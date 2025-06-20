@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation</title>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("U08QGWWRUenJDOllc");
-    })();
-    function envoyerEmail(e) {
+  <script type="module">
+    import emailjs from 'https://cdn.emailjs.com/dist/email.min.mjs';
+
+    emailjs.init("U08QGWWRUenJDOllc");
+
+    window.envoyerEmail = (e) => {
       e.preventDefault();
       emailjs.sendForm('service_o2lhgaa', 'template_93fatdg', e.target)
         .then(() => {
           alert("Votre demande a bien été envoyée !");
           e.target.reset();
-        }, (error) => {
+        }, () => {
           alert("Erreur lors de l'envoi. Veuillez réessayer.");
         });
-    }
+    };
   </script>
   <style>
     body {
@@ -26,7 +26,6 @@
       margin: 0;
       padding: 0;
       background: #f4f4f4;
-      color: #333;
     }
     header {
       background-color: #000;
@@ -107,7 +106,7 @@
 <body>
 
   <header>
-    <img src="logo.png1" alt="Logo OuassVTC" />
+    <img src="logo.png" alt="Logo OuassVTC" />
     <h1>OuassVTC - VTC à Perpignan</h1>
   </header>
 
@@ -149,6 +148,9 @@
   <footer id="contact">
     © 2025 OuassVTC · Contact : ouassvtc@yahoo.com
   </footer>
+
+</body>
+</html>
 
 </body>
 </html>
