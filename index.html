@@ -2,156 +2,149 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OuassVTC - Réservation</title>
-  <script type="module">
-    import emailjs from 'https://cdn.emailjs.com/dist/email.min.mjs';
-
-    emailjs.init("U08QGWWRUenJDOllc");
-
-    window.envoyerEmail = (e) => {
-      e.preventDefault();
-      emailjs.sendForm('service_o2lhgaa', 'template_93fatdg', e.target)
-        .then(() => {
-          alert("Votre demande a bien été envoyée !");
-          e.target.reset();
-        }, () => {
-          alert("Erreur lors de l'envoi. Veuillez réessayer.");
-        });
-    };
-  </script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f4f4;
+      background-color: #f5f5f5;
+      color: #333;
+      text-align: center;
     }
     header {
       background-color: #000;
-      color: white;
       padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
     header img {
-      height: 50px;
-    }
-    nav {
-      text-align: center;
-      background: #fff;
-      padding: 10px;
-    }
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #000;
-      font-weight: bold;
-    }
-    .hero {
-      text-align: center;
-      padding: 40px 20px;
-      background-color: #fff;
-    }
-    .hero img {
-      max-width: 90%;
+      width: 280px;
       height: auto;
-      margin-top: 20px;
     }
-    .cta-buttons {
-      margin-top: 20px;
+    h1 {
+      font-size: 2rem;
+      margin: 20px 0;
     }
-    .cta-button {
-      display: inline-block;
-      margin: 10px;
-      padding: 15px 30px;
-      background-color: #000;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.1em;
-    }
-    .container {
+    section img {
+      width: 60%;
       max-width: 600px;
-      margin: 40px auto;
+      height: auto;
+      margin: 20px 0;
+    }
+    .button-container {
+      margin: 20px 0;
+    }
+    .button-container a {
+      display: inline-block;
+      margin: 8px;
+      padding: 10px 20px;
+      background-color: #000;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+    .button-container a img {
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    form {
+      max-width: 500px;
+      margin: 30px auto 20px;
       padding: 20px;
       background: white;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    input, textarea {
+    input, textarea, button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
     }
-    input[type="submit"] {
-      background: black;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    footer {
+    button {
       background-color: #000;
       color: white;
-      text-align: center;
-      padding: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .about {
       margin-top: 40px;
+      padding: 0 25px 60px;
+      text-align: justify;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
 <body>
-
   <header>
-    <img src="logo.png" alt="Logo OuassVTC" />
-    <h1>OuassVTC - VTC à Perpignan</h1>
+    <img src="logo.png" alt="OuassVTC Logo" />
   </header>
 
-  <nav>
-    <a href="#reservation">Réserver</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <h1>Réservez votre chauffeur privé à Perpignan</h1>
 
-  <div class="hero">
-    <h2>Transport privé toutes distances</h2>
-    <p>Disponible 7j/7 à Perpignan et alentours</p>
-    <img src="voiture.png" alt="Voiture OuassVTC" />
-    <div class="cta-buttons">
-      <a class="cta-button" href="tel:0644120784">📞 Appeler : 06 44 12 07 84</a>
-      <a class="cta-button" href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
-      <a class="cta-button" href="sms:0644120784?body=Bonjour%20je%20souhaite%20réserver%20un%20trajet" target="_blank">📩 SMS</a>
-    </div>
+  <section>
+    <img src="voiture.png" alt="Voiture VTC" />
+  </section>
+
+  <div class="button-container">
+    <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/ffffff/phone.png" alt="Appel" />Appeler</a>
+    <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp" />WhatsApp</a>
+    <a href="sms:0644120784?body=Bonjour, je souhaite réserver un VTC."><img src="https://img.icons8.com/ios-filled/50/ffffff/sms.png" alt="SMS" />SMS</a>
+    <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/ffffff/facebook--v1.png" alt="Facebook" />Facebook</a>
+    <a href="#" onclick="alert('Ajoute-nous sur Snapchat : ouassvtc'); return false;"><img src="https://img.icons8.com/ios-filled/50/000000/snapchat.png" alt="Snapchat" />Snapchat</a>
   </div>
 
-  <div class="container" id="reservation">
-    <h2>Formulaire de réservation</h2>
-    <form onsubmit="envoyerEmail(event)">
-      <label>Nom</label>
-      <input type="text" name="nom" required />
-      <label>Téléphone</label>
-      <input type="tel" name="telephone" required />
-      <label>Date et Heure</label>
-      <input type="datetime-local" name="date" required />
-      <label>Départ</label>
-      <input type="text" name="depart" required />
-      <label>Destination</label>
-      <input type="text" name="destination" required />
-      <label>Remarque</label>
-      <textarea name="remarque"></textarea>
-      <input type="submit" value="Envoyer la demande" />
-    </form>
+  <div class="about">
+    Chez <strong>OuassVTC</strong>, notre mission est de vous offrir un service de transport VTC rapide, fiable et accessible à tout moment. Basés à Perpignan, nous mettons à votre disposition des chauffeurs professionnels et ponctuels pour répondre à tous vos besoins de déplacement. Que ce soit pour un trajet local, un transfert vers une gare, un aéroport ou un rendez-vous professionnel, nous assurons un accompagnement sérieux et adapté à vos attentes.
+
+    Nous intervenons sur Perpignan et dans toute sa région, avec une disponibilité 7j/7. Notre priorité est votre satisfaction : un service courtois, un véhicule propre et confortable, un trajet fluide et une prise en charge sans attente. Grâce à notre réactivité, nous garantissons des réservations simples et rapides, par téléphone, SMS, WhatsApp ou en ligne. Faites confiance à OuassVTC pour un transport en toute sérénité.
   </div>
 
-  <footer id="contact">
-    © 2025 OuassVTC · Contact : ouassvtc@yahoo.com
-  </footer>
+  <form id="reservation-form">
+    <input type="text" name="nom" placeholder="Votre nom" required />
+    <input type="tel" name="telephone" placeholder="Téléphone" required />
+    <input type="text" name="depart" placeholder="Adresse de départ" required />
+    <input type="text" name="arrivee" placeholder="Adresse d’arrivée" required />
+    <input type="datetime-local" name="dateheure" required />
+    <textarea name="message" placeholder="Message optionnel..."></textarea>
+    <button type="submit">Envoyer la demande</button>
+  </form>
 
-</body>
-</html>
+  <div style="display:none;">
+    VTC Perpignan, chauffeur privé Perpignan, VTC rapide, réservation VTC en ligne, transport privé 66,
+    taxi Perpignan, taxi privé, chauffeur taxi, service taxi Perpignan, Uber Perpignan, Bolt Perpignan, G7 Perpignan,
+    application VTC, alternative taxi, transport aéroport, navette gare, transport professionnel,
+    chauffeur de confiance, conducteur privé, transport événementiel, transfert hôtel, service premium,
+    VTC dernière minute, voiture avec chauffeur, course privée, VTC de nuit, réservation transport, 
+    transport local, chauffeur sérieux, service personnalisé, VTC disponible, course sur demande, 
+    transport de qualité, trajet ponctuel, service client chauffeur.
+  </div>
 
+  <script type="module">
+    import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    emailjs.init('U08QGWWRUenJDOllc');
+
+    const form = document.getElementById('reservation-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      emailjs.sendForm('service_o2lhgaa', 'template_93fatdg', this)
+        .then(() => {
+          alert("Demande envoyée avec succès !");
+          form.reset();
+        }, () => {
+          alert("Erreur lors de l'envoi. Veuillez réessayer.");
+        });
+    });
+  </script>
 </body>
 </html>
 
