@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OuassVTC - Chauffeur Privé</title>
+    <title>OuassVTC - Chauffeurs Privés à Perpignan</title>
     <style>
         body {
             margin: 0;
@@ -23,9 +23,19 @@
         header img {
             height: 60px;
         }
+        nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
         .hero {
             text-align: center;
-            padding: 50px 20px;
+            padding: 40px 20px;
             background-color: #fff;
         }
         .hero img {
@@ -33,19 +43,47 @@
             height: auto;
             margin-top: 20px;
         }
-        .hero h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .cta-buttons {
+            margin-top: 20px;
         }
         .cta-button {
             display: inline-block;
-            margin-top: 30px;
+            margin: 10px;
             padding: 15px 30px;
             background-color: #000;
             color: #fff;
             text-decoration: none;
             border-radius: 8px;
-            font-size: 1.2em;
+            font-size: 1.1em;
+        }
+        section {
+            padding: 30px 20px;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #000;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
         }
         footer {
             background-color: #000;
@@ -59,17 +97,53 @@
 <body>
     <header>
         <img src="logo.png" alt="Logo OuassVTC">
-        <div>Chauffeur privé VTC</div>
+        <div>Chauffeurs privés VTC à Perpignan</div>
     </header>
+
+    <nav>
+        <a href="#reservation">Réserver</a>
+        <a href="#carte">Zone de service</a>
+        <a href="#apropos">À propos</a>
+    </nav>
+
     <div class="hero">
         <h1>Bienvenue chez OuassVTC</h1>
-        <p>Votre chauffeur privé fiable, professionnel et disponible 24h/24 à prix abordable.</p>
+        <p>Chauffeurs privés à Perpignan, disponibles 7j/7 – Transports toutes distances</p>
         <img src="voiture.png" alt="Voiture OuassVTC">
-        <br>
-        <a class="cta-button" href="https://wa.me/33644120784" target="_blank">Réserver via WhatsApp</a>
+        <div class="cta-buttons">
+            <a class="cta-button" href="tel:0644120784">📞 Appeler maintenant</a>
+            <a class="cta-button" href="https://wa.me/33644120784" target="_blank">💬 Réserver via WhatsApp</a>
+        </div>
     </div>
+
+    <section id="reservation">
+        <h2>Réserver un trajet</h2>
+        <form>
+            <input type="text" placeholder="Nom" required>
+            <input type="tel" placeholder="Téléphone" required>
+            <input type="datetime-local" required>
+            <input type="text" placeholder="Lieu de départ" required>
+            <input type="text" placeholder="Destination" required>
+            <textarea placeholder="Remarque (facultatif)"></textarea>
+            <input type="submit" value="Envoyer">
+        </form>
+    </section>
+
+    <section id="carte">
+        <h2>Zone de service</h2>
+        <p>Nous desservons Perpignan et toutes distances. Contactez-nous pour un devis personnalisé.</p>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2896.6227093625463!2d2.895610515717318!3d42.69863977916521!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12b04f9f2f1943f5%3A0x2490138d4c65c031!2sPerpignan!5e0!3m2!1sfr!2sfr!4v1700000000000!5m2!1sfr!2sfr" allowfullscreen></iframe>
+    </section>
+
+    <section id="apropos">
+        <h2>À propos de OuassVTC</h2>
+        <p>OuassVTC, ce sont des chauffeurs professionnels et ponctuels, à votre service 7j/7 à Perpignan. 
+        Nous assurons des trajets confortables, toutes distances, avec discrétion et professionnalisme.</p>
+    </section>
+
     <footer>
         © 2025 OuassVTC. Tous droits réservés.
     </footer>
 </body>
 </html>
+
