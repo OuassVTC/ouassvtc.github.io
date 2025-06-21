@@ -115,12 +115,12 @@
 
   <script type="text/javascript">
     (function() {
-      emailjs.init("U08QGWWRUenJDOllc");
+      emailjs.init("U08QGWWRUenJDOllc"); // Ta clé publique
     })();
 
     function sendEmail(event) {
       event.preventDefault();
-      emailjs.send("service_o2lhgaa", "template_93fatdg", {
+      emailjs.send("service_kdvgh9f", "template_93fatdg", {
         nom: document.getElementById("nom").value,
         telephone: document.getElementById("telephone").value,
         dateheure: document.getElementById("dateheure").value,
