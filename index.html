@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OuassVTC - Réservation VTC à Perpignan</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <title>OuassVTC - Réservation</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -104,12 +104,12 @@
     </p>
 
     <form onsubmit="sendEmail(event)">
-      <input type="text" id="nom" name="nom" placeholder="Nom" required />
-      <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-      <input type="datetime-local" id="dateheure" name="dateheure" required />
-      <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
-      <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+      <input type="text" id="nom" placeholder="Nom" required />
+      <input type="tel" id="telephone" placeholder="Téléphone" required />
+      <input type="datetime-local" id="date" required />
+      <input type="text" id="depart" placeholder="Adresse de départ" required />
+      <input type="text" id="destination" placeholder="Adresse d'arrivée" required />
+      <textarea id="remarque" placeholder="Informations complémentaires"></textarea>
       <button type="submit">Envoyer la demande</button>
     </form>
   </div>
@@ -124,25 +124,25 @@
 
   <script type="text/javascript">
     (function() {
-      emailjs.init("U08QGWWRUenJDOllc"); // Remplace avec ton User ID EmailJS
+      emailjs.init("U08QGWWRUenJDOllc");
     })();
 
     function sendEmail(event) {
       event.preventDefault();
 
-      emailjs.send("service_kdvgh9f", "template_93fatdg", {
+      emailjs.send("service_kdvgh9f", "template_5x5sfie", {
         nom: document.getElementById("nom").value,
         telephone: document.getElementById("telephone").value,
-        dateheure: document.getElementById("dateheure").value,
+        date: document.getElementById("date").value,
         depart: document.getElementById("depart").value,
-        arrivee: document.getElementById("arrivee").value,
-        message: document.getElementById("message").value
+        destination: document.getElementById("destination").value,
+        remarque: document.getElementById("remarque").value
       })
       .then(function(response) {
         alert("Votre demande a bien été envoyée !");
       }, function(error) {
         alert("Erreur lors de l'envoi. Veuillez réessayer.");
-        console.error("EmailJS error:", error);
+        console.error(error);
       });
     }
   </script>
