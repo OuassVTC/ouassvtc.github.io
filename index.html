@@ -146,3 +146,30 @@
   </script>
 </body>
 </html>
+<script type="text/javascript">
+  (function() {
+    emailjs.init("U08QGWWRUenJDOllc");
+  })();
+
+  function sendEmail(event) {
+    event.preventDefault();
+
+    console.log("Tentative d'envoi...");
+    
+    emailjs.send("service_kdvgh9f", "template_93fatdg", {
+      nom: document.getElementById("nom").value,
+      telephone: document.getElementById("telephone").value,
+      dateheure: document.getElementById("dateheure").value,
+      depart: document.getElementById("depart").value,
+      arrivee: document.getElementById("arrivee").value,
+      message: document.getElementById("message").value
+    })
+    .then(function(response) {
+      console.log("Envoi réussi ✅", response);
+      alert("Votre demande a bien été envoyée !");
+    }, function(error) {
+      console.error("Erreur ❌", error);
+      alert("Erreur lors de l'envoi. Veuillez réessayer.");
+    });
+  }
+</script>
