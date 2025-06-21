@@ -124,12 +124,12 @@
 
   <script type="text/javascript">
     (function() {
-      emailjs.init("U08QGWWRUenJDOllc"); // Public key
+      emailjs.init("U08QGWWRUenJDOllc");
     })();
 
     function sendEmail(event) {
       event.preventDefault();
-      emailjs.send("service_kdvgh9f","template_5xt5vlv");
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
         nom: document.getElementById("nom").value,
         telephone: document.getElementById("telephone").value,
         date: document.getElementById("dateheure").value,
@@ -147,3 +147,4 @@
   </script>
 </body>
 </html>
+
