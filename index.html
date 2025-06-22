@@ -113,3 +113,108 @@
 
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
+<div class="buttons">
+      <a href="tel:0644120784" onclick="trackClick('Appel')">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler
+      </a>
+      <a href="https://wa.me/33644120784" target="_blank" onclick="trackClick('WhatsApp')">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp
+      </a>
+      <a href="sms:+33644120784" onclick="trackClick('SMS')">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS
+      </a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/"
+         target="_blank" onclick="trackClick('Facebook')">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook
+      </a>
+      <a href="snapchat://add/ouassvtc" onclick="trackClick('Snapchat')">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat
+      </a>
+    </div>
+
+    <div class="info">
+      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques.
+    </div>
+
+    <form onsubmit="sendEmail(event)">
+      <input type="text" id="nom" name="nom" placeholder="Nom" required />
+      <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
+      <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
+      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
+      <input type="datetime-local" id="dateheure" name="dateheure" required />
+      <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+      <button type="submit">Envoyer la demande</button>
+    </form>
+
+    <div class="estimation" id="prixEstime"></div>
+    <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
+  </div>
+
+  <footer>
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+  </footer>
+
+  <div class="hidden-keywords">
+    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
+  </div>
+
+  <script type="text/javascript">
+    // Tracking personnalisé pour Analytics
+    function trackClick(eventName) {
+      gtag('event', eventName, {
+        event_category: 'Interaction',
+        event_label: 'OuassVTC'
+      });
+    }
+
+    // EmailJS init
+    (function() {
+      emailjs.init("U08QGWWRUenJDOllc");
+    })();
+
+    function sendEmail(event) {
+      event.preventDefault();
+      const depart = document.getElementById("depart").value;
+      const arrivee = document.getElementById("arrivee").value;
+
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
+        nom: document.getElementById("nom").value,
+        telephone: document.getElementById("telephone").value,
+        dateheure: document.getElementById("dateheure").value,
+        depart,
+        arrivee,
+        message: document.getElementById("message").value
+      })
+      .then(() => {
+        alert("Votre demande a bien été envoyée !");
+        gtag('event', 'Formulaire Envoyé', {
+          event_category: 'Formulaire',
+          event_label: 'Demande de réservation'
+        });
+      })
+      .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+
+      estimateDistance(depart, arrivee);
+    }
+
+    function estimateDistance(depart, arrivee) {
+      const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.routes && data.routes.length) {
+            const distanceKm = data.routes[0].distance / 1000;
+            const distanceArrondie = Math.max(distanceKm, 5);
+            const prix = Math.max(20, distanceArrondie * 1.6);
+            document.getElementById("prixEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+          }
+        });
+    }
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
