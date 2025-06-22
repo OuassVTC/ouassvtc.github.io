@@ -127,28 +127,30 @@
     <h2 style="text-align:center;">Formulaire de réservation</h2>
 
     <form onsubmit="sendEmail(event)">
-      <input type="text" id="nom" name="nom" placeholder="Nom" required />
-      <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-      <input type="text" id="depart" name="depart" placeholder="Adresse de départ avec code postal" required />
-<button type="button" onclick="geoLocaliser('depart')" style="padding:6px;border:none;background:none;cursor:pointer;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée avec code postal" required style="flex:1;" />
-        
-          <img src="https://img.icons8.com/ios-filled/24/marker.png" alt="Localiser">
-        </button>
-      </div>
+  <input type="text" id="nom" name="nom" placeholder="Nom" required />
+  <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
+  
+  <div style="display:flex;align-items:center;gap:8px;">
+    <input type="text" id="depart" name="depart" placeholder="Adresse de départ avec code postal" required style="flex:1;" />
+    <button type="button" onclick="geoLocaliser('depart')" style="padding:6px;border:none;background:none;cursor:pointer;">
+      <img src="https://img.icons8.com/ios-filled/24/marker.png" alt="Localiser">
+    </button>
+  </div>
 
-      <input type="datetime-local" id="dateheure" name="dateheure" required />
-      <select id="passagers" name="passagers" required>
-        <option value="">Nombre de passagers</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4+">4 ou plus</option>
-      </select>
-      <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-      <button type="submit" id="submitBtn">Envoyer la demande</button>
-    </form>
+  <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée avec code postal" required />
+  <input type="datetime-local" id="dateheure" name="dateheure" required />
+  
+  <select id="passagers" name="passagers" required>
+    <option value="">Nombre de passagers</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4+">4 ou plus</option>
+  </select>
+  
+  <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+  <button type="submit" id="submitBtn">Envoyer la demande</button>
+</form>
 
     <div class="estimation" id="prixEstime"></div>
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
