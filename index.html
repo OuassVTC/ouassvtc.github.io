@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation VTC à Perpignan</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BG2J1H8TC"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-5BG2J1H8TC');
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,7 +72,7 @@
       max-width: 500px;
       margin: 20px auto;
     }
-    input, textarea {
+    input, textarea, select {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
@@ -116,7 +116,7 @@
       <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
       <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
       <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
-      <a href="https://www.facebook.com/people/Ouass-Vtc/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
       <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
 
@@ -125,18 +125,32 @@
     </div>
 
     <h2 style="text-align:center;">Formulaire de réservation</h2>
+
     <form onsubmit="sendEmail(event)">
-      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" max="7" required />
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-      <input type="text" id="depart" name="depart" placeholder="Adresse de départ avec code postal et ville" required />
-      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée avec code postal et ville" required />
+      <input type="text" id="depart" name="depart" placeholder="Adresse de départ avec code postal" required />
+
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée avec code postal" required style="flex:1;" />
+        <button type="button" onclick="geoLocaliser('arrivee')" style="padding:6px;border:none;background:none;cursor:pointer;">
+          <img src="https://img.icons8.com/ios-filled/24/marker.png" alt="Localiser">
+        </button>
+      </div>
+
       <input type="datetime-local" id="dateheure" name="dateheure" required />
+      <select id="passagers" name="passagers" required>
+        <option value="">Nombre de passagers</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4+">4 ou plus</option>
+      </select>
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-      <div class="estimation" id="prixEstime"></div>
-      <button type="submit">Envoyer la demande</button>
+      <button type="submit" id="submitBtn">Envoyer la demande</button>
     </form>
 
+    <div class="estimation" id="prixEstime"></div>
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
@@ -149,35 +163,42 @@
   </div>
 
   <script type="text/javascript">
-    emailjs.init("U08QGWWRUenJDOllc");
+    (function() {
+      emailjs.init("U08QGWWRUenJDOllc");
+    })();
 
     function sendEmail(event) {
       event.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
-      const prix = document.getElementById("prixEstime").innerText;
 
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom: document.getElementById("nom").value,
-        telephone: document.getElementById("telephone").value,
-        dateheure: document.getElementById("dateheure").value,
-        depart,
-        arrivee,
-        passagers: document.getElementById("passagers").value,
-        message: document.getElementById("message").value + "\n\n" + prix
-      })
-      .then(() => alert("Votre demande a bien été envoyée !"))
-      .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+      estimateDistance(depart, arrivee, function(distanceKm, prix) {
+        emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
+          nom: document.getElementById("nom").value,
+          telephone: document.getElementById("telephone").value,
+          dateheure: document.getElementById("dateheure").value,
+          depart,
+          arrivee,
+          passagers: document.getElementById("passagers").value,
+          message: document.getElementById("message").value,
+          distance: distanceKm.toFixed(1),
+          tarif: prix.toFixed(2)
+        })
+        .then(() => {
+          alert("Votre demande a bien été envoyée !");
+          btn.disabled = false;
+        })
+        .catch(() => {
+          alert("Erreur lors de l'envoi. Veuillez réessayer.");
+          btn.disabled = false;
+        });
+      });
     }
 
-    document.getElementById("depart").addEventListener("blur", estimateDistance);
-    document.getElementById("arrivee").addEventListener("blur", estimateDistance);
-
-    function estimateDistance() {
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      if (!depart || !arrivee) return;
-
+    function estimateDistance(depart, arrivee, callback) {
       const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
       fetch(url)
         .then(res => res.json())
@@ -187,8 +208,25 @@
             const distanceArrondie = Math.max(distanceKm, 7);
             const prix = Math.max(20, distanceArrondie * 1.6);
             document.getElementById("prixEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+            callback(distanceKm, prix);
           }
         });
+    }
+
+    function geoLocaliser(inputId) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+              const adresse = data.display_name;
+              document.getElementById(inputId).value = adresse;
+            });
+        });
+      } else {
+        alert("La géolocalisation n'est pas prise en charge par ce navigateur.");
+      }
     }
 
     function googleTranslateElementInit() {
