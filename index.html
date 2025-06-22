@@ -130,10 +130,10 @@
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
       <input type="text" id="depart" name="depart" placeholder="Adresse de départ avec code postal" required />
-
+<button type="button" onclick="geoLocaliser('depart')" style="padding:6px;border:none;background:none;cursor:pointer;">
       <div style="display:flex;align-items:center;gap:8px;">
         <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée avec code postal" required style="flex:1;" />
-        <button type="button" onclick="geoLocaliser('depart')" style="padding:6px;border:none;background:none;cursor:pointer;">
+        
           <img src="https://img.icons8.com/ios-filled/24/marker.png" alt="Localiser">
         </button>
       </div>
