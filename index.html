@@ -1,114 +1,169 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation VTC à Perpignan</title>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BG2J1H8TC"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5BG2J1H8TC');
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
-    header { background-color: #000; padding: 20px; text-align: center; }
-    header img { height: 140px; }
-    .container { padding: 20px; max-width: 900px; margin: auto; }
-    .car-image { width: 100%; max-width: 450px; display: block; margin: 0 auto 20px auto; }
-    .buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    .buttons a { display: flex; align-items: center; gap: 5px; background-color: #000; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; }
-    .buttons a img { width: 20px; height: 20px; }
-    .info { text-align: center; font-weight: bold; margin-bottom: 20px; }
-    form { display: flex; flex-direction: column; gap: 10px; max-width: 500px; margin: 20px auto; }
-    input, textarea, select { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
-    button { padding: 10px; background-color: #007bff; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
-    .estimation { text-align: center; font-weight: bold; margin-top: 10px; }
-    footer { background-color: #000; color: white; text-align: center; padding: 30px 10px; margin-top: 40px; }
-    .hidden-keywords { display: none; }
-    .localise-btn { background: none; border: none; position: absolute; right: 10px; top: 8px; cursor: pointer; }
-    .relative { position: relative; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #000;
+      padding: 20px;
+      text-align: center;
+    }
+    header img {
+      height: 140px;
+    }
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .car-image {
+      width: 100%;
+      max-width: 450px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .buttons a {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background-color: #000;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .buttons a img {
+      width: 20px;
+      height: 20px;
+    }
+    .info {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+    input, textarea {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .estimation {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    footer {
+      background-color: #000;
+      color: white;
+      text-align: center;
+      padding: 30px 10px;
+      margin-top: 40px;
+    }
+    .hidden-keywords {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <img src="ouassvtc.png" alt="Logo OuassVTC" />
-  </header>
-
+  <header><img src="ouassvtc.png" alt="Logo OuassVTC" /></header>
   <div class="container">
-    <img src="voiture.png" alt="Voiture VTC" class="car-image" />
+    <img src="voiture.png" alt="Voiture VTC" class="car-image"/>
+
     <div class="buttons">
       <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
-      <a href="https://wa.me/33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
+      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
       <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
-      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
       <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
 
     <div class="info">
-      <h2>Formulaire de réservation</h2>
-      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort.
+      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques.
     </div>
 
-    <form id="reservationForm" onsubmit="sendEmail(event)">
+    <h2 style="text-align:center;">Formulaire de réservation</h2>
+    <form onsubmit="sendEmail(event)">
+      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" max="7" required />
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-      <div class="relative">
-        <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-        <button type="button" class="localise-btn" onclick="localiserUtilisateur()">
-          <img src="https://img.icons8.com/ios-filled/20/000000/marker--v1.png" alt="Localiser" />
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required style="flex:1;" oninput="autocompleteAdresse('depart', this.value)">
+        <button type="button" onclick="geoLocaliser('depart')" style="padding:6px;border:none;background:none;cursor:pointer;">
+          <img src="https://img.icons8.com/ios-filled/24/marker.png" alt="Localiser" />
         </button>
       </div>
-      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
+
+      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required oninput="autocompleteAdresse('arrivee', this.value)"/>
+
       <input type="datetime-local" id="dateheure" name="dateheure" required />
-      <select id="passagers" name="passagers" required>
-        <option value="">Nombre de passagers</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4+">4 ou plus</option>
-      </select>
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+
+      <div class="estimation" id="prixEstime"></div>
       <button type="submit">Envoyer la demande</button>
     </form>
 
-    <div class="estimation" id="prixEstime"></div>
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
-  <footer>
-    © 2025 OuassVTC. Tous droits réservés.
-  </footer>
-
-  <div class="hidden-keywords">
-    Taxi Perpignan, VTC 66, Uber, G7, Bolt, réservation transport privé, Perpignan VTC, chauffeur VTC.
-  </div>
+  <footer>© 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.</footer>
+  <div class="hidden-keywords">Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.</div>
 
   <script>
-    (function(){ emailjs.init("U08QGWWRUenJDOllc"); })();
+    emailjs.init("U08QGWWRUenJDOllc");
 
     function sendEmail(event) {
       event.preventDefault();
-      const form = document.getElementById("reservationForm");
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
-      const distanceText = document.getElementById("prixEstime").innerText;
+      const prix = document.getElementById("prixEstime").innerText;
+
+      document.querySelector("button[type='submit']").disabled = true;
 
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom: form.nom.value,
-        telephone: form.telephone.value,
-        depart: depart,
-        arrivee: arrivee,
-        dateheure: form.dateheure.value,
-        passagers: form.passagers.value,
-        message: form.message.value + "\n\n" + distanceText
-      }).then(() => {
-        alert("Votre demande a bien été envoyée !");
-        form.reset();
-        document.getElementById("prixEstime").innerText = "";
-      }).catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+        nom: document.getElementById("nom").value,
+        telephone: document.getElementById("telephone").value,
+        dateheure: document.getElementById("dateheure").value,
+        depart,
+        arrivee,
+        message: document.getElementById("message").value,
+        passagers: document.getElementById("passagers").value + "\n\n" + prix
+      })
+      .then(() => alert("Votre demande a bien été envoyée !"))
+      .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
     }
 
     function estimateDistance() {
@@ -116,36 +171,57 @@
       const arrivee = document.getElementById("arrivee").value;
       if (!depart || !arrivee) return;
       const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
-      fetch(url).then(res => res.json()).then(data => {
-        if (data.routes && data.routes.length) {
-          const distanceKm = data.routes[0].distance / 1000;
-          const distanceArrondie = Math.max(distanceKm, 7);
-          const prix = Math.max(20, distanceArrondie * 1.6);
-          document.getElementById("prixEstime").innerText =
-            `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
-        }
-      });
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.routes && data.routes.length) {
+            const distanceKm = data.routes[0].distance / 1000;
+            const distanceArrondie = Math.max(distanceKm, 7);
+            const prix = Math.max(20, distanceArrondie * 1.6);
+            document.getElementById("prixEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+          }
+        });
     }
 
-    document.getElementById("depart").addEventListener("change", estimateDistance);
-    document.getElementById("arrivee").addEventListener("change", estimateDistance);
+    document.getElementById("depart").addEventListener("blur", estimateDistance);
+    document.getElementById("arrivee").addEventListener("blur", estimateDistance);
 
-    function localiserUtilisateur() {
+    function geoLocaliser(id) {
       if (!navigator.geolocation) {
         alert("La géolocalisation n'est pas supportée.");
         return;
       }
       navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`)
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
           .then(res => res.json())
           .then(data => {
-            if (data.display_name) {
-              document.getElementById("depart").value = data.display_name;
-              estimateDistance();
-            }
+            document.getElementById(id).value = data.display_name;
+            estimateDistance();
           });
-      });
+      }, () => alert("Impossible de récupérer votre position."));
+    }
+
+    function autocompleteAdresse(id, query) {
+      const suggestions = document.getElementById(id + "_suggestions");
+      if (query.length < 3 || !suggestions) return;
+      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`)
+        .then(res => res.json())
+        .then(data => {
+          suggestions.innerHTML = '';
+          data.features.forEach(feature => {
+            const li = document.createElement("li");
+            li.textContent = feature.properties.name + ", " + (feature.properties.city || '') + " " + (feature.properties.postcode || '');
+            li.style.cursor = "pointer";
+            li.onclick = () => {
+              document.getElementById(id).value = li.textContent;
+              suggestions.innerHTML = '';
+              estimateDistance();
+            };
+            suggestions.appendChild(li);
+          });
+        });
     }
 
     function googleTranslateElementInit() {
@@ -155,6 +231,7 @@
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
+
 
 
 
