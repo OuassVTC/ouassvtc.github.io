@@ -24,13 +24,9 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="ouassvtc.png" alt="Logo OuassVTC" />
-  </header>
-
+  <header><img src="ouassvtc.png" alt="Logo OuassVTC" /></header>
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
-    
     <div class="buttons">
       <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
       <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
@@ -38,11 +34,9 @@
       <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
       <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
-
     <div class="info">
-      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez.
+      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques.
     </div>
-
     <form onsubmit="sendEmail(event)">
       <input type="text" id="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" placeholder="Téléphone" required />
@@ -60,9 +54,7 @@
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
-  <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
-  </footer>
+  <footer>© 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.</footer>
 
   <div class="hidden-keywords">
     Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
@@ -83,13 +75,16 @@
         dateheure: document.getElementById("dateheure").value,
         depart,
         arrivee,
-        message: document.getElementById("message").value + "\\n\\n" + prix
+        message: document.getElementById("message").value + "\n\n" + prix
       })
       .then(() => alert("Votre demande a bien été envoyée !"))
       .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
     }
 
-    function estimateDistance(depart, arrivee) {
+    function estimateDistance() {
+      const depart = document.getElementById("depart").value;
+      const arrivee = document.getElementById("arrivee").value;
+      if (!depart || !arrivee) return;
       const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
       fetch(url)
         .then(res => res.json())
@@ -103,61 +98,52 @@
         });
     }
 
-    document.getElementById("depart").addEventListener("blur", () => estimateDistance(
-      document.getElementById("depart").value,
-      document.getElementById("arrivee").value
-    ));
-    document.getElementById("arrivee").addEventListener("blur", () => estimateDistance(
-      document.getElementById("depart").value,
-      document.getElementById("arrivee").value
-    ));
+    document.getElementById("depart").addEventListener("blur", estimateDistance);
+    document.getElementById("arrivee").addEventListener("blur", estimateDistance);
 
-    function autocompleteAdresse(id, query) {
-      const listId = id + "_suggestions";
-      const suggestions = document.getElementById(listId);
-      suggestions.innerHTML = "";
-      if (query.length < 3) return;
-      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5`)
-        .then(res => res.json())
-        .then(data => {
-          data.features.forEach(feature => {
-            const li = document.createElement("li");
-            li.textContent = feature.properties.name + ", " + (feature.properties.city || '') + " " + (feature.properties.postcode || '');
-            li.style.cursor = "pointer";
-            li.onclick = () => {
-              document.getElementById(id).value = li.textContent;
-              suggestions.innerHTML = "";
-              estimateDistance(
-                document.getElementById("depart").value,
-                document.getElementById("arrivee").value
-              );
-            };
-            suggestions.appendChild(li);
-          });
-        });
-    }
-
-    function geoLocaliser(id) {
+    function geoLocaliser(champId) {
       if (!navigator.geolocation) {
-        alert("La géolocalisation n'est pas supportée.");
+        alert("La géolocalisation n'est pas prise en charge.");
         return;
       }
-      navigator.geolocation.getCurrentPosition(pos => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-          .then(res => res.json())
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+          .then(response => response.json())
           .then(data => {
-            document.getElementById(id).value = data.display_name;
-            estimateDistance(document.getElementById("depart").value, data.display_name);
+            document.getElementById(champId).value = data.display_name;
+            estimateDistance();
           });
-      }, () => alert("Impossible de récupérer votre position."));
+      });
     }
 
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+      new google.translate.TranslateElement({ pageLanguage: 'fr' }, 'google_translate_element');
+    }
+
+    function autocompleteAdresse(champId, query) {
+      if (query.length < 3) return;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          const suggestions = data.slice(0, 5);
+          const list = document.getElementById(champId + "_suggestions");
+          list.innerHTML = "";
+          suggestions.forEach(s => {
+            const li = document.createElement("li");
+            li.textContent = s.display_name;
+            li.style.cursor = "pointer";
+            li.onclick = () => {
+              document.getElementById(champId).value = s.display_name;
+              list.innerHTML = "";
+              estimateDistance();
+            };
+            list.appendChild(li);
+          });
+        });
     }
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
+
