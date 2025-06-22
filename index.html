@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation VTC à Perpignan</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f5f5f5;
+      color: #333;
       margin: 0;
       padding: 0;
-      color: #333;
     }
     header {
       background-color: #000;
@@ -40,14 +40,14 @@
       margin-bottom: 20px;
     }
     .buttons a {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       background-color: #000;
       color: white;
       padding: 10px 15px;
       border-radius: 5px;
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
     .buttons a img {
       width: 20px;
@@ -93,36 +93,42 @@
   </style>
 </head>
 <body>
-  <header><img src="ouassvtc.png" alt="Logo OuassVTC"></header>
+  <header>
+    <img src="ouassvtc.png" alt="Logo OuassVTC" />
+  </header>
 
   <div class="container">
-    <img src="voiture.png" alt="Voiture VTC" class="car-image">
+    <img src="voiture.png" alt="Voiture VTC" class="car-image" />
 
     <div class="buttons">
-      <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/>Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/>WhatsApp</a>
-      <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/>SMS</a>
-      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/>Facebook</a>
-      <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/>Snapchat</a>
+      <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
+      <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+      <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
 
     <form onsubmit="sendEmail(event)">
-      <input type="text" id="nom" placeholder="Nom" required>
-      <input type="tel" id="telephone" placeholder="Téléphone" required>
-      <input type="text" id="depart" placeholder="Adresse de départ" required>
-      <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
-      <input type="datetime-local" id="dateheure" required>
-      <textarea id="message" placeholder="Informations complémentaires"></textarea>
+      <input type="text" id="nom" name="nom" placeholder="Nom" required />
+      <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
+      <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
+      <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
+      <input type="datetime-local" id="dateheure" name="dateheure" required />
+      <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
       <button type="submit">Envoyer la demande</button>
     </form>
 
     <div class="estimation" id="prixEstime"></div>
-    <div class="message" id="status"></div>
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
-  <footer>© 2025 OuassVTC. Tous droits réservés.</footer>
-  <div class="hidden-keywords">Taxi, VTC Perpignan, Uber, G7, Bolt, transport privé</div>
+  <footer>
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+  </footer>
+
+  <div class="hidden-keywords">
+    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
+  </div>
 
   <script>
     (function() {
@@ -150,12 +156,17 @@
       const routeUrl = `https://router.project-osrm.org/route/v1/driving/${coordsDep.lon},${coordsDep.lat};${coordsArr.lon},${coordsArr.lat}?overview=false`;
       const route = await fetch(routeUrl).then(res => res.json());
       let distanceKm = 0;
+      let prix = 0;
 
       if (route.routes && route.routes.length) {
         distanceKm = route.routes[0].distance / 1000;
-        const prix = Math.max(20, Math.max(distanceKm, 5) * 1.6).toFixed(2);
+        const distanceArrondie = Math.max(distanceKm, 5);
+        prix = Math.max(20, distanceArrondie * 1.6).toFixed(2);
         document.getElementById("prixEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix} €`;
       }
+
+      const messageText = document.getElementById("message").value +
+        `\n\nDistance estimée : ${distanceKm.toFixed(1)} km\nPrix estimé : ${prix} €`;
 
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
         nom: document.getElementById("nom").value,
@@ -163,18 +174,18 @@
         dateheure: document.getElementById("dateheure").value,
         depart,
         arrivee,
-        message: document.getElementById("message").value
+        message: messageText
       })
       .then(() => {
-        document.getElementById("status").innerText = "Demande envoyée avec succès !";
+        alert("Votre demande a bien été envoyée !");
       })
       .catch(() => {
-        document.getElementById("status").innerText = "Erreur d'envoi. Veuillez réessayer.";
+        alert("Erreur lors de l'envoi. Veuillez réessayer.");
       });
     }
 
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({ pageLanguage: 'fr' }, 'google_translate_element');
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
