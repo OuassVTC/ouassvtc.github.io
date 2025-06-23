@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BG2J1H8TC"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5BG2J1H8TC');
-  </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation VTC à Perpignan</title>
@@ -28,11 +19,7 @@
       text-align: center;
     }
     header img {
-  width: 100%;
-  max-width: 450px;
-  display: block;
-  margin: 0 auto;
-  height: auto;
+      height: 140px;
     }
     .container {
       padding: 20px;
@@ -96,7 +83,7 @@
     .estimation {
       text-align: center;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 20px;
     }
     footer {
       background-color: #000;
@@ -118,64 +105,33 @@
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
 
-    <div class="buttons">
-      <a href="tel:0644120784" onclick="trackClick('Appel')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler
-      </a>
-      <a href="https://wa.me/33644120784" target="_blank" onclick="trackClick('WhatsApp')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp
-      </a>
-      <a href="sms:+33644120784" onclick="trackClick('SMS')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS
-      </a>
-      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank" onclick="trackClick('Facebook')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook
-      </a>
-      <a href="snapchat://add/ouassvtc" onclick="trackClick('Snapchat')">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat
-      </a>
-    </div>
-
     <div class="info">
-      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques.
+      OuassVTC est votre service de transport privé basé à Perpignan.
     </div>
 
     <form onsubmit="sendEmail(event)">
-      <h2 style="text-align:center;">Formulaire de réservation</h2>
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
       <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
       <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
-      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" required />
       <input type="datetime-local" id="dateheure" name="dateheure" required />
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+      <input type="hidden" id="prix" name="prix" />
       <button type="submit">Envoyer la demande</button>
     </form>
 
-    <div class="estimation" id="prixEstime"></div>
-    <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
+    <div class="estimation" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+      <div style="padding: 10px 20px; background: #000; color: white; border-radius: 8px;" id="kmEstime">Distance estimée : ...</div>
+      <div style="padding: 10px 20px; background: #007bff; color: white; border-radius: 8px;" id="prixEstime">Prix estimé : ...</div>
+      <p style="font-weight:bold; color:#444;">Prix fixe annoncé à l’avance, aucune surprise à l’arrivée !</p>
+    </div>
   </div>
 
   <footer>
     © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
   </footer>
 
-  <div style="text-align:center; font-size: 13px; color: #999; margin-bottom: 10px;">
-    Contactez-nous : <a href="mailto:contact@ouassvtc.fr" style="color:#999;">contact@ouassvtc.fr</a>
-  </div>
-
-  <div class="hidden-keywords">
-    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
-  </div>
-
   <script type="text/javascript">
-    function trackClick(eventName) {
-      gtag('event', eventName, {
-        event_category: 'Interaction',
-        event_label: 'OuassVTC'
-      });
-    }
-
     (function() {
       emailjs.init("U08QGWWRUenJDOllc");
     })();
@@ -184,8 +140,6 @@
       event.preventDefault();
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
-      const distanceKm = estimatedKm;
-      const estimatedPrice = estimatedPrix;
 
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
         nom: document.getElementById("nom").value,
@@ -193,47 +147,30 @@
         dateheure: document.getElementById("dateheure").value,
         depart,
         arrivee,
-        passagers: document.getElementById("passagers").value,
         message: document.getElementById("message").value,
-        distance: distanceKm.toFixed(1),
-        prix: estimatedPrice.toFixed(2)
+        prix: document.getElementById("prix").value
       })
       .then(() => alert("Votre demande a bien été envoyée !"))
       .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
 
-      document.querySelector("form").reset();
+      estimateDistance(depart, arrivee);
     }
-
-    let estimatedKm = 0;
-    let estimatedPrix = 0;
 
     function estimateDistance(depart, arrivee) {
       const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
-
       fetch(url)
         .then(res => res.json())
         .then(data => {
           if (data.routes && data.routes.length) {
-            estimatedKm = data.routes[0].distance / 1000;
-            const kmArrondi = Math.max(estimatedKm, 7);
-            estimatedPrix = Math.max(20, kmArrondi * 1.6);
-            document.getElementById("prixEstime").innerText = `Distance estimée : ${estimatedKm.toFixed(1)} km | Prix estimé : ${estimatedPrix.toFixed(2)} €`;
+            const distanceKm = data.routes[0].distance / 1000;
+            const distanceArrondie = Math.max(distanceKm, 7);
+            const prix = Math.max(20, distanceArrondie * 1.6);
+            document.getElementById("kmEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km`;
+            document.getElementById("prixEstime").innerText = `Prix estimé : ${prix.toFixed(2)} €`;
+            document.getElementById("prix").value = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
           }
         });
     }
-
-    document.getElementById("arrivee").addEventListener("blur", () => {
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      if (depart && arrivee) {
-        estimateDistance(depart, arrivee);
-      }
-    });
-
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
-    }
   </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
