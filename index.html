@@ -58,9 +58,6 @@
       font-weight: bold;
       margin-bottom: 20px;
     }
-    h2 {
-      text-align: center;
-    }
     form {
       display: flex;
       flex-direction: column;
@@ -74,15 +71,15 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-    #localiser {
+    .localiser-btn {
       position: absolute;
-      right: 10px;
-      top: 36px;
+      right: 15px;
+      top: 6px;
       background: none;
       border: none;
       cursor: pointer;
     }
-    .input-group {
+    .field-container {
       position: relative;
     }
     button {
@@ -97,9 +94,8 @@
     .estimation {
       text-align: center;
       font-weight: bold;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #333;
+      margin-top: 10px;
+      color: green;
     }
     footer {
       background-color: #000;
@@ -130,129 +126,123 @@
     </div>
 
     <div class="info">
-      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques. Un tarif fixe à l’avance, sans surprise.
+      <h2>Formulaire de réservation</h2>
+      <p>Tarif fixe à l'avance – pas de surprise !</p>
     </div>
-
-    <h2>Formulaire de réservation avec tarif</h2>
 
     <form onsubmit="sendEmail(event)">
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-      <div class="input-group">
+      <div class="field-container">
         <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-        <button id="localiser" type="button" title="Me localiser" onclick="geolocaliser()">
-          📍
+        <button type="button" class="localiser-btn" onclick="localiserDepart()">
+          <img src="https://img.icons8.com/ios-filled/24/000000/navigation.png" alt="Me localiser" />
         </button>
       </div>
       <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
+      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" />
       <input type="datetime-local" id="dateheure" name="dateheure" required />
-      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" required />
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
+      <div class="estimation" id="prixEstime"></div>
       <button type="submit">Envoyer la demande</button>
     </form>
-
-    <div class="estimation" id="estimationTarif">Estimation : en attente...</div>
 
     <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
   <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation. <br/>
-    Pour toute question, contactez-nous à <a href="mailto:contact@ouassvtc.fr" style="color:#00f">contact@ouassvtc.fr</a>
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+    <br/><br/>
+    Pour toute demande : <a href="mailto:contact@ouassvtc.fr" style="color:#0af;">contact@ouassvtc.fr</a>
   </footer>
 
   <div class="hidden-keywords">
     Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
   </div>
 
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
-    }
-
-    (function() {
-      emailjs.init("U08QGWWRUenJDOllc");
-    })();
+  <script>
+    emailjs.init("U08QGWWRUenJDOllc");
 
     function sendEmail(event) {
       event.preventDefault();
+      const nom = document.getElementById("nom").value;
+      const telephone = document.getElementById("telephone").value;
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
+      const dateheure = document.getElementById("dateheure").value;
+      const passagers = document.getElementById("passagers").value;
+      const message = document.getElementById("message").value;
+      const prixText = document.getElementById("prixEstime").innerText;
 
-      estimateDistance(depart, arrivee, (distance, prix) => {
-        const templateParams = {
-          nom: document.getElementById("nom").value,
-          telephone: document.getElementById("telephone").value,
-          dateheure: document.getElementById("dateheure").value,
-          depart,
-          arrivee,
-          passagers: document.getElementById("passagers").value,
-          message: document.getElementById("message").value,
-          distance: `${distance.toFixed(1)} km`,
-          prix: `${prix.toFixed(2)} €`
-        };
-
-        emailjs.send("service_kdvgh9f", "template_5xt5vlv", templateParams)
-        .then(() => alert("Votre demande a bien été envoyée !"))
-        .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
+        nom,
+        telephone,
+        depart,
+        arrivee,
+        dateheure,
+        passagers,
+        message,
+        prix: prixText
+      }).then(() => {
+        alert("Votre demande a bien été envoyée !");
+      }).catch(() => {
+        alert("Erreur lors de l'envoi. Veuillez réessayer.");
       });
     }
 
-    function estimateDistance(depart, arrivee, callback) {
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(depart)}`)
-        .then(res => res.json())
-        .then(data1 => {
-          if (!data1[0]) return showEstimationError();
-
-          const lat1 = data1[0].lat;
-          const lon1 = data1[0].lon;
-
-          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(arrivee)}`)
+    function localiserDepart() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
             .then(res => res.json())
-            .then(data2 => {
-              if (!data2[0]) return showEstimationError();
-
-              const lat2 = data2[0].lat;
-              const lon2 = data2[0].lon;
-
-              fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`)
-                .then(res => res.json())
-                .then(route => {
-                  if (!route.routes || !route.routes[0]) return showEstimationError();
-
-                  const distance = route.routes[0].distance / 1000;
-                  const minKm = 7;
-                  const minTarif = 20;
-                  const prix = Math.max(minTarif, distance * 1.6);
-                  document.getElementById("estimationTarif").innerText = `Distance : ${distance.toFixed(1)} km | Tarif estimé : ${prix.toFixed(2)} €`;
-                  callback(distance, prix);
-                });
+            .then(data => {
+              document.getElementById("depart").value = data.display_name || "";
+              calculerEstimation();
             });
         });
-    }
-
-    function showEstimationError() {
-      document.getElementById("estimationTarif").innerText = "Estimation indisponible pour les adresses fournies.";
-    }
-
-    function geolocaliser() {
-      if (!navigator.geolocation) {
+      } else {
         alert("La géolocalisation n'est pas supportée par votre navigateur.");
-        return;
       }
+    }
 
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+    function calculerEstimation() {
+      const depart = document.getElementById("depart").value;
+      const arrivee = document.getElementById("arrivee").value;
+      if (depart && arrivee) {
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(depart)}&format=json&limit=1`)
           .then(res => res.json())
-          .then(data => {
-            if (data.display_name) {
-              document.getElementById("depart").value = data.display_name;
-            }
+          .then(data1 => {
+            if (!data1.length) throw "Adresse de départ non trouvée";
+            const start = `${data1[0].lon},${data1[0].lat}`;
+            return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(arrivee)}&format=json&limit=1`)
+              .then(res => res.json())
+              .then(data2 => {
+                if (!data2.length) throw "Adresse d'arrivée non trouvée";
+                const end = `${data2[0].lon},${data2[0].lat}`;
+                return fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
+                  .then(res => res.json())
+                  .then(route => {
+                    const distKm = route.routes[0].distance / 1000;
+                    let prix = 20;
+                    if (distKm > 7) prix += (distKm - 7) * 1.6;
+                    document.getElementById("prixEstime").innerText =
+                      `Distance estimée : ${distKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+                  });
+              });
+          })
+          .catch(() => {
+            document.getElementById("prixEstime").innerText = "Estimation indisponible.";
           });
-      }, () => {
-        alert("Impossible de récupérer votre position.");
-      });
+      }
+    }
+
+    document.getElementById("depart").addEventListener("blur", calculerEstimation);
+    document.getElementById("arrivee").addEventListener("blur", calculerEstimation);
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
