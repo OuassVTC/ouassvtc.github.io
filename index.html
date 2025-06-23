@@ -19,7 +19,7 @@
       text-align: center;
     }
     header img {
-      max-height: 150px;
+      height: 140px;
     }
     .container {
       padding: 20px;
@@ -68,23 +68,22 @@
       max-width: 500px;
       margin: 20px auto;
     }
-    .address-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    input, textarea, select {
-      flex: 1;
+    input, textarea {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-    .localise-button {
+    #localiser {
+      position: absolute;
+      right: 10px;
+      top: 36px;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 20px;
+    }
+    .input-group {
+      position: relative;
     }
     button {
       padding: 10px;
@@ -98,8 +97,9 @@
     .estimation {
       text-align: center;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 20px;
       font-size: 18px;
+      color: #333;
     }
     footer {
       background-color: #000;
@@ -110,11 +110,6 @@
     }
     .hidden-keywords {
       display: none;
-    }
-    .contact {
-      font-size: 12px;
-      text-align: center;
-      margin-top: 10px;
     }
   </style>
 </head>
@@ -135,130 +130,131 @@
     </div>
 
     <div class="info">
-      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort.
+      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques. Un tarif fixe à l’avance, sans surprise.
     </div>
 
-    <h2>Formulaire de réservation (tarif donné à l'avance)</h2>
+    <h2>Formulaire de réservation avec tarif</h2>
 
     <form onsubmit="sendEmail(event)">
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-
-      <div class="address-group">
+      <div class="input-group">
         <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-        <button type="button" class="localise-button" onclick="geolocate()">📍</button>
+        <button id="localiser" type="button" title="Me localiser" onclick="geolocaliser()">
+          📍
+        </button>
       </div>
-
       <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
       <input type="datetime-local" id="dateheure" name="dateheure" required />
-      <select id="passagers" name="passagers" required>
-        <option value="">Nombre de passagers</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
+      <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" required />
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-
-      <div class="estimation" id="prixEstime">Distance : - | Prix : -</div>
-
       <button type="submit">Envoyer la demande</button>
     </form>
 
-    <div class="contact">
-      Pour toute question, contactez-nous par mail à <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a>
-    </div>
+    <div class="estimation" id="estimationTarif">Estimation : en attente...</div>
+
+    <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
   <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation. <br/>
+    Pour toute question, contactez-nous à <a href="mailto:contact@ouassvtc.fr" style="color:#00f">contact@ouassvtc.fr</a>
   </footer>
 
   <div class="hidden-keywords">
-    Taxi Perpignan, VTC 66, chauffeur privé, Uber, réservation VTC, alternative taxi Perpignan.
+    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
   </div>
 
-  <script>
-    emailjs.init("U08QGWWRUenJDOllc");
-    const apiKey = "3c6fd63c601db422d98506845138e792b";
-
-    async function geolocate() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async pos => {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-          const res = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=${apiKey}`);
-          const data = await res.json();
-          if (data.features.length > 0) {
-            document.getElementById('depart').value = data.features[0].properties.formatted;
-            estimateDistance();
-          }
-        });
-      } else {
-        alert("Géolocalisation non supportée");
-      }
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
 
-    async function getCoordinates(address) {
-      const res = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${apiKey}`);
-      const data = await res.json();
-      if (!data.features.length) throw new Error("Adresse non trouvée");
-      return data.features[0].geometry.coordinates;
-    }
+    (function() {
+      emailjs.init("U08QGWWRUenJDOllc");
+    })();
 
-    async function estimateDistance() {
-      try {
-        const depart = document.getElementById("depart").value;
-        const arrivee = document.getElementById("arrivee").value;
-
-        const [lon1, lat1] = await getCoordinates(depart);
-        const [lon2, lat2] = await getCoordinates(arrivee);
-
-        const res = await fetch(`https://api.geoapify.com/v1/routing?waypoints=${lat1},${lon1}|${lat2},${lon2}&mode=drive&apiKey=${apiKey}`);
-        const data = await res.json();
-        if (data.features.length > 0) {
-          const distanceKm = data.features[0].properties.distance / 1000;
-          const d = Math.max(distanceKm, 7);
-          const prix = Math.max(20, d * 1.6);
-          document.getElementById("prixEstime").innerText = `Distance : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
-          return { distance: distanceKm.toFixed(1), prix: prix.toFixed(2) };
-        } else {
-          document.getElementById("prixEstime").innerText = "Estimation indisponible.";
-          return null;
-        }
-      } catch {
-        document.getElementById("prixEstime").innerText = "Erreur dans l'estimation.";
-        return null;
-      }
-    }
-
-    async function sendEmail(event) {
+    function sendEmail(event) {
       event.preventDefault();
-      const btn = event.target.querySelector("button[type='submit']");
-      btn.disabled = true;
+      const depart = document.getElementById("depart").value;
+      const arrivee = document.getElementById("arrivee").value;
 
-      const est = await estimateDistance();
-      if (!est) return;
+      estimateDistance(depart, arrivee, (distance, prix) => {
+        const templateParams = {
+          nom: document.getElementById("nom").value,
+          telephone: document.getElementById("telephone").value,
+          dateheure: document.getElementById("dateheure").value,
+          depart,
+          arrivee,
+          passagers: document.getElementById("passagers").value,
+          message: document.getElementById("message").value,
+          distance: `${distance.toFixed(1)} km`,
+          prix: `${prix.toFixed(2)} €`
+        };
 
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom: document.getElementById("nom").value,
-        telephone: document.getElementById("telephone").value,
-        depart: document.getElementById("depart").value,
-        arrivee: document.getElementById("arrivee").value,
-        dateheure: document.getElementById("dateheure").value,
-        passagers: document.getElementById("passagers").value,
-        message: document.getElementById("message").value,
-        distance: est.distance,
-        prix: est.prix
-      }).then(() => {
-        alert("Demande envoyée !");
-        event.target.reset();
-        document.getElementById("prixEstime").innerText = "Distance : - | Prix : -";
-      }).catch(() => alert("Erreur lors de l'envoi."));
+        emailjs.send("service_kdvgh9f", "template_5xt5vlv", templateParams)
+        .then(() => alert("Votre demande a bien été envoyée !"))
+        .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+      });
     }
 
-    document.getElementById("depart").addEventListener("blur", estimateDistance);
-    document.getElementById("arrivee").addEventListener("blur", estimateDistance);
+    function estimateDistance(depart, arrivee, callback) {
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(depart)}`)
+        .then(res => res.json())
+        .then(data1 => {
+          if (!data1[0]) return showEstimationError();
+
+          const lat1 = data1[0].lat;
+          const lon1 = data1[0].lon;
+
+          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(arrivee)}`)
+            .then(res => res.json())
+            .then(data2 => {
+              if (!data2[0]) return showEstimationError();
+
+              const lat2 = data2[0].lat;
+              const lon2 = data2[0].lon;
+
+              fetch(`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`)
+                .then(res => res.json())
+                .then(route => {
+                  if (!route.routes || !route.routes[0]) return showEstimationError();
+
+                  const distance = route.routes[0].distance / 1000;
+                  const minKm = 7;
+                  const minTarif = 20;
+                  const prix = Math.max(minTarif, distance * 1.6);
+                  document.getElementById("estimationTarif").innerText = `Distance : ${distance.toFixed(1)} km | Tarif estimé : ${prix.toFixed(2)} €`;
+                  callback(distance, prix);
+                });
+            });
+        });
+    }
+
+    function showEstimationError() {
+      document.getElementById("estimationTarif").innerText = "Estimation indisponible pour les adresses fournies.";
+    }
+
+    function geolocaliser() {
+      if (!navigator.geolocation) {
+        alert("La géolocalisation n'est pas supportée par votre navigateur.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.display_name) {
+              document.getElementById("depart").value = data.display_name;
+            }
+          });
+      }, () => {
+        alert("Impossible de récupérer votre position.");
+      });
+    }
   </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
