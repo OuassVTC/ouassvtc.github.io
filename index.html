@@ -180,9 +180,19 @@
 
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
         nom, telephone, depart, arrivee, dateheure, passagers, message, prix: prixText
-      }).then(() => {
-        alert("Votre demande a bien été envoyée !");
-      }).catch(() => {
+      })..then(() => {
+  // Cacher le formulaire
+  document.querySelector("form").style.display = "none";
+
+  // Afficher un message de confirmation
+  const confirmation = document.createElement("div");
+  confirmation.style.textAlign = "center";
+  confirmation.style.marginTop = "20px";
+  confirmation.style.fontWeight = "bold";
+  confirmation.style.color = "green";
+  confirmation.innerText = "Merci ! Votre demande a bien été envoyée. Nous vous recontacterons rapidement.";
+  document.querySelector(".container").appendChild(confirmation);
+}).catch(() => {
         alert("Erreur lors de l'envoi. Veuillez réessayer.");
       });
     }
