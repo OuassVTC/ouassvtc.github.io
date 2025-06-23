@@ -126,12 +126,8 @@
     </div>
 
     <div class="info">
-      <h2>Formulaire de réservation avec estimation de tarif</h2>
-      <p>
-        OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort.<br><br>
-        Que ce soit pour vos trajets personnels, professionnels, vers la gare ou l'aéroport, nous vous garantissons un service de qualité, rapide et fiable.<br><br>
-        Réservez facilement votre trajet en ligne et obtenez une estimation claire de votre tarif à l’avance, sans surprise.
-      </p>
+      <h2>Formulaire de réservation</h2>
+      <p>Tarif fixe à l'avance – pas de surprise !</p>
     </div>
 
     <form onsubmit="sendEmail(event)">
@@ -179,20 +175,25 @@
       const prixText = document.getElementById("prixEstime").innerText;
 
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom, telephone, depart, arrivee, dateheure, passagers, message, prix: prixText
-      })..then(() => {
-  // Cacher le formulaire
-  document.querySelector("form").style.display = "none";
-
-  // Afficher un message de confirmation
-  const confirmation = document.createElement("div");
-  confirmation.style.textAlign = "center";
-  confirmation.style.marginTop = "20px";
-  confirmation.style.fontWeight = "bold";
-  confirmation.style.color = "green";
-  confirmation.innerText = "Merci ! Votre demande a bien été envoyée. Nous vous recontacterons rapidement.";
-  document.querySelector(".container").appendChild(confirmation);
-}).catch(() => {
+        nom,
+        telephone,
+        depart,
+        arrivee,
+        dateheure,
+        passagers,
+        message,
+        prix: prixText
+      }).then(() => {
+        // Cacher le formulaire et afficher un message de confirmation
+        document.querySelector("form").style.display = "none";
+        const confirmation = document.createElement("div");
+        confirmation.style.textAlign = "center";
+        confirmation.style.marginTop = "20px";
+        confirmation.style.fontWeight = "bold";
+        confirmation.style.color = "green";
+        confirmation.innerText = "✅ Merci ! Votre demande a bien été envoyée. Nous vous contacterons rapidement.";
+        document.querySelector(".container").appendChild(confirmation);
+      }).catch(() => {
         alert("Erreur lors de l'envoi. Veuillez réessayer.");
       });
     }
