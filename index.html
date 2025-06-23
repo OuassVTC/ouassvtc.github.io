@@ -19,7 +19,7 @@
       text-align: center;
     }
     header img {
-      height: 140px;
+      max-height: 140px;
     }
     .container {
       padding: 20px;
@@ -63,9 +63,9 @@
       flex-direction: column;
       gap: 10px;
       max-width: 500px;
-      margin: 20px auto;
+      margin: 0 auto 20px auto;
     }
-    input, textarea {
+    input, textarea, select {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
@@ -83,7 +83,14 @@
     .estimation {
       text-align: center;
       font-weight: bold;
-      margin-top: 20px;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    .form-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0 10px 0;
     }
     footer {
       background-color: #000;
@@ -105,31 +112,48 @@
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
 
-    <div class="info">
-      OuassVTC est votre service de transport privé basé à Perpignan.
+    <div class="buttons">
+      <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
+      <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+      <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
 
+    <div class="info">
+      OuassVTC est votre service de transport privé basé à Perpignan. Nos chauffeurs professionnels sont disponibles 7j/7 pour tous vos déplacements avec ponctualité, sécurité et confort. Nous vous offrons un service rapide et efficace pour vous conduire où vous le souhaitez. Faites confiance à OuassVTC pour vos trajets personnels, professionnels ou touristiques.
+    </div>
+
+    <div class="form-title">Formulaire de réservation</div>
     <form onsubmit="sendEmail(event)">
       <input type="text" id="nom" name="nom" placeholder="Nom" required />
       <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
       <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
       <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
       <input type="datetime-local" id="dateheure" name="dateheure" required />
+      <select id="passagers" name="passagers">
+        <option value="" disabled selected>Nombre de passagers</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4+">4 ou plus</option>
+      </select>
       <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-      <input type="hidden" id="prix" name="prix" />
+      <div class="estimation" id="prixEstime"></div>
       <button type="submit">Envoyer la demande</button>
     </form>
 
-    <div class="estimation" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-      <div style="padding: 10px 20px; background: #000; color: white; border-radius: 8px;" id="kmEstime">Distance estimée : ...</div>
-      <div style="padding: 10px 20px; background: #007bff; color: white; border-radius: 8px;" id="prixEstime">Prix estimé : ...</div>
-      <p style="font-weight:bold; color:#444;">Prix fixe annoncé à l’avance, aucune surprise à l’arrivée !</p>
-    </div>
+    <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
   </div>
 
   <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.<br>
+    Pour toute question, contactez-nous à <a href="mailto:contact@ouassvtc.fr" style="color:#fff;">contact@ouassvtc.fr</a>
   </footer>
+
+  <div class="hidden-keywords">
+    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
+  </div>
 
   <script type="text/javascript">
     (function() {
@@ -141,36 +165,48 @@
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
 
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom: document.getElementById("nom").value,
-        telephone: document.getElementById("telephone").value,
-        dateheure: document.getElementById("dateheure").value,
-        depart,
-        arrivee,
-        message: document.getElementById("message").value,
-        prix: document.getElementById("prix").value
-      })
-      .then(() => alert("Votre demande a bien été envoyée !"))
-      .catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
-
-      estimateDistance(depart, arrivee);
+      calculateDistance(depart, arrivee, function(km, prix) {
+        emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
+          nom: document.getElementById("nom").value,
+          telephone: document.getElementById("telephone").value,
+          dateheure: document.getElementById("dateheure").value,
+          depart,
+          arrivee,
+          passagers: document.getElementById("passagers").value,
+          message: document.getElementById("message").value,
+          distance: km.toFixed(1) + " km",
+          tarif: prix.toFixed(2) + " €"
+        }).then(() => {
+          alert("Votre demande a bien été envoyée !");
+        }).catch(() => alert("Erreur lors de l'envoi. Veuillez réessayer."));
+      });
     }
 
-    function estimateDistance(depart, arrivee) {
-      const url = `https://router.project-osrm.org/route/v1/driving/${encodeURIComponent(depart)};${encodeURIComponent(arrivee)}?overview=false`;
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (data.routes && data.routes.length) {
-            const distanceKm = data.routes[0].distance / 1000;
-            const distanceArrondie = Math.max(distanceKm, 7);
-            const prix = Math.max(20, distanceArrondie * 1.6);
-            document.getElementById("kmEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km`;
-            document.getElementById("prixEstime").innerText = `Prix estimé : ${prix.toFixed(2)} €`;
-            document.getElementById("prix").value = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
-          }
-        });
+    function calculateDistance(depart, arrivee, callback) {
+      fetch(`https://api.geoapify.com/v1/routing?waypoints=${encodeURIComponent(depart)}|${encodeURIComponent(arrivee)}&mode=drive&apiKey=3cf6d3c601db422d98506845138e792b`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.features && data.features.length > 0) {
+          const distanceKm = data.features[0].properties.distance / 1000;
+          const distanceArrondie = Math.max(distanceKm, 7);
+          const prix = Math.max(20, distanceArrondie * 1.6);
+          document.getElementById("prixEstime").innerText = `Distance estimée : ${distanceKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+          callback(distanceKm, prix);
+        } else {
+          document.getElementById("prixEstime").innerText = "Estimation indisponible.";
+          callback(0, 0);
+        }
+      })
+      .catch(() => {
+        document.getElementById("prixEstime").innerText = "Erreur de calcul.";
+        callback(0, 0);
+      });
+    }
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
   </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
