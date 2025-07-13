@@ -196,6 +196,26 @@
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
+    <script>
+  function localiserDepart() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById("depart").value = data.display_name || "";
+            document.getElementById("depart").dispatchEvent(new Event("input")); // relance autocomplete
+          });
+      }, () => {
+        alert("Impossible de récupérer votre position.");
+      });
+    } else {
+      alert("La géolocalisation n'est pas supportée par votre navigateur.");
+    }
+  }
+</script>
   </script>
   <script>
   function autocomplete(inputId) {
@@ -236,6 +256,47 @@
     new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
   }
 </script>
+  <script>
+  function calculerEstimation() {
+    const depart = document.getElementById("depart").value;
+    const arrivee = document.getElementById("arrivee").value;
+    if (!depart || !arrivee) {
+      alert("Veuillez remplir les adresses de départ et d'arrivée.");
+      return;
+    }
+
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(depart)}&format=json&limit=1`)
+      .then(res => res.json())
+      .then(data1 => {
+        if (!data1.length) throw new Error("Adresse de départ non trouvée");
+        const start = `${data1[0].lon},${data1[0].lat}`;
+        return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(arrivee)}&format=json&limit=1`)
+          .then(res => res.json())
+          .then(data2 => {
+            if (!data2.length) throw new Error("Adresse d'arrivée non trouvée");
+            const end = `${data2[0].lon},${data2[0].lat}`;
+            return fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
+              .then(res => res.json())
+              .then(route => {
+                const distKm = route.routes[0].distance / 1000;
+                let prix = 20;
+                if (distKm > 7) prix += (distKm - 7) * 1.6;
+                document.querySelector(".estimation").innerText =
+                  `Distance estimée : ${distKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
+              });
+          });
+      })
+      .catch(() => {
+        document.querySelector(".estimation").innerText = "Estimation indisponible.";
+      });
+  }
+
+  // Calcul automatique au changement des champs
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("depart").addEventListener("blur", calculerEstimation);
+    document.getElementById("arrivee").addEventListener("blur", calculerEstimation);
+  });
+  </script>
 </body>
 </html>
 </body>
