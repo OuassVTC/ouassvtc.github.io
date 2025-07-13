@@ -1,178 +1,200 @@
-
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OuassVTC - Réservation VTC à Perpignan</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OuassVTC - Réserver VTC à Perpignan</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f8f9fa;
-      color: #212529;
       margin: 0;
       padding: 0;
+      background: #f0f2f5;
+      color: #333;
     }
-    header {
+    header, footer {
       background-color: #000;
-      padding: 20px;
+      color: white;
       text-align: center;
+      padding: 20px 10px;
     }
     header img {
-      height: 100px;
+      max-height: 100px;
+    }
+    nav {
+      background: #111;
+      padding: 10px 0;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 500;
     }
     .container {
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 960px;
+      margin: auto;
       padding: 20px;
     }
+    .hero-text {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .buttons a {
+      background: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+    }
     form {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     input, textarea, select, button {
       width: 100%;
-      margin-bottom: 15px;
       padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ced4da;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
       font-size: 16px;
     }
     button {
       background-color: #007bff;
-      color: #fff;
+      color: white;
+      font-weight: bold;
       border: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
     }
-    button:hover {
-      background-color: #0056b3;
+    button.green {
+      background-color: #28a745;
     }
-    .estimation {
+    .confirmation {
       text-align: center;
-      font-weight: bold;
+      margin-top: 20px;
       color: green;
+      font-weight: bold;
     }
     #map {
       height: 300px;
-      border-radius: 10px;
       margin-top: 20px;
+      border-radius: 10px;
     }
-    .loader {
-      display: none;
-      margin: 0 auto 15px;
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #007bff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    footer {
-      background: #000;
-      color: #fff;
-      padding: 20px;
+    #google_translate_element {
       text-align: center;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="ouassvtc.png" alt="Logo OuassVTC">
-  </header>
-  <div class="container">
-    <form onsubmit="sendEmail(event)">
-      <input type="text" id="nom" placeholder="Votre nom" required />
-      <input type="tel" id="telephone" placeholder="Téléphone" required />
-      <input type="text" id="depart" placeholder="Adresse de départ" required />
-      <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
-      <select id="passagers" required>
-        <option value="" disabled selected>Nombre de passagers</option>
-        <option value="1">1 passager</option>
-        <option value="2">2 passagers</option>
-        <option value="3">3 passagers</option>
-        <option value="4">4 passagers</option>
-      </select>
-      <input type="datetime-local" id="dateheure" placeholder="Date de la réservation" required />
-      <textarea id="message" placeholder="Informations complémentaires"></textarea>
-      <div class="loader" id="loader"></div>
-      <div class="estimation" id="prixEstime">Distance estimée : -- km | Prix estimé : -- €</div>
-      <button type="submit">Envoyer la demande</button>
-    </form>
-    <div id="map"></div>
-  </div>
-  <footer>
-    © 2025 OuassVTC. Tous droits réservés.
-  </footer>
+  <nav>
+    <a href="services.html">Services</a>
+    <a href="faq.html">FAQ</a>
+    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+    <a href="contact.html">Contact</a>
+  </nav>  <header>
+    <img src="ouassvtc.png" alt="Logo OuassVTC" />
+  </header>  <div class="container">
+    <div class="hero-text">
+      <h2>Votre chauffeur VTC privé à Perpignan</h2>
+      <p>Réservez votre trajet simplement avec estimation instantanée. Confort, sécurité et ponctualité garanties.</p>
+    </div><div class="buttons">
+  <a href="tel:0644120784">📞 Appeler</a>
+  <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
+  <a href="sms:+33644120784">✉️ SMS</a>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
+<form onsubmit="sendEmail(event)">
+  <input type="text" id="nom" placeholder="Nom" required />
+  <input type="tel" id="telephone" placeholder="Téléphone" required />
+  <input type="text" id="depart" placeholder="Adresse de départ" required />
+  <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
+  <label for="dateheure">Date de la réservation</label>
+  <input type="datetime-local" id="dateheure" name="dateheure" required />
+  <select id="passagers">
+    <option value="">Nombre de passagers</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+  <textarea id="message" placeholder="Informations complémentaires..."></textarea>
+  <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
+  <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
+  <button type="submit">Envoyer la demande</button>
+</form>
+
+<div id="map"></div>
+<div id="google_translate_element"></div>
+
+  </div>  <footer>
+    © 2025 OuassVTC - Tous droits réservés. Contact : contact@ouassvtc.fr
+  </footer>  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+    }
+
     emailjs.init("U08QGWWRUenJDOllc");
 
-    function sendEmail(e) {
-      e.preventDefault();
-      const loader = document.getElementById("loader");
-      loader.style.display = "block";
-
-      const data = {
-        nom: document.getElementById("nom").value,
-        telephone: document.getElementById("telephone").value,
-        depart: document.getElementById("depart").value,
-        arrivee: document.getElementById("arrivee").value,
-        passagers: document.getElementById("passagers").value,
-        dateheure: document.getElementById("dateheure").value,
-        message: document.getElementById("message").value,
-        prix: document.getElementById("prixEstime").innerText
+    function sendEmail(event) {
+      event.preventDefault();
+      const params = {
+        nom: nom.value,
+        telephone: telephone.value,
+        depart: depart.value,
+        arrivee: arrivee.value,
+        dateheure: dateheure.value,
+        passagers: passagers.value,
+        message: message.value,
+        prix: prixEstime.innerText
       };
-
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", data)
-        .then(() => {
-          loader.style.display = "none";
-          alert("✅ Votre demande a bien été envoyée !");
-        }, () => {
-          loader.style.display = "none";
-          alert("❌ Une erreur s'est produite.");
-        });
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
+        .then(() => alert("✅ Votre demande a bien été envoyée."))
+        .catch(() => alert("Erreur d'envoi"));
     }
 
     let map = L.map('map').setView([42.7, 2.9], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    navigator.geolocation.getCurrentPosition(pos => {
+      const latlng = [pos.coords.latitude, pos.coords.longitude];
+      L.marker(latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
+      map.setView(latlng, 13);
+    });
 
-    function tracerRoute() {
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      if (!depart || !arrivee) return;
-
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(depart)}`)
-        .then(res => res.json())
-        .then(dep => {
-          return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(arrivee)}`)
-            .then(res => res.json())
-            .then(arr => {
-              if (dep[0] && arr[0]) {
-                const start = [dep[0].lat, dep[0].lon];
-                const end = [arr[0].lat, arr[0].lon];
-                L.Routing.control({
-                  waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
-                  routeWhileDragging: false
-                }).addTo(map);
-              }
+    function calculerEstimation() {
+      const d = depart.value, a = arrivee.value;
+      if (!d || !a) return alert("Veuillez entrer les adresses");
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d)}&format=json&limit=1`)
+        .then(res => res.json()).then(data1 => {
+        if (!data1.length) throw "Erreur départ";
+        const start = `${data1[0].lon},${data1[0].lat}`;
+        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(a)}&format=json&limit=1`)
+          .then(res => res.json()).then(data2 => {
+          if (!data2.length) throw "Erreur arrivée";
+          const end = `${data2[0].lon},${data2[0].lat}`;
+          fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
+            .then(res => res.json()).then(route => {
+              const dist = route.routes[0].distance / 1000;
+              let prix = 20 + Math.max(0, dist - 7) * 1.6;
+              prixEstime.innerText = `Distance : ${dist.toFixed(1)} km | Estimation : ${prix.toFixed(2)} €`;
             });
         });
+      });
     }
-
-    document.getElementById("depart").addEventListener("blur", tracerRoute);
-    document.getElementById("arrivee").addEventListener("blur", tracerRoute);
-  </script>
-  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
-</body>
+  </script></body>
 </html>
