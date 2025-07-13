@@ -147,37 +147,51 @@
       new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
 
-    emailjs.init("U08QGWWRUenJDOllc");
-let formEnvoye = false; // ✅ Ajout à faire ici
+<script>
+  emailjs.init("U08QGWWRUenJDOllc");
+  let formEnvoye = false;
+
   function sendEmail(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (formEnvoye) {
-    alert("Votre demande a déjà été envoyée.");
-    return;
+    if (formEnvoye) {
+      alert("Votre demande a déjà été envoyée.");
+      return;
+    }
+
+    const params = {
+      nom: nom.value,
+      telephone: telephone.value,
+      depart: depart.value,
+      arrivee: arrivee.value,
+      dateheure: dateheure.value,
+      passagers: passagers.value,
+      message: message.value,
+      prix: document.getElementById("prixEstime").innerText
+    };
+
+    emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
+      .then(() => {
+        formEnvoye = true;
+
+        // Cacher le formulaire
+        const formSection = document.querySelector(".form-section");
+        formSection.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px;">
+            <h2 style="color: #28a745; font-size: 28px;">✅ Demande envoyée !</h2>
+            <p style="margin-top: 10px; font-size: 18px;">Nous vous contacterons dans les plus brefs délais.</p>
+            <button onclick="window.location.reload()" style="margin-top: 30px; padding: 12px 24px; background-color: #007bff; border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
+              Faire une nouvelle demande
+            </button>
+          </div>
+        `;
+      })
+      .catch(() => {
+        alert("❌ Une erreur est survenue. Veuillez réessayer.");
+      });
   }
+</script>
 
-  const params = {
-    nom: nom.value,
-    telephone: telephone.value,
-    depart: depart.value,
-    arrivee: arrivee.value,
-    dateheure: dateheure.value,
-    passagers: passagers.value,
-    message: message.value,
-    prix: document.getElementById("prixEstime").innerText
-  };
-
-  emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
-    .then(() => {
-      formEnvoye = true;
-      document.querySelector("form button[type='submit']").disabled = true;
-      alert("✅ Votre demande a bien été envoyée.");
-    })
-    .catch(() => {
-      alert("Erreur lors de l'envoi. Veuillez réessayer.");
-    });
-}
 
     let map = L.map('map').setView([42.7, 2.9], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
