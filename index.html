@@ -270,5 +270,64 @@
       document.getElementById("arrivee").addEventListener("blur", calculerEstimation);
     });
   </script>
+  <script>
+  emailjs.init("U08QGWWRUenJDOllc");
+
+  function sendEmail(event) {
+    event.preventDefault();
+    const submitButton = document.querySelector("form button[type='submit']");
+    submitButton.disabled = true;
+    submitButton.innerText = "Envoi en cours...";
+
+    const nom = document.getElementById("nom").value;
+    const telephone = document.getElementById("telephone").value;
+    const depart = document.getElementById("depart").value;
+    const arrivee = document.getElementById("arrivee").value;
+    const dateheure = document.getElementById("dateheure").value;
+    const passagers = document.getElementById("passagers").value;
+    const message = document.getElementById("message").value;
+    const prixText = document.getElementById("prixEstime")?.innerText || "";
+
+    emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
+      nom, telephone, depart, arrivee, dateheure, passagers, message, prix: prixText
+    }).then(() => {
+      const form = document.querySelector("form");
+      form.style.display = "none";
+
+      const confirmation = document.createElement("div");
+      confirmation.style.textAlign = "center";
+      confirmation.style.marginTop = "20px";
+      confirmation.style.fontWeight = "bold";
+      confirmation.style.color = "green";
+      confirmation.innerText = "✅ Merci ! Votre demande a bien été envoyée. Nous vous contacterons rapidement.";
+
+      const resetBtn = document.createElement("button");
+      resetBtn.innerText = "Faire une nouvelle demande";
+      resetBtn.style.marginTop = "20px";
+      resetBtn.style.padding = "10px 20px";
+      resetBtn.style.border = "none";
+      resetBtn.style.borderRadius = "5px";
+      resetBtn.style.backgroundColor = "#28a745";
+      resetBtn.style.color = "white";
+      resetBtn.style.cursor = "pointer";
+      resetBtn.onclick = () => {
+        form.reset();
+        document.getElementById("prixEstime").innerText = "";
+        form.style.display = "flex";
+        confirmation.remove();
+        resetBtn.remove();
+        submitButton.disabled = false;
+        submitButton.innerText = "Envoyer la demande";
+      };
+
+      document.querySelector(".container").appendChild(confirmation);
+      document.querySelector(".container").appendChild(resetBtn);
+    }).catch(() => {
+      submitButton.disabled = false;
+      submitButton.innerText = "Envoyer la demande";
+      alert("Erreur lors de l'envoi. Veuillez réessayer.");
+    });
+  }
+  </script>
 </body>
 </html>
