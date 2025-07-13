@@ -1,14 +1,16 @@
-<!DOCTYPE html><html lang="fr">
+
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OuassVTC - Réservation VTC à Perpignan</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      color: #212529;
       margin: 0;
       padding: 0;
     }
@@ -18,218 +20,159 @@
       text-align: center;
     }
     header img {
-      height: 140px;
-      max-width: 100%;
+      height: 100px;
     }
     .container {
-      padding: 20px;
       max-width: 900px;
-      margin: auto;
-    }
-    .car-image {
-      width: 100%;
-      max-width: 450px;
-      display: block;
-      margin: 0 auto 20px auto;
-    }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .buttons a {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background-color: #000;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-    .buttons a img {
-      width: 20px;
-      height: 20px;
-    }
-    .info {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
+      margin: 0 auto;
+      padding: 20px;
     }
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 500px;
-      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
     }
-    input, textarea {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    input, textarea, select, button {
       width: 100%;
-    }
-    .localiser-btn {
-      position: absolute;
-      right: 15px;
-      top: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-    .field-container {
-      position: relative;
+      margin-bottom: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      font-size: 16px;
     }
     button {
-      padding: 10px;
       background-color: #007bff;
-      color: white;
-      font-size: 16px;
+      color: #fff;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     .estimation {
       text-align: center;
       font-weight: bold;
-      margin-top: 10px;
       color: green;
     }
-    footer {
-      background-color: #000;
-      color: white;
-      text-align: center;
-      padding: 30px 10px;
-      margin-top: 40px;
+    #map {
+      height: 300px;
+      border-radius: 10px;
+      margin-top: 20px;
     }
-    .hidden-keywords {
+    .loader {
       display: none;
+      margin: 0 auto 15px;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
     }
-    @media (max-width: 600px) {
-      .buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      .buttons a {
-        width: 80%;
-        justify-content: center;
-      }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    /* Confirmation popup */
-    .confirmation-popup {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(3px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    .popup-content {
-      background: #ffffff;
-      padding: 30px 20px;
-      border-radius: 16px;
+    footer {
+      background: #000;
+      color: #fff;
+      padding: 20px;
       text-align: center;
-      font-family: 'Segoe UI', sans-serif;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
-      animation: scaleUp 0.35s ease;
-      max-width: 90%;
-      width: 100%;
-      max-width: 400px;
-    }
-    .popup-content h2 {
-      color: #28a745;
-      margin-bottom: 10px;
-    }
-    .popup-content p {
-      color: #333;
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-    .popup-content button {
-      background-color: #007bff;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .popup-content button:hover {
-      background-color: #0056b3;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; } 
-      to { opacity: 1; }
-    }
-    @keyframes scaleUp {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <!-- Le reste du contenu HTML reste identique jusqu'au formulaire -->
-  <!-- Dans ton formulaire, assure-toi que le champ date utilise un label clair ou un placeholder -->
-  <input type="datetime-local" id="dateheure" name="dateheure" required placeholder="Date de la réservation">
-  <!-- Et que le formulaire est bien -->
-  <form onsubmit="sendEmail(event)">...</form>  <script>
+  <header>
+    <img src="ouassvtc.png" alt="Logo OuassVTC">
+  </header>
+  <div class="container">
+    <form onsubmit="sendEmail(event)">
+      <input type="text" id="nom" placeholder="Votre nom" required />
+      <input type="tel" id="telephone" placeholder="Téléphone" required />
+      <input type="text" id="depart" placeholder="Adresse de départ" required />
+      <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
+      <select id="passagers" required>
+        <option value="" disabled selected>Nombre de passagers</option>
+        <option value="1">1 passager</option>
+        <option value="2">2 passagers</option>
+        <option value="3">3 passagers</option>
+        <option value="4">4 passagers</option>
+      </select>
+      <input type="datetime-local" id="dateheure" placeholder="Date de la réservation" required />
+      <textarea id="message" placeholder="Informations complémentaires"></textarea>
+      <div class="loader" id="loader"></div>
+      <div class="estimation" id="prixEstime">Distance estimée : -- km | Prix estimé : -- €</div>
+      <button type="submit">Envoyer la demande</button>
+    </form>
+    <div id="map"></div>
+  </div>
+  <footer>
+    © 2025 OuassVTC. Tous droits réservés.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
     emailjs.init("U08QGWWRUenJDOllc");
 
-    function sendEmail(event) {
-      event.preventDefault();
-      const form = document.querySelector("form");
-      const submitButton = form.querySelector("button[type='submit']");
-      submitButton.disabled = true;
-      submitButton.innerText = "Envoi en cours...";
+    function sendEmail(e) {
+      e.preventDefault();
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
 
-      const nom = document.getElementById("nom").value;
-      const telephone = document.getElementById("telephone").value;
+      const data = {
+        nom: document.getElementById("nom").value,
+        telephone: document.getElementById("telephone").value,
+        depart: document.getElementById("depart").value,
+        arrivee: document.getElementById("arrivee").value,
+        passagers: document.getElementById("passagers").value,
+        dateheure: document.getElementById("dateheure").value,
+        message: document.getElementById("message").value,
+        prix: document.getElementById("prixEstime").innerText
+      };
+
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", data)
+        .then(() => {
+          loader.style.display = "none";
+          alert("✅ Votre demande a bien été envoyée !");
+        }, () => {
+          loader.style.display = "none";
+          alert("❌ Une erreur s'est produite.");
+        });
+    }
+
+    let map = L.map('map').setView([42.7, 2.9], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    function tracerRoute() {
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
-      const dateheure = document.getElementById("dateheure").value;
-      const passagers = document.getElementById("passagers").value;
-      const message = document.getElementById("message").value;
-      const prixText = document.getElementById("prixEstime").innerText;
+      if (!depart || !arrivee) return;
 
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom, telephone, depart, arrivee, dateheure, passagers, message, prix: prixText
-      }).then(() => {
-        form.reset();
-        document.getElementById("prixEstime").innerText = "";
-        showConfirmationPopup();
-      }).catch(() => {
-        submitButton.disabled = false;
-        submitButton.innerText = "Envoyer la demande";
-        alert("❌ Une erreur est survenue. Veuillez réessayer.");
-      });
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(depart)}`)
+        .then(res => res.json())
+        .then(dep => {
+          return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(arrivee)}`)
+            .then(res => res.json())
+            .then(arr => {
+              if (dep[0] && arr[0]) {
+                const start = [dep[0].lat, dep[0].lon];
+                const end = [arr[0].lat, arr[0].lon];
+                L.Routing.control({
+                  waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
+                  routeWhileDragging: false
+                }).addTo(map);
+              }
+            });
+        });
     }
 
-    function showConfirmationPopup() {
-      const popup = document.createElement("div");
-      popup.className = "confirmation-popup";
-      popup.innerHTML = `
-        <div class="popup-content">
-          <h2>✅ Demande envoyée</h2>
-          <p>Merci pour votre réservation.<br>Nous vous contacterons dans les plus brefs délais.</p>
-          <button onclick="closeConfirmationPopup()">Faire une nouvelle demande</button>
-        </div>
-      `;
-      document.body.appendChild(popup);
-    }
-
-    function closeConfirmationPopup() {
-      const popup = document.querySelector(".confirmation-popup");
-      if (popup) popup.remove();
-      const submitButton = document.querySelector("form button[type='submit']");
-      submitButton.disabled = false;
-      submitButton.innerText = "Envoyer la demande";
-    }
-  </script></body>
+    document.getElementById("depart").addEventListener("blur", tracerRoute);
+    document.getElementById("arrivee").addEventListener("blur", tracerRoute);
+  </script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+</body>
 </html>
