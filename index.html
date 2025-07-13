@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -66,29 +67,25 @@
       max-width: 500px;
       margin: 20px auto;
     }
-    input, textarea {
+    input, textarea, select {
       padding: 10px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
       width: 100%;
     }
-    .localiser-btn {
-      position: absolute;
-      right: 15px;
-      top: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
+    .field-container-horizontal {
+      display: flex;
+      gap: 10px;
     }
-    .field-container {
-      position: relative;
+    .field-container-horizontal input {
+      flex: 1;
     }
-    button {
+    .localiser-side-btn {
       padding: 10px;
       background-color: #007bff;
       color: white;
-      font-size: 16px;
+      font-size: 14px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -98,6 +95,15 @@
       font-weight: bold;
       margin-top: 10px;
       color: green;
+    }
+    .bottom-menu {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .bottom-menu a {
+      margin: 0 10px;
+      color: #007bff;
+      text-decoration: none;
     }
     footer {
       background-color: #000;
@@ -109,236 +115,85 @@
     .hidden-keywords {
       display: none;
     }
-    @media (max-width: 600px) {
-      .buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      .buttons a {
-        width: 80%;
-        justify-content: center;
-      }
-    }
   </style>
 </head>
-  
 <body>
   <header>
     <img src="ouassvtc.png" alt="Logo OuassVTC" />
   </header>
+
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
     <div class="info">
       <h2>OuassVTC – Votre service de transport privé à Perpignan</h2>
-      <p>
-        OuassVTC vous propose un service de transport privé à Perpignan et ses environs. Nos chauffeurs professionnels, expérimentés et discrets sont à votre disposition 7j/7 pour assurer tous vos déplacements dans les meilleures conditions de ponctualité, de sécurité et de confort.
-      </p>
-      <p>
-        Que ce soit pour un trajet personnel, professionnel, ou pour vos transferts vers la gare ou l’aéroport, nous mettons un point d’honneur à vous offrir une prestation fiable, rapide et de qualité.
-      </p>
-      <p>
-        Réservez votre course en quelques clics via notre plateforme en ligne et bénéficiez d’une estimation tarifaire transparente, sans frais cachés ni mauvaises surprises.
-      </p>
+      <p>OuassVTC vous propose un service de transport privé à Perpignan et ses environs. Nos chauffeurs professionnels, expérimentés et discrets sont à votre disposition 7j/7 pour assurer tous vos déplacements dans les meilleures conditions de ponctualité, de sécurité et de confort.</p>
+      <p>Que ce soit pour un trajet personnel, professionnel, ou pour vos transferts vers la gare ou l’aéroport, nous mettons un point d’honneur à vous offrir une prestation fiable, rapide et de qualité.</p>
+      <p>Réservez votre course en quelques clics via notre plateforme en ligne et bénéficiez d’une estimation tarifaire transparente, sans frais cachés ni mauvaises surprises.</p>
+    </div>
+
+    <div class="info" style="max-width: 400px; margin: 40px auto; font-weight: bold; font-size: 18px;">
+      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">O</span><span>rganiser vos trajets</span></div>
+      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">U</span><span>tile pour tous vos déplacements</span></div>
+      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">A</span><span>gile et ponctuel</span></div>
+      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>écurité garantie</span></div>
+      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>ervice de qualité</span></div>
+    </div>
+
+    <div class="buttons">
+      <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
+      <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
+      <a href="https://www.facebook.com/people/Ouass-Vtc/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+      <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
     </div>
 
     <div class="info">
-      <div style="max-width: 400px; margin: 40px auto; font-weight: bold; font-size: 18px;">
-        <div style="display: flex; align-items: baseline;">
-          <span style="color:#007bff; font-size: 24px; min-width: 30px;">O</span>
-          <span>rganiser vos trajets</span>
-        </div>
-        <div style="display: flex; align-items: baseline;">
-          <span style="color:#007bff; font-size: 24px; min-width: 30px;">U</span>
-          <span>tile pour tous vos déplacements</span>
-        </div>
-        <div style="display: flex; align-items: baseline;">
-          <span style="color:#007bff; font-size: 24px; min-width: 30px;">A</span>
-          <span>gile et ponctuel</span>
-        </div>
-        <div style="display: flex; align-items: baseline;">
-          <span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span>
-          <span>écurité garantie</span>
-        </div>
-        <div style="display: flex; align-items: baseline;">
-          <span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span>
-          <span>ervice de qualité</span>
-        </div>
-      </div>
-
-      <div class="buttons">
-        <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
-        <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
-        <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
-        <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
-        <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
-      </div>
-
-      <div class="info">
-        <h2>Formulaire de réservation</h2>
-        <p>Tarif fixe à l'avance – pas de surprise !</p>
-      </div>
-
-      <form onsubmit="sendEmail(event)">
-        <input type="text" id="nom" name="nom" placeholder="Nom" required />
-        <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-        <div class="field-container-horizontal">
-  <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-  <button type="button" class="localiser-side-btn" onclick="localiserDepart()">Me localiser</button>
-        </div>
-        <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
-        <select id="passagers" name="passagers" required>
-  <option value="" disabled selected>Nombre de passagers</option>
-  <option value="1">1 passager</option>
-  <option value="2">2 passagers</option>
-  <option value="3">3 passagers</option>
-  <option value="4">4 passagers</option>
-        </select>
-        <input type="datetime-local" id="dateheure" name="dateheure" required />
-        <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-        <button type="button" onclick="calculerEstimation()" style="background-color:#28a745;color:white;padding:10px;border:none;border-radius:5px;font-size:16px;margin-top:10px;cursor:pointer;">
-  Estimer le tarif
-</button>
-<div class="estimation" id="prixEstime" style="margin-top:10px;"></div>
-        <button type="submit">Envoyer la demande</button>
-      </form>
-
-      <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
+      <h2>Formulaire de réservation</h2>
+      <p>Tarif fixe à l'avance – pas de surprise !</p>
     </div>
+
+    <form>
+      <input type="text" placeholder="Nom" required />
+      <input type="tel" placeholder="Téléphone" required />
+      <div class="field-container-horizontal">
+        <input type="text" id="depart" placeholder="Adresse de départ" required />
+        <button type="button" class="localiser-side-btn">Me localiser</button>
+      </div>
+      <input type="text" placeholder="Adresse d'arrivée" required />
+      <select required>
+        <option value="" disabled selected>Nombre de passagers</option>
+        <option value="1">1 passager</option>
+        <option value="2">2 passagers</option>
+        <option value="3">3 passagers</option>
+        <option value="4">4 passagers</option>
+      </select>
+      <input type="datetime-local" required />
+      <textarea placeholder="Informations complémentaires"></textarea>
+      <button type="button" style="background-color: #28a745;">Estimer le tarif</button>
+      <div class="estimation" id="prixEstime"></div>
+      <button type="submit" style="background-color: #007bff;">Envoyer la demande</button>
+    </form>
+
+    <div class="bottom-menu">
+      <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+      <a href="services.html">Services</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html">Contact</a>
+    </div>
+
+    <div id="google_translate_element" style="margin-top: 20px; text-align: center;"></div>
   </div>
-<div class="bottom-menu">
-  <a href="qui-sommes-nous.html">Qui sommes-nous</a>
-  <a href="services.html">Services</a>
-  <a href="faq.html">FAQ</a>
-  <a href="contact.html">Contact</a>
-</div>
+
   <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
-    <br/><br/>
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.<br>
     Pour toute demande : <a href="mailto:contact@ouassvtc.fr" style="color:#0af;">contact@ouassvtc.fr</a>
   </footer>
 
-  <div class="hidden-keywords">
-    Taxi Perpignan, VTC 66, chauffeur privé, Uber, G7, Bolt, réservation VTC, transport sécurisé, chauffeur disponible, véhicule avec chauffeur, service de transport 24/7, alternative taxi.
-  </div>
-
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
-    emailjs.init("U08QGWWRUenJDOllc");
-
-    function sendEmail(event) {
-      event.preventDefault();
-      const submitButton = document.querySelector("form button[type='submit']");
-      submitButton.disabled = true;
-      submitButton.innerText = "Envoi en cours...";
-
-      const nom = document.getElementById("nom").value;
-      const telephone = document.getElementById("telephone").value;
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      const dateheure = document.getElementById("dateheure").value;
-      const passagers = document.getElementById("passagers").value;
-      const message = document.getElementById("message").value;
-      const prixText = document.getElementById("prixEstime").innerText;
-
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", {
-        nom, telephone, depart, arrivee, dateheure, passagers, message, prix: prixText
-      }).then(() => {
-        const form = document.querySelector("form");
-        form.style.display = "none";
-
-        const confirmation = document.createElement("div");
-        confirmation.style.textAlign = "center";
-        confirmation.style.marginTop = "20px";
-        confirmation.style.fontWeight = "bold";
-        confirmation.style.color = "green";
-        confirmation.style.opacity = 0;
-        confirmation.style.transition = "opacity 0.8s ease-in-out";
-        confirmation.innerText = "✅ Merci ! Votre demande a bien été envoyée. Nous vous contacterons rapidement.";
-
-        const resetBtn = document.createElement("button");
-        resetBtn.innerText = "Faire une nouvelle demande";
-        resetBtn.style.marginTop = "20px";
-        resetBtn.style.padding = "10px 20px";
-        resetBtn.style.border = "none";
-        resetBtn.style.borderRadius = "5px";
-        resetBtn.style.backgroundColor = "#28a745";
-        resetBtn.style.color = "white";
-        resetBtn.style.cursor = "pointer";
-        resetBtn.onclick = () => {
-          form.reset();
-          document.getElementById("prixEstime").innerText = "";
-          form.style.display = "flex";
-          confirmation.remove();
-          resetBtn.remove();
-          submitButton.disabled = false;
-          submitButton.innerText = "Envoyer la demande";
-        };
-
-        document.querySelector(".container").appendChild(confirmation);
-        document.querySelector(".container").appendChild(resetBtn);
-
-        setTimeout(() => { confirmation.style.opacity = 1; }, 100);
-      }).catch(() => {
-        submitButton.disabled = false;
-        submitButton.innerText = "Envoyer la demande";
-        alert("Erreur lors de l'envoi. Veuillez réessayer.");
-      });
-    }
-
-    function localiserDepart() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-            .then(res => res.json())
-            .then(data => {
-              document.getElementById("depart").value = data.display_name || "";
-              calculerEstimation();
-            });
-        });
-      } else {
-        alert("La géolocalisation n'est pas supportée par votre navigateur.");
-      }
-    }
-
-    function calculerEstimation() {
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      if (depart && arrivee) {
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(depart)}&format=json&limit=1`)
-          .then(res => res.json())
-          .then(data1 => {
-            if (!data1.length) throw "Adresse de départ non trouvée";
-            const start = `${data1[0].lon},${data1[0].lat}`;
-            return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(arrivee)}&format=json&limit=1`)
-              .then(res => res.json())
-              .then(data2 => {
-                if (!data2.length) throw "Adresse d'arrivée non trouvée";
-                const end = `${data2[0].lon},${data2[0].lat}`;
-                return fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
-                  .then(res => res.json())
-                  .then(route => {
-                    const distKm = route.routes[0].distance / 1000;
-                    let prix = 20;
-                    if (distKm > 7) prix += (distKm - 7) * 1.6;
-                    document.getElementById("prixEstime").innerText =
-                      `Distance estimée : ${distKm.toFixed(1)} km | Prix estimé : ${prix.toFixed(2)} €`;
-                  });
-              });
-          })
-          .catch(() => {
-            document.getElementById("prixEstime").innerText = "Estimation indisponible.";
-          });
-      }
-    }
-
-    document.getElementById("depart").addEventListener("blur", calculerEstimation);
-    document.getElementById("arrivee").addEventListener("blur", calculerEstimation);
-
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
   </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
