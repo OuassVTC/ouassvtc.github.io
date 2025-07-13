@@ -149,22 +149,35 @@
 
     emailjs.init("U08QGWWRUenJDOllc");
 
-    function sendEmail(event) {
-      event.preventDefault();
-      const params = {
-        nom: nom.value,
-        telephone: telephone.value,
-        depart: depart.value,
-        arrivee: arrivee.value,
-        dateheure: dateheure.value,
-        passagers: passagers.value,
-        message: message.value,
-        prix: prixEstime.innerText
-      };
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
-        .then(() => alert("✅ Votre demande a bien été envoyée."))
-        .catch(() => alert("Erreur d'envoi"));
-    }
+  function sendEmail(event) {
+  event.preventDefault();
+
+  if (formEnvoye) {
+    alert("Votre demande a déjà été envoyée.");
+    return;
+  }
+
+  const params = {
+    nom: nom.value,
+    telephone: telephone.value,
+    depart: depart.value,
+    arrivee: arrivee.value,
+    dateheure: dateheure.value,
+    passagers: passagers.value,
+    message: message.value,
+    prix: document.getElementById("prixEstime").innerText
+  };
+
+  emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
+    .then(() => {
+      formEnvoye = true;
+      document.querySelector("form button[type='submit']").disabled = true;
+      alert("✅ Votre demande a bien été envoyée.");
+    })
+    .catch(() => {
+      alert("Erreur lors de l'envoi. Veuillez réessayer.");
+    });
+}
 
     let map = L.map('map').setView([42.7, 2.9], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
