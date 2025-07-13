@@ -85,7 +85,6 @@
       padding: 10px;
       background-color: #007bff;
       color: white;
-      font-size: 14px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -97,11 +96,12 @@
       color: green;
     }
     .bottom-menu {
-      text-align: center;
-      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
     }
     .bottom-menu a {
-      margin: 0 10px;
       color: #007bff;
       text-decoration: none;
     }
@@ -121,7 +121,6 @@
   <header>
     <img src="ouassvtc.png" alt="Logo OuassVTC" />
   </header>
-
   <div class="container">
     <img src="voiture.png" alt="Voiture VTC" class="car-image" />
     <div class="info">
@@ -131,61 +130,64 @@
       <p>Réservez votre course en quelques clics via notre plateforme en ligne et bénéficiez d’une estimation tarifaire transparente, sans frais cachés ni mauvaises surprises.</p>
     </div>
 
-    <div class="info" style="max-width: 400px; margin: 40px auto; font-weight: bold; font-size: 18px;">
-      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">O</span><span>rganiser vos trajets</span></div>
-      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">U</span><span>tile pour tous vos déplacements</span></div>
-      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">A</span><span>gile et ponctuel</span></div>
-      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>écurité garantie</span></div>
-      <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>ervice de qualité</span></div>
-    </div>
-
-    <div class="buttons">
-      <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
-      <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
-      <a href="https://www.facebook.com/people/Ouass-Vtc/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
-      <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
-    </div>
-
     <div class="info">
-      <h2>Formulaire de réservation</h2>
-      <p>Tarif fixe à l'avance – pas de surprise !</p>
-    </div>
-
-    <form>
-      <input type="text" placeholder="Nom" required />
-      <input type="tel" placeholder="Téléphone" required />
-      <div class="field-container-horizontal">
-        <input type="text" id="depart" placeholder="Adresse de départ" required />
-        <button type="button" class="localiser-side-btn">Me localiser</button>
+      <div style="max-width: 400px; margin: 40px auto; font-weight: bold; font-size: 18px;">
+        <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">O</span><span>rganiser vos trajets</span></div>
+        <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">U</span><span>tile pour tous vos déplacements</span></div>
+        <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">A</span><span>gile et ponctuel</span></div>
+        <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>écurité garantie</span></div>
+        <div style="display: flex; align-items: baseline;"><span style="color:#007bff; font-size: 24px; min-width: 30px;">S</span><span>ervice de qualité</span></div>
       </div>
-      <input type="text" placeholder="Adresse d'arrivée" required />
-      <select required>
-        <option value="" disabled selected>Nombre de passagers</option>
-        <option value="1">1 passager</option>
-        <option value="2">2 passagers</option>
-        <option value="3">3 passagers</option>
-        <option value="4">4 passagers</option>
-      </select>
-      <input type="datetime-local" required />
-      <textarea placeholder="Informations complémentaires"></textarea>
-      <button type="button" style="background-color: #28a745;">Estimer le tarif</button>
-      <div class="estimation" id="prixEstime"></div>
-      <button type="submit" style="background-color: #007bff;">Envoyer la demande</button>
-    </form>
 
-    <div class="bottom-menu">
-      <a href="qui-sommes-nous.html">Qui sommes-nous</a>
-      <a href="services.html">Services</a>
-      <a href="faq.html">FAQ</a>
-      <a href="contact.html">Contact</a>
+      <div class="buttons">
+        <a href="tel:0644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/phone.png"/> Appeler</a>
+        <a href="https://wa.me/33644120784" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/whatsapp.png"/> WhatsApp</a>
+        <a href="sms:+33644120784"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/sms.png"/> SMS</a>
+        <a href="https://www.facebook.com/people/Ouass-Vtc/pfbid0Ti5DGSqRP1AvcZtZ8HGmCi6YUJLjcgwjJ12GFzv7KpknTsUjkK9TvA12XMo7sFgXl/" target="_blank"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/facebook-new.png"/> Facebook</a>
+        <a href="snapchat://add/ouassvtc"><img src="https://img.icons8.com/ios-filled/50/FFFFFF/snapchat.png"/> Snapchat</a>
+      </div>
+
+      <div class="info">
+        <h2>Formulaire de réservation</h2>
+        <p>Tarif fixe à l'avance – pas de surprise !</p>
+      </div>
+
+      <form>
+        <input type="text" placeholder="Nom" required />
+        <input type="tel" placeholder="Téléphone" required />
+        <div class="field-container-horizontal">
+          <input type="text" id="depart" placeholder="Adresse de départ" required />
+          <button type="button" class="localiser-side-btn">Me localiser</button>
+        </div>
+        <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
+        <select required>
+          <option value="" disabled selected>Nombre de passagers</option>
+          <option value="1">1 passager</option>
+          <option value="2">2 passagers</option>
+          <option value="3">3 passagers</option>
+          <option value="4">4 passagers</option>
+        </select>
+        <input type="datetime-local" required />
+        <textarea placeholder="Informations complémentaires"></textarea>
+        <button type="button" style="background-color:#28a745;">Estimer le tarif</button>
+        <div class="estimation">Distance estimée : -- km | Prix estimé : -- €</div>
+        <button type="submit" style="background-color:#007bff;">Envoyer la demande</button>
+      </form>
+
+      <div id="google_translate_element" style="text-align:center;margin-top:20px;"></div>
     </div>
+  </div>
 
-    <div id="google_translate_element" style="margin-top: 20px; text-align: center;"></div>
+  <div class="bottom-menu">
+    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+    <a href="services.html">Services</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
   </div>
 
   <footer>
-    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.<br>
+    © 2025 OuassVTC. Tous droits réservés. Transport privé sur réservation.
+    <br/><br/>
     Pour toute demande : <a href="mailto:contact@ouassvtc.fr" style="color:#0af;">contact@ouassvtc.fr</a>
   </footer>
 
