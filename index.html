@@ -197,5 +197,46 @@
       new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
     }
   </script>
+  <script>
+  function autocomplete(inputId) {
+    const input = document.getElementById(inputId);
+    const listId = `${inputId}-list`;
+
+    const dataList = document.createElement("datalist");
+    dataList.id = listId;
+    document.body.appendChild(dataList);
+    input.setAttribute("list", listId);
+
+    input.addEventListener("input", () => {
+      const query = input.value;
+      if (query.length < 3) return;
+
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`)
+        .then(response => response.json())
+        .then(results => {
+          dataList.innerHTML = "";
+          results.forEach(result => {
+            const option = document.createElement("option");
+            option.value = result.display_name;
+            dataList.appendChild(option);
+          });
+        });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    autocomplete("depart");
+    autocomplete("arrivee");
+  });
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+  }
+</script>
+</body>
+</html>
 </body>
 </html>
