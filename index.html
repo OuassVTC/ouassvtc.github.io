@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -180,9 +179,7 @@
   <!-- Dans ton formulaire, assure-toi que le champ date utilise un label clair ou un placeholder -->
   <input type="datetime-local" id="dateheure" name="dateheure" required placeholder="Date de la réservation">
   <!-- Et que le formulaire est bien -->
-  <form onsubmit="sendEmail(event)">...</form>
-
-  <script>
+  <form onsubmit="sendEmail(event)">...</form>  <script>
     emailjs.init("U08QGWWRUenJDOllc");
 
     function sendEmail(event) {
@@ -234,6 +231,5 @@
       submitButton.disabled = false;
       submitButton.innerText = "Envoyer la demande";
     }
-  </script>
-</body>
+  </script></body>
 </html>
