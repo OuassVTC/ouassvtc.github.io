@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -105,94 +106,126 @@
     <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">Qui sommes-nous</a>
     <a href="contact.html">Contact</a>
-  </nav>  <header>
+  </nav>
+
+  <header>
     <img src="ouassvtc.png" alt="Logo OuassVTC" />
-  </header>  <div class="container">
+  </header>
+
+  <div class="container">
     <div class="hero-text">
       <h2>Votre chauffeur VTC privé à Perpignan</h2>
       <p>Réservez votre trajet simplement avec estimation instantanée. Confort, sécurité et ponctualité garanties.</p>
-    </div><div class="buttons">
-  <a href="tel:0644120784">📞 Appeler</a>
-  <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
-  <a href="sms:+33644120784">✉️ SMS</a>
-</div>
+    </div>
 
-<form onsubmit="sendEmail(event)">
-  <input type="text" id="nom" placeholder="Nom" required />
-  <input type="tel" id="telephone" placeholder="Téléphone" required />
-  <input type="text" id="depart" placeholder="Adresse de départ" required />
-  <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
-  <label for="dateheure">Date de la réservation</label>
-  <input type="datetime-local" id="dateheure" name="dateheure" required />
-  <select id="passagers">
-    <option value="">Nombre de passagers</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-  </select>
-  <textarea id="message" placeholder="Informations complémentaires..."></textarea>
-  <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
-  <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
-  <button type="submit">Envoyer la demande</button>
-</form>
+    <div class="buttons">
+      <a href="tel:0644120784">📞 Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
+      <a href="sms:+33644120784">✉️ SMS</a>
+    </div>
 
-<div id="map"></div>
-<div id="google_translate_element"></div>
+    <div class="form-section">
+      <form onsubmit="sendEmail(event)">
+        <input type="text" id="nom" placeholder="Nom" required />
+        <input type="tel" id="telephone" placeholder="Téléphone" required />
+        <input type="text" id="depart" placeholder="Adresse de départ" required />
+        <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required />
+        <label for="dateheure">Date de la réservation</label>
+        <input type="datetime-local" id="dateheure" name="dateheure" required />
+        <select id="passagers" required>
+          <option value="">Nombre de passagers</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <textarea id="message" placeholder="Informations complémentaires..."></textarea>
+        <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
+        <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
+        <button type="submit">Envoyer la demande</button>
+      </form>
+    </div>
 
-  </div>  <footer>
+    <div id="map"></div>
+    <div id="google_translate_element"></div>
+  </div>
+
+  <footer>
     © 2025 OuassVTC - Tous droits réservés. Contact : contact@ouassvtc.fr
-  </footer>  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  <script>
+  </footer>
+
+  <!-- Traduction Google -->
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
     function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'fr'}, 'google_translate_element');
+      new google.translate.TranslateElement({ pageLanguage: 'fr' }, 'google_translate_element');
+    }
+  </script>
+
+  <!-- EmailJS + Estimation + Map -->
+  <script>
+    emailjs.init("U08QGWWRUenJDOllc");
+    let formEnvoye = false;
+
+    function sendEmail(event) {
+      event.preventDefault();
+      if (formEnvoye) return alert("Votre demande a déjà été envoyée.");
+
+      const params = {
+        nom: nom.value,
+        telephone: telephone.value,
+        depart: depart.value,
+        arrivee: arrivee.value,
+        dateheure: dateheure.value,
+        passagers: passagers.value,
+        message: message.value,
+        prix: document.getElementById("prixEstime").innerText
+      };
+
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
+        .then(() => {
+          formEnvoye = true;
+          document.querySelector(".form-section").innerHTML = `
+            <div style="text-align: center; padding: 40px 20px;">
+              <h2 style="color: #28a745; font-size: 28px;">✅ Demande envoyée !</h2>
+              <p style="margin-top: 10px; font-size: 18px;">Nous vous contacterons rapidement.</p>
+              <button onclick="window.location.reload()" style="margin-top: 30px; padding: 12px 24px; background-color: #007bff; border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
+                Faire une nouvelle demande
+              </button>
+            </div>
+          `;
+        })
+        .catch(() => {
+          alert("❌ Une erreur est survenue. Veuillez réessayer.");
+        });
     }
 
-<script>
-  emailjs.init("U08QGWWRUenJDOllc");
-  let formEnvoye = false;
+    function calculerEstimation() {
+      const d = depart.value, a = arrivee.value;
+      if (!d || !a) return alert("Veuillez entrer les adresses");
 
-  function sendEmail(event) {
-    event.preventDefault();
-
-    if (formEnvoye) {
-      alert("Votre demande a déjà été envoyée.");
-      return;
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d)}&format=json&limit=1`)
+        .then(res => res.json()).then(data1 => {
+          if (!data1.length) throw "Erreur départ";
+          const start = `${data1[0].lon},${data1[0].lat}`;
+          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(a)}&format=json&limit=1`)
+            .then(res => res.json()).then(data2 => {
+              if (!data2.length) throw "Erreur arrivée";
+              const end = `${data2[0].lon},${data2[0].lat}`;
+              fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
+                .then(res => res.json()).then(route => {
+                  const dist = route.routes[0].distance / 1000;
+                  let prix = 20 + Math.max(0, dist - 7) * 1.6;
+                  prixEstime.innerText = `Distance : ${dist.toFixed(1)} km | Estimation : ${prix.toFixed(2)} €`;
+                });
+            });
+        })
+        .catch(() => {
+          prixEstime.innerText = "Estimation impossible.";
+        });
     }
 
-    const params = {
-      nom: nom.value,
-      telephone: telephone.value,
-      depart: depart.value,
-      arrivee: arrivee.value,
-      dateheure: dateheure.value,
-      passagers: passagers.value,
-      message: message.value,
-      prix: document.getElementById("prixEstime").innerText
-    };
-
-    emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
-      .then(() => {
-        formEnvoye = true;
-
-        // Cacher le formulaire
-        const formSection = document.querySelector(".form-section");
-        formSection.innerHTML = `
-          <div style="text-align: center; padding: 40px 20px;">
-            <h2 style="color: #28a745; font-size: 28px;">✅ Demande envoyée !</h2>
-            <p style="margin-top: 10px; font-size: 18px;">Nous vous contacterons dans les plus brefs délais.</p>
-            <button onclick="window.location.reload()" style="margin-top: 30px; padding: 12px 24px; background-color: #007bff; border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
-              Faire une nouvelle demande
-            </button>
-          </div>
-        `;
-      })
-      .catch(() => {
-        alert("❌ Une erreur est survenue. Veuillez réessayer.");
-      });
-  }
-</script>
-
-
+    // Map
     let map = L.map('map').setView([42.7, 2.9], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -202,26 +235,6 @@
       L.marker(latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
       map.setView(latlng, 13);
     });
-
-    function calculerEstimation() {
-      const d = depart.value, a = arrivee.value;
-      if (!d || !a) return alert("Veuillez entrer les adresses");
-      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d)}&format=json&limit=1`)
-        .then(res => res.json()).then(data1 => {
-        if (!data1.length) throw "Erreur départ";
-        const start = `${data1[0].lon},${data1[0].lat}`;
-        fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(a)}&format=json&limit=1`)
-          .then(res => res.json()).then(data2 => {
-          if (!data2.length) throw "Erreur arrivée";
-          const end = `${data2[0].lon},${data2[0].lat}`;
-          fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
-            .then(res => res.json()).then(route => {
-              const dist = route.routes[0].distance / 1000;
-              let prix = 20 + Math.max(0, dist - 7) * 1.6;
-              prixEstime.innerText = `Distance : ${dist.toFixed(1)} km | Estimation : ${prix.toFixed(2)} €`;
-            });
-        });
-      });
-    }
-  </script></body>
+  </script>
+</body>
 </html>
