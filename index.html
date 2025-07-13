@@ -186,7 +186,13 @@
   <button type="button" class="localiser-side-btn" onclick="localiserDepart()">Me localiser</button>
         </div>
         <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
-        <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" max="4" />
+        <select id="passagers" name="passagers" required>
+  <option value="" disabled selected>Nombre de passagers</option>
+  <option value="1">1 passager</option>
+  <option value="2">2 passagers</option>
+  <option value="3">3 passagers</option>
+  <option value="4">4 passagers</option>
+        </select>
         <input type="datetime-local" id="dateheure" name="dateheure" required />
         <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
         <div class="estimation" id="prixEstime"></div>
