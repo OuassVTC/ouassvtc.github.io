@@ -195,7 +195,10 @@
         </select>
         <input type="datetime-local" id="dateheure" name="dateheure" required />
         <textarea id="message" name="message" placeholder="Informations complémentaires"></textarea>
-        <div class="estimation" id="prixEstime"></div>
+        <button type="button" onclick="calculerEstimation()" style="background-color:#28a745;color:white;padding:10px;border:none;border-radius:5px;font-size:16px;margin-top:10px;cursor:pointer;">
+  Estimer le tarif
+</button>
+<div class="estimation" id="prixEstime" style="margin-top:10px;"></div>
         <button type="submit">Envoyer la demande</button>
       </form>
 
