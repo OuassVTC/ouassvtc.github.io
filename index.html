@@ -181,10 +181,9 @@
       <form onsubmit="sendEmail(event)">
         <input type="text" id="nom" name="nom" placeholder="Nom" required />
         <input type="tel" id="telephone" name="telephone" placeholder="Téléphone" required />
-        <div class="field-container">
-          <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
-          <button type="button" class="localiser-texte-btn" onclick="localiserDepart()">Me localiser</button>
-          </button>
+        <<div class="field-container-horizontal">
+  <input type="text" id="depart" name="depart" placeholder="Adresse de départ" required />
+  <button type="button" class="localiser-side-btn" onclick="localiserDepart()">Me localiser</button>
         </div>
         <input type="text" id="arrivee" name="arrivee" placeholder="Adresse d'arrivée" required />
         <input type="number" id="passagers" name="passagers" placeholder="Nombre de passagers" min="1" max="4" />
