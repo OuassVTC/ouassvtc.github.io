@@ -3,109 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OuassVTC - Réserver VTC à Perpignan</title>
+  <title>OuassVTC - Réservez votre chauffeur privé à Perpignan</title>
+  <meta name="description" content="VTC à Perpignan - Chauffeur privé 24/7. Réservation simple avec estimation tarifaire instantanée. Service rapide, sécurisé et ponctuel." />
+  <meta name="keywords" content="VTC Perpignan, chauffeur privé, taxi Perpignan, Uber Perpignan, Bolt Perpignan, transport aéroport, réservation VTC" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f0f2f5;
-      color: #333;
-    }
-    header, footer {
-      background-color: #000;
-      color: white;
-      text-align: center;
-      padding: 20px 10px;
-    }
-    header img {
-      max-height: 100px;
-    }
-    nav {
-      background: #111;
-      padding: 10px 0;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .container {
-      max-width: 960px;
-      margin: auto;
-      padding: 20px;
-    }
-    .hero-text {
-      text-align: center;
-      margin: 30px 0;
-    }
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
-    }
-    .buttons a {
-      background: #007bff;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    form {
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-    button.green {
-      background-color: #28a745;
-    }
-    .confirmation {
-      text-align: center;
-      margin-top: 20px;
-      color: green;
-      font-weight: bold;
-    }
-    #map {
-      height: 300px;
-      margin-top: 20px;
-      border-radius: 10px;
-    }
-    #google_translate_element {
-      text-align: center;
-      margin-top: 30px;
-    }
+    body {font-family:'Segoe UI',sans-serif;margin:0;padding:0;background:#f0f2f5;color:#333;}
+    header,footer{background-color:#000;color:white;text-align:center;padding:20px 10px;}
+    header img{max-height:100px;}
+    nav{background:#111;padding:10px 0;text-align:center;}
+    nav a{color:white;margin:0 15px;text-decoration:none;font-weight:500;}
+    .container{max-width:960px;margin:auto;padding:20px;}
+    .hero-text{text-align:center;margin:30px 0;}
+    .buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:20px 0;}
+    .buttons a{background:#007bff;color:white;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:500;}
+    form{background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    input,textarea,select,button{width:100%;padding:12px;margin:10px 0;border-radius:6px;border:1px solid #ccc;font-size:16px;}
+    button{background-color:#007bff;color:white;font-weight:bold;border:none;cursor:pointer;transition:0.3s;}
+    button.green{background-color:#28a745;}
+    button:hover{opacity:0.9;}
+    .confirmation{text-align:center;margin-top:20px;color:green;font-weight:bold;}
+    #map{height:300px;margin-top:20px;border-radius:10px;}
+    #google_translate_element{text-align:center;margin-top:30px;}
+    .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#222;color:white;text-align:center;padding:10px;font-size:14px;}
+    .cookie-banner button{background:#007bff;color:white;border:none;padding:5px 10px;margin-left:10px;cursor:pointer;border-radius:4px;}
   </style>
+
+  <!-- ✅ Google Analytics 4 avec suivi des conversions -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-23LLHRH2QL');
+
+    // ✅ Déclaration des conversions importantes
+    function trackConversion(eventName){
+      gtag('event', eventName, {
+        'event_category': 'Conversion',
+        'event_label': eventName,
+        'value': 1
+      });
+    }
+  </script>
 </head>
 <body>
   <nav>
-    <a href="services.html">Services</a>
-    <a href="faq.html">FAQ</a>
-    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
-    <a href="contact.html">Contact</a>
+    <a href="services.html" onclick="trackConversion('click_services')">Services</a>
+    <a href="faq.html" onclick="trackConversion('click_faq')">FAQ</a>
+    <a href="qui-sommes-nous.html" onclick="trackConversion('click_about')">Qui sommes-nous</a>
+    <a href="contact.html" onclick="trackConversion('click_contact')">Contact</a>
   </nav>
 
   <header>
@@ -119,9 +69,9 @@
     </div>
 
     <div class="buttons">
-      <a href="tel:0644120784">📞 Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
-      <a href="sms:+33644120784">✉️ SMS</a>
+      <a href="tel:0644120784" onclick="trackConversion('call_click')">📞 Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank" onclick="trackConversion('whatsapp_click')">💬 WhatsApp</a>
+      <a href="sms:+33644120784" onclick="trackConversion('sms_click')">✉️ SMS</a>
     </div>
 
     <div class="form-section">
@@ -141,7 +91,7 @@
         </select>
         <textarea id="message" placeholder="Informations complémentaires..."></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
-        <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
+        <button type="button" class="green" onclick="calculerEstimation(); trackConversion('estimate_click')">Estimer le tarif</button>
         <button type="submit">Envoyer la demande</button>
       </form>
     </div>
@@ -154,16 +104,18 @@
     © 2025 OuassVTC - Tous droits réservés. Contact : contact@ouassvtc.fr
   </footer>
 
-  <!-- Traduction Google -->
+  <!-- ✅ Bandeau Cookie -->
+  <div class="cookie-banner" id="cookie-banner">
+    Ce site utilise des cookies pour améliorer votre expérience et mesurer l'audience.
+    <button onclick="acceptCookies()">Accepter</button>
+  </div>
+
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({ pageLanguage: 'fr' }, 'google_translate_element');
     }
-  </script>
 
-  <!-- EmailJS + Estimation + Map -->
-  <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
@@ -185,6 +137,7 @@
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
         .then(() => {
           formEnvoye = true;
+          trackConversion('form_submitted');
           document.querySelector(".form-section").innerHTML = `
             <div style="text-align: center; padding: 40px 20px;">
               <h2 style="color: #28a745; font-size: 28px;">✅ Demande envoyée !</h2>
@@ -192,8 +145,7 @@
               <button onclick="window.location.reload()" style="margin-top: 30px; padding: 12px 24px; background-color: #007bff; border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
                 Faire une nouvelle demande
               </button>
-            </div>
-          `;
+            </div>`;
         })
         .catch(() => {
           alert("❌ Une erreur est survenue. Veuillez réessayer.");
@@ -203,7 +155,6 @@
     function calculerEstimation() {
       const d = depart.value, a = arrivee.value;
       if (!d || !a) return alert("Veuillez entrer les adresses");
-
       fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d)}&format=json&limit=1`)
         .then(res => res.json()).then(data1 => {
           if (!data1.length) throw "Erreur départ";
@@ -225,7 +176,6 @@
         });
     }
 
-    // Map
     let map = L.map('map').setView([42.7, 2.9], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -234,29 +184,26 @@
       const latlng = [pos.coords.latitude, pos.coords.longitude];
       L.marker(latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
       map.setView(latlng, 13);
+
+      // ✅ Tracking ville avec GA4
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng[0]}&lon=${latlng[1]}&format=json`)
+        .then(res=>res.json())
+        .then(data=>{
+          if(data.address.city){
+            gtag('event','visitor_city',{city:data.address.city});
+          }
+        });
     });
+
+    function acceptCookies(){
+      document.getElementById("cookie-banner").style.display="none";
+      gtag('event','cookies_accepted');
+    }
   </script>
-  <div style="display: none;">
-  VTC Perpignan, chauffeur privé Perpignan, réservation VTC 66, taxi Perpignan, taxi 66, transport aéroport Perpignan, transport gare Perpignan,
-  Uber Perpignan, Bolt Perpignan, Heetch Perpignan, Allocab Perpignan, G7 Perpignan, alternative Uber, alternative taxi Perpignan,
-  chauffeur professionnel, transport sécurisé Perpignan, service de VTC 24h/24 7j/7, navette gare Perpignan, navette aéroport Perpignan,
-  VTC entreprise Perpignan, transport médicalisé, VTC longue distance, VTC local, réservation en ligne VTC, tarif VTC Perpignan,
-  service de transport privé à Perpignan, OuassVTC, chauffeur ponctuel, service premium VTC, meilleure solution de transport Perpignan,
-  transport rapide et fiable, réservation de taxi privé, plateforme de réservation VTC, transport sur mesure Perpignan, chauffeur indépendant VTC,
-  course Perpignan, prix VTC Perpignan, alternative G7, VTC pas cher Perpignan, course VTC urgente, VTC professionnel, VTC disponible Perpignan,
-  chauffeur VTC autorisé, service client VTC Perpignan, réservation immédiate, application VTC, prestataire VTC local, entreprise VTC Perpignan,
-  vtc aéroport perpignan, transport personnes perpignan, chauffeur Uber privé, VTC premium Perpignan, véhicule avec chauffeur Perpignan,
 
-  Perpignan, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Port-Leucate, Torreilles,
-  Sainte-Marie-la-Mer, Bompas, Pia, Saint-Cyprien, Cerbère, Banyuls-sur-Mer, Port-Vendres, Collioure, Céret, Thuir, Elne, Bages, Villeneuve-de-la-Raho,
-  Espagne, frontière Espagne, Gérone, Figueras, Costa Brava, Barcelone, aéroport Gérone, Lloret de Mar, Rosas, Empuriabrava,
-
-  hôtel à Perpignan, airbnb Perpignan, location saisonnière Perpignan, camping Le Barcarès, vacances Canet-en-Roussillon,
-  transport vacances été, VTC plage, transfert hôtel gare, VTC événement, transport de groupe, mariage VTC, navette concert,
-  chauffeur VTC discothèque, transfert VTC aéroport, déplacement professionnel, transport VIP, service de nuit VTC, transport médical VTC,
-  transfert hôpital, VTC rapide, VTC fiable, service ponctuel, transport scolaire privé, VTC tourisme, visite guidée VTC, 
-  transport longue distance, transport local, chauffeur privé disponible maintenant, solution de mobilité douce, alternative aux taxis.
-
+  <div style="display:none">
+    VTC Perpignan, chauffeur privé Perpignan, réservation VTC 66, taxi Perpignan, Uber Perpignan, Bolt Perpignan, ...
+    Perpignan, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Barcarès, Leucate, Torreilles, Espagne, Gérone, Figueras, Costa Brava, etc.
   </div>
 </body>
 </html>
