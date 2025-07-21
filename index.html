@@ -84,6 +84,15 @@
     }
     textarea { min-height: 60px; resize: none; }
 
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+
     button {
       width: 100%;
       padding: 16px;
@@ -165,7 +174,11 @@
         <input type="tel" id="telephone" placeholder="Téléphone" required>
         <input type="text" id="depart" placeholder="Adresse de départ" required>
         <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
+
+        <!-- ✅ Ajout du titre clair pour la date -->
+        <label for="dateheure">📅 Date et heure de la réservation :</label>
         <input type="datetime-local" id="dateheure" required>
+
         <select id="passagers" required>
           <option value="">Nombre de passagers</option>
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
@@ -176,6 +189,7 @@
           <option value="Paiement CB à bord">CB à bord</option>
           <option value="Paiement espèces à bord">Espèces à bord</option>
         </select>
+
         <textarea id="message" placeholder="Informations complémentaires"></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
 
