@@ -8,33 +8,90 @@
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
   <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
-    body{font-family:'Segoe UI',sans-serif;margin:0;padding:0;background:#f0f2f5;color:#333}
-    header,footer{background:#000;color:#fff;text-align:center;padding:20px 10px}
-    header img{max-height:100px}
-    nav{background:#111;padding:10px 0;text-align:center}
-    nav a{color:#fff;margin:0 15px;text-decoration:none;font-weight:500}
-    .container{max-width:960px;margin:auto;padding:20px}
-    .hero-text{text-align:center;margin:30px 0}
-    .buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:20px 0}
-    .buttons a{background:#007bff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:500}
-    .form-section{background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
-    input,textarea,select,button{width:100%;padding:12px;margin:10px 0;border-radius:6px;border:1px solid #ccc;font-size:16px}
-    button{background:#007bff;color:#fff;font-weight:bold;border:none;cursor:pointer}
-    button.green{background:#28a745}
-    .confirmation{text-align:center;margin-top:20px;color:green;font-weight:bold}
-    #map{height:300px;margin-top:20px;border-radius:10px}
-    #google_translate_element{text-align:center;margin-top:30px}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      margin: 0; padding: 0;
+      background: #fff; color: #222;
+    }
+    header, footer {
+      background: #000; color: #fff;
+      text-align: center; padding: 15px;
+    }
+    header img { max-height: 70px; }
+
+    .container {
+      max-width: 450px; margin: auto;
+      padding: 20px;
+    }
+    .hero-text {
+      text-align: center; margin: 15px 0 25px;
+    }
+    .hero-text h2 {
+      font-size: 24px; font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .hero-text p {
+      font-size: 15px; color: #666;
+    }
+
+    .form-section {
+      background: #fff; padding: 15px;
+      border-radius: 12px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      background: #f9f9f9;
+      font-size: 16px;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border: 1px solid #000;
+      background: #fff;
+    }
+    textarea { min-height: 60px; resize: none; }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+    button.green {
+      background: #06c167; color: #fff;
+      margin-bottom: 10px;
+    }
+    button.green:hover { opacity: 0.9; }
+
+    button.black {
+      background: #000; color: #fff;
+    }
+    button.black:hover { opacity: 0.85; }
+
+    .confirmation {
+      text-align: center;
+      margin-top: 8px;
+      color: #06c167;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 15px; }
+      .hero-text h2 { font-size: 22px; }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="services.html">Services</a>
-    <a href="faq.html">FAQ</a>
-    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
-    <a href="contact.html">Contact</a>
-  </nav>
 
   <header>
     <img src="ouassvtc.png" alt="Logo OuassVTC">
@@ -42,51 +99,50 @@
 
   <div class="container">
     <div class="hero-text">
-      <h2>Votre chauffeur VTC privé à Perpignan</h2>
-      <p>Réservez votre trajet simplement avec estimation instantanée. Confort, sécurité et ponctualité garanties.</p>
-    </div>
-
-    <div class="buttons">
-      <a href="tel:0644120784">📞 Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
-      <a href="sms:+33644120784">✉️ SMS</a>
+      <h2>Réservez votre chauffeur</h2>
+      <p>Course rapide, sécurisée et professionnelle</p>
     </div>
 
     <div class="form-section">
       <form onsubmit="sendEmail(event)">
-        <input type="text" id="nom" placeholder="Nom" required>
+        <input type="text" id="nom" placeholder="Nom et prénom" required>
         <input type="tel" id="telephone" placeholder="Téléphone" required>
         <input type="text" id="depart" placeholder="Adresse de départ" required>
         <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
-        <label for="dateheure">Date de la réservation</label>
-        <input type="datetime-local" id="dateheure" name="dateheure" required>
+        <input type="datetime-local" id="dateheure" required>
         <select id="passagers" required>
           <option value="">Nombre de passagers</option>
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         </select>
 
-        <!-- ✅ Nouveau champ : mode de paiement -->
+        <!-- ✅ Paiement complet -->
         <select id="paiement" required>
           <option value="">Mode de paiement</option>
-          <option value="Lien de paiement sécurisé">💳 Recevoir un lien de paiement sécurisé</option>
-          <option value="Paiement CB à bord">🚗 Paiement CB possible à bord</option>
+          <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+          <option value="Paiement CB à bord">CB à bord</option>
+          <option value="Paiement espèces à bord">Espèces à bord</option>
         </select>
 
-        <textarea id="message" placeholder="Informations complémentaires..."></textarea>
+        <textarea id="message" placeholder="Informations complémentaires"></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
+
         <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
-        <button type="submit">Envoyer la demande</button>
+        <button type="submit" class="black">Envoyer la demande</button>
       </form>
     </div>
-
-    <div id="map"></div>
-    <div id="google_translate_element"></div>
   </div>
 
-  <footer>© 2025 OuassVTC - Tous droits réservés. Contact : contact@ouassvtc.fr</footer>
+  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
+
+  <!-- ✅ Bloc SEO caché -->
+  <div style="display:none;">
+    VTC Perpignan, chauffeur privé, taxi 66, Uber Perpignan, Bolt Perpignan, Heetch Perpignan, Allocab Perpignan, G7 Perpignan,
+    Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Sainte-Marie-la-Mer,
+    Bompas, Pia, Saint-Cyprien, Cerbère, Banyuls-sur-Mer, Port-Vendres, Collioure, Espagne, Gérone, Figueras, Costa Brava, Barcelone,
+    transport vacances, hôtel, airbnb, camping, navette aéroport, navette gare, transport VIP, mariage, événement, tourisme VTC.
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye=false;
@@ -100,7 +156,7 @@
         arrivee:arrivee.value,
         dateheure:dateheure.value,
         passagers:passagers.value,
-        paiement:paiement.value, // ✅ Ajouté ici
+        paiement:paiement.value,
         message:message.value,
         prix:document.getElementById("prixEstime").innerText
       };
@@ -109,13 +165,13 @@
           formEnvoye=true;
           document.querySelector(".form-section").innerHTML=`
             <div style="text-align:center;padding:40px 20px;">
-              <h2 style="color:#28a745;font-size:28px;">✅ Demande envoyée !</h2>
-              <p style="margin-top:10px;font-size:18px;">Nous vous contacterons rapidement.</p>
-              <button onclick="window.location.reload()" style="margin-top:30px;padding:12px 24px;background:#007bff;border:none;color:white;border-radius:6px;font-size:16px;cursor:pointer;">
-                Faire une nouvelle demande
+              <h2 style="color:#06c167;font-size:24px;">✅ Demande envoyée</h2>
+              <p style="margin-top:10px;font-size:16px;">Nous vous confirmons rapidement votre course.</p>
+              <button onclick="window.location.reload()" style="margin-top:25px;padding:14px 24px;background:#000;color:#fff;border:none;border-radius:30px;font-size:15px;cursor:pointer;">
+                ➕ Nouvelle réservation
               </button>
             </div>`;
-        }).catch(()=>alert("❌ Une erreur est survenue. Veuillez réessayer."));
+        }).catch(()=>alert("❌ Une erreur est survenue. Réessayez."));
     }
 
     function calculerEstimation(){
@@ -138,14 +194,6 @@
             });
         }).catch(()=>{prixEstime.innerText="Estimation impossible.";});
     }
-
-    let map=L.map('map').setView([42.7,2.9],12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map);
-    navigator.geolocation.getCurrentPosition(pos=>{
-      const lat=pos.coords.latitude,lon=pos.coords.longitude,latlng=[lat,lon];
-      L.marker(latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
-      map.setView(latlng,13);
-    });
   </script>
 </body>
 </html>
