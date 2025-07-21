@@ -21,10 +21,10 @@
     header img { max-height: 70px; }
 
     nav {
-      background: #f5f5f5;
+      background: #f7f7f7;
       display: flex; justify-content: center;
       gap: 15px; padding: 10px 0;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
     }
     nav a {
       color: #333; text-decoration: none;
@@ -54,17 +54,16 @@
     .buttons a {
       display: inline-block;
       background: #000; color: #fff;
-      padding: 10px 16px;
-      border-radius: 25px;
+      padding: 12px 20px;
+      border-radius: 30px;
       text-decoration: none;
       font-size: 14px; font-weight: 500;
+      transition: 0.2s;
     }
-    .buttons a.green { background: #06c167; }
-    .buttons a.blue { background: #007bff; }
-    .buttons a.orange { background: #ff7b00; }
+    .buttons a:hover { opacity: 0.85; }
 
     .form-section {
-      background: #fff; padding: 15px;
+      background: #fff; padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
@@ -96,12 +95,13 @@
       transition: 0.2s ease-in-out;
     }
     button.green {
-      background: #06c167; color: #fff;
+      background: #000; color: #fff;
       margin-bottom: 10px;
     }
     button.black {
       background: #000; color: #fff;
     }
+    button:hover { opacity: 0.9; }
 
     .confirmation {
       text-align: center;
@@ -111,13 +111,26 @@
       font-size: 14px;
     }
 
+    .contact-section {
+      margin-top: 40px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 15px;
+      color: #444;
+    }
+    .contact-section p {
+      margin: 6px 0;
+    }
+
     footer { font-size: 13px; }
 
     @media (max-width: 600px) {
       nav { flex-wrap: wrap; }
       .container { padding: 15px; }
       .hero-text h2 { font-size: 22px; }
-      .buttons a { font-size: 13px; padding: 9px 14px; }
+      .buttons a { font-size: 13px; padding: 10px 18px; }
     }
   </style>
 </head>
@@ -141,9 +154,9 @@
     </div>
 
     <div class="buttons">
-      <a href="tel:0644120784" class="green">📞 Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank" class="blue">💬 WhatsApp</a>
-      <a href="sms:+33644120784" class="orange">✉️ SMS</a>
+      <a href="tel:0644120784">📞 Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
+      <a href="sms:+33644120784">✉️ SMS</a>
     </div>
 
     <div class="form-section">
@@ -157,20 +170,25 @@
           <option value="">Nombre de passagers</option>
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         </select>
-
         <select id="paiement" required>
           <option value="">Mode de paiement</option>
           <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
           <option value="Paiement CB à bord">CB à bord</option>
           <option value="Paiement espèces à bord">Espèces à bord</option>
         </select>
-
         <textarea id="message" placeholder="Informations complémentaires"></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
 
         <button type="button" class="green" onclick="calculerEstimation()">📏 Estimer le tarif</button>
         <button type="submit" class="black">✅ Envoyer la demande</button>
       </form>
+    </div>
+
+    <div class="contact-section">
+      <h3>Contact direct</h3>
+      <p>📞 Téléphone : <a href="tel:0644120784" style="color:#000;text-decoration:none;">06 44 12 07 84</a></p>
+      <p>💬 WhatsApp : <a href="https://wa.me/33644120784" style="color:#000;text-decoration:none;">Envoyer un message</a></p>
+      <p>✉️ Email : <a href="mailto:contact@ouassvtc.fr" style="color:#000;text-decoration:none;">contact@ouassvtc.fr</a></p>
     </div>
   </div>
 
@@ -207,7 +225,7 @@
           formEnvoye=true;
           document.querySelector(".form-section").innerHTML=`
             <div style="text-align:center;padding:40px 20px;">
-              <h2 style="color:#06c167;font-size:24px;">✅ Demande envoyée</h2>
+              <h2 style="color:#000;font-size:24px;">✅ Demande envoyée</h2>
               <p style="margin-top:10px;font-size:16px;">Nous vous confirmons rapidement votre course.</p>
               <button onclick="window.location.reload()" style="margin-top:25px;padding:14px 24px;background:#000;color:#fff;border:none;border-radius:30px;font-size:15px;cursor:pointer;">
                 ➕ Nouvelle réservation
