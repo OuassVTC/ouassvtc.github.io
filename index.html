@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OuassVTC - Chauffeur VTC à Perpignan</title>
 
-  <!-- SEO -->
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
   <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
 
-  <!-- Feuilles de style -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     body{font-family:'Segoe UI',sans-serif;margin:0;padding:0;background:#f0f2f5;color:#333}
@@ -29,33 +27,13 @@
     #map{height:300px;margin-top:20px;border-radius:10px}
     #google_translate_element{text-align:center;margin-top:30px}
   </style>
-
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5BG2J1H8TC"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-5BG2J1H8TC');
-
-    function trackEvent(action,label){
-      gtag('event', action, {
-        'event_category': 'interaction',
-        'event_label': label,
-        'value': 1
-      });
-    }
-    document.addEventListener("DOMContentLoaded",()=>{
-      gtag('event','page_view',{page_title:document.title,page_location:window.location.href});
-    });
-  </script>
 </head>
 <body>
   <nav>
-    <a href="services.html" onclick="trackEvent('page_services','Visite Services')">Services</a>
-    <a href="faq.html" onclick="trackEvent('page_faq','Visite FAQ')">FAQ</a>
-    <a href="qui-sommes-nous.html" onclick="trackEvent('page_qsn','Visite Qui sommes-nous')">Qui sommes-nous</a>
-    <a href="contact.html" onclick="trackEvent('page_contact','Visite Contact')">Contact</a>
+    <a href="services.html">Services</a>
+    <a href="faq.html">FAQ</a>
+    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+    <a href="contact.html">Contact</a>
   </nav>
 
   <header>
@@ -69,9 +47,9 @@
     </div>
 
     <div class="buttons">
-      <a href="tel:0644120784" onclick="trackEvent('clic_tel','Appel téléphone')">📞 Appeler</a>
-      <a href="https://wa.me/33644120784" target="_blank" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
-      <a href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
+      <a href="tel:0644120784">📞 Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
+      <a href="sms:+33644120784">✉️ SMS</a>
     </div>
 
     <div class="form-section">
@@ -86,6 +64,14 @@
           <option value="">Nombre de passagers</option>
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         </select>
+
+        <!-- ✅ Nouveau champ : mode de paiement -->
+        <select id="paiement" required>
+          <option value="">Mode de paiement</option>
+          <option value="Lien de paiement sécurisé">💳 Recevoir un lien de paiement sécurisé</option>
+          <option value="Paiement CB à bord">🚗 Paiement CB possible à bord</option>
+        </select>
+
         <textarea id="message" placeholder="Informations complémentaires..."></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
         <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
@@ -99,15 +85,6 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés. Contact : contact@ouassvtc.fr</footer>
 
-  <!-- Google Translate -->
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <script>
-    function googleTranslateElementInit(){
-      new google.translate.TranslateElement({pageLanguage:'fr'},'google_translate_element');
-    }
-  </script>
-
-  <!-- EmailJS + Estimation + Map -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -117,14 +94,19 @@
       event.preventDefault();
       if(formEnvoye)return alert("Votre demande a déjà été envoyée.");
       const params={
-        nom:nom.value,telephone:telephone.value,depart:depart.value,arrivee:arrivee.value,
-        dateheure:dateheure.value,passagers:passagers.value,message:message.value,
+        nom:nom.value,
+        telephone:telephone.value,
+        depart:depart.value,
+        arrivee:arrivee.value,
+        dateheure:dateheure.value,
+        passagers:passagers.value,
+        paiement:paiement.value, // ✅ Ajouté ici
+        message:message.value,
         prix:document.getElementById("prixEstime").innerText
       };
       emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
         .then(()=>{
           formEnvoye=true;
-          trackEvent('formulaire_envoye','Réservation envoyée');
           document.querySelector(".form-section").innerHTML=`
             <div style="text-align:center;padding:40px 20px;">
               <h2 style="color:#28a745;font-size:28px;">✅ Demande envoyée !</h2>
@@ -152,7 +134,6 @@
                   const dist=route.routes[0].distance/1000;
                   let prix=20+Math.max(0,dist-7)*1.6;
                   prixEstime.innerText=`Distance : ${dist.toFixed(1)} km | Estimation : ${prix.toFixed(2)} €`;
-                  trackEvent('estimation_tarif','Tarif estimé');
                 });
             });
         }).catch(()=>{prixEstime.innerText="Estimation impossible.";});
@@ -164,22 +145,7 @@
       const lat=pos.coords.latitude,lon=pos.coords.longitude,latlng=[lat,lon];
       L.marker(latlng).addTo(map).bindPopup("Vous êtes ici").openPopup();
       map.setView(latlng,13);
-      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-        .then(res=>res.json()).then(data=>{
-          if(data.address){
-            const ville=data.address.city||data.address.town||data.address.village||"Ville inconnue";
-            trackEvent('visite_geo',`Visiteur depuis ${ville}`);
-          }
-        });
     });
   </script>
-
-  <!-- SEO caché -->
-  <div style="display:none;">
-    VTC Perpignan, chauffeur privé, taxi 66, Uber Perpignan, Bolt Perpignan, Heetch Perpignan, Allocab Perpignan, G7 Perpignan,
-    Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Sainte-Marie-la-Mer,
-    Bompas, Pia, Saint-Cyprien, Cerbère, Banyuls-sur-Mer, Port-Vendres, Collioure, Espagne, Gérone, Figueras, Costa Brava, Barcelone,
-    transport vacances, hôtel, airbnb, camping, navette aéroport, navette gare, transport VIP, mariage, événement, tourisme VTC.
-  </div>
 </body>
 </html>
