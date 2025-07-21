@@ -20,8 +20,20 @@
     }
     header img { max-height: 70px; }
 
+    nav {
+      background: #f5f5f5;
+      display: flex; justify-content: center;
+      gap: 15px; padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    nav a {
+      color: #333; text-decoration: none;
+      font-size: 15px; font-weight: 500;
+    }
+    nav a:hover { color: #000; text-decoration: underline; }
+
     .container {
-      max-width: 450px; margin: auto;
+      max-width: 480px; margin: auto;
       padding: 20px;
     }
     .hero-text {
@@ -35,9 +47,26 @@
       font-size: 15px; color: #666;
     }
 
+    .buttons {
+      display: flex; justify-content: center;
+      gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .buttons a {
+      display: inline-block;
+      background: #000; color: #fff;
+      padding: 10px 16px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 14px; font-weight: 500;
+    }
+    .buttons a.green { background: #06c167; }
+    .buttons a.blue { background: #007bff; }
+    .buttons a.orange { background: #ff7b00; }
+
     .form-section {
       background: #fff; padding: 15px;
       border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     input, select, textarea {
@@ -70,12 +99,9 @@
       background: #06c167; color: #fff;
       margin-bottom: 10px;
     }
-    button.green:hover { opacity: 0.9; }
-
     button.black {
       background: #000; color: #fff;
     }
-    button.black:hover { opacity: 0.85; }
 
     .confirmation {
       text-align: center;
@@ -85,9 +111,13 @@
       font-size: 14px;
     }
 
+    footer { font-size: 13px; }
+
     @media (max-width: 600px) {
+      nav { flex-wrap: wrap; }
       .container { padding: 15px; }
       .hero-text h2 { font-size: 22px; }
+      .buttons a { font-size: 13px; padding: 9px 14px; }
     }
   </style>
 </head>
@@ -97,10 +127,23 @@
     <img src="ouassvtc.png" alt="Logo OuassVTC">
   </header>
 
+  <nav>
+    <a href="services.html">Services</a>
+    <a href="faq.html">FAQ</a>
+    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
   <div class="container">
     <div class="hero-text">
-      <h2>Réservez votre chauffeur</h2>
-      <p>Course rapide, sécurisée et professionnelle</p>
+      <h2>Votre chauffeur privé à Perpignan</h2>
+      <p>Réservez en quelques secondes – confort & sécurité assurés.</p>
+    </div>
+
+    <div class="buttons">
+      <a href="tel:0644120784" class="green">📞 Appeler</a>
+      <a href="https://wa.me/33644120784" target="_blank" class="blue">💬 WhatsApp</a>
+      <a href="sms:+33644120784" class="orange">✉️ SMS</a>
     </div>
 
     <div class="form-section">
@@ -115,7 +158,6 @@
           <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
         </select>
 
-        <!-- ✅ Paiement complet -->
         <select id="paiement" required>
           <option value="">Mode de paiement</option>
           <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
@@ -126,8 +168,8 @@
         <textarea id="message" placeholder="Informations complémentaires"></textarea>
         <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
 
-        <button type="button" class="green" onclick="calculerEstimation()">Estimer le tarif</button>
-        <button type="submit" class="black">Envoyer la demande</button>
+        <button type="button" class="green" onclick="calculerEstimation()">📏 Estimer le tarif</button>
+        <button type="submit" class="black">✅ Envoyer la demande</button>
       </form>
     </div>
   </div>
