@@ -135,6 +135,13 @@
 
     footer { font-size: 13px; }
 
+    #map {
+      height: 300px;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+
     @media (max-width: 600px) {
       nav { flex-wrap: wrap; }
       .container { padding: 15px; }
@@ -175,7 +182,6 @@
         <input type="text" id="depart" placeholder="Adresse de départ" required>
         <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
 
-        <!-- ✅ Ajout du titre clair pour la date -->
         <label for="dateheure">📅 Date et heure de la réservation :</label>
         <input type="datetime-local" id="dateheure" required>
 
@@ -191,11 +197,12 @@
         </select>
 
         <textarea id="message" placeholder="Informations complémentaires"></textarea>
-        <div id="prixEstime" class="confirmation">Distance : -- km | Estimation : -- €</div>
+        <div id="prixEstime" class="confirmation">Distance : -- km | Temps : -- | Estimation : -- €</div>
 
         <button type="button" class="green" onclick="calculerEstimation()">📏 Estimer le tarif</button>
         <button type="submit" class="black">✅ Envoyer la demande</button>
       </form>
+      <div id="map"></div>
     </div>
 
     <div class="contact-section">
@@ -208,18 +215,11 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- ✅ Bloc SEO caché -->
-  <div style="display:none;">
-    VTC Perpignan, chauffeur privé, taxi 66, Uber Perpignan, Bolt Perpignan, Heetch Perpignan, Allocab Perpignan, G7 Perpignan,
-    Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Sainte-Marie-la-Mer,
-    Bompas, Pia, Saint-Cyprien, Cerbère, Banyuls-sur-Mer, Port-Vendres, Collioure, Espagne, Gérone, Figueras, Costa Brava, Barcelone,
-    transport vacances, hôtel, airbnb, camping, navette aéroport, navette gare, transport VIP, mariage, événement, tourisme VTC.
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye=false;
+
     function sendEmail(event){
       event.preventDefault();
       if(formEnvoye)return alert("Votre demande a déjà été envoyée.");
@@ -248,26 +248,46 @@
         }).catch(()=>alert("❌ Une erreur est survenue. Réessayez."));
     }
 
-    function calculerEstimation(){
-      const d=depart.value,a=arrivee.value;
-      if(!d||!a)return alert("Veuillez entrer les adresses");
-      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d)}&format=json&limit=1`)
-        .then(res=>res.json()).then(data1=>{
-          if(!data1.length)throw"Erreur départ";
-          const start=`${data1[0].lon},${data1[0].lat}`;
-          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(a)}&format=json&limit=1`)
-            .then(res=>res.json()).then(data2=>{
-              if(!data2.length)throw"Erreur arrivée";
-              const end=`${data2[0].lon},${data2[0].lat}`;
-              fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=false`)
-                .then(res=>res.json()).then(route=>{
-                  const dist=route.routes[0].distance/1000;
-                  let prix=20+Math.max(0,dist-7)*1.6;
-                  prixEstime.innerText=`Distance : ${dist.toFixed(1)} km | Estimation : ${prix.toFixed(2)} €`;
-                });
-            });
-        }).catch(()=>{prixEstime.innerText="Estimation impossible.";});
+    // ✅ Google Maps avec tracé + estimation
+    let map, directionsService, directionsRenderer;
+    function initMap(){
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 7,
+        center: { lat: 42.6887, lng: 2.8948 } // Perpignan par défaut
+      });
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      new google.maps.places.Autocomplete(document.getElementById("depart"));
+      new google.maps.places.Autocomplete(document.getElementById("arrivee"));
     }
+
+    function calculerEstimation(){
+      const d = depart.value, a = arrivee.value;
+      if(!d||!a)return alert("Veuillez entrer les adresses");
+
+      directionsService.route({
+        origin: d,
+        destination: a,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, (result, status)=>{
+        if(status === "OK"){
+          directionsRenderer.setDirections(result);
+          const leg = result.routes[0].legs[0];
+          const distKm = leg.distance.value / 1000;
+          const duree = leg.duration.text;
+          let prix = 20 + Math.max(0, distKm-7)*1.6;
+          prixEstime.innerText = `Distance : ${distKm.toFixed(1)} km | Temps : ${duree} | Estimation : ${prix.toFixed(2)} €`;
+        }else{
+          prixEstime.innerText="Estimation impossible.";
+        }
+      });
+    }
+  </script>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=TA_CLE_API&libraries=places&callback=initMap">
   </script>
 </body>
 </html>
