@@ -6,17 +6,16 @@
   <title>OuassVTC - Chauffeur VTC à Perpignan</title>
 
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
-  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, Taxi, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
+  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
 
-  <!-- ✅ Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id="G-23LLHRH2QL</script>
+  <!-- ✅ Google Analytics intégré -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-23LLHRH2QL'); // Remplace par ton ID GA4
+    gtag('config', 'G-23LLHRH2QL');
 
-    // ✅ Fonction pour suivre les clics
     function trackEvent(action, label) {
       gtag('event', action, {
         'event_category': 'Interaction',
@@ -130,7 +129,7 @@
       event.preventDefault();
       if(formEnvoye)return alert("Votre demande a déjà été envoyée.");
 
-      // ✅ Tracking Google Analytics pour la réservation
+      // ✅ Tracking Google Analytics
       gtag('event', 'reservation_envoyee', {
         'event_category': 'Formulaire',
         'event_label': 'Demande de réservation'
@@ -180,7 +179,6 @@
       const d = depart.value, a = arrivee.value;
       if(!d||!a)return alert("Veuillez entrer les adresses");
 
-      // ✅ Tracking Google Analytics
       trackEvent('clic_estimation', 'Bouton Estimer le tarif');
 
       directionsService.route({
