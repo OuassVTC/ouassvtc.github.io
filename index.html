@@ -6,60 +6,82 @@
   <title>OuassVTC - Chauffeur VTC à Perpignan</title>
 
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
-  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
+  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
 
-  <!-- ✅ Google Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
-    function trackEvent(action, label) {
-      gtag('event', action, { event_category: 'Interaction', event_label: label });
-    }
+    function trackEvent(action,label){gtag('event',action,{event_category:'Interaction',event_label:label});}
   </script>
 
   <style>
-    :root{--border:#e5e7eb;--muted:#6b7280}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#fff;color:#111}
-    header,footer{background:#000;color:#fff;text-align:center;padding:16px}
-    header img{max-height:64px}
-    nav{display:flex;gap:16px;justify-content:center;border-bottom:1px solid var(--border);padding:10px}
-    nav a{color:#333;text-decoration:none;font-weight:600} nav a:hover{text-decoration:underline}
+    :root{
+      --brand:#000;
+      --border:#e5e7eb;
+      --muted:#6b7280;
+      --bg:#fff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111}
 
-    .container{max-width:560px;margin:auto;padding:20px}
-    .hero-text{text-align:center;margin:10px 0 18px}
-    .hero-text h2{margin:0 0 6px;font-size:26px}
-    .hero-text p{margin:0;color:var(--muted)}
-    .buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
-    .btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;background:#000;color:#fff;text-decoration:none;font-weight:700;cursor:pointer}
+    header,footer{background:#000;color:#fff;text-align:center;padding:16px}
+    header img{max-height:56px}
+
+    nav{display:flex;gap:16px;justify-content:center;padding:10px;border-bottom:1px solid var(--border)}
+    nav a{color:#333;text-decoration:none;font-weight:600;font-size:15px}
+    nav a:hover{text-decoration:underline}
+
+    .container{max-width:540px;margin:auto;padding:24px 16px}
+    .hero-text{text-align:center;margin-bottom:28px}
+    .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
+    .hero-text p{font-size:15px;color:var(--muted)}
+
+    .buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px}
+    .btn{
+      appearance:none;
+      border:1px solid var(--brand);
+      background:var(--brand);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 20px;
+      font-weight:600;
+      text-decoration:none;
+      transition:.2s;
+    }
     .btn:hover{opacity:.9}
 
-    .form-section{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
-    label{display:block;font-size:14px;font-weight:600;margin:8px 0 6px}
-    input,select,textarea{width:100%;padding:14px 12px;border:1px solid var(--border);border-radius:12px;background:#f8fafc;font-size:16px}
-    textarea{min-height:64px;resize:none}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:#000;background:#fff}
-
-    /* === Uber-like sticky fare banner === */
+    /* Bannière tarif */
     .fare-sticky{
-      position:sticky; top:8px; z-index:5;
-      background:#0a0a0a; color:#fff; border-radius:14px;
-      padding:14px 16px; margin:10px 0 12px; display:none;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
+      position:sticky;top:8px;z-index:5;
+      background:#0a0a0a;color:#fff;border-radius:14px;
+      padding:14px 16px;margin-bottom:20px;display:none;
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
     }
-    .fare-row{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
-    .badge{font-size:12px;font-weight:800;letter-spacing:.02em;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
-    .fare-price{font-size:34px;font-weight:900;line-height:1}
+    .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
+    .fare-price{font-size:34px;font-weight:800}
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
-    .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px}
-    .accent{color:#86efac;border-color:#22c55e}
+    .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
 
-    #map{height:320px;border-radius:14px;overflow:hidden;margin-top:10px}
+    form label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;margin-top:12px}
+    input,select,textarea{
+      width:100%;padding:14px 12px;
+      border:1px solid var(--border);
+      border-radius:12px;background:#f9f9f9;
+      font-size:16px;
+      transition:border .2s,background .2s;
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:none;border-color:var(--brand);background:#fff;
+    }
+    textarea{min-height:64px;resize:none}
+
+    #map{height:320px;border-radius:14px;margin-top:20px}
 
     /* Animations */
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -67,28 +89,33 @@
     .show{display:block;animation:fadeUp .35s ease-out}
     .pop{animation:pop .38s ease-out}
 
-    .contact-section{margin-top:28px;text-align:center;color:#555}
-    .contact-section a{color:#000;text-decoration:none}
-    footer{font-size:13px}
+    .contact-section{text-align:center;margin-top:32px;color:#555;font-size:15px}
+    .contact-section a{color:#000;text-decoration:none;font-weight:600}
+    footer{font-size:13px;padding:20px}
 
-    @media (max-width:560px){.fare-price{font-size:28px}.container{padding:16px}}
+    @media (max-width:560px){
+      .fare-price{font-size:28px}
+      .hero-text h2{font-size:22px}
+    }
   </style>
 </head>
 <body>
 
-  <header><img src="ouassvtc.png" alt="Logo OuassVTC"></header>
+  <header>
+    <img src="ouassvtc.png" alt="OuassVTC">
+  </header>
 
   <nav>
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
-    <a href="qui-sommes-nous.html">Qui sommes-nous</a>
+    <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
   </nav>
 
   <div class="container">
     <div class="hero-text">
-      <h2>Votre chauffeur privé à Perpignan</h2>
-      <p>Réservez en quelques secondes – confort & sécurité assurés.</p>
+      <h2>Chauffeur privé à Perpignan</h2>
+      <p>Réservez en quelques secondes — confort et fiabilité.</p>
     </div>
 
     <div class="buttons">
@@ -97,72 +124,69 @@
       <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
     </div>
 
-    <div class="form-section">
-      <!-- ⭐️ Bannière tarif façon Uber -->
-      <div id="fare" class="fare-sticky">
-        <div class="fare-row">
-          <div class="fare-left">
-            <span class="badge">Estimation</span>
-            <div>
-              <div class="fare-price" id="prixAffiche">-- €</div>
-              <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
-            </div>
+    <!-- Bannière tarif -->
+    <div id="fare" class="fare-sticky">
+      <div class="fare-row">
+        <div class="fare-left">
+          <span class="badge">Estimation</span>
+          <div>
+            <div class="fare-price" id="prixAffiche">-- €</div>
+            <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
           </div>
-          <div class="chip accent">Tarif indicatif</div>
         </div>
+        <div class="chip">Tarif indicatif</div>
       </div>
-
-      <form onsubmit="sendEmail(event)">
-        <label for="nom">Nom et prénom</label>
-        <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
-
-        <label for="telephone">Téléphone</label>
-        <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
-
-        <label for="depart">Adresse de départ</label>
-        <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" required>
-
-        <label for="arrivee">Adresse d'arrivée</label>
-        <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" required>
-
-        <label for="dateheure">📅 Date et heure</label>
-        <input type="datetime-local" id="dateheure" required>
-
-        <label for="passagers">Nombre de passagers</label>
-        <select id="passagers" required>
-          <option value="">Sélectionner</option>
-          <option>1</option><option>2</option><option>3</option><option>4</option>
-        </select>
-
-        <label for="paiement">Mode de paiement</label>
-        <select id="paiement" required>
-          <option value="">Sélectionner</option>
-          <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
-          <option value="Paiement CB à bord">CB à bord</option>
-          <option value="Paiement espèces à bord">Espèces à bord</option>
-        </select>
-
-        <label for="message">Informations complémentaires</label>
-        <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
-
-        <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
-        <button type="submit" class="btn">✅ Envoyer la demande</button>
-      </form>
-
-      <div id="map"></div>
     </div>
 
+    <form onsubmit="sendEmail(event)">
+      <label for="nom">Nom et prénom</label>
+      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
+
+      <label for="telephone">Téléphone</label>
+      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
+
+      <label for="depart">Adresse de départ</label>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" required>
+
+      <label for="arrivee">Adresse d'arrivée</label>
+      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" required>
+
+      <label for="dateheure">📅 Date et heure</label>
+      <input type="datetime-local" id="dateheure" required>
+
+      <label for="passagers">Nombre de passagers</label>
+      <select id="passagers" required>
+        <option value="">Sélectionner</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+      </select>
+
+      <label for="paiement">Mode de paiement</label>
+      <select id="paiement" required>
+        <option value="">Sélectionner</option>
+        <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+        <option value="Paiement CB à bord">CB à bord</option>
+        <option value="Paiement espèces à bord">Espèces à bord</option>
+      </select>
+
+      <label for="message">Informations complémentaires</label>
+      <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+
+      <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer</button>
+      <button type="submit" class="btn">✅ Envoyer</button>
+    </form>
+
+    <div id="map"></div>
+
     <div class="contact-section">
-      <h3 style="margin:0 0 6px">Contact direct</h3>
-      <p style="margin:4px 0">📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
-      <p style="margin:4px 0">💬 <a href="https://wa.me/33644120784">WhatsApp</a></p>
-      <p style="margin:4px 0">✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
+      <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
+      <p>💬 <a href="https://wa.me/33644120784">WhatsApp</a></p>
+      <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
     </div>
   </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- ✅ EmailJS -->
+  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
@@ -171,88 +195,72 @@
     function sendEmail(e){
       e.preventDefault();
       if(formEnvoye) return alert("Votre demande a déjà été envoyée.");
-
       const params={
-        nom:nom.value,
-        telephone:telephone.value,
-        depart:depart.value,
-        arrivee:arrivee.value,
-        dateheure:dateheure.value,
-        passagers:passagers.value,
-        paiement:paiement.value,
-        message:message.value,
+        nom:nom.value,telephone:telephone.value,
+        depart:depart.value,arrivee:arrivee.value,
+        dateheure:dateheure.value,passagers:passagers.value,
+        paiement:paiement.value,message:message.value,
         prix:document.getElementById("prixAffiche").textContent
       };
-
       emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
-        .then(()=>{ formEnvoye=true; alert("✅ Demande envoyée. Nous revenons vers vous rapidement."); })
-        .catch(()=> alert("❌ Erreur d’envoi. Réessayez."));
+        .then(()=>{formEnvoye=true;alert("✅ Demande envoyée.");})
+        .catch(()=>alert("❌ Erreur. Réessayez."));
     }
 
-    // ✅ Google Maps avec autocomplétion et estimation
     let map, directionsService, directionsRenderer;
     function initMap(){
-      map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7, center: { lat: 42.6887, lng: 2.8948 } // Perpignan
+      map=new google.maps.Map(document.getElementById("map"),{
+        zoom:7,center:{lat:42.6887,lng:2.8948}
       });
-      directionsService = new google.maps.DirectionsService();
-      directionsRenderer = new google.maps.DirectionsRenderer({ map });
-
-      // Autocomplete (classique) — nécessite libraries=places
+      directionsService=new google.maps.DirectionsService();
+      directionsRenderer=new google.maps.DirectionsRenderer({map});
       new google.maps.places.Autocomplete(document.getElementById("depart"));
       new google.maps.places.Autocomplete(document.getElementById("arrivee"));
     }
 
-    // Anim prix + affichage sticky
     function animatePrice(el,target){
-      const startTime=performance.now(), dur=600;
+      const start=performance.now(),dur=600;
       (function step(now){
-        const p=Math.min((now-startTime)/dur,1);
+        const p=Math.min((now-start)/dur,1);
         el.textContent=(target*p).toFixed(2)+" €";
         if(p<1) requestAnimationFrame(step);
-      })(startTime);
+      })(start);
     }
-    function showFare(prix, distKm, duree){
+
+    function showFare(prix,distKm,duree){
       const wrap=document.getElementById("fare");
       const priceEl=document.getElementById("prixAffiche");
       const detEl=document.getElementById("detailsTrajet");
-      animatePrice(priceEl, prix);
-      priceEl.classList.remove("pop"); void priceEl.offsetWidth; priceEl.classList.add("pop");
+      animatePrice(priceEl,prix);
+      priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
       detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
       wrap.classList.add("show");
     }
 
     function calculerEstimation(){
-      const d = depart.value, a = arrivee.value;
-      if(!d || !a) return alert("Veuillez entrer les adresses");
-
+      const d=depart.value,a=arrivee.value;
+      if(!d||!a)return alert("Veuillez entrer les adresses");
       trackEvent('clic_estimation','Estimation');
-
-      directionsService.route({
-        origin: d, destination: a, travelMode: google.maps.TravelMode.DRIVING
-      }, (result, status) => {
-        const wrap=document.getElementById("fare");
-        const priceEl=document.getElementById("prixAffiche");
-        const detEl=document.getElementById("detailsTrajet");
-
-        if(status === "OK"){
+      directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
+      (result,status)=>{
+        const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
+        if(status==="OK"){
           directionsRenderer.setDirections(result);
-          const leg = result.routes[0].legs[0];
-          const distKm = leg.distance.value / 1000;
-          const duree = leg.duration.text;
-
-          // 💰 Grille : base 20 € + 1,60 €/km au-delà de 7 km (modifier ici si besoin)
-          const prix = 20 + Math.max(0, distKm - 7) * 1.6;
-          showFare(prix, distKm, duree);
-        } else {
-          priceEl.textContent = "Estimation indisponible";
-          detEl.textContent = ""; wrap.classList.add("show");
+          const leg=result.routes[0].legs[0];
+          const distKm=leg.distance.value/1000;
+          const duree=leg.duration.text;
+          const prix=20+Math.max(0,distKm-7)*1.6;
+          showFare(prix,distKm,duree);
+        }else{
+          priceEl.textContent="Estimation indisponible";
+          detEl.textContent="";
+          wrap.classList.add("show");
         }
       });
     }
   </script>
 
-  <!-- ✅ Google Maps API (Places requis) -->
+  <!-- Google Maps API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
 </body>
 </html>
