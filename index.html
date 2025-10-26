@@ -8,7 +8,7 @@
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
   <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, Allocab, transport aéroport, transport gare, Saint-Estève, Canet-en-Roussillon, Cabestany, Rivesaltes, Argelès-sur-Mer, Le Barcarès, Leucate, Torreilles, Saint-Cyprien, Espagne, Gérone, Figueras, Costa Brava">
 
-  <!-- ✅ Google Analytics intégré -->
+  <!-- ✅ Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -31,7 +31,7 @@
     nav {background: #f7f7f7;display: flex; justify-content: center;gap: 15px; padding: 10px 0;border-bottom: 1px solid #eee;}
     nav a {color: #333; text-decoration: none;font-size: 15px; font-weight: 500;}
     nav a:hover { color: #000; text-decoration: underline; }
-    .container {max-width: 480px; margin: auto;padding: 20px;}
+    .container {max-width: 500px; margin: auto;padding: 20px;}
     .hero-text {text-align: center; margin: 15px 0 25px;}
     .hero-text h2 {font-size: 24px; font-weight: 600;margin-bottom: 5px;}
     .hero-text p {font-size: 15px; color: #666;}
@@ -47,12 +47,29 @@
     button.green {background: #000; color: #fff;margin-bottom: 10px;}
     button.black {background: #000; color: #fff;}
     button:hover { opacity: 0.9; }
-    .confirmation {text-align: center;margin-top: 8px;color: #06c167;font-weight: 600;font-size: 14px;}
+    .tarif-box {
+      text-align: center;
+      margin-top: 20px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      border: 2px solid #000;
+    }
+    .tarif-box .prix {
+      font-size: 32px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 5px;
+    }
+    .tarif-box .details {
+      font-size: 15px;
+      color: #555;
+    }
     .contact-section {margin-top: 40px;padding: 20px;background: #f9f9f9;border-radius: 12px;text-align: center;font-size: 15px;color: #444;}
     .contact-section p {margin: 6px 0;}
     footer { font-size: 13px; }
     #map {height: 300px;width: 100%;margin-top: 10px;border-radius: 12px;}
-    @media (max-width: 600px) {.container { padding: 15px; } .hero-text h2 { font-size: 22px; } .buttons a { font-size: 13px; padding: 10px 18px; }}
+    @media (max-width: 600px) {.container { padding: 15px; } .hero-text h2 { font-size: 22px; } .buttons a { font-size: 13px; padding: 10px 18px; } .tarif-box .prix { font-size: 26px; }}
   </style>
 </head>
 <body>
@@ -92,8 +109,12 @@
 
         <select id="passagers" required>
           <option value="">Nombre de passagers</option>
-          <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
         </select>
+
         <select id="paiement" required>
           <option value="">Mode de paiement</option>
           <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
@@ -102,12 +123,17 @@
         </select>
 
         <textarea id="message" placeholder="Informations complémentaires"></textarea>
-        <div id="prixEstime" class="confirmation">Distance : -- km | Temps : -- | Estimation : -- €</div>
-
         <button type="button" class="green" onclick="calculerEstimation()">📏 Estimer le tarif</button>
         <button type="submit" class="black">✅ Envoyer la demande</button>
       </form>
+
       <div id="map"></div>
+
+      <!-- 💰 Tarif affiché ici -->
+      <div id="tarifBox" class="tarif-box" style="display:none;">
+        <div class="prix" id="prixAffiche">-- €</div>
+        <div class="details" id="detailsTrajet">Distance : -- km | Temps : --</div>
+      </div>
     </div>
 
     <div class="contact-section">
@@ -120,36 +146,32 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
+  <!-- ✅ EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
-    let formEnvoye=false;
+    let formEnvoye = false;
 
     function sendEmail(event){
       event.preventDefault();
-      if(formEnvoye)return alert("Votre demande a déjà été envoyée.");
+      if(formEnvoye) return alert("Votre demande a déjà été envoyée.");
 
-      // ✅ Tracking Google Analytics
-      gtag('event', 'reservation_envoyee', {
-        'event_category': 'Formulaire',
-        'event_label': 'Demande de réservation'
-      });
-
-      const params={
-        nom:nom.value,
-        telephone:telephone.value,
-        depart:depart.value,
-        arrivee:arrivee.value,
-        dateheure:dateheure.value,
-        passagers:passagers.value,
-        paiement:paiement.value,
-        message:message.value,
-        prix:document.getElementById("prixEstime").innerText
+      const params = {
+        nom: nom.value,
+        telephone: telephone.value,
+        depart: depart.value,
+        arrivee: arrivee.value,
+        dateheure: dateheure.value,
+        passagers: passagers.value,
+        paiement: paiement.value,
+        message: message.value,
+        prix: document.getElementById("prixAffiche").innerText
       };
+
       emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
-        .then(()=>{
-          formEnvoye=true;
-          document.querySelector(".form-section").innerHTML=`
+        .then(() => {
+          formEnvoye = true;
+          document.querySelector(".form-section").innerHTML = `
             <div style="text-align:center;padding:40px 20px;">
               <h2 style="color:#000;font-size:24px;">✅ Demande envoyée</h2>
               <p style="margin-top:10px;font-size:16px;">Nous vous confirmons rapidement votre course.</p>
@@ -157,15 +179,15 @@
                 ➕ Nouvelle réservation
               </button>
             </div>`;
-        }).catch(()=>alert("❌ Une erreur est survenue. Réessayez."));
+        }).catch(() => alert("❌ Une erreur est survenue. Réessayez."));
     }
 
-    // ✅ Google Maps avec tracé + estimation
+    // ✅ Google Maps avec autocomplétion et estimation
     let map, directionsService, directionsRenderer;
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
-        center: { lat: 42.6887, lng: 2.8948 } // Perpignan par défaut
+        center: { lat: 42.6887, lng: 2.8948 } // Perpignan
       });
       directionsService = new google.maps.DirectionsService();
       directionsRenderer = new google.maps.DirectionsRenderer();
@@ -177,7 +199,7 @@
 
     function calculerEstimation(){
       const d = depart.value, a = arrivee.value;
-      if(!d||!a)return alert("Veuillez entrer les adresses");
+      if(!d || !a) return alert("Veuillez entrer les adresses");
 
       trackEvent('clic_estimation', 'Bouton Estimer le tarif');
 
@@ -185,21 +207,26 @@
         origin: d,
         destination: a,
         travelMode: google.maps.TravelMode.DRIVING
-      }, (result, status)=>{
+      }, (result, status) => {
         if(status === "OK"){
           directionsRenderer.setDirections(result);
           const leg = result.routes[0].legs[0];
           const distKm = leg.distance.value / 1000;
           const duree = leg.duration.text;
-          let prix = 20 + Math.max(0, distKm-7)*1.6;
-          prixEstime.innerText = `Distance : ${distKm.toFixed(1)} km | Temps : ${duree} | Estimation : ${prix.toFixed(2)} €`;
-        }else{
-          prixEstime.innerText="Estimation impossible.";
+          let prix = 20 + Math.max(0, distKm - 7) * 1.6;
+
+          document.getElementById("prixAffiche").innerText = prix.toFixed(2) + " €";
+          document.getElementById("detailsTrajet").innerText = `Distance : ${distKm.toFixed(1)} km | Temps : ${duree}`;
+          document.getElementById("tarifBox").style.display = "block";
+        } else {
+          document.getElementById("prixAffiche").innerText = "Estimation impossible";
+          document.getElementById("tarifBox").style.display = "block";
         }
       });
     }
   </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap" async defer></script>
+  <!-- ✅ Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places" async defer></script>
 </body>
 </html>
