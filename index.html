@@ -171,8 +171,9 @@
       <label for="message">Informations complémentaires</label>
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
-      <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer</button>
-      <button type="submit" class="btn">✅ Envoyer</button>
+      <!-- Boutons mis à jour -->
+      <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
+      <button type="submit" class="btn">✅ Envoyer votre formulaire de réservation</button>
     </form>
 
     <div id="map"></div>
@@ -194,6 +195,12 @@
 
     function sendEmail(e){
       e.preventDefault();
+
+      // ➜ calcule/actualise l’estimation automatiquement à l’envoi
+      // (Note: le calcul est asynchrone mais on met déjà à jour l’affichage;
+      // si vous souhaitez attendre la réponse Maps avant l’envoi, dites-le moi et je l’adapte en promesse.)
+      calculerEstimation();
+
       if(formEnvoye) return alert("Votre demande a déjà été envoyée.");
       const params={
         nom:nom.value,telephone:telephone.value,
