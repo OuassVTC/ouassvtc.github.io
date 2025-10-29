@@ -24,6 +24,7 @@
       --border:#e5e7eb;
       --muted:#6b7280;
       --bg:#fff;
+      --success:#16a34a;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111}
@@ -40,9 +41,18 @@
     .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
     .hero-text p{font-size:15px;color:var(--muted)}
 
-    .buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px}
+    /* Boutons uniformes et centrés */
+    .buttons{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-top:20px;
+      margin-bottom:24px;
+    }
     .btn{
-      appearance:none;
+      flex:1 1 200px;
+      max-width:220px;
       border:1px solid var(--brand);
       background:var(--brand);
       color:#fff;
@@ -50,9 +60,11 @@
       padding:12px 20px;
       font-weight:600;
       text-decoration:none;
-      transition:.2s;
+      text-align:center;
+      transition:.25s;
     }
-    .btn:hover{opacity:.9}
+    .btn:hover{opacity:.9;transform:translateY(-1px)}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
 
     /* Bannière tarif */
     .fare-sticky{
@@ -83,7 +95,6 @@
 
     #map{height:320px;border-radius:14px;margin-top:20px}
 
-    /* Animations */
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
     @keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
     .show{display:block;animation:fadeUp .35s ease-out}
@@ -92,6 +103,19 @@
     .contact-section{text-align:center;margin-top:32px;color:#555;font-size:15px}
     .contact-section a{color:#000;text-decoration:none;font-weight:600}
     footer{font-size:13px;padding:20px}
+
+    /* Message pro après envoi */
+    .success-message{
+      background:#ecfdf5;
+      border:1px solid #bbf7d0;
+      color:var(--success);
+      padding:14px 16px;
+      border-radius:12px;
+      font-weight:600;
+      text-align:center;
+      margin-top:20px;
+      animation:fadeUp .4s ease-out;
+    }
 
     @media (max-width:560px){
       .fare-price{font-size:28px}
@@ -138,7 +162,7 @@
       </div>
     </div>
 
-    <form onsubmit="sendEmail(event)">
+    <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
       <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
 
@@ -171,10 +195,13 @@
       <label for="message">Informations complémentaires</label>
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
-      <!-- Boutons mis à jour -->
-      <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
-      <button type="submit" class="btn">✅ Envoyer votre formulaire de réservation</button>
+      <div class="buttons">
+        <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
+        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire de réservation</button>
+      </div>
     </form>
+
+    <div id="successBox"></div>
 
     <div id="map"></div>
 
@@ -191,17 +218,17 @@
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
-    let formEnvoye=false;
+    let formEnvoye = false;
 
     function sendEmail(e){
       e.preventDefault();
+      calculerEstimation(); // calcule le tarif automatiquement
 
-      // ➜ calcule/actualise l’estimation automatiquement à l’envoi
-      // (Note: le calcul est asynchrone mais on met déjà à jour l’affichage;
-      // si vous souhaitez attendre la réponse Maps avant l’envoi, dites-le moi et je l’adapte en promesse.)
-      calculerEstimation();
-
+      const btn = document.getElementById("btnSubmit");
       if(formEnvoye) return alert("Votre demande a déjà été envoyée.");
+      formEnvoye = true;
+      btn.disabled = true;
+
       const params={
         nom:nom.value,telephone:telephone.value,
         depart:depart.value,arrivee:arrivee.value,
@@ -209,9 +236,18 @@
         paiement:paiement.value,message:message.value,
         prix:document.getElementById("prixAffiche").textContent
       };
+
       emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
-        .then(()=>{formEnvoye=true;alert("✅ Demande envoyée.");})
-        .catch(()=>alert("❌ Erreur. Réessayez."));
+        .then(()=>{
+          document.getElementById("formResa").reset();
+          document.getElementById("successBox").innerHTML =
+            '<div class=\"success-message\">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
+        })
+        .catch(()=>{
+          alert("❌ Erreur. Réessayez.");
+          formEnvoye = false;
+          btn.disabled = false;
+        });
     }
 
     let map, directionsService, directionsRenderer;
@@ -246,8 +282,7 @@
 
     function calculerEstimation(){
       const d=depart.value,a=arrivee.value;
-      if(!d||!a)return alert("Veuillez entrer les adresses");
-      trackEvent('clic_estimation','Estimation');
+      if(!d||!a)return;
       directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
       (result,status)=>{
         const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
