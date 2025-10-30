@@ -216,7 +216,6 @@
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
-    // --- FONCTION PRINCIPALE D’ENVOI ---
     async function sendEmail(e){
       e.preventDefault();
 
@@ -261,7 +260,6 @@
       }
     }
 
-    // --- CALCUL DU PRIX ---
     function calculerEstimation(){
       return new Promise((resolve) => {
         const d = depart.value, a = arrivee.value;
@@ -305,7 +303,6 @@
       })(start);
     }
 
-    // --- GOOGLE MAPS ---
     let map, directionsService, directionsRenderer;
     function initMap(){
       map=new google.maps.Map(document.getElementById("map"),{
