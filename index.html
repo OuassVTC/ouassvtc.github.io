@@ -41,7 +41,6 @@
     .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
     .hero-text p{font-size:15px;color:var(--muted)}
 
-    /* Boutons uniformes et centrés */
     .buttons{
       display:flex;
       justify-content:center;
@@ -66,7 +65,6 @@
     .btn:hover{opacity:.9;transform:translateY(-1px)}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
 
-    /* Bannière tarif */
     .fare-sticky{
       position:sticky;top:8px;z-index:5;
       background:#0a0a0a;color:#fff;border-radius:14px;
@@ -104,7 +102,6 @@
     .contact-section a{color:#000;text-decoration:none;font-weight:600}
     footer{font-size:13px;padding:20px}
 
-    /* Message pro après envoi */
     .success-message{
       background:#ecfdf5;
       border:1px solid #bbf7d0;
@@ -148,7 +145,6 @@
       <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
     </div>
 
-    <!-- Bannière tarif -->
     <div id="fare" class="fare-sticky">
       <div class="fare-row">
         <div class="fare-left">
@@ -220,45 +216,84 @@
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
-    function sendEmail(e){
+    // --- FONCTION PRINCIPALE D’ENVOI ---
+    async function sendEmail(e){
       e.preventDefault();
-      calculerEstimation(); // calcule le tarif automatiquement
 
-      const btn = document.getElementById("btnSubmit");
-      if(formEnvoye) return alert("Votre demande a déjà été envoyée.");
+      if(formEnvoye){
+        alert("Votre demande a déjà été envoyée.");
+        return;
+      }
       formEnvoye = true;
+      const btn = document.getElementById("btnSubmit");
       btn.disabled = true;
 
-      const params={
-        nom:nom.value,telephone:telephone.value,
-        depart:depart.value,arrivee:arrivee.value,
-        dateheure:dateheure.value,passagers:passagers.value,
-        paiement:paiement.value,message:message.value,
-        prix:document.getElementById("prixAffiche").textContent
+      const calc = await calculerEstimation();
+
+      let prixStr = "";
+      if (calc && Number.isFinite(calc.prix)) {
+        prixStr = `${calc.prix.toFixed(2)} €`;
+      } else {
+        prixStr = document.getElementById("prixAffiche").textContent || "";
+      }
+
+      const params = {
+        nom: nom.value,
+        telephone: telephone.value,
+        depart: depart.value,
+        arrivee: arrivee.value,
+        dateheure: dateheure.value,
+        passagers: passagers.value,
+        paiement: paiement.value,
+        message: message.value,
+        prix: prixStr
       };
 
-      emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
-        .then(()=>{
-          document.getElementById("formResa").reset();
-          document.getElementById("successBox").innerHTML =
-            '<div class=\"success-message\">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
-        })
-        .catch(()=>{
-          alert("❌ Erreur. Réessayez.");
-          formEnvoye = false;
-          btn.disabled = false;
-        });
+      try{
+        await emailjs.send("service_kdvgh9f","template_5xt5vlv",params);
+        document.getElementById("formResa").reset();
+        document.getElementById("successBox").innerHTML =
+          '<div class="success-message">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
+      }catch(err){
+        alert("❌ Erreur. Réessayez.");
+        formEnvoye = false;
+        btn.disabled = false;
+      }
     }
 
-    let map, directionsService, directionsRenderer;
-    function initMap(){
-      map=new google.maps.Map(document.getElementById("map"),{
-        zoom:7,center:{lat:42.6887,lng:2.8948}
+    // --- CALCUL DU PRIX ---
+    function calculerEstimation(){
+      return new Promise((resolve) => {
+        const d = depart.value, a = arrivee.value;
+        const wrap=document.getElementById("fare"),
+              priceEl=document.getElementById("prixAffiche"),
+              detEl=document.getElementById("detailsTrajet");
+
+        if(!d||!a){ resolve(null); return; }
+
+        directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
+          (result,status)=>{
+            if(status==="OK"){
+              directionsRenderer.setDirections(result);
+              const leg=result.routes[0].legs[0];
+              const distKm=leg.distance.value/1000;
+              const duree=leg.duration.text;
+              const prix=+(20+Math.max(0,distKm-7)*1.6).toFixed(2);
+
+              animatePrice(priceEl,prix);
+              priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
+              detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
+              wrap.classList.add("show");
+              resolve({prix,distKm,duree});
+            }else{
+              priceEl.textContent="Estimation indisponible";
+              detEl.textContent="";
+              wrap.classList.add("show");
+              resolve(null);
+            }
+          }
+        );
       });
-      directionsService=new google.maps.DirectionsService();
-      directionsRenderer=new google.maps.DirectionsRenderer({map});
-      new google.maps.places.Autocomplete(document.getElementById("depart"));
-      new google.maps.places.Autocomplete(document.getElementById("arrivee"));
     }
 
     function animatePrice(el,target){
@@ -270,35 +305,16 @@
       })(start);
     }
 
-    function showFare(prix,distKm,duree){
-      const wrap=document.getElementById("fare");
-      const priceEl=document.getElementById("prixAffiche");
-      const detEl=document.getElementById("detailsTrajet");
-      animatePrice(priceEl,prix);
-      priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
-      detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
-      wrap.classList.add("show");
-    }
-
-    function calculerEstimation(){
-      const d=depart.value,a=arrivee.value;
-      if(!d||!a)return;
-      directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
-      (result,status)=>{
-        const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
-        if(status==="OK"){
-          directionsRenderer.setDirections(result);
-          const leg=result.routes[0].legs[0];
-          const distKm=leg.distance.value/1000;
-          const duree=leg.duration.text;
-          const prix=20+Math.max(0,distKm-7)*1.6;
-          showFare(prix,distKm,duree);
-        }else{
-          priceEl.textContent="Estimation indisponible";
-          detEl.textContent="";
-          wrap.classList.add("show");
-        }
+    // --- GOOGLE MAPS ---
+    let map, directionsService, directionsRenderer;
+    function initMap(){
+      map=new google.maps.Map(document.getElementById("map"),{
+        zoom:7,center:{lat:42.6887,lng:2.8948}
       });
+      directionsService=new google.maps.DirectionsService();
+      directionsRenderer=new google.maps.DirectionsRenderer({map});
+      new google.maps.places.Autocomplete(document.getElementById("depart"));
+      new google.maps.places.Autocomplete(document.getElementById("arrivee"));
     }
   </script>
 
