@@ -5,45 +5,126 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact - OuassVTC</title>
   <style>
+    :root{
+      --brand:#000;
+      --border:#e5e7eb;
+      --bg:#f5f5f5;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: var(--bg);
       color: #333;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
+
+    header{
+      background:#000;
+      color:#fff;
+      text-align:center;
+      padding:24px 16px;
+    }
+    header img{max-height:90px;height:auto;width:auto}
+
     h1 {
       text-align: center;
-      margin-bottom: 30px;
+      margin: 26px 0 18px;
+      font-size: 1.6rem;
     }
+
     .contact-container {
       max-width: 800px;
-      margin: auto;
+      margin: 0 auto;
+      padding: 0 16px 100px; /* espace pour le bouton flottant */
+      line-height:1.6;
     }
+
     p {
       margin-bottom: 15px;
+      color:#555;
     }
+
     a {
-      color: #007bff;
+      color: #000;
       text-decoration: none;
+      font-weight:600;
+    }
+    a:hover{text-decoration:underline;}
+
+    /* Bouton flottant noir */
+    .btn-black{
+      position:fixed;
+      bottom:22px;
+      right:22px;
+      background-color: var(--brand);
+      color:#fff;
+      border:1px solid var(--brand);
+      border-radius:9999px;
+      padding:14px 24px;
+      font-weight:700;
+      font-size:15px;
+      text-decoration:none;
+      cursor:pointer;
+      transition:opacity .25s, transform .25s, box-shadow .25s;
+      box-shadow:0 6px 18px rgba(0,0,0,.25);
+      z-index:100;
+    }
+    .btn-black:hover{
+      opacity:.9;
+      transform:translateY(-2px);
+      box-shadow:0 8px 22px rgba(0,0,0,.35);
+    }
+
+    footer{
+      font-size:13px;
+      color:#777;
+      text-align:center;
+      padding:18px 12px 28px;
+    }
+
+    @media (max-width:600px){
+      .btn-black{
+        right:12px;
+        bottom:12px;
+        padding:12px 18px;
+        font-size:14px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Contact</h1>
-  <div class="contact-container">
+
+  <header>
+    <img src="ouassvtc.png" alt="OuassVTC">
+  </header>
+
+  <main class="contact-container">
+    <h1>Contact</h1>
+
     <p><strong>Téléphone :</strong> <a href="tel:+33644120784">06 44 12 07 84</a></p>
-    <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank">Discuter sur WhatsApp</a></p>
+    <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p>
     <p><strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
     <p><strong>Adresse :</strong> Perpignan, France</p>
     <p><strong>Disponibilité :</strong> 7j/7 – Sur réservation</p>
     <p>Vous pouvez également utiliser notre formulaire de réservation sur la page d’accueil pour toute demande personnalisée.</p>
-  </div>
-  <div style="text-align:center; margin-top: 40px;">
-  <a href="index.html" style="display:inline-block; padding:10px 20px; background-color:#007bff; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
-    ⬅️ Retour à l'accueil
-  </a>
-</div>
+  </main>
+
+  <!-- Bouton flottant -->
+  <button id="btnRetour" class="btn-black">⬅️ Retour à l’accueil</button>
+
+  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
+
+  <script>
+    // Bouton dynamique : retour ou redirection
+    document.getElementById("btnRetour").addEventListener("click", function(){
+      if (document.referrer && document.referrer !== window.location.href) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
 
 </body>
 </html>
