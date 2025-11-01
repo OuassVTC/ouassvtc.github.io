@@ -55,7 +55,7 @@
     .btn-light:hover,.btn-light:focus-visible{transform:translateY(-1px);outline:none}
 
     /* --- Fare sticky --- */
-    .fare-sticky{position:sticky;top:8px;z-index:5;background:#0a0a0a;color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    .fare-sticky{position:sticky;top:8px;z-index:50;background:#0a0a0a;color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25)}
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
     .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
@@ -116,6 +116,15 @@
     /* --- Small screens (fine tuning) --- */
     @media (max-width:560px){
       .fare-price{font-size:28px}
+      .hero-text h1{font-size:22px}
+      .btn{font-size:14px;padding:12px 8px}
+    }
+
+    /* --- Floating fare on mobile --- */
+    @media (max-width:699px){
+      body.has-fare-padding{padding-bottom:96px}
+      .fare-sticky{position:fixed;left:12px;right:12px;bottom:12px;top:auto;border-radius:18px}
+    }
       .hero-text h1{font-size:22px}
       .btn{font-size:14px;padding:12px 8px}
     }
@@ -250,7 +259,9 @@
       return new Promise((resolve)=>{
         const d=depart.value,a=arrivee.value;
         const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
-        if(!d||!a){wrap.classList.add("show");resolve(null);return;}
+        if(!d||!a){wrap.classList.add("show");
+            document.body.classList.add('has-fare-padding');
+            resolve(null);return;}
         directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
         (result,status)=>{
           if(status==="OK"){
@@ -263,11 +274,13 @@
             priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
             detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
             wrap.classList.add("show");
+            document.body.classList.add('has-fare-padding');
             resolve({prix,distKm,duree});
           }else{
             priceEl.textContent="Estimation indisponible";
             detEl.textContent="";
             wrap.classList.add("show");
+            document.body.classList.add('has-fare-padding');
             resolve(null);
           }
         });
