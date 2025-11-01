@@ -8,6 +8,16 @@
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
   <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-23LLHRH2QL');
+    function trackEvent(action,label){gtag('event',action,{event_category:'Interaction',event_label:label});}
+  </script>
+
   <style>
     :root{
       --brand:#000;
@@ -20,13 +30,16 @@
     html{scroll-behavior:smooth;}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111}
 
+    /* Logo + en-tête */
     header,footer{background:#000;color:#fff;text-align:center;padding:28px}
     header img{max-height:90px}
 
+    /* Nav */
     nav{display:flex;gap:16px;justify-content:center;padding:10px;border-bottom:1px solid var(--border)}
     nav a{color:#333;text-decoration:none;font-weight:600;font-size:15px}
     nav a:hover{text-decoration:underline}
 
+    /* Layout */
     .container{max-width:540px;margin:auto;padding:24px 16px}
     .hero-text{text-align:center;margin-bottom:28px}
     .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
@@ -41,43 +54,48 @@
     }
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
-    /* --- Boutons de contact encore plus serrés --- */
-    .buttons{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:6px; /* espacement réduit */
-      flex-wrap:nowrap;
-      margin-top:16px;
-      margin-bottom:24px;
-    }
+    /* Style générique bouton */
     .btn{
-      flex:1;
       border:1px solid var(--brand);
       background:var(--brand);
       color:#fff;
       border-radius:999px;
-      padding:12px 0;
+      padding:12px 20px;
       font-weight:600;
       text-decoration:none;
       text-align:center;
-      font-size:15px;
       transition:.25s;
       white-space:nowrap;
+      display:inline-block;
     }
-    .btn:hover{opacity:.9;transform:translateY(-1px);}
-    .btn:disabled{opacity:0.6;cursor:not-allowed;}
+    .btn:hover{opacity:.9;transform:translateY(-1px)}
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
 
-    /* Sur mobile : rester aligné avec un petit scroll horizontal */
+    /* --- Boutons de contact : côte à côte, resserrés --- */
+    .buttons-contact{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:6px;                   /* espacement réduit */
+      flex-wrap:nowrap;          /* jamais de retour à la ligne */
+      margin-top:16px;
+      margin-bottom:24px;
+    }
+    .buttons-contact .btn{
+      flex:1 1 33%;
+      padding:12px 0;           /* mêmes largeurs visuelles */
+      min-width:0;              /* pour permettre le shrink */
+      font-size:15px;
+    }
+    /* Sur très petit écran : on garde une ligne, défilement horizontal si besoin */
     @media (max-width:480px){
-      .buttons{
-        flex-wrap:nowrap;
+      .buttons-contact{
         overflow-x:auto;
         scrollbar-width:none;
       }
-      .buttons::-webkit-scrollbar{display:none;}
-      .btn{
-        min-width:120px;
+      .buttons-contact::-webkit-scrollbar{display:none;}
+      .buttons-contact .btn{
+        min-width:120px;        /* évite que le texte soit trop compressé */
         flex:0 0 auto;
       }
     }
@@ -94,6 +112,7 @@
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
     .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
 
+    /* Formulaire */
     form label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;margin-top:12px}
     input,select,textarea{
       width:100%;padding:14px 12px;border:1px solid var(--border);border-radius:12px;background:#f9f9f9;
@@ -102,13 +121,40 @@
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;}
     textarea{min-height:64px;resize:none}
 
+    /* Boutons dans le formulaire (on garde l’empilement s’il manque de place) */
+    .buttons-form{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;           /* le formulaire peut passer sur 2 lignes */
+      margin-top:20px;
+      margin-bottom:24px;
+    }
+    .buttons-form .btn{flex:1 1 220px}
+
+    /* Carte */
     #map{height:320px;border-radius:14px;margin-top:20px}
 
-    footer{font-size:13px;padding:20px;text-align:center;background:#000;color:#fff;}
+    /* Animations */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    @keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+    .show{display:block;animation:fadeUp .35s ease-out}
+    .pop{animation:pop .38s ease-out}
+
+    /* Pied de page + contacts */
+    .contact-section{text-align:center;margin-top:32px;color:#555;font-size:15px}
+    .contact-section a{color:#000;text-decoration:none;font-weight:600}
+    footer{font-size:13px;padding:20px}
 
     .success-message{
       background:#ecfdf5;border:1px solid #bbf7d0;color:var(--success);
       padding:14px 16px;border-radius:12px;font-weight:600;text-align:center;margin-top:20px;
+      animation:fadeUp .4s ease-out;
+    }
+
+    @media (max-width:560px){
+      .fare-price{font-size:28px}
+      .hero-text h2{font-size:22px}
     }
   </style>
 </head>
@@ -133,18 +179,32 @@
 
     <!-- Bouton principal -->
     <div class="main-button">
-      <a class="btn btn-main" href="#formResa">📅 Réservez maintenant</a>
+      <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
     </div>
 
-    <!-- Boutons de contact côte à côte (resserrés) -->
-    <div class="buttons">
-      <a class="btn" href="tel:0644120784">📞 Appeler</a>
-      <a class="btn" href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
-      <a class="btn" href="sms:+33644120784">✉️ SMS</a>
+    <!-- Boutons de contact serrés côte à côte -->
+    <div class="buttons-contact">
+      <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
+      <a class="btn" href="https://wa.me/33644120784" target="_blank" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
+      <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
     </div>
 
-    <!-- Exemple du formulaire -->
-    <form id="formResa">
+    <!-- Estimation -->
+    <div id="fare" class="fare-sticky">
+      <div class="fare-row">
+        <div class="fare-left">
+          <span class="badge">Estimation</span>
+          <div>
+            <div class="fare-price" id="prixAffiche">-- €</div>
+            <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
+          </div>
+        </div>
+        <div class="chip">Tarif indicatif</div>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
       <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
 
@@ -152,27 +212,156 @@
       <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
 
       <label for="depart">Adresse de départ</label>
-      <input type="text" id="depart" placeholder="Adresse de départ" required>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" required>
 
       <label for="arrivee">Adresse d'arrivée</label>
-      <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
+      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" required>
 
       <label for="dateheure">📅 Date et heure</label>
       <input type="datetime-local" id="dateheure" required>
 
-      <label for="message">Informations complémentaires</label>
-      <textarea id="message" placeholder="Bagages, code porte, etc."></textarea>
+      <label for="passagers">Nombre de passagers</label>
+      <select id="passagers" required>
+        <option value="">Sélectionner</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+      </select>
 
-      <div class="buttons">
-        <button type="submit" class="btn">✅ Envoyer</button>
-        <button type="button" class="btn">📏 Estimer</button>
+      <label for="paiement">Mode de paiement</label>
+      <select id="paiement" required>
+        <option value="">Sélectionner</option>
+        <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+        <option value="Paiement CB à bord">CB à bord</option>
+        <option value="Paiement espèces à bord">Espèces à bord</option>
+      </select>
+
+      <label for="message">Informations complémentaires</label>
+      <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+
+      <div class="buttons-form">
+        <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
+        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire de réservation</button>
       </div>
     </form>
 
+    <div id="successBox"></div>
+
     <div id="map"></div>
+
+    <div class="contact-section">
+      <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
+      <p>💬 <a href="https://wa.me/33644120784">WhatsApp</a></p>
+      <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
+    </div>
   </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("U08QGWWRUenJDOllc");
+    let formEnvoye = false;
+
+    async function sendEmail(e){
+      e.preventDefault();
+
+      if(formEnvoye){
+        alert("Votre demande a déjà été envoyée.");
+        return;
+      }
+      formEnvoye = true;
+      const btn = document.getElementById("btnSubmit");
+      btn.disabled = true;
+
+      const calc = await calculerEstimation();
+
+      let prixStr = "";
+      if (calc && Number.isFinite(calc.prix)) {
+        prixStr = `${calc.prix.toFixed(2)} €`;
+      } else {
+        prixStr = document.getElementById("prixAffiche").textContent || "";
+      }
+
+      const params = {
+        nom: nom.value,
+        telephone: telephone.value,
+        depart: depart.value,
+        arrivee: arrivee.value,
+        dateheure: dateheure.value,
+        passagers: passagers.value,
+        paiement: paiement.value,
+        message: message.value,
+        prix: prixStr
+      };
+
+      try{
+        await emailjs.send("service_kdvgh9f","template_5xt5vlv",params);
+        document.getElementById("formResa").reset();
+        document.getElementById("successBox").innerHTML =
+          '<div class="success-message">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
+      }catch(err){
+        alert("❌ Erreur. Réessayez.");
+        formEnvoye = false;
+        btn.disabled = false;
+      }
+    }
+
+    function calculerEstimation(){
+      return new Promise((resolve) => {
+        const d = depart.value, a = arrivee.value;
+        const wrap=document.getElementById("fare"),
+              priceEl=document.getElementById("prixAffiche"),
+              detEl=document.getElementById("detailsTrajet");
+
+        if(!d||!a){ resolve(null); return; }
+
+        directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
+          (result,status)=>{
+            if(status==="OK"){
+              directionsRenderer.setDirections(result);
+              const leg=result.routes[0].legs[0];
+              const distKm=leg.distance.value/1000;
+              const duree=leg.duration.text;
+              const prix=+(20+Math.max(0,distKm-7)*1.6).toFixed(2);
+
+              animatePrice(priceEl,prix);
+              priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
+              detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
+              wrap.classList.add("show");
+              resolve({prix,distKm,duree});
+            }else{
+              priceEl.textContent="Estimation indisponible";
+              detEl.textContent="";
+              wrap.classList.add("show");
+              resolve(null);
+            }
+          }
+        );
+      });
+    }
+
+    function animatePrice(el,target){
+      const start=performance.now(),dur=600;
+      (function step(now){
+        const p=Math.min((now-start)/dur,1);
+        el.textContent=(target*p).toFixed(2)+" €";
+        if(p<1) requestAnimationFrame(step);
+      })(start);
+    }
+
+    let map, directionsService, directionsRenderer;
+    function initMap(){
+      map=new google.maps.Map(document.getElementById("map"),{
+        zoom:7,center:{lat:42.6887,lng:2.8948}
+      });
+      directionsService=new google.maps.DirectionsService();
+      directionsRenderer=new google.maps.DirectionsRenderer({map});
+      new google.maps.places.Autocomplete(document.getElementById("depart"));
+      new google.maps.places.Autocomplete(document.getElementById("arrivee"));
+    }
+  </script>
+
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
 </body>
 </html>
