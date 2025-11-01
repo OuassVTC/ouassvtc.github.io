@@ -52,7 +52,7 @@
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
     /* Boutons de contact côte à côte */
-    .buttons{
+    .contact-buttons{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
@@ -61,6 +61,7 @@
       margin-bottom:24px;
     }
 
+    /* Style général boutons */
     .btn{
       display:flex;
       align-items:center;
@@ -77,9 +78,19 @@
       text-align:center;
       transition:.25s;
       font-size:15px;
+      width:100%;
     }
     .btn:hover{opacity:.9;transform:translateY(-1px)}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+    /* Boutons du formulaire empilés */
+    .form-buttons{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:20px;
+      margin-bottom:24px;
+    }
 
     .fare-sticky{
       position:sticky;top:8px;z-index:5;background:#0a0a0a;color:#fff;border-radius:14px;
@@ -120,7 +131,7 @@
     @media (max-width:560px){
       .fare-price{font-size:28px}
       .hero-text h2{font-size:22px}
-      .buttons{grid-template-columns:repeat(3,1fr);}
+      .contact-buttons{grid-template-columns:repeat(3,1fr);}
       .btn{font-size:14px;padding:12px 8px;}
     }
   </style>
@@ -150,7 +161,7 @@
     </div>
 
     <!-- Boutons de contact -->
-    <div class="buttons">
+    <div class="contact-buttons">
       <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
       <a class="btn" href="https://wa.me/33644120784" target="_blank" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
       <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
@@ -202,7 +213,8 @@
       <label for="message">Informations complémentaires</label>
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
-      <div class="buttons">
+      <!-- Boutons du formulaire (verticaux) -->
+      <div class="form-buttons">
         <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
         <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
       </div>
