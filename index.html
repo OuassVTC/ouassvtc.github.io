@@ -31,7 +31,7 @@
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111}
 
     header,footer{background:#000;color:#fff;text-align:center;padding:28px}
-    header img{max-height:90px}
+    header img{max-height:120px} /* ← logo agrandi */
 
     nav{display:flex;gap:16px;justify-content:center;padding:10px;border-bottom:1px solid var(--border)}
     nav a{color:#333;text-decoration:none;font-weight:600;font-size:15px}
@@ -188,6 +188,11 @@
       <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
       <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
     </div>
+
+    <!-- Texte au-dessus du formulaire -->
+    <p style="text-align:center;font-size:15px;color:#444;font-weight:600;margin-top:20px;margin-bottom:10px;">
+      Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.
+    </p>
 
     <!-- Estimation sticky -->
     <div id="fare" class="fare-sticky" aria-live="polite">
