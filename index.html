@@ -51,23 +51,27 @@
     }
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
-    /* Boutons de contact alignés côte à côte */
+    /* Boutons de contact côte à côte */
     .buttons{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
-      flex-wrap:nowrap;
+      align-items:stretch;
       margin-top:20px;
       margin-bottom:24px;
     }
+
     .btn{
-      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      white-space:nowrap;
       border:1px solid var(--brand);
       background:var(--brand);
       color:#fff;
       border-radius:999px;
-      padding:12px 0;
+      padding:12px 10px;
       font-weight:600;
       text-decoration:none;
       text-align:center;
@@ -116,8 +120,8 @@
     @media (max-width:560px){
       .fare-price{font-size:28px}
       .hero-text h2{font-size:22px}
-      .buttons{flex-wrap:wrap;}
-      .btn{flex:1 1 100%;max-width:none;}
+      .buttons{grid-template-columns:repeat(3,1fr);}
+      .btn{font-size:14px;padding:12px 8px;}
     }
   </style>
 </head>
