@@ -1,284 +1,228 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!DOCTYPE html><html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OuassVTC - Chauffeur VTC à Perpignan</title>
-
-  <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
-  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
-  <script>
+  <title>OuassVTC - Chauffeur VTC à Perpignan</title>  <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
+  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">  <!-- Google Analytics -->  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){dataLayer.push(arguments);} 
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
     function trackEvent(action,label){gtag('event',action,{event_category:'Interaction',event_label:label});}
-  </script>
-
-  <style>
+  </script>  <style>
     :root{
       --brand:#000;
       --border:#e5e7eb;
       --muted:#6b7280;
       --bg:#fff;
       --success:#16a34a;
+      --radius:14px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth;}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111}
+    html{scroll-behavior:smooth}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111;line-height:1.4}
 
-    header,footer{background:#000;color:#fff;text-align:center;padding:28px}
-    header img{max-height:120px} /* ← logo agrandi */
+    /* --- Header / Nav --- */
+    header{background:#000;color:#fff;text-align:center;padding:28px}
+    header img{max-height:120px;inline-size:auto;height:auto;aspect-ratio:auto}
 
-    nav{display:flex;gap:16px;justify-content:center;padding:10px;border-bottom:1px solid var(--border)}
-    nav a{color:#333;text-decoration:none;font-weight:600;font-size:15px}
-    nav a:hover{text-decoration:underline}
+    nav{position:sticky;top:0;z-index:20;display:flex;gap:18px;justify-content:center;padding:12px 10px;background:#fff;border-bottom:1px solid var(--border);backdrop-filter:saturate(180%) blur(8px)}
+    nav a{color:#111;text-decoration:none;font-weight:650;font-size:15px;padding:8px 10px;border-radius:999px}
+    nav a:hover,nav a:focus-visible{background:#f3f4f6;outline:none}
 
-    .container{max-width:540px;margin:auto;padding:24px 16px}
-    .hero-text{text-align:center;margin-bottom:28px}
-    .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
+    /* --- Layout --- */
+    .container{max-width:min(1100px,92vw);margin:auto;padding:28px 18px}
+    .hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
+    .hero-text{text-align:center}
+    .hero-text h1{font-size:26px;font-weight:800;margin-bottom:6px}
     .hero-text p{font-size:15px;color:var(--muted)}
 
-    .main-button{display:flex;justify-content:center;margin-bottom:20px;}
+    .main-button{display:flex;justify-content:center;margin:18px 0}
     .btn-main{
-      background:var(--brand);color:#fff;font-weight:700;font-size:17px;
-      border:none;border-radius:999px;padding:16px 40px;width:100%;max-width:520px;
-      text-align:center;text-decoration:none;transition:.25s;
+      background:var(--brand);color:#fff;font-weight:800;font-size:17px;
+      border:none;border-radius:999px;padding:16px 40px;width:100%;max-width:560px;
+      text-align:center;text-decoration:none;transition:transform .25s,opacity .25s;
     }
-    .btn-main:hover{opacity:.9;transform:translateY(-2px);}
+    .btn-main:hover,.btn-main:focus-visible{opacity:.9;transform:translateY(-2px);outline:none}
 
-    .contact-buttons{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      align-items:stretch;
-      margin-top:20px;
-      margin-bottom:24px;
-    }
+    /* --- Contact buttons --- */
+    .contact-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;margin:20px 0 24px}
+    .btn{display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:12px 10px;font-weight:650;text-decoration:none;text-align:center;transition:transform .25s,opacity .25s;font-size:15px;width:100%;cursor:pointer}
+    .btn:hover,.btn:focus-visible{opacity:.9;transform:translateY(-1px);outline:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
 
-    .btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      white-space:nowrap;
-      border:1px solid var(--brand);
-      background:var(--brand);
-      color:#fff;
-      border-radius:999px;
-      padding:12px 10px;
-      font-weight:600;
-      text-decoration:none;
-      text-align:center;
-      transition:.25s;
-      font-size:15px;
-      width:100%;
-      cursor:pointer;
-    }
-    .btn:hover{opacity:.9;transform:translateY(-1px)}
-    .btn:disabled{opacity:0.6;cursor:not-allowed}
+    .btn-light{background:#fff;color:#111;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;font-size:14px;border-radius:999px;display:inline-flex}
+    .btn-light:hover,.btn-light:focus-visible{transform:translateY(-1px);outline:none}
 
-    .btn-light{
-      background:#fff;
-      color:#111;
-      border:1px solid var(--border);
-      box-shadow:0 2px 6px rgba(0,0,0,.06);
-      padding:10px 14px;
-      font-size:14px;
-      border-radius:999px;
-      width:auto;
-      display:inline-flex;
-    }
-    .btn-light:hover{transform:translateY(-1px);}
-
-    .form-buttons{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top:20px;
-      margin-bottom:24px;
-    }
-
-    .fare-sticky{
-      position:sticky;top:8px;z-index:5;background:#0a0a0a;color:#fff;border-radius:14px;
-      padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25);
-    }
+    /* --- Fare sticky --- */
+    .fare-sticky{position:sticky;top:8px;z-index:5;background:#0a0a0a;color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25)}
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
     .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
-    .fare-price{font-size:34px;font-weight:800}
+    .fare-price{font-size:34px;font-weight:900}
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
     .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
 
-    form label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;margin-top:12px}
-    input,select,textarea{
-      width:100%;padding:14px 12px;border:1px solid var(--border);border-radius:12px;background:#f9f9f9;
-      font-size:16px;transition:border .2s,background .2s;
-    }
-    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;}
+    /* --- Formulaire --- */
+    .intro{text-align:center;font-size:15px;color:#444;font-weight:650;margin:20px 0 10px}
+    form label{display:block;font-size:14px;font-weight:650;margin-bottom:6px;margin-top:12px}
+    input,select,textarea{width:100%;padding:14px 12px;border:1px solid var(--border);border-radius:12px;background:#f9f9f9;font-size:16px;transition:border .2s,background .2s}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
     textarea{min-height:64px;resize:none}
 
-    /* Carte */
-    #map{height:320px;border-radius:14px;margin-top:20px}
+    .form-buttons{display:flex;flex-direction:column;gap:12px;margin:20px 0 24px}
 
+    /* --- Map --- */
+    #map{height:320px;border-radius:var(--radius);margin-top:20px}
+
+    /* --- Feedback / Modal --- */
+    .success-message{background:#ecfdf5;border:1px solid #bbf7d0;color:var(--success);padding:14px 16px;border-radius:12px;font-weight:700;text-align:center;margin-top:20px;animation:fadeUp .4s ease-out}
+
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
+    .modal.show{display:flex;animation:fadeIn .25s ease-out}
+    .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:popUp .35s ease-out}
+    .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
+    .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
+    .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
+
+    /* --- Animations --- */
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    @keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes popUp{0%{transform:translateY(8px) scale(.98);opacity:0}100%{transform:none;opacity:1}}
     .show{display:block;animation:fadeUp .35s ease-out}
-    .pop{animation:pop .38s ease-out}
+    .pop{animation:popUp .38s ease-out}
 
-    .contact-section{text-align:center;margin-top:32px;color:#555;font-size:15px}
-    .contact-section a{color:#000;text-decoration:none;font-weight:600}
-    footer{font-size:13px;padding:20px}
-
-    .success-message{
-      background:#ecfdf5;border:1px solid #bbf7d0;color:var(--success);
-      padding:14px 16px;border-radius:12px;font-weight:600;text-align:center;margin-top:20px;
-      animation:fadeUp .4s ease-out;
+    /* --- Desktop enhancements --- */
+    @media (min-width:700px){
+      .hero{grid-template-columns:1.1fr .9fr}
+      .hero-text{text-align:left}
+      .hero-text h1{font-size:34px}
+      .hero-text p{font-size:16px}
+      .contact-buttons{grid-template-columns:repeat(6,minmax(0,1fr))}
+      /* Space the three buttons across: span 2 each */
+      .contact-buttons a:nth-child(1){grid-column:1/span 2}
+      .contact-buttons a:nth-child(2){grid-column:3/span 2}
+      .contact-buttons a:nth-child(3){grid-column:5/span 2}
+      #map{height:420px}
+      .fare-price{font-size:38px}
     }
 
-    /* Modale */
-    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.5); z-index:100; padding:16px;}
-    .modal.show{ display:flex; animation:fadeIn .25s ease-out; }
-    .modal-content{ background:#fff; color:#111; width:100%; max-width:420px; border-radius:18px; padding:22px 18px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:popUp .35s ease-out; }
-    .modal-icon{ font-size:40px; line-height:1; margin-bottom:8px; }
-    .modal-title{ font-size:18px; font-weight:800; margin-bottom:6px; }
-    .modal-text{ font-size:14px; color:#4b5563; margin-bottom:14px; }
+    /* --- Very wide screens --- */
+    @media (min-width:1100px){
+      .container{max-width:1100px}
+      .btn-main{font-size:18px}
+    }
 
-    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
-    @keyframes popUp{ 0%{transform:translateY(8px) scale(.98); opacity:0} 100%{transform:none; opacity:1} }
-
+    /* --- Small screens (fine tuning) --- */
     @media (max-width:560px){
       .fare-price{font-size:28px}
-      .hero-text h2{font-size:22px}
-      .contact-buttons{grid-template-columns:repeat(3,1fr);}
-      .btn{font-size:14px;padding:12px 8px;}
+      .hero-text h1{font-size:22px}
+      .btn{font-size:14px;padding:12px 8px}
     }
-  </style>
-</head>
+
+    /* --- Accessibility: reduced motion --- */
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none !important;transition:none !important;scroll-behavior:auto}
+    }
+  </style></head>
 <body>
-
   <header>
-    <img src="ouassvtc.png" alt="OuassVTC">
-  </header>
-
-  <nav>
+    <img src="ouassvtc.png" alt="OuassVTC" loading="eager" width="240" height="120">
+  </header>  <nav>
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
-  </nav>
-
-  <div class="container">
-    <div class="hero-text">
-      <h2>Chauffeur privé à Perpignan</h2>
-      <p>Réservez en quelques secondes — confort et fiabilité.</p>
-    </div>
-
-    <!-- CTA -->
-    <div class="main-button">
-      <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
-    </div>
-
-    <!-- Boutons de contact -->
-    <div class="contact-buttons">
-      <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
-      <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
-      <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
-    </div>
-
-    <!-- Texte au-dessus du formulaire -->
-    <p style="text-align:center;font-size:15px;color:#444;font-weight:600;margin-top:20px;margin-bottom:10px;">
-      Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.
-    </p>
-
-    <!-- Estimation sticky -->
-    <div id="fare" class="fare-sticky" aria-live="polite">
-      <div class="fare-row">
-        <div class="fare-left">
-          <span class="badge">Estimation</span>
-          <div>
-            <div class="fare-price" id="prixAffiche">-- €</div>
-            <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
+  </nav>  <div class="container">
+    <section class="hero" aria-label="Présentation et réservation">
+      <div class="hero-text">
+        <h1>Chauffeur privé à Perpignan</h1>
+        <p>Réservez en quelques secondes — confort et fiabilité.</p>
+        <div class="main-button">
+          <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
+        </div>
+        <div class="contact-buttons" role="group" aria-label="Contact rapide">
+          <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
+          <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
+          <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
+        </div>
+      </div>
+      <aside>
+        <div id="fare" class="fare-sticky" aria-live="polite">
+          <div class="fare-row">
+            <div class="fare-left">
+              <span class="badge">Estimation</span>
+              <div>
+                <div class="fare-price" id="prixAffiche">-- €</div>
+                <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
+              </div>
+            </div>
+            <div class="chip">Tarif indicatif</div>
           </div>
         </div>
-        <div class="chip">Tarif indicatif</div>
-      </div>
-    </div>
+      </aside>
+    </section><p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
 
-    <!-- Formulaire -->
-    <form id="formResa" onsubmit="sendEmail(event)">
-      <label for="nom">Nom et prénom</label>
-      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
+<!-- Formulaire -->
+<form id="formResa" onsubmit="sendEmail(event)">
+  <label for="nom">Nom et prénom</label>
+  <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
 
-      <label for="telephone">Téléphone</label>
-      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
+  <label for="telephone">Téléphone</label>
+  <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
 
-      <label for="depart">Adresse de départ</label>
-      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
+  <label for="depart">Adresse de départ</label>
+  <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
 
-      <label for="arrivee">Adresse d'arrivée</label>
-      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
+  <label for="arrivee">Adresse d'arrivée</label>
+  <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
 
-      <label for="dateheure">📅 Date et heure</label>
-      <input type="datetime-local" id="dateheure" required>
+  <label for="dateheure">📅 Date et heure</label>
+  <input type="datetime-local" id="dateheure" required>
 
-      <label for="passagers">Nombre de passagers</label>
-      <select id="passagers" required>
-        <option value="">Sélectionner</option>
-        <option>1</option><option>2</option><option>3</option><option>4</option>
-      </select>
+  <label for="passagers">Nombre de passagers</label>
+  <select id="passagers" required>
+    <option value="">Sélectionner</option>
+    <option>1</option><option>2</option><option>3</option><option>4</option>
+  </select>
 
-      <label for="paiement">Mode de paiement</label>
-      <select id="paiement" required>
-        <option value="">Sélectionner</option>
-        <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
-        <option value="Paiement CB à bord">CB à bord</option>
-        <option value="Paiement espèces à bord">Espèces à bord</option>
-      </select>
+  <label for="paiement">Mode de paiement</label>
+  <select id="paiement" required>
+    <option value="">Sélectionner</option>
+    <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+    <option value="Paiement CB à bord">CB à bord</option>
+    <option value="Paiement espèces à bord">Espèces à bord</option>
+  </select>
 
-      <label for="message">Informations complémentaires</label>
-      <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+  <label for="message">Informations complémentaires</label>
+  <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
-      <div class="form-buttons">
-        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
-        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
-      </div>
-    </form>
-
-    <div id="successBox"></div>
-
-    <!-- Titre au-dessus de la carte -->
-    <h3 style="font-size:16px;font-weight:600;text-align:center;margin-top:20px;margin-bottom:8px;color:#333;">
-      🗺️ Visualisez votre itinéraire ci-dessous
-    </h3>
-    <div id="map"></div>
-
-    <!-- Coordonnées -->
-    <div class="contact-section">
-      <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
-      <p>💬 <a href="https://wa.me/33644120784">WhatsApp</a></p>
-      <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-    </div>
+  <div class="form-buttons">
+    <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
+    <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
   </div>
+</form>
 
-  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
+<div id="successBox"></div>
 
-  <!-- Modale de succès -->
-  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
+<h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
+<div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
+
+<!-- Coordonnées -->
+<section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
+  <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
+  <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
+  <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
+</section>
+
+  </div>  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>  <!-- Modale de succès -->  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
       <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
     </div>
-  </div>
-
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
+  </div>  <!-- EmailJS -->  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>  <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
@@ -362,9 +306,7 @@
       window.removeEventListener('keydown',onEscClose);
     }
 
-    function onEscClose(e){
-      if(e.key==='Escape') hideSuccessModal();
-    }
+    function onEscClose(e){ if(e.key==='Escape') hideSuccessModal(); }
 
     // === Google Maps ===
     let map,directionsService,directionsRenderer;
@@ -381,9 +323,5 @@
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
-  </script>
-
-  <!-- Google Maps (clé de test de ton exemple) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
-</body>
+  </script>  <!-- Google Maps (clé d'exemple) -->  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script></body>
 </html>
