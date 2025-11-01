@@ -79,9 +79,24 @@
       transition:.25s;
       font-size:15px;
       width:100%;
+      cursor:pointer;
     }
     .btn:hover{opacity:.9;transform:translateY(-1px)}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+    /* Variante bouton clair pour la modale */
+    .btn-light{
+      background:#fff;
+      color:#111;
+      border:1px solid var(--border);
+      box-shadow:0 2px 6px rgba(0,0,0,.06);
+      padding:10px 14px;
+      font-size:14px;
+      border-radius:999px;
+      width:auto;
+      display:inline-flex;
+    }
+    .btn-light:hover{transform:translateY(-1px);}
 
     /* Boutons du formulaire empilés */
     .form-buttons{
@@ -127,6 +142,28 @@
       padding:14px 16px;border-radius:12px;font-weight:600;text-align:center;margin-top:20px;
       animation:fadeUp .4s ease-out;
     }
+
+    /* === Modale de succès centrée === */
+    .modal{
+      position:fixed; inset:0; display:none;
+      align-items:center; justify-content:center;
+      background:rgba(0,0,0,.5);
+      z-index:100; padding:16px;
+    }
+    .modal.show{ display:flex; animation:fadeIn .25s ease-out; }
+    .modal-content{
+      background:#fff; color:#111; width:100%; max-width:420px;
+      border-radius:18px; padding:22px 18px; text-align:center;
+      box-shadow:0 24px 64px rgba(0,0,0,.25);
+      animation:popUp .35s ease-out;
+    }
+    .modal-icon{ font-size:40px; line-height:1; margin-bottom:8px; }
+    .modal-title{ font-size:18px; font-weight:800; margin-bottom:6px; }
+    .modal-text{ font-size:14px; color:#4b5563; margin-bottom:14px; }
+
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+    @keyframes popUp{ 0%{transform:translateY(8px) scale(.98); opacity:0}
+                      100%{transform:none; opacity:1} }
 
     @media (max-width:560px){
       .fare-price{font-size:28px}
@@ -232,6 +269,16 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
+  <!-- === Modale succès === -->
+  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" id="successContent">
+      <div class="modal-icon">✅</div>
+      <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
+      <div class="modal-text">Nous revenons vers vous rapidement !</div>
+      <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
+    </div>
+  </div>
+
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
@@ -251,7 +298,7 @@
       try{
         await emailjs.send("service_kdvgh9f","template_5xt5vlv",params);
         document.getElementById("formResa").reset();
-        document.getElementById("successBox").innerHTML='<div class="success-message">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
+        showSuccessModal();     // <— Affiche la modale animée
       }catch(err){
         alert("❌ Erreur. Réessayez.");
         formEnvoye=false;btn.disabled=false;
@@ -293,6 +340,44 @@
         el.textContent=(target*p).toFixed(2)+" €";
         if(p<1) requestAnimationFrame(step);
       })(start);
+    }
+
+    /* === Contrôles de la modale === */
+    function showSuccessModal(){
+      const modal=document.getElementById('successModal');
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+
+      // Focus accessible
+      const homeBtn=document.getElementById('homeBtn');
+      setTimeout(()=>homeBtn.focus(), 50);
+
+      // Fermer sur clic arrière-plan
+      modal.addEventListener('click', (e)=>{
+        if(e.target===modal){ hideSuccessModal(); }
+      });
+
+      // Fermer sur Échap
+      window.addEventListener('keydown', onEscClose);
+      homeBtn.addEventListener('click', ()=>{
+        hideSuccessModal();
+        window.scrollTo({top:0,behavior:'smooth'});
+        // Si tu as une page d’accueil distincte, tu peux rediriger :
+        // location.href = '/';
+      }, { once:true });
+    }
+
+    function hideSuccessModal(){
+      const modal=document.getElementById('successModal');
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      window.removeEventListener('keydown', onEscClose);
+    }
+
+    function onEscClose(e){
+      if(e.key==='Escape') hideSuccessModal();
     }
 
     let map,directionsService,directionsRenderer;
