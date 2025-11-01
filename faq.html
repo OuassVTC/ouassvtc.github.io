@@ -5,64 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FAQ - OuassVTC</title>
   <style>
+    :root{
+      --brand:#000;
+      --border:#e5e7eb;
+      --bg:#f5f5f5;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: var(--bg);
       color: #333;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
+
+    header{
+      background:#000;
+      color:#fff;
+      text-align:center;
+      padding:24px 16px;
+    }
+    header img{max-height:90px;height:auto;width:auto}
+
     h1 {
       text-align: center;
-      margin-bottom: 30px;
+      margin: 26px 0 18px;
+      font-size: 1.6rem;
     }
+
     .faq-container {
       max-width: 800px;
-      margin: auto;
+      margin: 0 auto;
+      padding: 0 16px 28px;
     }
     .faq-item {
-      margin-bottom: 20px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:16px;
+      margin-bottom:16px;
     }
     .faq-item h2 {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #000;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
     .faq-item p {
       margin: 0;
       color: #555;
+      line-height:1.5;
+    }
+
+    .btn-black{
+      display:inline-block;
+      padding:12px 22px;
+      background-color: var(--brand);
+      color:#fff;
+      border:1px solid var(--brand);
+      border-radius:9999px;
+      text-decoration:none;
+      font-weight:700;
+      transition:opacity .25s, transform .2s;
+      cursor:pointer;
+    }
+    .btn-black:hover{opacity:.9; transform:translateY(-1px)}
+    .back-wrap{ text-align:center; margin:30px 0 40px; }
+
+    footer{
+      font-size:13px;
+      color:#777;
+      text-align:center;
+      padding:18px 12px 28px;
     }
   </style>
 </head>
 <body>
-  <h1>Foire Aux Questions (FAQ)</h1>
-  <div class="faq-container">
+
+  <header>
+    <img src="ouassvtc.png" alt="OuassVTC">
+  </header>
+
+  <main class="faq-container">
+    <h1>Foire Aux Questions (FAQ)</h1>
+
     <div class="faq-item">
       <h2>📅 Peut-on réserver à l'avance ?</h2>
       <p>Oui, vous pouvez réserver votre course à l'avance via notre site, par téléphone ou WhatsApp.</p>
     </div>
+
     <div class="faq-item">
       <h2>💳 Quels moyens de paiement acceptez-vous ?</h2>
       <p>Nous acceptons les paiements en espèces, par carte bancaire et via certains services mobiles.</p>
     </div>
+
     <div class="faq-item">
       <h2>🕒 Êtes-vous disponible 24h/24 ?</h2>
       <p>Oui, notre service est disponible 7j/7 et sur demande, y compris de nuit.</p>
     </div>
+
     <div class="faq-item">
       <h2>👨‍👩‍👧‍👦 Acceptez-vous les enfants et animaux ?</h2>
       <p>Oui, nous acceptons les enfants accompagnés. Les animaux sont également les bienvenus s’ils sont transportés en toute sécurité.</p>
     </div>
+
     <div class="faq-item">
       <h2>📍 Quels lieux desservez-vous ?</h2>
       <p>Nous desservons Perpignan et sa région : Canet, Argelès, Le Barcarès, Narbonne, aéroports et gares régionales.</p>
     </div>
-  </div>
-  <div style="text-align:center; margin-top: 40px;">
-  <a href="index.html" style="display:inline-block; padding:10px 20px; background-color:#007bff; color:white; border-radius:5px; text-decoration:none; font-weight:bold;">
-    ⬅️ Retour à l'accueil
-  </a>
-</div>
+
+    <div class="back-wrap">
+      <button id="btnRetour" class="btn-black">⬅️ Retour</button>
+    </div>
+  </main>
+
+  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
+
+  <script>
+    // Bouton dynamique : retour ou redirection
+    document.getElementById("btnRetour").addEventListener("click", function(){
+      if (document.referrer && document.referrer !== window.location.href) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
 
 </body>
 </html>
