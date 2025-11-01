@@ -2,14 +2,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OuassVTC - Chauffeur VTC à Perpignan</title>  <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
-  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">  <!-- Google Analytics -->  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>  <script>
+  <title>OuassVTC - Chauffeur VTC à Perpignan</title>
+
+  <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
+  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
+
+  <!-- Google Analytics (déclencher après consentement en production) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} 
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
     function trackEvent(action,label){gtag('event',action,{event_category:'Interaction',event_label:label});}
-  </script>  <style>
+  </script>
+
+  <style>
     :root{
       --brand:#000;
       --border:#e5e7eb;
@@ -54,8 +62,16 @@
     .btn-light{background:#fff;color:#111;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;font-size:14px;border-radius:999px;display:inline-flex}
     .btn-light:hover,.btn-light:focus-visible{transform:translateY(-1px);outline:none}
 
-    /* --- Fare sticky --- */
-    .fare-sticky{position:sticky;top:8px;z-index:50;background:#0a0a0a;color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+    /* --- Estimation: toujours en haut (mobile + desktop) --- */
+    .fare-sticky{
+      position:sticky;top:0;z-index:50;
+      background:#0a0a0a;color:#fff;
+      border-radius:0 0 var(--radius) var(--radius);
+      padding:14px 16px;
+      margin:-8px -18px 20px; /* étend jusqu'aux bords du container */
+      display:none;
+      box-shadow:0 10px 24px rgba(0,0,0,.25)
+    }
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
     .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
@@ -77,7 +93,6 @@
 
     /* --- Feedback / Modal --- */
     .success-message{background:#ecfdf5;border:1px solid #bbf7d0;color:var(--success);padding:14px 16px;border-radius:12px;font-weight:700;text-align:center;margin-top:20px;animation:fadeUp .4s ease-out}
-
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
     .modal.show{display:flex;animation:fadeIn .25s ease-out}
     .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:popUp .35s ease-out}
@@ -99,12 +114,12 @@
       .hero-text h1{font-size:34px}
       .hero-text p{font-size:16px}
       .contact-buttons{grid-template-columns:repeat(6,minmax(0,1fr))}
-      /* Space the three buttons across: span 2 each */
       .contact-buttons a:nth-child(1){grid-column:1/span 2}
       .contact-buttons a:nth-child(2){grid-column:3/span 2}
       .contact-buttons a:nth-child(3){grid-column:5/span 2}
       #map{height:420px}
       .fare-price{font-size:38px}
+      .fare-sticky{margin:0 0 20px;border-radius:14px}
     }
 
     /* --- Very wide screens --- */
@@ -120,29 +135,25 @@
       .btn{font-size:14px;padding:12px 8px}
     }
 
-    /* --- Floating fare on mobile --- */
-    @media (max-width:699px){
-      body.has-fare-padding{padding-bottom:96px}
-      .fare-sticky{position:fixed;left:12px;right:12px;bottom:12px;top:auto;border-radius:18px}
-    }
-      .hero-text h1{font-size:22px}
-      .btn{font-size:14px;padding:12px 8px}
-    }
-
     /* --- Accessibility: reduced motion --- */
     @media (prefers-reduced-motion:reduce){
       *{animation:none !important;transition:none !important;scroll-behavior:auto}
     }
-  </style></head>
+  </style>
+</head>
 <body>
   <header>
     <img src="ouassvtc.png" alt="OuassVTC" loading="eager" width="240" height="120">
-  </header>  <nav>
+  </header>
+
+  <nav>
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
-  </nav>  <div class="container">
+  </nav>
+
+  <div class="container">
     <section class="hero" aria-label="Présentation et réservation">
       <div class="hero-text">
         <h1>Chauffeur privé à Perpignan</h1>
@@ -156,6 +167,8 @@
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
         </div>
       </div>
+
+      <!-- Estimation toujours en haut -->
       <aside>
         <div id="fare" class="fare-sticky" aria-live="polite">
           <div class="fare-row">
@@ -170,68 +183,78 @@
           </div>
         </div>
       </aside>
-    </section><p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
+    </section>
 
-<!-- Formulaire -->
-<form id="formResa" onsubmit="sendEmail(event)">
-  <label for="nom">Nom et prénom</label>
-  <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
+    <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
 
-  <label for="telephone">Téléphone</label>
-  <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
+    <!-- Formulaire -->
+    <form id="formResa" onsubmit="sendEmail(event)">
+      <label for="nom">Nom et prénom</label>
+      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
 
-  <label for="depart">Adresse de départ</label>
-  <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
+      <label for="telephone">Téléphone</label>
+      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
 
-  <label for="arrivee">Adresse d'arrivée</label>
-  <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
+      <label for="depart">Adresse de départ</label>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
 
-  <label for="dateheure">📅 Date et heure</label>
-  <input type="datetime-local" id="dateheure" required>
+      <label for="arrivee">Adresse d'arrivée</label>
+      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
 
-  <label for="passagers">Nombre de passagers</label>
-  <select id="passagers" required>
-    <option value="">Sélectionner</option>
-    <option>1</option><option>2</option><option>3</option><option>4</option>
-  </select>
+      <label for="dateheure">📅 Date et heure</label>
+      <input type="datetime-local" id="dateheure" required>
 
-  <label for="paiement">Mode de paiement</label>
-  <select id="paiement" required>
-    <option value="">Sélectionner</option>
-    <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
-    <option value="Paiement CB à bord">CB à bord</option>
-    <option value="Paiement espèces à bord">Espèces à bord</option>
-  </select>
+      <label for="passagers">Nombre de passagers</label>
+      <select id="passagers" required>
+        <option value="">Sélectionner</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+      </select>
 
-  <label for="message">Informations complémentaires</label>
-  <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+      <label for="paiement">Mode de paiement</label>
+      <select id="paiement" required>
+        <option value="">Sélectionner</option>
+        <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+        <option value="Paiement CB à bord">CB à bord</option>
+        <option value="Paiement espèces à bord">Espèces à bord</option>
+      </select>
 
-  <div class="form-buttons">
-    <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
-    <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
+      <label for="message">Informations complémentaires</label>
+      <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+
+      <div class="form-buttons">
+        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
+        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
+      </div>
+    </form>
+
+    <div id="successBox"></div>
+
+    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
+    <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
+
+    <!-- Coordonnées -->
+    <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
+      <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
+      <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
+      <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
+    </section>
   </div>
-</form>
 
-<div id="successBox"></div>
+  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>
 
-<h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
-<div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
-
-<!-- Coordonnées -->
-<section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
-  <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
-  <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
-  <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-</section>
-
-  </div>  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>  <!-- Modale de succès -->  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
+  <!-- Modale de succès -->
+  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
       <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
     </div>
-  </div>  <!-- EmailJS -->  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>  <script>
+  </div>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
@@ -259,9 +282,7 @@
       return new Promise((resolve)=>{
         const d=depart.value,a=arrivee.value;
         const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
-        if(!d||!a){wrap.classList.add("show");
-            document.body.classList.add('has-fare-padding');
-            resolve(null);return;}
+        if(!d||!a){wrap.classList.add("show");resolve(null);return;}
         directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
         (result,status)=>{
           if(status==="OK"){
@@ -274,13 +295,11 @@
             priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
             detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
             wrap.classList.add("show");
-            document.body.classList.add('has-fare-padding');
             resolve({prix,distKm,duree});
           }else{
             priceEl.textContent="Estimation indisponible";
             detEl.textContent="";
             wrap.classList.add("show");
-            document.body.classList.add('has-fare-padding');
             resolve(null);
           }
         });
@@ -336,5 +355,9 @@
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
-  </script>  <!-- Google Maps (clé d'exemple) -->  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script></body>
+  </script>
+
+  <!-- Google Maps (clé d'exemple) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
+</body>
 </html>
