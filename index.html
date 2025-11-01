@@ -42,7 +42,6 @@
     .hero-text h2{font-size:26px;font-weight:700;margin-bottom:4px}
     .hero-text p{font-size:15px;color:var(--muted)}
 
-    /* Bouton principal large */
     .main-button{display:flex;justify-content:center;margin-bottom:20px;}
     .btn-main{
       background:var(--brand);color:#fff;font-weight:700;font-size:17px;
@@ -51,7 +50,6 @@
     }
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
-    /* Boutons de contact côte à côte */
     .contact-buttons{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -61,7 +59,6 @@
       margin-bottom:24px;
     }
 
-    /* Style général boutons */
     .btn{
       display:flex;
       align-items:center;
@@ -84,7 +81,6 @@
     .btn:hover{opacity:.9;transform:translateY(-1px)}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
 
-    /* Variante bouton clair pour la modale */
     .btn-light{
       background:#fff;
       color:#111;
@@ -98,7 +94,6 @@
     }
     .btn-light:hover{transform:translateY(-1px);}
 
-    /* Boutons du formulaire empilés */
     .form-buttons{
       display:flex;
       flex-direction:column;
@@ -126,6 +121,7 @@
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;}
     textarea{min-height:64px;resize:none}
 
+    /* Carte */
     #map{height:320px;border-radius:14px;margin-top:20px}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -143,27 +139,16 @@
       animation:fadeUp .4s ease-out;
     }
 
-    /* === Modale de succès centrée === */
-    .modal{
-      position:fixed; inset:0; display:none;
-      align-items:center; justify-content:center;
-      background:rgba(0,0,0,.5);
-      z-index:100; padding:16px;
-    }
+    /* Modale */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.5); z-index:100; padding:16px;}
     .modal.show{ display:flex; animation:fadeIn .25s ease-out; }
-    .modal-content{
-      background:#fff; color:#111; width:100%; max-width:420px;
-      border-radius:18px; padding:22px 18px; text-align:center;
-      box-shadow:0 24px 64px rgba(0,0,0,.25);
-      animation:popUp .35s ease-out;
-    }
+    .modal-content{ background:#fff; color:#111; width:100%; max-width:420px; border-radius:18px; padding:22px 18px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:popUp .35s ease-out; }
     .modal-icon{ font-size:40px; line-height:1; margin-bottom:8px; }
     .modal-title{ font-size:18px; font-weight:800; margin-bottom:6px; }
     .modal-text{ font-size:14px; color:#4b5563; margin-bottom:14px; }
 
     @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
-    @keyframes popUp{ 0%{transform:translateY(8px) scale(.98); opacity:0}
-                      100%{transform:none; opacity:1} }
+    @keyframes popUp{ 0%{transform:translateY(8px) scale(.98); opacity:0} 100%{transform:none; opacity:1} }
 
     @media (max-width:560px){
       .fare-price{font-size:28px}
@@ -192,7 +177,7 @@
       <p>Réservez en quelques secondes — confort et fiabilité.</p>
     </div>
 
-    <!-- Bouton principal -->
+    <!-- CTA -->
     <div class="main-button">
       <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
     </div>
@@ -200,11 +185,12 @@
     <!-- Boutons de contact -->
     <div class="contact-buttons">
       <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
-      <a class="btn" href="https://wa.me/33644120784" target="_blank" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
+      <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
       <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
     </div>
 
-    <div id="fare" class="fare-sticky">
+    <!-- Estimation sticky -->
+    <div id="fare" class="fare-sticky" aria-live="polite">
       <div class="fare-row">
         <div class="fare-left">
           <span class="badge">Estimation</span>
@@ -217,18 +203,19 @@
       </div>
     </div>
 
+    <!-- Formulaire -->
     <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
-      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
+      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
 
       <label for="telephone">Téléphone</label>
-      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
+      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
 
       <label for="depart">Adresse de départ</label>
-      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" required>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
 
       <label for="arrivee">Adresse d'arrivée</label>
-      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" required>
+      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
 
       <label for="dateheure">📅 Date et heure</label>
       <input type="datetime-local" id="dateheure" required>
@@ -250,7 +237,6 @@
       <label for="message">Informations complémentaires</label>
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
-      <!-- Boutons du formulaire (verticaux) -->
       <div class="form-buttons">
         <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
         <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
@@ -258,8 +244,14 @@
     </form>
 
     <div id="successBox"></div>
+
+    <!-- Titre au-dessus de la carte -->
+    <h3 style="font-size:16px;font-weight:600;text-align:center;margin-top:20px;margin-bottom:8px;color:#333;">
+      🗺️ Visualisez votre itinéraire ci-dessous
+    </h3>
     <div id="map"></div>
 
+    <!-- Coordonnées -->
     <div class="contact-section">
       <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
       <p>💬 <a href="https://wa.me/33644120784">WhatsApp</a></p>
@@ -269,7 +261,7 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- === Modale succès === -->
+  <!-- Modale de succès -->
   <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
@@ -298,7 +290,7 @@
       try{
         await emailjs.send("service_kdvgh9f","template_5xt5vlv",params);
         document.getElementById("formResa").reset();
-        showSuccessModal();     // <— Affiche la modale animée
+        showSuccessModal();
       }catch(err){
         alert("❌ Erreur. Réessayez.");
         formEnvoye=false;btn.disabled=false;
@@ -309,7 +301,7 @@
       return new Promise((resolve)=>{
         const d=depart.value,a=arrivee.value;
         const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
-        if(!d||!a){resolve(null);return;}
+        if(!d||!a){wrap.classList.add("show");resolve(null);return;}
         directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
         (result,status)=>{
           if(status==="OK"){
@@ -342,30 +334,19 @@
       })(start);
     }
 
-    /* === Contrôles de la modale === */
     function showSuccessModal(){
       const modal=document.getElementById('successModal');
       modal.classList.add('show');
       modal.setAttribute('aria-hidden','false');
       document.body.style.overflow='hidden';
-
-      // Focus accessible
       const homeBtn=document.getElementById('homeBtn');
-      setTimeout(()=>homeBtn.focus(), 50);
-
-      // Fermer sur clic arrière-plan
-      modal.addEventListener('click', (e)=>{
-        if(e.target===modal){ hideSuccessModal(); }
-      });
-
-      // Fermer sur Échap
-      window.addEventListener('keydown', onEscClose);
-      homeBtn.addEventListener('click', ()=>{
+      setTimeout(()=>homeBtn.focus(),50);
+      modal.addEventListener('click',(e)=>{ if(e.target===modal){hideSuccessModal();} });
+      window.addEventListener('keydown',onEscClose);
+      homeBtn.addEventListener('click',()=>{
         hideSuccessModal();
         window.scrollTo({top:0,behavior:'smooth'});
-        // Si tu as une page d’accueil distincte, tu peux rediriger :
-        // location.href = '/';
-      }, { once:true });
+      },{once:true});
     }
 
     function hideSuccessModal(){
@@ -373,24 +354,31 @@
       modal.classList.remove('show');
       modal.setAttribute('aria-hidden','true');
       document.body.style.overflow='';
-      window.removeEventListener('keydown', onEscClose);
+      window.removeEventListener('keydown',onEscClose);
     }
 
     function onEscClose(e){
       if(e.key==='Escape') hideSuccessModal();
     }
 
+    // === Google Maps ===
     let map,directionsService,directionsRenderer;
     function initMap(){
-      map=new google.maps.Map(document.getElementById("map"),{zoom:7,center:{lat:42.6887,lng:2.8948}});
-      directionsService=new google.maps.DirectionsService();
-      directionsRenderer=new google.maps.DirectionsRenderer({map});
-      new google.maps.places.Autocomplete(document.getElementById("depart"));
-      new google.maps.places.Autocomplete(document.getElementById("arrivee"));
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 7,
+        center: {lat:42.6887, lng:2.8948} // Perpignan
+      });
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({ map });
+
+      // Autocomplete (France)
+      const acOpts = { componentRestrictions: { country: "fr" } };
+      new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
+      new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
   </script>
 
-  <!-- Google Maps -->
+  <!-- Google Maps (clé de test de ton exemple) -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
 </body>
 </html>
