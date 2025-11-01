@@ -33,31 +33,31 @@
     .hero-text p{font-size:15px;color:var(--muted)}
 
     /* Bouton principal large */
-    .main-button{display:flex;justify-content:center;margin-bottom:20px;}
+    .main-button{display:flex;justify-content:center;margin-bottom:16px;}
     .btn-main{
       background:var(--brand);color:#fff;font-weight:700;font-size:17px;
-      border:none;border-radius:999px;padding:16px 40px;width:100%;max-width:520px;
+      border:none;border-radius:999px;padding:14px 36px;width:100%;max-width:520px;
       text-align:center;text-decoration:none;transition:.25s;
     }
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
-    /* --- Boutons de contact alignés sur une seule ligne --- */
+    /* --- Boutons de contact encore plus serrés --- */
     .buttons{
       display:flex;
-      justify-content:center;
+      justify-content:space-between;
       align-items:center;
-      gap:10px;
+      gap:6px; /* espacement réduit */
       flex-wrap:nowrap;
-      margin-top:20px;
+      margin-top:16px;
       margin-bottom:24px;
     }
     .btn{
-      flex:1 1 33%;
+      flex:1;
       border:1px solid var(--brand);
       background:var(--brand);
       color:#fff;
       border-radius:999px;
-      padding:14px 0;
+      padding:12px 0;
       font-weight:600;
       text-decoration:none;
       text-align:center;
@@ -68,7 +68,7 @@
     .btn:hover{opacity:.9;transform:translateY(-1px);}
     .btn:disabled{opacity:0.6;cursor:not-allowed;}
 
-    /* Empêche le retour à la ligne sur mobile */
+    /* Sur mobile : rester aligné avec un petit scroll horizontal */
     @media (max-width:480px){
       .buttons{
         flex-wrap:nowrap;
@@ -77,11 +77,12 @@
       }
       .buttons::-webkit-scrollbar{display:none;}
       .btn{
-        min-width:130px;
+        min-width:120px;
         flex:0 0 auto;
       }
     }
 
+    /* Bloc estimation */
     .fare-sticky{
       position:sticky;top:8px;z-index:5;background:#0a0a0a;color:#fff;border-radius:14px;
       padding:14px 16px;margin-bottom:20px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25);
@@ -135,18 +136,40 @@
       <a class="btn btn-main" href="#formResa">📅 Réservez maintenant</a>
     </div>
 
-    <!-- Boutons de contact alignés côte à côte -->
+    <!-- Boutons de contact côte à côte (resserrés) -->
     <div class="buttons">
       <a class="btn" href="tel:0644120784">📞 Appeler</a>
       <a class="btn" href="https://wa.me/33644120784" target="_blank">💬 WhatsApp</a>
       <a class="btn" href="sms:+33644120784">✉️ SMS</a>
     </div>
 
-    <!-- Exemple suite (formulaire etc.) -->
+    <!-- Exemple du formulaire -->
     <form id="formResa">
-      <label>Nom et prénom</label>
-      <input type="text" placeholder="Ex. Dupont Pierre">
+      <label for="nom">Nom et prénom</label>
+      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
+
+      <label for="telephone">Téléphone</label>
+      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
+
+      <label for="depart">Adresse de départ</label>
+      <input type="text" id="depart" placeholder="Adresse de départ" required>
+
+      <label for="arrivee">Adresse d'arrivée</label>
+      <input type="text" id="arrivee" placeholder="Adresse d'arrivée" required>
+
+      <label for="dateheure">📅 Date et heure</label>
+      <input type="datetime-local" id="dateheure" required>
+
+      <label for="message">Informations complémentaires</label>
+      <textarea id="message" placeholder="Bagages, code porte, etc."></textarea>
+
+      <div class="buttons">
+        <button type="submit" class="btn">✅ Envoyer</button>
+        <button type="button" class="btn">📏 Estimer</button>
+      </div>
     </form>
+
+    <div id="map"></div>
   </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
