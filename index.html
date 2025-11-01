@@ -51,15 +51,28 @@
     }
     .btn-main:hover{opacity:.9;transform:translateY(-2px);}
 
-    /* Boutons de contact alignés */
+    /* Boutons de contact alignés côte à côte */
     .buttons{
-      display:flex;justify-content:center;align-items:center;gap:12px;
-      flex-wrap:nowrap;margin-top:20px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:nowrap;
+      margin-top:20px;
+      margin-bottom:24px;
     }
     .btn{
-      flex:1 1 auto;min-width:120px;max-width:220px;border:1px solid var(--brand);
-      background:var(--brand);color:#fff;border-radius:999px;padding:12px 20px;
-      font-weight:600;text-decoration:none;text-align:center;transition:.25s;white-space:nowrap;
+      flex:1;
+      border:1px solid var(--brand);
+      background:var(--brand);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 0;
+      font-weight:600;
+      text-decoration:none;
+      text-align:center;
+      transition:.25s;
+      font-size:15px;
     }
     .btn:hover{opacity:.9;transform:translateY(-1px)}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
@@ -103,23 +116,8 @@
     @media (max-width:560px){
       .fare-price{font-size:28px}
       .hero-text h2{font-size:22px}
-    }
-
-    /* --- CTA mobile fixe (Variante B — barre translucide) --- */
-    @media (max-width:640px){
-      body{ padding-bottom:72px; }
-      .sticky-cta.glass{
-        position:fixed; left:0; right:0; bottom:0; z-index:50;
-        display:flex; justify-content:center; padding:10px 14px;
-        padding-bottom:calc(10px + env(safe-area-inset-bottom));
-        background:rgba(255,255,255,.75); backdrop-filter:blur(10px);
-        border-top:1px solid rgba(0,0,0,.06);
-      }
-      .sticky-cta.glass .btn-cta{
-        background:#111; color:#fff; border-radius:12px; width:100%; max-width:420px;
-        padding:14px 18px; font-weight:800; text-align:center;
-        box-shadow:0 8px 24px rgba(0,0,0,.15);
-      }
+      .buttons{flex-wrap:wrap;}
+      .btn{flex:1 1 100%;max-width:none;}
     }
   </style>
 </head>
@@ -147,6 +145,7 @@
       <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
     </div>
 
+    <!-- Boutons de contact -->
     <div class="buttons">
       <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
       <a class="btn" href="https://wa.me/33644120784" target="_blank" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
@@ -201,7 +200,7 @@
 
       <div class="buttons">
         <button type="button" class="btn" onclick="calculerEstimation()">📏 Estimer le tarif</button>
-        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire de réservation</button>
+        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
       </div>
     </form>
 
@@ -217,29 +216,29 @@
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- CTA mobile fixe -->
-  <div class="sticky-cta glass">
-    <a class="btn-cta" href="#formResa" onclick="trackEvent('cta_mobile','Réserver maintenant (mobile)')">📅 Réservez maintenant</a>
-  </div>
-
   <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
+
     async function sendEmail(e){
       e.preventDefault();
       if(formEnvoye){alert("Votre demande a déjà été envoyée.");return;}
-      formEnvoye = true; const btn=document.getElementById("btnSubmit"); btn.disabled=true;
+      formEnvoye = true;
+      const btn=document.getElementById("btnSubmit");
+      btn.disabled=true;
       const calc=await calculerEstimation();
-      let prixStr=""; prixStr = (calc && Number.isFinite(calc.prix)) ? `${calc.prix.toFixed(2)} €` : document.getElementById("prixAffiche").textContent || "";
+      let prixStr="";
+      prixStr = (calc && Number.isFinite(calc.prix)) ? `${calc.prix.toFixed(2)} €` : document.getElementById("prixAffiche").textContent || "";
       const params={nom:nom.value,telephone:telephone.value,depart:depart.value,arrivee:arrivee.value,dateheure:dateheure.value,passagers:passagers.value,paiement:paiement.value,message:message.value,prix:prixStr};
       try{
         await emailjs.send("service_kdvgh9f","template_5xt5vlv",params);
         document.getElementById("formResa").reset();
         document.getElementById("successBox").innerHTML='<div class="success-message">✅ Formulaire bien envoyé. Nous revenons vers vous rapidement !</div>';
       }catch(err){
-        alert("❌ Erreur. Réessayez."); formEnvoye=false; btn.disabled=false;
+        alert("❌ Erreur. Réessayez.");
+        formEnvoye=false;btn.disabled=false;
       }
     }
 
