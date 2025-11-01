@@ -25,6 +25,7 @@
       --bg:#fff;
       --success:#16a34a;
       --radius:14px;
+      --navH:56px; /* sera mis à jour en JS */
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
@@ -34,9 +35,9 @@
     header{background:#000;color:#fff;text-align:center;padding:28px}
     header img{max-height:120px;inline-size:auto;height:auto;aspect-ratio:auto}
 
-    nav{position:sticky;top:0;z-index:20;display:flex;gap:18px;justify-content:center;padding:12px 10px;background:#fff;border-bottom:1px solid var(--border);backdrop-filter:saturate(180%) blur(8px)}
-    nav a{color:#111;text-decoration:none;font-weight:650;font-size:15px;padding:8px 10px;border-radius:999px}
-    nav a:hover,nav a:focus-visible{background:#f3f4f6;outline:none}
+    nav#topnav{position:sticky;top:0;z-index:20;display:flex;gap:18px;justify-content:center;padding:12px 10px;background:#fff;border-bottom:1px solid var(--border);backdrop-filter:saturate(180%) blur(8px)}
+    nav#topnav a{color:#111;text-decoration:none;font-weight:650;font-size:15px;padding:8px 10px;border-radius:999px}
+    nav#topnav a:hover,nav#topnav a:focus-visible{background:#f3f4f6;outline:none}
 
     /* --- Layout --- */
     .container{max-width:min(1100px,92vw);margin:auto;padding:28px 18px}
@@ -62,16 +63,24 @@
     .btn-light{background:#fff;color:#111;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;font-size:14px;border-radius:999px;display:inline-flex}
     .btn-light:hover,.btn-light:focus-visible{transform:translateY(-1px);outline:none}
 
-    /* --- Estimation: toujours en haut (mobile + desktop) --- */
+    /* --- Estimation: FIXE en haut (sous la nav), largeur alignée au container --- */
     .fare-sticky{
-      position:sticky;top:0;z-index:50;
+      position:fixed;
+      top:var(--navH); /* collée sous la nav */
+      left:0; right:0;
+      z-index:50;
       background:#0a0a0a;color:#fff;
       border-radius:0 0 var(--radius) var(--radius);
       padding:14px 16px;
-      margin:-8px -18px 20px; /* étend jusqu'aux bords du container */
-      display:none;
-      box-shadow:0 10px 24px rgba(0,0,0,.25)
+      display:none;            /* sera affichée via JS */
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
+      /* centrée et largeur identique au container */
+      width:min(1100px,92vw);
+      margin-inline:auto;
     }
+    /* Quand la barre est ouverte, on pousse le contenu pour éviter le recouvrement */
+    body.fare-open{ padding-top:calc(var(--navH) + 82px); } /* ~82px = hauteur de la barre */
+
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
     .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
@@ -92,20 +101,13 @@
     #map{height:320px;border-radius:var(--radius);margin-top:20px}
 
     /* --- Feedback / Modal --- */
-    .success-message{background:#ecfdf5;border:1px solid #bbf7d0;color:var(--success);padding:14px 16px;border-radius:12px;font-weight:700;text-align:center;margin-top:20px;animation:fadeUp .4s ease-out}
+    .success-message{background:#ecfdf5;border:1px solid #bbf7d0;color:#16a34a;padding:14px 16px;border-radius:12px;font-weight:700;text-align:center;margin-top:20px}
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
-    .modal.show{display:flex;animation:fadeIn .25s ease-out}
-    .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:popUp .35s ease-out}
+    .modal.show{display:flex}
+    .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25)}
     .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
     .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
     .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
-
-    /* --- Animations --- */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes popUp{0%{transform:translateY(8px) scale(.98);opacity:0}100%{transform:none;opacity:1}}
-    .show{display:block;animation:fadeUp .35s ease-out}
-    .pop{animation:popUp .38s ease-out}
 
     /* --- Desktop enhancements --- */
     @media (min-width:700px){
@@ -119,7 +121,7 @@
       .contact-buttons a:nth-child(3){grid-column:5/span 2}
       #map{height:420px}
       .fare-price{font-size:38px}
-      .fare-sticky{margin:0 0 20px;border-radius:14px}
+      /* sur desktop on garde la barre fixe, déjà centrée */
     }
 
     /* --- Very wide screens --- */
@@ -135,7 +137,7 @@
       .btn{font-size:14px;padding:12px 8px}
     }
 
-    /* --- Accessibility: reduced motion --- */
+    /* --- Accessibilité: réduit les animations si demandé --- */
     @media (prefers-reduced-motion:reduce){
       *{animation:none !important;transition:none !important;scroll-behavior:auto}
     }
@@ -146,7 +148,8 @@
     <img src="ouassvtc.png" alt="OuassVTC" loading="eager" width="240" height="120">
   </header>
 
-  <nav>
+  <!-- NAV avec id pour mesurer la hauteur -->
+  <nav id="topnav">
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">À propos</a>
@@ -168,7 +171,7 @@
         </div>
       </div>
 
-      <!-- Estimation toujours en haut -->
+      <!-- Estimation FIXE en haut -->
       <aside>
         <div id="fare" class="fare-sticky" aria-live="polite">
           <div class="fare-row">
@@ -258,6 +261,24 @@
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
+    /* Mesure la nav + ouvre la barre d'estimation fixée en haut */
+    function openFareBar(){
+      const nav = document.getElementById('topnav');
+      const navH = nav ? nav.offsetHeight : 56;
+      document.documentElement.style.setProperty('--navH', navH + 'px');
+      document.body.classList.add('fare-open');
+      const wrap = document.getElementById('fare');
+      if (wrap) {
+        wrap.style.display = 'block';
+        // petite animation d'apparition si tu veux
+        wrap.classList.add('show');
+      }
+    }
+    // si orientation change / resize, on réajuste la marge haute
+    window.addEventListener('resize', () => {
+      if (document.body.classList.contains('fare-open')) openFareBar();
+    });
+
     async function sendEmail(e){
       e.preventDefault();
       if(formEnvoye){alert("Votre demande a déjà été envoyée.");return;}
@@ -282,7 +303,7 @@
       return new Promise((resolve)=>{
         const d=depart.value,a=arrivee.value;
         const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
-        if(!d||!a){wrap.classList.add("show");resolve(null);return;}
+        if(!d||!a){ openFareBar(); resolve(null); return; }
         directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
         (result,status)=>{
           if(status==="OK"){
@@ -294,12 +315,12 @@
             animatePrice(priceEl,prix);
             priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
             detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
-            wrap.classList.add("show");
+            openFareBar();
             resolve({prix,distKm,duree});
           }else{
             priceEl.textContent="Estimation indisponible";
             detEl.textContent="";
-            wrap.classList.add("show");
+            openFareBar();
             resolve(null);
           }
         });
