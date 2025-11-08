@@ -8,11 +8,10 @@
   <meta name="description" content="OuassVTC - Chauffeur VTC privé à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
   <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
 
-  <!-- Icônes + manifest pour installation -->
+  <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <link rel="apple-touch-icon" href="ouassvtc.png">
   <meta name="theme-color" content="#000000">
-  <link rel="manifest" href="/manifest.json">
 
   <!-- Google Analytics (déclencher après consentement en production) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
@@ -67,9 +66,6 @@
     .btn:hover,.btn:focus-visible{opacity:.9;transform:translateY(-1px);outline:none}
     .btn:disabled{opacity:.6;cursor:not-allowed}
 
-    /* bouton clair pour "ajouter l'appli" */
-    .btn-addapp{background:#fff;color:#111;border:1px solid #000;box-shadow:0 2px 6px rgba(0,0,0,.05);width:auto;padding:10px 16px}
-
     .btn-light{background:#fff;color:#111;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;font-size:14px;border-radius:999px;display:inline-flex}
     .btn-light:hover,.btn-light:focus-visible{transform:translateY(-1px);outline:none}
 
@@ -118,7 +114,6 @@
     .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
     .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
     .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
-    .modal-actions{display:flex;flex-direction:column;gap:10px;align-items:center}
 
     /* --- Desktop enhancements --- */
     @media (min-width:700px){
@@ -132,6 +127,7 @@
       .contact-buttons a:nth-child(3){grid-column:5/span 2}
       #map{height:420px}
       .fare-price{font-size:38px}
+      /* sur desktop on garde la barre fixe, déjà centrée */
     }
 
     /* --- Very wide screens --- */
@@ -178,10 +174,6 @@
           <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
           <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
-        </div>
-        <!-- ✅ bouton ajouter l'appli sous les boutons -->
-        <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button type="button" class="btn btn-addapp" id="btnAddAppMain">📱 Ajouter l’application</button>
         </div>
       </div>
 
@@ -265,11 +257,7 @@
       <div class="modal-icon">✅</div>
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
-      <div class="modal-actions">
-        <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
-        <!-- ✅ bouton "ajouter l'appli" dans la modale -->
-        <button type="button" class="btn btn-addapp" id="btnAddAppModal">📱 Ajouter l’application</button>
-      </div>
+      <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
     </div>
   </div>
 
@@ -278,24 +266,6 @@
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
-
-    /* === installation PWA === */
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-    });
-
-    function handleInstallClick(){
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.finally(() => {
-          deferredPrompt = null;
-        });
-      } else {
-        alert("Pour ajouter l'application :\n• Android : menu ⋮ puis « Ajouter à l’écran d’accueil »\n• iPhone : bouton Partager → « Sur l’écran d’accueil »");
-      }
-    }
 
     /* Mesure la nav + ouvre la barre d'estimation fixée en haut */
     function openFareBar(){
@@ -377,7 +347,6 @@
       modal.setAttribute('aria-hidden','false');
       document.body.style.overflow='hidden';
       const homeBtn=document.getElementById('homeBtn');
-      const btnAddAppModal=document.getElementById('btnAddAppModal');
       setTimeout(()=>homeBtn.focus(),50);
       modal.addEventListener('click',(e)=>{ if(e.target===modal){hideSuccessModal();} });
       window.addEventListener('keydown',onEscClose);
@@ -385,8 +354,6 @@
         hideSuccessModal();
         window.scrollTo({top:0,behavior:'smooth'});
       },{once:true});
-      // bouton dans la modale
-      btnAddAppModal.addEventListener('click', handleInstallClick);
     }
 
     function hideSuccessModal(){
@@ -414,12 +381,6 @@
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
-
-    // on branche le bouton du haut
-    document.addEventListener('DOMContentLoaded', () => {
-      const btnAddAppMain = document.getElementById('btnAddAppMain');
-      if (btnAddAppMain) btnAddAppMain.addEventListener('click', handleInstallClick);
-    });
   </script>
 
   <!-- Google Maps (clé d'exemple) -->
