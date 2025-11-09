@@ -3,6 +3,7 @@
   "short_name": "OuassVTC",
   "description": "Chauffeur privé VTC à Perpignan et alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
