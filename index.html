@@ -11,6 +11,7 @@
   <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <link rel="apple-touch-icon" href="ouassvtc.png">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
   <!-- Google Analytics (déclencher après consentement en production) -->
@@ -72,20 +73,18 @@
     /* --- Estimation: FIXE en haut (sous la nav), largeur alignée au container --- */
     .fare-sticky{
       position:fixed;
-      top:var(--navH); /* collée sous la nav */
+      top:var(--navH);
       left:0; right:0;
       z-index:50;
       background:#0a0a0a;color:#fff;
       border-radius:0 0 var(--radius) var(--radius);
       padding:14px 16px;
-      display:none;            /* sera affichée via JS */
+      display:none;
       box-shadow:0 10px 24px rgba(0,0,0,.25);
-      /* centrée et largeur identique au container */
       width:min(1100px,92vw);
       margin-inline:auto;
     }
-    /* Quand la barre est ouverte, on pousse le contenu pour éviter le recouvrement */
-    body.fare-open{ padding-top:calc(var(--navH) + 82px); } /* ~82px = hauteur de la barre */
+    body.fare-open{ padding-top:calc(var(--navH) + 82px); }
 
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .fare-left{display:flex;align-items:center;gap:10px}
@@ -94,19 +93,15 @@
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
     .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
 
-    /* --- Formulaire --- */
     .intro{text-align:center;font-size:15px;color:#444;font-weight:650;margin:20px 0 10px}
     form label{display:block;font-size:14px;font-weight:650;margin-bottom:6px;margin-top:12px}
     input,select,textarea{width:100%;padding:14px 12px;border:1px solid var(--border);border-radius:12px;background:#f9f9f9;font-size:16px;transition:border .2s,background .2s}
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
     textarea{min-height:64px;resize:none}
-
     .form-buttons{display:flex;flex-direction:column;gap:12px;margin:20px 0 24px}
 
-    /* --- Map --- */
     #map{height:320px;border-radius:var(--radius);margin-top:20px}
 
-    /* --- Feedback / Modal --- */
     .success-message{background:#ecfdf5;border:1px solid #bbf7d0;color:#16a34a;padding:14px 16px;border-radius:12px;font-weight:700;text-align:center;margin-top:20px}
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
     .modal.show{display:flex}
@@ -115,7 +110,6 @@
     .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
     .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
 
-    /* --- Desktop enhancements --- */
     @media (min-width:700px){
       .hero{grid-template-columns:1.1fr .9fr}
       .hero-text{text-align:left}
@@ -127,23 +121,16 @@
       .contact-buttons a:nth-child(3){grid-column:5/span 2}
       #map{height:420px}
       .fare-price{font-size:38px}
-      /* sur desktop on garde la barre fixe, déjà centrée */
     }
-
-    /* --- Very wide screens --- */
     @media (min-width:1100px){
       .container{max-width:1100px}
       .btn-main{font-size:18px}
     }
-
-    /* --- Small screens (fine tuning) --- */
     @media (max-width:560px){
       .fare-price{font-size:28px}
       .hero-text h1{font-size:22px}
       .btn{font-size:14px;padding:12px 8px}
     }
-
-    /* --- Accessibilité: réduit les animations si demandé --- */
     @media (prefers-reduced-motion:reduce){
       *{animation:none !important;transition:none !important;scroll-behavior:auto}
     }
@@ -154,7 +141,6 @@
     <img src="ouassvtc.png" alt="OuassVTC" loading="eager" width="240" height="120">
   </header>
 
-  <!-- NAV avec id pour mesurer la hauteur -->
   <nav id="topnav">
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
@@ -175,9 +161,14 @@
           <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
         </div>
+        <!-- bouton ajouter l'application -->
+        <div style="display:flex;justify-content:center;margin-top:6px;">
+          <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
+            📱 Ajouter l’application
+          </button>
+        </div>
       </div>
 
-      <!-- Estimation FIXE en haut -->
       <aside>
         <div id="fare" class="fare-sticky" aria-live="polite">
           <div class="fare-row">
@@ -196,7 +187,6 @@
 
     <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
 
-    <!-- Formulaire -->
     <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
       <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
@@ -241,7 +231,6 @@
     <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
     <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
 
-    <!-- Coordonnées -->
     <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
       <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
       <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
@@ -251,7 +240,6 @@
 
   <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- Modale de succès -->
   <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
@@ -261,13 +249,11 @@
     </div>
   </div>
 
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     emailjs.init("U08QGWWRUenJDOllc");
     let formEnvoye = false;
 
-    /* Mesure la nav + ouvre la barre d'estimation fixée en haut */
     function openFareBar(){
       const nav = document.getElementById('topnav');
       const navH = nav ? nav.offsetHeight : 56;
@@ -279,7 +265,7 @@
         wrap.classList.add('show');
       }
     }
-    // si orientation change / resize, on réajuste la marge haute
+
     window.addEventListener('resize', () => {
       if (document.body.classList.contains('fare-open')) openFareBar();
     });
@@ -307,7 +293,8 @@
     function calculerEstimation(){
       return new Promise((resolve)=>{
         const d=depart.value,a=arrivee.value;
-        const wrap=document.getElementById("fare"),priceEl=document.getElementById("prixAffiche"),detEl=document.getElementById("detailsTrajet");
+        const priceEl=document.getElementById("prixAffiche");
+        const detEl=document.getElementById("detailsTrajet");
         if(!d||!a){ openFareBar(); resolve(null); return; }
         directionsService.route({origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
         (result,status)=>{
@@ -318,7 +305,6 @@
             const duree=leg.duration.text;
             const prix=+(20+Math.max(0,distKm-7)*1.6).toFixed(2);
             animatePrice(priceEl,prix);
-            priceEl.classList.remove("pop");void priceEl.offsetWidth;priceEl.classList.add("pop");
             detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
             openFareBar();
             resolve({prix,distKm,duree});
@@ -371,19 +357,45 @@
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
-        center: {lat:42.6887, lng:2.8948} // Perpignan
+        center: {lat:42.6887, lng:2.8948}
       });
       directionsService = new google.maps.DirectionsService();
       directionsRenderer = new google.maps.DirectionsRenderer({ map });
-
-      // Autocomplete (France)
       const acOpts = { componentRestrictions: { country: "fr" } };
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
+
+    // === PWA : bouton Ajouter l'application + SW ===
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnAdd = document.getElementById('btnAddApp');
+      if (btnAdd) {
+        btnAdd.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+          } else {
+            alert("Pour ajouter l'application :\n• Android : menu ⋮ → Ajouter à l’écran d’accueil\n• iPhone : Partager → Sur l’écran d’accueil");
+          }
+        });
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.log('SW error', err));
+      });
+    }
   </script>
 
-  <!-- Google Maps (clé d'exemple) -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
 </body>
 </html>
