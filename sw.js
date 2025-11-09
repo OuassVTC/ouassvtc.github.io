@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ouassvtc-cache-v1';
+const CACHE_NAME = 'ouassvtc-cache-v2'; // <-- on change la version
 const urlsToCache = [
   '/',
   '/index.html',
@@ -17,7 +17,8 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.filter((name) => name !== CACHE_NAME)
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
           .map((name) => caches.delete(name))
       );
     })
