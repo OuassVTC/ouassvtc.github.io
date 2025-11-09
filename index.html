@@ -11,7 +11,6 @@
   <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <link rel="apple-touch-icon" href="ouassvtc.png">
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
@@ -50,7 +49,7 @@
       display:block;
       margin:0 auto;
       width:100%;
-      max-width:260px;   /* taille contrôlée */
+      max-width:200px; /* plus petit et propre */
       height:auto;
     }
 
@@ -70,7 +69,6 @@
       background:#f3f4f6;outline:none
     }
 
-    /* --- Layout --- */
     .container{max-width:min(1100px,92vw);margin:auto;padding:28px 18px}
     .hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
     .hero-text{text-align:center}
@@ -85,7 +83,6 @@
     }
     .btn-main:hover,.btn-main:focus-visible{opacity:.9;transform:translateY(-2px);outline:none}
 
-    /* --- Contact buttons --- */
     .contact-buttons{
       display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;align-items:stretch;margin:20px 0 12px
@@ -126,7 +123,6 @@
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
     .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
 
-    /* --- Formulaire --- */
     .intro{text-align:center;font-size:15px;color:#444;font-weight:650;margin:20px 0 10px}
     form label{display:block;font-size:14px;font-weight:650;margin-bottom:6px;margin-top:12px}
     input,select,textarea{
@@ -138,10 +134,8 @@
     textarea{min-height:64px;resize:none}
     .form-buttons{display:flex;flex-direction:column;gap:12px;margin:20px 0 24px}
 
-    /* --- Map --- */
     #map{height:320px;border-radius:var(--radius);margin-top:20px}
 
-    /* --- Modal --- */
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
     .modal.show{display:flex}
     .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25)}
@@ -177,7 +171,6 @@
     <img src="ouassvtc.png" alt="OuassVTC" loading="eager">
   </header>
 
-  <!-- NAV -->
   <nav id="topnav">
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
@@ -201,15 +194,14 @@
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
         </div>
 
-        <!-- bouton télécharger l'appli -->
+        <!-- bouton plus pro -->
         <div style="display:flex;justify-content:center;margin-top:6px;">
           <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
-            🤖 Télécharger l’application (Android)
+            Installer l’application sur Android
           </button>
         </div>
       </div>
 
-      <!-- bandeau estimation -->
       <aside>
         <div id="fare" class="fare-sticky" aria-live="polite">
           <div class="fare-row">
@@ -228,7 +220,6 @@
 
     <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
 
-    <!-- FORMULAIRE -->
     <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
       <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
@@ -273,7 +264,6 @@
     <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
     <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
 
-    <!-- Coordonnées -->
     <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
       <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
       <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
@@ -283,16 +273,14 @@
 
   <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>
 
-  <!-- Modale de succès -->
   <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
       <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
-      <!-- même bouton dans la modale -->
       <button type="button" class="btn" id="btnAddAppModal" style="margin-top:10px;">
-        🤖 Télécharger l’application (Android)
+        Installer l’application sur Android
       </button>
     </div>
   </div>
@@ -419,27 +407,25 @@
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
 
-    // === PWA : installation Android / explication iPhone ===
+    // === PWA : install Android / explication iPhone ===
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      deferredPrompt = e; // dispo pour Android / Chrome
+      deferredPrompt = e;
     });
 
     function explainIOS(){
       alert(
-        "Vous êtes sur iPhone 📱\n\n1. Appuyez sur le bouton « Partager » (carré avec la flèche vers le haut)\n2. Faites défiler vers le bas\n3. Touchez « Sur l’écran d’accueil »\n4. Validez : votre icône OuassVTC sera sur l’écran comme une vraie app ✅"
+        "Vous utilisez un iPhone.\n\nPour ajouter OuassVTC :\n1. Touchez le bouton « Partager » (icône avec la flèche vers le haut)\n2. Faites défiler vers le bas\n3. Touchez « Sur l’écran d’accueil »\n4. Validez.\n\nL’icône sera ajoutée comme une application."
       );
     }
 
     async function triggerInstall(){
-      // si on a l’événement → Android
       if (deferredPrompt) {
         deferredPrompt.prompt();
         await deferredPrompt.userChoice;
         deferredPrompt = null;
       } else {
-        // pas d’événement → sûrement iPhone
         explainIOS();
       }
     }
@@ -457,7 +443,6 @@
       });
     });
 
-    // Service worker (même nom que ton fichier sw.js)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js?v=2').catch(err => console.log('SW error', err));
@@ -465,7 +450,6 @@
     }
   </script>
 
-  <!-- Google Maps -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
 </body>
 </html>
