@@ -11,7 +11,7 @@
   <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <link rel="apple-touch-icon" href="ouassvtc.png">
-  <!-- IMPORTANT pour la PWA -->
+  <!-- PWA -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
@@ -46,12 +46,11 @@
       text-align:center;
       padding:28px;
     }
-    /* ✅ logo comme avant : pas limité à 120px */
     header img{
       display:block;
       margin:0 auto;
       width:100%;
-      max-width:400px; /* tu peux monter à 500 si ton image est large */
+      max-width:260px;   /* taille contrôlée */
       height:auto;
     }
 
@@ -202,10 +201,10 @@
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
         </div>
 
-        <!-- bouton ajouter l'appli -->
+        <!-- bouton télécharger l'appli -->
         <div style="display:flex;justify-content:center;margin-top:6px;">
           <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
-            📱 Ajouter l’application
+            🤖 Télécharger l’application (Android)
           </button>
         </div>
       </div>
@@ -291,8 +290,9 @@
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
       <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
+      <!-- même bouton dans la modale -->
       <button type="button" class="btn" id="btnAddAppModal" style="margin-top:10px;">
-        📱 Ajouter l’application
+        🤖 Télécharger l’application (Android)
       </button>
     </div>
   </div>
@@ -326,8 +326,7 @@
       const btn=document.getElementById("btnSubmit");
       btn.disabled=true;
       const calc=await calculerEstimation();
-      let prixStr="";
-      prixStr = (calc && Number.isFinite(calc.prix)) ? `${calc.prix.toFixed(2)} €` : document.getElementById("prixAffiche").textContent || "";
+      let prixStr = (calc && Number.isFinite(calc.prix)) ? `${calc.prix.toFixed(2)} €` : document.getElementById("prixAffiche").textContent || "";
       const params={
         nom:nom.value,
         telephone:telephone.value,
@@ -393,8 +392,6 @@
       modal.classList.add('show');
       modal.setAttribute('aria-hidden','false');
       document.body.style.overflow='hidden';
-      setTimeout(()=>document.getElementById('homeBtn').focus(),50);
-      modal.addEventListener('click',(e)=>{ if(e.target===modal){hideSuccessModal();} });
       window.addEventListener('keydown',onEscClose);
     }
 
@@ -413,7 +410,7 @@
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
         zoom: 7,
-        center: {lat:42.6887, lng:2.8948} // Perpignan
+        center: {lat:42.6887, lng:2.8948}
       });
       directionsService = new google.maps.DirectionsService();
       directionsRenderer = new google.maps.DirectionsRenderer({ map });
@@ -422,22 +419,28 @@
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
 
-    // === PWA : bouton Ajouter l'application ===
+    // === PWA : installation Android / explication iPhone ===
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      deferredPrompt = e;
-      console.log('✅ beforeinstallprompt capturé');
+      deferredPrompt = e; // dispo pour Android / Chrome
     });
 
-    function triggerInstall(){
+    function explainIOS(){
+      alert(
+        "Vous êtes sur iPhone 📱\n\n1. Appuyez sur le bouton « Partager » (carré avec la flèche vers le haut)\n2. Faites défiler vers le bas\n3. Touchez « Sur l’écran d’accueil »\n4. Validez : votre icône OuassVTC sera sur l’écran comme une vraie app ✅"
+      );
+    }
+
+    async function triggerInstall(){
+      // si on a l’événement → Android
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
-          deferredPrompt = null;
-        });
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
       } else {
-        alert("Pour ajouter l'application :\n• Android : menu ⋮ → Ajouter à l’écran d’accueil\n• iPhone : Partager → Sur l’écran d’accueil");
+        // pas d’événement → sûrement iPhone
+        explainIOS();
       }
     }
 
@@ -454,12 +457,10 @@
       });
     });
 
-    // === Service Worker ===
+    // Service worker (même nom que ton fichier sw.js)
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=2')
-          .then(() => console.log('✅ Service worker enregistré'))
-          .catch(err => console.log('SW error', err));
+        navigator.serviceWorker.register('/sw.js?v=2').catch(err => console.log('SW error', err));
       });
     }
   </script>
