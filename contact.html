@@ -5,37 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact VTC à Perpignan – OuassVTC</title>
   <meta name="description" content="Contactez OuassVTC, chauffeur VTC à Perpignan : téléphone 06 44 12 07 84, WhatsApp, email. Réservation 24h/24 pour transferts aéroports, gares, trajets locaux et Espagne.">
-  <meta name="keywords" content="contact VTC Perpignan, chauffeur privé Perpignan, réservation VTC, OuassVTC, taxi alternatif Perpignan">
-
-  <!-- Données structurées : ContactPage -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "Contact OuassVTC",
-    "url": "https://www.ouassvtc.fr/contact.html",
-    "about": {
-      "@type": "LocalBusiness",
-      "name": "OuassVTC",
-      "telephone": "+33644120784",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Perpignan",
-        "postalCode": "66000",
-        "addressCountry": "FR"
-      },
-      "areaServed": ["Perpignan","Canet-en-Roussillon","Saint-Estève","Argelès-sur-Mer","Le Barcarès"]
-    },
-    "contactPoint": [{
-      "@type": "ContactPoint",
-      "telephone": "+33644120784",
-      "contactType": "customer service",
-      "areaServed": "FR",
-      "availableLanguage": "fr"
-    }]
-  }
-  </script>
-
   <style>
     :root{
       --brand:#000;
@@ -51,7 +20,6 @@
       line-height:1.6;
       padding-bottom: 90px; /* pour les boutons flottants */
     }
-
     header{
       background:#000;
       color:#fff;
@@ -59,31 +27,19 @@
       padding:24px 16px;
     }
     header img{max-height:90px;height:auto;width:auto}
-
     h1 {
       text-align: center;
       margin: 26px 0 8px;
       font-size: 1.6rem;
     }
-
     .contact-container {
       max-width: 800px;
       margin: 0 auto;
       padding: 0 16px 100px;
     }
-
-    p {
-      margin-bottom: 15px;
-      color:#555;
-    }
-
-    a {
-      color: #000;
-      text-decoration: none;
-      font-weight:600;
-    }
+    p { margin-bottom: 15px; color:#555; }
+    a { color: #000; text-decoration: none; font-weight:600; }
     a:hover{text-decoration:underline;}
-
     form {
       background:#fff;
       border:1px solid var(--border);
@@ -116,16 +72,19 @@
       cursor:pointer;
     }
     .btn-submit:hover{opacity:.9;}
-
+    #contactSuccess {
+      margin-top:10px;
+      color:green;
+      font-size:14px;
+      display:none;
+    }
     footer{
       font-size:13px;
-      color:#777;
       text-align:center;
       padding:18px 12px 28px;
       background:#000;
       color:#fff;
     }
-
     /* Boutons flottants bas */
     .floating-buttons {
       position: fixed;
@@ -155,7 +114,6 @@
       transform: translateY(-2px);
       opacity: 0.9;
     }
-
     @media (max-width:600px){
       .floating-buttons a {
         font-size: 14px;
@@ -163,6 +121,14 @@
       }
     }
   </style>
+  <!-- EmailJS (même que sur ta page d'accueil) -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // même clé que sur ton index
+    (function(){
+      emailjs.init("U08QGWWRUenJDOllc");
+    })();
+  </script>
 </head>
 <body>
 
@@ -172,29 +138,28 @@
 
   <main class="contact-container">
     <h1>Contactez OuassVTC</h1>
-    <p>Pour toute réservation de VTC à Perpignan, un transfert vers l’aéroport ou une demande particulière, vous pouvez nous joindre avec les coordonnées ci-dessous.</p>
+    <p>Pour toute réservation de VTC à Perpignan ou demande de tarif, contactez-nous :</p>
 
     <p><strong>Téléphone :</strong> <a href="tel:+33644120784">06 44 12 07 84</a></p>
     <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p>
     <p><strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-    <p><strong>Zone :</strong> Perpignan et Pyrénées-Orientales (66)</p>
-    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (possibilité tôt le matin ou tard le soir)</p>
-    <p>Pour une réservation immédiate, le plus rapide reste l’appel ou WhatsApp 👍</p>
+    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (tôt le matin ou tard le soir possible)</p>
 
-    <!-- petit formulaire de contact -->
-    <form>
+    <!-- Formulaire qui envoie via EmailJS -->
+    <form id="contactForm">
       <h2 style="margin-bottom:10px;font-size:1.05rem;color:#000;">Envoyer un message</h2>
+
       <label for="nom">Nom</label>
-      <input type="text" id="nom" name="nom" placeholder="Votre nom">
+      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
 
       <label for="tel">Téléphone</label>
-      <input type="tel" id="tel" name="tel" placeholder="06 xx xx xx xx">
+      <input type="tel" id="tel" name="tel" placeholder="06 xx xx xx xx" required>
 
       <label for="msg">Votre demande</label>
-      <textarea id="msg" name="msg" placeholder="Date/heure du trajet, adresse de départ, destination..."></textarea>
+      <textarea id="msg" name="msg" placeholder="Ex. Trajet Perpignan → aéroport Barcelone, le 14/01 à 6h00" required></textarea>
 
       <button type="submit" class="btn-submit">📩 Envoyer</button>
-      <p style="font-size:12px;color:#999;margin-top:6px;">(Formulaire d’exemple – vous pouvez aussi écrire directement sur WhatsApp)</p>
+      <p id="contactSuccess">✅ Message envoyé, on vous répond très vite.</p>
     </form>
   </main>
 
@@ -206,6 +171,32 @@
   </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
+
+  <script>
+    // même service/template que sur ta page d'accueil
+    // (tu peux changer si tu as d’autres IDs)
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      const params = {
+        nom: document.getElementById('nom').value,
+        telephone: document.getElementById('tel').value,
+        message: document.getElementById('msg').value,
+        // on peut mettre prix vide, pas grave si le template l'attend
+        prix: ''
+      };
+
+      emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
+        .then(function() {
+          document.getElementById('contactSuccess').style.display = 'block';
+          form.reset();
+        }, function(error) {
+          alert("❌ Impossible d'envoyer pour le moment. Vous pouvez appeler ou écrire sur WhatsApp.");
+          console.log(error);
+        });
+    });
+  </script>
 
 </body>
 </html>
