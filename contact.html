@@ -3,7 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact - OuassVTC</title>
+  <title>Contact VTC à Perpignan – OuassVTC</title>
+  <meta name="description" content="Contactez OuassVTC, chauffeur VTC à Perpignan : téléphone 06 44 12 07 84, WhatsApp, email. Réservation 24h/24 pour transferts aéroports, gares, trajets locaux et Espagne.">
+  <meta name="keywords" content="contact VTC Perpignan, chauffeur privé Perpignan, réservation VTC, OuassVTC, taxi alternatif Perpignan">
+
+  <!-- Données structurées : ContactPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact OuassVTC",
+    "url": "https://www.ouassvtc.fr/contact.html",
+    "about": {
+      "@type": "LocalBusiness",
+      "name": "OuassVTC",
+      "telephone": "+33644120784",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perpignan",
+        "postalCode": "66000",
+        "addressCountry": "FR"
+      },
+      "areaServed": ["Perpignan","Canet-en-Roussillon","Saint-Estève","Argelès-sur-Mer","Le Barcarès"]
+    },
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+33644120784",
+      "contactType": "customer service",
+      "areaServed": "FR",
+      "availableLanguage": "fr"
+    }]
+  }
+  </script>
+
   <style>
     :root{
       --brand:#000;
@@ -16,7 +48,8 @@
       background-color: var(--bg);
       color: #333;
       margin: 0;
-      padding: 0;
+      line-height:1.6;
+      padding-bottom: 90px; /* pour les boutons flottants */
     }
 
     header{
@@ -29,15 +62,14 @@
 
     h1 {
       text-align: center;
-      margin: 26px 0 18px;
+      margin: 26px 0 8px;
       font-size: 1.6rem;
     }
 
     .contact-container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 0 16px 100px; /* espace pour le bouton flottant */
-      line-height:1.6;
+      padding: 0 16px 100px;
     }
 
     p {
@@ -52,43 +84,82 @@
     }
     a:hover{text-decoration:underline;}
 
-    /* Bouton flottant noir */
-    .btn-black{
-      position:fixed;
-      bottom:22px;
-      right:22px;
-      background-color: var(--brand);
-      color:#fff;
-      border:1px solid var(--brand);
-      border-radius:9999px;
-      padding:14px 24px;
-      font-weight:700;
+    form {
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      margin-top:18px;
+      box-shadow:0 2px 6px rgba(0,0,0,.04);
+    }
+    label {
+      display:block;
+      margin-bottom:6px;
+      font-weight:600;
+    }
+    input, textarea {
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      margin-bottom:12px;
       font-size:15px;
-      text-decoration:none;
+    }
+    textarea{min-height:90px;resize:vertical;}
+    .btn-submit{
+      background:var(--brand);
+      color:#fff;
+      border:none;
+      padding:12px 18px;
+      border-radius:999px;
+      font-weight:700;
       cursor:pointer;
-      transition:opacity .25s, transform .25s, box-shadow .25s;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-      z-index:100;
     }
-    .btn-black:hover{
-      opacity:.9;
-      transform:translateY(-2px);
-      box-shadow:0 8px 22px rgba(0,0,0,.35);
-    }
+    .btn-submit:hover{opacity:.9;}
 
     footer{
       font-size:13px;
       color:#777;
       text-align:center;
       padding:18px 12px 28px;
+      background:#000;
+      color:#fff;
+    }
+
+    /* Boutons flottants bas */
+    .floating-buttons {
+      position: fixed;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      padding: 8px 10px;
+      z-index: 999;
+    }
+    .floating-buttons a {
+      flex: 1;
+      text-align: center;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 14px 10px;
+      text-decoration: none;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform .2s, opacity .2s;
+    }
+    .floating-buttons a:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
     }
 
     @media (max-width:600px){
-      .btn-black{
-        right:12px;
-        bottom:12px;
-        padding:12px 18px;
-        font-size:14px;
+      .floating-buttons a {
+        font-size: 14px;
+        padding: 12px 8px;
       }
     }
   </style>
@@ -100,31 +171,41 @@
   </header>
 
   <main class="contact-container">
-    <h1>Contact</h1>
+    <h1>Contactez OuassVTC</h1>
+    <p>Pour toute réservation de VTC à Perpignan, un transfert vers l’aéroport ou une demande particulière, vous pouvez nous joindre avec les coordonnées ci-dessous.</p>
 
     <p><strong>Téléphone :</strong> <a href="tel:+33644120784">06 44 12 07 84</a></p>
     <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p>
     <p><strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-    <p><strong>Adresse :</strong> Perpignan, France</p>
-    <p><strong>Disponibilité :</strong> 7j/7 – Sur réservation</p>
-    <p>Vous pouvez également utiliser notre formulaire de réservation sur la page d’accueil pour toute demande personnalisée.</p>
+    <p><strong>Zone :</strong> Perpignan et Pyrénées-Orientales (66)</p>
+    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (possibilité tôt le matin ou tard le soir)</p>
+    <p>Pour une réservation immédiate, le plus rapide reste l’appel ou WhatsApp 👍</p>
+
+    <!-- petit formulaire de contact -->
+    <form>
+      <h2 style="margin-bottom:10px;font-size:1.05rem;color:#000;">Envoyer un message</h2>
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" placeholder="Votre nom">
+
+      <label for="tel">Téléphone</label>
+      <input type="tel" id="tel" name="tel" placeholder="06 xx xx xx xx">
+
+      <label for="msg">Votre demande</label>
+      <textarea id="msg" name="msg" placeholder="Date/heure du trajet, adresse de départ, destination..."></textarea>
+
+      <button type="submit" class="btn-submit">📩 Envoyer</button>
+      <p style="font-size:12px;color:#999;margin-top:6px;">(Formulaire d’exemple – vous pouvez aussi écrire directement sur WhatsApp)</p>
+    </form>
   </main>
 
-  <!-- Bouton flottant -->
-  <button id="btnRetour" class="btn-black">⬅️ Retour à l’accueil</button>
+  <!-- Boutons flottants -->
+  <div class="floating-buttons">
+    <a href="index.html">⬅️ Accueil</a>
+    <a href="tel:0644120784">📞 Appeler</a>
+    <a href="index.html#formResa">📅 Réserver</a>
+  </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
-
-  <script>
-    // Bouton dynamique : retour ou redirection
-    document.getElementById("btnRetour").addEventListener("click", function(){
-      if (document.referrer && document.referrer !== window.location.href) {
-        window.history.back();
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-  </script>
 
 </body>
 </html>
