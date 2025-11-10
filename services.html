@@ -5,7 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nos services VTC à Perpignan - OuassVTC</title>
   <meta name="description" content="Découvrez tous les services de OuassVTC à Perpignan : transferts aéroports et gares, trajets locaux ou longue distance, déplacements professionnels et mise à disposition. Réservez 24h/24 au 06 44 12 07 84.">
-  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, transfert aéroport, gare Perpignan, VTC 66, taxi Perpignan, transport professionnel, OuassVTC">
+  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, transfert aéroport Perpignan, gare Perpignan, VTC 66, transport Perpignan, OuassVTC">
+
+  <!-- Données structurées SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Transport VTC à Perpignan",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "OuassVTC",
+      "image": "https://www.ouassvtc.fr/ouassvtc.png",
+      "url": "https://www.ouassvtc.fr",
+      "telephone": "+33644120784",
+      "email": "contact@ouassvtc.fr",
+      "priceRange": "€€",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perpignan",
+        "postalCode": "66000",
+        "addressCountry": "FR"
+      }
+    }
+  }
+  </script>
 
   <style>
     :root {
@@ -20,6 +44,7 @@
       color: #333;
       margin: 0;
       line-height: 1.6;
+      padding-bottom: 90px; /* espace pour les boutons fixes */
     }
     header {
       background: var(--brand);
@@ -30,7 +55,6 @@
     header img {
       max-height: 90px;
       height: auto;
-      width: auto;
     }
     main {
       max-width: 850px;
@@ -40,9 +64,7 @@
       box-shadow: 0 4px 16px rgba(0,0,0,.08);
       padding: 28px 20px 60px;
     }
-    h1, h2 {
-      color: #000;
-    }
+    h1, h2 { color: #000; }
     h1 {
       text-align: center;
       font-size: 1.8rem;
@@ -64,14 +86,51 @@
     }
     footer {
       font-size: 13px;
-      color: #777;
       text-align: center;
       padding: 18px 12px 28px;
       background: #000;
       color: #fff;
     }
+
+    /* === Boutons fixes === */
+    .floating-buttons {
+      position: fixed;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      padding: 8px 10px;
+      z-index: 999;
+    }
+    .floating-buttons a {
+      flex: 1;
+      text-align: center;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 14px 10px;
+      text-decoration: none;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform .2s, opacity .2s;
+    }
+    .floating-buttons a:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    @media (max-width:600px){
+      .floating-buttons a {
+        font-size: 14px;
+        padding: 12px 8px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -91,12 +150,12 @@
 
     <h2>🚖 Transferts aéroports & gares</h2>
     <p>
-      Besoin d’un transfert vers ou depuis un aéroport ou une gare ? OuassVTC vous conduit avec fiabilité et ponctualité vers les principales destinations :
+      Besoin d’un transfert vers ou depuis un aéroport ou une gare ? OuassVTC vous conduit vers :
       <strong>Perpignan</strong>, <strong>Béziers</strong>, <strong>Gérone</strong>, <strong>Barcelone</strong>, <strong>Toulouse</strong> ou <strong>Montpellier</strong>.
     </p>
     <p>
-      Votre chauffeur suit les horaires de votre vol ou de votre train en temps réel, pour s’adapter en cas de retard ou d’avance.
-      Pas d’attente inutile, pas de surprise — un trajet fluide et confortable, avec prise en charge à l’heure souhaitée.
+      Votre chauffeur suit les horaires de votre vol ou train en temps réel.
+      Pas d’attente inutile, pas de surprise — un trajet fluide et confortable.
     </p>
     <p>
       👉 <strong>Réservez dès maintenant</strong> au <a href="tel:0644120784">06 44 12 07 84</a> ou par
@@ -105,69 +164,41 @@
 
     <h2>🕐 Mise à disposition à l’heure ou à la journée</h2>
     <p>
-      Vous avez plusieurs déplacements prévus dans la même journée ? Vous souhaitez un chauffeur à disposition pour vos
-      <strong>rendez-vous professionnels, mariages, événements ou visites touristiques</strong> ?
-      OuassVTC vous propose un service de <strong>mise à disposition personnalisée</strong>,
-      avec un véhicule et un chauffeur qui restent à votre disposition aussi longtemps que nécessaire.
+      Vous avez plusieurs déplacements ? Profitez d’un chauffeur à disposition pour vos
+      <strong>rendez-vous, mariages, événements ou visites</strong>.
+      Un service flexible, confortable et professionnel.
     </p>
-    <p>C’est la solution idéale pour les clients qui recherchent flexibilité, confort et tranquillité.</p>
 
     <h2>📍 Trajets locaux & longues distances</h2>
     <p>
-      OuassVTC assure vos <strong>déplacements dans tout le bassin perpignanais</strong> :
-      <strong>Perpignan</strong>, <strong>Canet-en-Roussillon</strong>, <strong>Saint-Estève</strong>,
-      <strong>Argelès-sur-Mer</strong>, <strong>Le Barcarès</strong>, <strong>Toulouges</strong> et les communes voisines.
+      Déplacements à <strong>Perpignan</strong>, <strong>Canet</strong>, <strong>Saint-Estève</strong>,
+      <strong>Argelès</strong>, <strong>Le Barcarès</strong>, <strong>Toulouges</strong>…
+      mais aussi <strong>Barcelone</strong>, <strong>Gérone</strong>, <strong>Montpellier</strong>.
     </p>
-    <p>
-      Nous réalisons également des <strong>trajets longue distance</strong>, vers la France entière et l’Espagne
-      (<strong>Barcelone</strong>, <strong>Gérone</strong>, <strong>Costa Brava</strong>, <strong>Narbonne</strong>, <strong>Montpellier</strong>…).
-      Nos tarifs sont <strong>fixes, transparents et sans frais cachés</strong>.
-    </p>
+    <p>Tarifs <strong>fixes, transparents</strong> et sans frais cachés.</p>
 
     <h2>💼 Déplacements professionnels</h2>
     <p>
-      OuassVTC accompagne aussi les <strong>entreprises, hôtels, administrations et agences</strong>.
-      Nous proposons des <strong>transferts réguliers</strong>, des <strong>accueils de clients</strong>,
-      des <strong>déplacements inter-sites</strong> ou encore des <strong>services de transport événementiel</strong>.
+      Service dédié aux <strong>entreprises, hôtels et administrations</strong> :
+      transferts clients, séminaires, trajets réguliers. Ponctualité et discrétion garanties.
     </p>
-    <ul>
-      <li>Chauffeur professionnel titulaire de la carte VTC</li>
-      <li>Discrétion, ponctualité et courtoisie</li>
-      <li>Facturation simple et claire</li>
-      <li>Adaptation à vos besoins (trajets ponctuels ou contrats récurrents)</li>
-    </ul>
-    <p>Un partenaire fiable pour tous vos déplacements d’affaires à Perpignan et au-delà.</p>
 
     <h2>💳 Paiement simplifié</h2>
-    <p>Avec OuassVTC, le paiement est simple et flexible :</p>
     <ul>
       <li>💳 Carte bancaire à bord</li>
-      <li>🔗 Lien de paiement sécurisé avant le trajet</li>
+      <li>🔗 Lien de paiement sécurisé</li>
       <li>💶 Espèces acceptées</li>
     </ul>
-    <p>
-      Aucun compteur, aucune surprise : le <strong>prix est fixé à l’avance</strong> au moment de la réservation.
-      Transparence, confort et confiance sont nos priorités.
-    </p>
+    <p>Prix connu à l’avance, sans surprise.</p>
 
     <h2>📞 Réserver un VTC à Perpignan</h2>
-    <p>Réserver votre trajet n’a jamais été aussi simple :</p>
     <ul>
-      <li>📱 <strong>Téléphone</strong> : <a href="tel:0644120784">06 44 12 07 84</a></li>
-      <li>💬 <strong>WhatsApp</strong> : <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Cliquez ici pour discuter</a></li>
-      <li>📧 <strong>Email</strong> : <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></li>
-      <li>🖥️ <strong>Formulaire en ligne</strong> disponible sur le site</li>
+      <li>📱 <strong>Téléphone :</strong> <a href="tel:0644120784">06 44 12 07 84</a></li>
+      <li>💬 <strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank">Envoyer un message</a></li>
+      <li>📧 <strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></li>
     </ul>
-    <p>Votre chauffeur est disponible <strong>24h/24 et 7j/7</strong> pour tous vos trajets.</p>
-
-    <h2>❓ Questions fréquentes</h2>
-    <p><strong>→ Le tarif est-il fixe ?</strong> Oui, le prix est défini à l’avance selon la distance et le trajet. Aucun supplément imprévu.</p>
-    <p><strong>→ Intervenez-vous en Espagne ?</strong> Oui, régulièrement pour des transferts vers <strong>Barcelone</strong>, <strong>Gérone</strong> et la <strong>Costa Brava</strong>.</p>
-    <p><strong>→ Peut-on réserver de nuit ?</strong> Oui, OuassVTC est disponible 24h/24, sur simple réservation préalable.</p>
-    <p><strong>→ Acceptez-vous les animaux ou les bagages volumineux ?</strong> Oui, sur demande au moment de la réservation pour prévoir le véhicule adapté.</p>
 
     <h2>🌍 Zones desservies</h2>
-    <p>OuassVTC intervient dans tout le département des <strong>Pyrénées-Orientales (66)</strong> :</p>
     <ul>
       <li>Perpignan</li>
       <li>Saint-Estève</li>
@@ -175,24 +206,24 @@
       <li>Argelès-sur-Mer</li>
       <li>Le Barcarès</li>
       <li>Toulouges</li>
-      <li>Saleilles</li>
-      <li>Rivesaltes</li>
-      <li>Et toutes les communes voisines</li>
+      <li>Et tout le département des Pyrénées-Orientales</li>
     </ul>
-    <p>Nous effectuons également des trajets longue distance vers <strong>Barcelone</strong>, <strong>Toulouse</strong>, <strong>Montpellier</strong> ou <strong>Béziers</strong>.</p>
 
     <h2>🚗 Votre satisfaction, notre priorité</h2>
-    <p>
-      Avec OuassVTC, chaque trajet est effectué avec sérieux, confort et courtoisie.
-      Notre objectif : vous offrir un <strong>service VTC à Perpignan</strong> fiable, accessible et professionnel,
-      que vous voyagiez seul, en couple, en famille ou pour le travail.
-    </p>
-    <p style="font-weight:600;">OuassVTC – votre chauffeur privé à Perpignan, disponible 24h/24.</p>
+    <p>Avec OuassVTC, chaque trajet est effectué avec confort, sécurité et courtoisie.</p>
+    <p><strong>OuassVTC – votre chauffeur VTC à Perpignan, disponible 24h/24.</strong></p>
   </main>
 
   <footer>
     © 2025 OuassVTC - Tous droits réservés.
   </footer>
+
+  <!-- === Boutons fixes === -->
+  <div class="floating-buttons">
+    <a href="index.html">⬅️ Accueil</a>
+    <a href="tel:0644120784">📞 Appeler</a>
+    <a href="index.html#formResa">📅 Réserver</a>
+  </div>
 
 </body>
 </html>
