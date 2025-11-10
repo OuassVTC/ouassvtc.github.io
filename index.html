@@ -49,7 +49,7 @@
       display:block;
       margin:0 auto;
       width:100%;
-      max-width:200px; /* plus petit et propre */
+      max-width:200px;
       height:auto;
     }
 
@@ -194,7 +194,6 @@
           <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
         </div>
 
-        <!-- bouton plus pro -->
         <div style="display:flex;justify-content:center;margin-top:6px;">
           <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
             Installer l’application sur Android
@@ -259,7 +258,14 @@
       </div>
     </form>
 
-    <div id="successBox"></div>
+    <!-- petit maillage interne SEO -->
+    <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
+      Besoin d’en savoir plus ? 
+      <a href="services.html">Voir nos services</a> · 
+      <a href="faq.html">Questions fréquentes</a> · 
+      <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> · 
+      <a href="contact.html">Nous contacter</a>
+    </p>
 
     <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
     <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
@@ -271,7 +277,12 @@
     </section>
   </div>
 
-  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px">© 2025 OuassVTC - Tous droits réservés.</footer>
+  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px;line-height:1.5">
+    © 2025 OuassVTC - Tous droits réservés. <br>
+    <a href="mentions-legales.html" style="color:#fff;text-decoration:none;">Mentions légales</a> ·
+    <a href="politique-confidentialite.html" style="color:#fff;text-decoration:none;">Politique de confidentialité</a> ·
+    <a href="sitemap.xml" style="color:#fff;text-decoration:none;">Plan du site</a>
+  </footer>
 
   <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
