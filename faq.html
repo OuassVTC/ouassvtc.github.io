@@ -3,7 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAQ - OuassVTC</title>
+  <title>FAQ VTC Perpignan – Questions fréquentes | OuassVTC</title>
+  <meta name="description" content="Toutes les réponses sur OuassVTC à Perpignan : réservation VTC, tarifs, paiements, différence taxi/VTC, trajets vers Barcelone ou Gérone, disponibilité 24h/24. Réservez en ligne ou par téléphone.">
+  <meta name="keywords" content="FAQ VTC Perpignan, chauffeur privé Perpignan, différence taxi VTC, VTC aéroport Barcelone, réservation VTC, prix VTC Perpignan, OuassVTC">
+
+  <!-- Données structurées SEO : FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Peut-on réserver un VTC à l'avance à Perpignan ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. OuassVTC accepte les réservations à l'avance par téléphone, WhatsApp ou via le formulaire du site. C'est conseillé pour les trajets tôt le matin ou vers les aéroports (Perpignan, Béziers, Gérone, Barcelone)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle est la différence entre un taxi et un VTC à Perpignan ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le taxi peut prendre des clients sans réservation et travaille au compteur. Le VTC fonctionne uniquement sur réservation et le prix est connu avant le départ. Avec OuassVTC, vous connaissez votre chauffeur, votre heure de prise en charge et votre tarif."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels moyens de paiement sont acceptés par OuassVTC ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "OuassVTC accepte les paiements en espèces, par carte bancaire à bord et via un lien de paiement sécurisé envoyé avant le trajet. Le tarif est communiqué à l'avance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "OuassVTC est-il disponible 24h/24 et 7j/7 ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Le service VTC est disponible à Perpignan 24h/24 et 7j/7, sur réservation, y compris de nuit ou tôt le matin."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Dessers-vous les villes autour de Perpignan (Canet, Argelès, Saint-Estève) ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. OuassVTC dessert Perpignan et les communes voisines : Canet-en-Roussillon, Argelès-sur-Mer, Le Barcarès, Saint-Estève, Toulouges, mais aussi les gares et aéroports de la région."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Proposez-vous des trajets longue distance vers Barcelone ou Toulouse ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Nous réalisons régulièrement des transferts VTC Perpignan – Barcelone, Perpignan – Gérone, Perpignan – Toulouse ou Montpellier. Le prix est fixé à l'avance selon le trajet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Peut-on réserver un VTC comme sur Uber à Perpignan ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Les plateformes ne sont pas toujours disponibles à Perpignan. Avec OuassVTC, vous réservez très facilement par WhatsApp, téléphone ou formulaire et vous avez une vraie confirmation par le chauffeur."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     :root{
       --brand:#000;
@@ -16,7 +85,8 @@
       background-color: var(--bg);
       color: #333;
       margin: 0;
-      padding: 0;
+      line-height: 1.6;
+      padding-bottom: 90px; /* espace bas pour boutons fixes */
     }
 
     header{
@@ -29,14 +99,20 @@
 
     h1 {
       text-align: center;
-      margin: 26px 0 18px;
+      margin: 26px 0 10px;
       font-size: 1.6rem;
+    }
+    .intro {
+      text-align:center;
+      color:#555;
+      margin-bottom:18px;
+      font-size:0.95rem;
     }
 
     .faq-container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 0 16px 100px; /* espace bas pour le bouton flottant */
+      padding: 0 16px 100px;
     }
     .faq-item {
       background:#fff;
@@ -56,30 +132,7 @@
       color: #555;
       line-height:1.5;
     }
-
-    /* Bouton flottant noir */
-    .btn-black{
-      position:fixed;
-      bottom:22px;
-      right:22px;
-      background-color: var(--brand);
-      color:#fff;
-      border:1px solid var(--brand);
-      border-radius:9999px;
-      padding:14px 24px;
-      font-weight:700;
-      font-size:15px;
-      text-decoration:none;
-      cursor:pointer;
-      transition:opacity .25s, transform .25s, box-shadow .25s;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-      z-index:100;
-    }
-    .btn-black:hover{
-      opacity:.9;
-      transform:translateY(-2px);
-      box-shadow:0 8px 22px rgba(0,0,0,.35);
-    }
+    .faq-item a { color:#000; font-weight:600; }
 
     footer{
       font-size:13px;
@@ -88,12 +141,40 @@
       padding:18px 12px 28px;
     }
 
+    /* Boutons flottants bas */
+    .floating-buttons {
+      position: fixed;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      padding: 8px 10px;
+      z-index: 999;
+    }
+    .floating-buttons a {
+      flex: 1;
+      text-align: center;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 14px 10px;
+      text-decoration: none;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform .2s, opacity .2s;
+    }
+    .floating-buttons a:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
     @media (max-width:600px){
-      .btn-black{
-        right:12px;
-        bottom:12px;
-        padding:12px 18px;
-        font-size:14px;
+      .floating-buttons a {
+        font-size: 14px;
+        padding: 12px 8px;
       }
     }
   </style>
@@ -101,53 +182,73 @@
 <body>
 
   <header>
-    <img src="ouassvtc.png" alt="OuassVTC">
+    <img src="ouassvtc.png" alt="OuassVTC - VTC à Perpignan">
   </header>
 
   <main class="faq-container">
     <h1>Foire Aux Questions (FAQ)</h1>
+    <p class="intro">Toutes les réponses sur votre service de VTC à Perpignan. Si vous ne trouvez pas votre question, contactez-nous au <a href="tel:0644120784" style="color:#000;">06 44 12 07 84</a>.</p>
 
     <div class="faq-item">
       <h2>📅 Peut-on réserver à l'avance ?</h2>
-      <p>Oui, vous pouvez réserver votre course à l'avance via notre site, par téléphone ou WhatsApp.</p>
+      <p>Oui, vous pouvez réserver votre course à l'avance via notre site, par téléphone ou via WhatsApp. C’est recommandé pour les aéroports (Perpignan, Gérone, Barcelone) ou les départs très tôt.</p>
     </div>
 
     <div class="faq-item">
       <h2>💳 Quels moyens de paiement acceptez-vous ?</h2>
-      <p>Nous acceptons les paiements en espèces, par carte bancaire et via certains services mobiles.</p>
+      <p>Espèces, carte bancaire à bord et lien de paiement sécurisé. Le tarif est communiqué avant le trajet.</p>
     </div>
 
     <div class="faq-item">
       <h2>🕒 Êtes-vous disponible 24h/24 ?</h2>
-      <p>Oui, notre service est disponible 7j/7 et sur demande, y compris de nuit.</p>
+      <p>Oui, nous pouvons assurer des trajets de jour comme de nuit, 7j/7, sur réservation.</p>
     </div>
 
     <div class="faq-item">
-      <h2>👨‍👩‍👧‍👦 Acceptez-vous les enfants et animaux ?</h2>
-      <p>Oui, nous acceptons les enfants accompagnés. Les animaux sont également les bienvenus s’ils sont transportés en toute sécurité.</p>
+      <h2>🚕 Quelle est la différence entre un taxi et un VTC ?</h2>
+      <p>Le taxi prend à la volée et facture au compteur. Le VTC travaille uniquement sur réservation, avec un prix fixe défini à l’avance. OuassVTC est un VTC à Perpignan : vous savez qui vient, à quelle heure et à quel prix.</p>
+    </div>
+
+    <div class="faq-item">
+      <h2>✅ Pourquoi choisir un VTC plutôt qu’un taxi à Perpignan ?</h2>
+      <p>Pour le tarif fixe, la réservation rapide (WhatsApp, téléphone), un chauffeur ponctuel et un véhicule réservé uniquement pour vous. C’est une alternative très pratique surtout pour les gares, aéroports ou déplacements pros.</p>
+    </div>
+
+    <div class="faq-item">
+      <h2>📱 Peut-on réserver comme sur Uber ou Bolt ?</h2>
+      <p>À Perpignan, les plateformes ne sont pas toujours disponibles. Avec OuassVTC, vous envoyez juste votre trajet par WhatsApp ou via le formulaire et nous confirmons le prix et l’horaire.</p>
     </div>
 
     <div class="faq-item">
       <h2>📍 Quels lieux desservez-vous ?</h2>
-      <p>Nous desservons Perpignan et sa région : Canet, Argelès, Le Barcarès, Narbonne, aéroports et gares régionales.</p>
+      <p>Nous couvrons Perpignan, Canet-en-Roussillon, Argelès-sur-Mer, Le Barcarès, Saint-Estève, Toulouges, Rivesaltes, et réalisons des trajets vers les aéroports de Perpignan, Béziers, Gérone et Barcelone.</p>
     </div>
+
+    <div class="faq-item">
+      <h2>✈️ Faites-vous Perpignan → Aéroport Barcelone / Gérone ?</h2>
+      <p>Oui, c’est un trajet très demandé. Le prix est fixé à l’avance selon l’horaire et le point de départ. Vous pouvez le demander directement ici : <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp OuassVTC</a>.</p>
+    </div>
+
+    <div class="faq-item">
+      <h2>👨‍👩‍👧‍👦 Acceptez-vous les enfants et les animaux ?</h2>
+      <p>Oui, enfants accompagnés acceptés. Animaux acceptés s’ils sont précisés à l’avance (pour protéger le véhicule).</p>
+    </div>
+
+    <div class="faq-item">
+      <h2>📄 Où voir vos autres services ?</h2>
+      <p>Vous pouvez consulter la page <a href="services.html">“Nos services VTC à Perpignan”</a> pour voir les transferts, mises à disposition et trajets longue distance.</p>
+    </div>
+
   </main>
 
-  <!-- Bouton flottant -->
-  <button id="btnRetour" class="btn-black">⬅️ Retour à l’accueil</button>
+  <!-- Boutons fixes -->
+  <div class="floating-buttons">
+    <a href="index.html">⬅️ Accueil</a>
+    <a href="tel:0644120784">📞 Appeler</a>
+    <a href="index.html#formResa">📅 Réserver</a>
+  </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
-
-  <script>
-    // Bouton dynamique : retour ou redirection
-    document.getElementById("btnRetour").addEventListener("click", function(){
-      if (document.referrer && document.referrer !== window.location.href) {
-        window.history.back();
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-  </script>
 
 </body>
 </html>
