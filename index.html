@@ -15,13 +15,14 @@
   <meta name="theme-color" content="#000000">
 
   <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL&v=2"></script>
+  <!-- ⚠️ c'est CETTE ligne qui était cassée avant -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
-    // tes events
+    // pour suivre tes clics
     function trackEvent(action,label){
       gtag('event', action, {
         event_category: 'Interaction',
@@ -445,7 +446,7 @@
       });
     });
 
-    // on garde le PWA, mais on force une nouvelle version du SW
+    // on garde ton PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js?v=3').catch(err => console.log('SW error', err));
