@@ -3,8 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact VTC à Perpignan – OuassVTC</title>
-  <meta name="description" content="Contactez OuassVTC, chauffeur VTC à Perpignan : téléphone 06 44 12 07 84, WhatsApp, email. Réservation 24h/24 pour transferts aéroports, gares, trajets locaux et Espagne.">
+  <title>Contact VTC Perpignan | OuassVTC – Réservation chauffeur privé 24h/24</title>
+  <meta name="description" content="Contactez OuassVTC, chauffeur VTC à Perpignan (66) : téléphone 06 44 12 07 84, WhatsApp, formulaire. Réservation 24h/24 pour transferts aéroports, gares, Canet, Argelès, Espagne.">
+  <link rel="canonical" href="https://www.ouassvtc.fr/contact.html" />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Schema.org : ContactPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact OuassVTC",
+    "url": "https://www.ouassvtc.fr/contact.html",
+    "description": "Page de contact du service VTC OuassVTC à Perpignan.",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+33644120784",
+      "contactType": "customer service",
+      "areaServed": "FR",
+      "availableLanguage": "fr"
+    }]
+  }
+  </script>
+
+  <!-- Schema.org : LocalBusiness pour le local SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "OuassVTC",
+    "url": "https://www.ouassvtc.fr",
+    "image": "https://www.ouassvtc.fr/ouassvtc.png",
+    "description": "Chauffeur VTC à Perpignan et dans les Pyrénées-Orientales. Transferts gares, aéroports, Espagne, déplacements professionnels.",
+    "telephone": "+33644120784",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Perpignan",
+      "addressLocality": "Perpignan",
+      "postalCode": "66000",
+      "addressCountry": "FR"
+    },
+    "areaServed": [
+      "Perpignan",
+      "Canet-en-Roussillon",
+      "Saint-Estève",
+      "Argelès-sur-Mer",
+      "Le Barcarès",
+      "Toulouges"
+    ],
+    "openingHours": "Mo-Su 00:00-23:59",
+    "priceRange": "€€"
+  }
+  </script>
+
   <style>
     :root{
       --brand:#000;
@@ -27,19 +78,32 @@
       padding:24px 16px;
     }
     header img{max-height:90px;height:auto;width:auto}
-    h1 {
-      text-align: center;
-      margin: 26px 0 8px;
-      font-size: 1.6rem;
-    }
     .contact-container {
       max-width: 800px;
       margin: 0 auto;
       padding: 0 16px 100px;
     }
+    h1 {
+      text-align: center;
+      margin: 26px 0 6px;
+      font-size: 1.65rem;
+    }
+    .intro {
+      text-align:center;
+      color:#555;
+      margin-bottom:18px;
+    }
     p { margin-bottom: 15px; color:#555; }
     a { color: #000; text-decoration: none; font-weight:600; }
     a:hover{text-decoration:underline;}
+
+    h2 {
+      font-size:1.08rem;
+      margin-top:20px;
+      margin-bottom:8px;
+      color:#000;
+    }
+
     form {
       background:#fff;
       border:1px solid var(--border);
@@ -60,6 +124,7 @@
       border-radius:10px;
       margin-bottom:12px;
       font-size:15px;
+      background:#fff;
     }
     textarea{min-height:90px;resize:vertical;}
     .btn-submit{
@@ -78,6 +143,7 @@
       font-size:14px;
       display:none;
     }
+
     footer{
       font-size:13px;
       text-align:center;
@@ -85,6 +151,7 @@
       background:#000;
       color:#fff;
     }
+
     /* Boutons flottants bas */
     .floating-buttons {
       position: fixed;
@@ -114,6 +181,7 @@
       transform: translateY(-2px);
       opacity: 0.9;
     }
+
     @media (max-width:600px){
       .floating-buttons a {
         font-size: 14px;
@@ -121,10 +189,10 @@
       }
     }
   </style>
-  <!-- EmailJS (même que sur ta page d'accueil) -->
+
+  <!-- EmailJS (comme ta page d'accueil) -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    // même clé que sur ton index
     (function(){
       emailjs.init("U08QGWWRUenJDOllc");
     })();
@@ -133,22 +201,23 @@
 <body>
 
   <header>
-    <img src="ouassvtc.png" alt="OuassVTC">
+    <img src="ouassvtc.png" alt="OuassVTC - VTC à Perpignan">
   </header>
 
   <main class="contact-container">
-    <h1>Contactez OuassVTC</h1>
-    <p>Pour toute réservation de VTC à Perpignan ou demande de tarif, contactez-nous :</p>
+    <h1>Contactez votre VTC à Perpignan</h1>
+    <p class="intro">Besoin d’un chauffeur privé pour un trajet à Perpignan, un transfert vers l’aéroport de Barcelone ou une mise à disposition ? Écrivez-nous ou appelez-nous.</p>
 
+    <h2>Coordonnées</h2>
     <p><strong>Téléphone :</strong> <a href="tel:+33644120784">06 44 12 07 84</a></p>
     <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p>
     <p><strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (tôt le matin ou tard le soir possible)</p>
+    <p><strong>Adresse (zone d’intervention) :</strong> Perpignan (66000), Pyrénées-Orientales</p>
+    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (trajets tôt ou tard possibles)</p>
 
-    <!-- Formulaire qui envoie via EmailJS -->
+    <h2>Formulaire de contact</h2>
+    <p>Indiquez votre trajet (Perpignan → destination, date et heure) et nous vous répondons rapidement.</p>
     <form id="contactForm">
-      <h2 style="margin-bottom:10px;font-size:1.05rem;color:#000;">Envoyer un message</h2>
-
       <label for="nom">Nom</label>
       <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
 
@@ -158,9 +227,20 @@
       <label for="msg">Votre demande</label>
       <textarea id="msg" name="msg" placeholder="Ex. Trajet Perpignan → aéroport Barcelone, le 14/01 à 6h00" required></textarea>
 
-      <button type="submit" class="btn-submit">📩 Envoyer</button>
-      <p id="contactSuccess">✅ Message envoyé, on vous répond très vite.</p>
+      <button type="submit" class="btn-submit">📩 Envoyer la demande</button>
+      <p id="contactSuccess">✅ Message envoyé. Nous revenons vers vous rapidement.</p>
     </form>
+
+    <h2>Autres pages utiles</h2>
+    <p>
+      👉 <a href="index.html">Page d’accueil VTC Perpignan</a><br>
+      👉 <a href="services.html">Nos services (gares, aéroports, Espagne)</a><br>
+      👉 <a href="faq.html">FAQ VTC Perpignan</a>
+    </p>
+
+    <h2>Zones desservies</h2>
+    <p>Nous intervenons à Perpignan, Saint-Estève, Canet-en-Roussillon, Argelès-sur-Mer, Le Barcarès, Toulouges ainsi que vers les aéroports de Perpignan, Béziers, Gérone et Barcelone.</p>
+
   </main>
 
   <!-- Boutons flottants -->
@@ -173,27 +253,23 @@
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
   <script>
-    // même service/template que sur ta page d'accueil
-    // (tu peux changer si tu as d’autres IDs)
     const form = document.getElementById('contactForm');
     form.addEventListener('submit', function(e){
       e.preventDefault();
-
       const params = {
         nom: document.getElementById('nom').value,
         telephone: document.getElementById('tel').value,
         message: document.getElementById('msg').value,
-        // on peut mettre prix vide, pas grave si le template l'attend
         prix: ''
       };
-
+      // même service / template que ton accueil
       emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
         .then(function() {
           document.getElementById('contactSuccess').style.display = 'block';
           form.reset();
-        }, function(error) {
-          alert("❌ Impossible d'envoyer pour le moment. Vous pouvez appeler ou écrire sur WhatsApp.");
-          console.log(error);
+        }, function(err) {
+          alert("❌ Envoi impossible pour le moment. Vous pouvez appeler ou écrire sur WhatsApp.");
+          console.log(err);
         });
     });
   </script>
