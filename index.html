@@ -21,6 +21,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
+    // tes events
     function trackEvent(action,label){
       gtag('event', action, {
         event_category: 'Interaction',
@@ -43,22 +44,9 @@
     html{scroll-behavior:smooth}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111;line-height:1.4}
 
-    /* --- Header --- */
-    header{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:28px;
-    }
-    header img{
-      display:block;
-      margin:0 auto;
-      width:100%;
-      max-width:200px;
-      height:auto;
-    }
+    header{background:#000;color:#fff;text-align:center;padding:28px;}
+    header img{display:block;margin:0 auto;width:100%;max-width:200px;height:auto;}
 
-    /* --- Nav --- */
     nav#topnav{
       position:sticky;top:0;z-index:20;
       display:flex;gap:18px;justify-content:center;
@@ -106,7 +94,6 @@
       font-size:14px;border-radius:999px;display:inline-flex
     }
 
-    /* --- Estimation sticky --- */
     .fare-sticky{
       position:fixed;
       top:var(--navH);
@@ -263,7 +250,6 @@
       </div>
     </form>
 
-    <!-- petit maillage interne SEO -->
     <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
       Besoin d’en savoir plus ? 
       <a href="services.html">Voir nos services</a> · 
@@ -459,9 +445,10 @@
       });
     });
 
+    // on garde le PWA, mais on force une nouvelle version du SW
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=2').catch(err => console.log('SW error', err));
+        navigator.serviceWorker.register('/sw.js?v=3').catch(err => console.log('SW error', err));
       });
     }
   </script>
