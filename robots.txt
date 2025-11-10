@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.ouassvtc.fr/sitemap.xml
