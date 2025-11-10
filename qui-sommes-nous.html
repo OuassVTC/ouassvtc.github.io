@@ -3,7 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>À propos - OuassVTC</title>
+  <title>À propos de OuassVTC – Chauffeur VTC à Perpignan</title>
+  <meta name="description" content="OuassVTC est un chauffeur VTC professionnel basé à Perpignan (66). Plus de 10 ans d'expérience dans le transport de personnes : trajets locaux, aéroports, Espagne, entreprises. Service fiable et ponctuel, réservation 24h/24.">
+  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, à propos OuassVTC, transport personne Perpignan, VTC 66, alternative taxi Perpignan">
+
+  <!-- Données structurées : AboutPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "À propos de OuassVTC",
+    "description": "Présentation du service VTC OuassVTC à Perpignan, transport privé 24h/24.",
+    "mainEntityOfPage": "https://www.ouassvtc.fr/qui-sommes-nous.html",
+    "about": {
+      "@type": "LocalBusiness",
+      "name": "OuassVTC",
+      "url": "https://www.ouassvtc.fr",
+      "telephone": "+33644120784",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perpignan",
+        "postalCode": "66000",
+        "addressCountry": "FR"
+      },
+      "areaServed": [
+        "Perpignan",
+        "Saint-Estève",
+        "Canet-en-Roussillon",
+        "Argelès-sur-Mer",
+        "Le Barcarès"
+      ]
+    }
+  }
+  </script>
+
   <style>
     :root{
       --brand:#000;
@@ -16,7 +49,8 @@
       background-color: var(--bg);
       color: #333;
       margin: 0;
-      padding: 0;
+      line-height: 1.6;
+      padding-bottom: 90px; /* pour les boutons fixes */
     }
 
     header{
@@ -27,46 +61,28 @@
     }
     header img{max-height:90px;height:auto;width:auto}
 
-    h1 {
-      text-align: center;
-      margin: 26px 0 18px;
-      font-size: 1.6rem;
+    .about-container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 16px 100px;
     }
 
-    .about-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 16px 100px; /* espace bas pour le bouton flottant */
+    h1 {
+      text-align: center;
+      margin: 26px 0 14px;
+      font-size: 1.65rem;
+    }
+    h2 {
+      font-size: 1.05rem;
+      margin-top: 20px;
+      margin-bottom: 6px;
+      color:#000;
     }
 
     p {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       line-height: 1.6;
       color:#555;
-    }
-
-    /* Bouton flottant noir */
-    .btn-black{
-      position:fixed;
-      bottom:22px;
-      right:22px;
-      background-color: var(--brand);
-      color:#fff;
-      border:1px solid var(--brand);
-      border-radius:9999px;
-      padding:14px 24px;
-      font-weight:700;
-      font-size:15px;
-      text-decoration:none;
-      cursor:pointer;
-      transition:opacity .25s, transform .25s, box-shadow .25s;
-      box-shadow:0 6px 18px rgba(0,0,0,.25);
-      z-index:100;
-    }
-    .btn-black:hover{
-      opacity:.9;
-      transform:translateY(-2px);
-      box-shadow:0 8px 22px rgba(0,0,0,.35);
     }
 
     footer{
@@ -74,14 +90,44 @@
       color:#777;
       text-align:center;
       padding:18px 12px 28px;
+      background:#000;
+      color:#fff;
+    }
+
+    /* Boutons flottants bas */
+    .floating-buttons {
+      position: fixed;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      padding: 8px 10px;
+      z-index: 999;
+    }
+    .floating-buttons a {
+      flex: 1;
+      text-align: center;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 14px 10px;
+      text-decoration: none;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform .2s, opacity .2s;
+    }
+    .floating-buttons a:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
     }
 
     @media (max-width:600px){
-      .btn-black{
-        right:12px;
-        bottom:12px;
-        padding:12px 18px;
-        font-size:14px;
+      .floating-buttons a {
+        font-size: 14px;
+        padding: 12px 8px;
       }
     }
   </style>
@@ -93,41 +139,66 @@
   </header>
 
   <main class="about-container">
-    <h1>À propos</h1>
-
+    <h1>À propos de OuassVTC</h1>
     <p>
-      Chez <strong>OuassVTC</strong>, nous sommes spécialisés dans le transport de personnes à Perpignan et sa région. 
-      Forts de plus de 10 ans d'expérience dans le domaine, nous mettons un point d'honneur à offrir un service fiable, ponctuel, sécurisé et respectueux de nos clients.
+      <strong>OuassVTC</strong> est un service de transport de personnes basé à <strong>Perpignan</strong>, dans les Pyrénées-Orientales (66).
+      Nous accompagnons les particuliers, familles et professionnels pour leurs déplacements quotidiens, leurs transferts vers les gares et aéroports,
+      ainsi que leurs trajets vers l’Espagne.
     </p>
 
+    <h2>Une expérience de plus de 10 ans</h2>
     <p>
-      Nous croyons que chaque trajet compte. C’est pourquoi notre engagement repose sur la qualité de l’accueil, la propreté des véhicules, la courtoisie de nos chauffeurs et le respect total de vos horaires.
+      Forts de plus de 10 ans d’expérience dans le transport, nous connaissons parfaitement le secteur de Perpignan, ses axes, ses horaires
+      et les besoins de nos clients (aéroports très tôt, sorties tardives, trajets vers Barcelone…).
+      Cette expérience nous permet de vous proposer un service <strong>ponctuel, organisé et sécurisé</strong>.
     </p>
 
+    <h2>Un service VTC différent d’un taxi</h2>
     <p>
-      Notre mission est simple : faciliter vos déplacements avec professionnalisme, que ce soit pour un rendez-vous personnel, un déplacement professionnel ou un transfert vers une gare ou un aéroport.
+      Contrairement à un taxi, le VTC fonctionne <strong>uniquement sur réservation</strong> et le tarif est connu à l’avance.
+      Avec OuassVTC, vous savez qui vient vous chercher, à quelle heure et à quel prix. C’est une alternative pratique au taxi à Perpignan,
+      notamment pour les gares, aéroports, rendez-vous médicaux ou professionnels.
     </p>
 
+    <h2>Nos engagements</h2>
     <p>
-      Réserver avec OuassVTC, c’est faire le choix d’un chauffeur à l’écoute, expérimenté et toujours prêt à répondre à vos besoins.
+      - Ponctualité et respect des horaires<br>
+      - Véhicule propre et confortable<br>
+      - Chauffeur courtois et discret<br>
+      - Plusieurs moyens de paiement (CB, lien sécurisé, espèces)<br>
+      - Zone de service : Perpignan, Canet, Argelès, Saint-Estève, Le Barcarès, et trajets vers l’Espagne
+    </p>
+
+    <h2>Pour quels trajets ?</h2>
+    <p>
+      Nous réalisons :
+    </p>
+    <ul style="margin-left:18px;color:#555;line-height:1.5;">
+      <li>Transferts gares et aéroports (Perpignan, Béziers, Gérone, Barcelone)</li>
+      <li>Déplacements locaux dans le 66</li>
+      <li>Longues distances vers la France et l’Espagne</li>
+      <li>Déplacements professionnels et rendez-vous</li>
+    </ul>
+
+    <p style="margin-top:18px;">
+      Pour en savoir plus sur nos prestations, consultez aussi la page
+      <a href="services.html" style="color:#000;font-weight:600;">Nos services VTC à Perpignan</a>.
+    </p>
+
+    <p style="margin-top:10px;">
+      📞 Une question ou une réservation ? Appelez le <a href="tel:0644120784" style="color:#000;">06 44 12 07 84</a> ou écrivez-nous sur
+      <a href="https://wa.me/33644120784" target="_blank" rel="noopener" style="color:#000;">WhatsApp</a>.
     </p>
   </main>
 
-  <!-- Bouton flottant -->
-  <button id="btnRetour" class="btn-black">⬅️ Retour à l’accueil</button>
+  <!-- Boutons fixes -->
+  <div class="floating-buttons">
+    <a href="index.html">⬅️ Accueil</a>
+    <a href="tel:0644120784">📞 Appeler</a>
+    <a href="index.html#formResa">📅 Réserver</a>
+  </div>
 
   <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
-
-  <script>
-    // Bouton dynamique : retour ou redirection
-    document.getElementById("btnRetour").addEventListener("click", function(){
-      if (document.referrer && document.referrer !== window.location.href) {
-        window.history.back();
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-  </script>
 
 </body>
 </html>
