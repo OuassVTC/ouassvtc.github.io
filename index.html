@@ -14,14 +14,19 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL&v=2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
-    function trackEvent(action,label){gtag('event',action,{event_category:'Interaction',event_label:label});}
+    function trackEvent(action,label){
+      gtag('event', action, {
+        event_category: 'Interaction',
+        event_label: label
+      });
+    }
   </script>
 
   <style>
