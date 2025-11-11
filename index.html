@@ -45,23 +45,8 @@
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111;line-height:1.4}
-
-    /* --- Header --- */
-    header{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:28px;
-    }
-    header img{
-      display:block;
-      margin:0 auto;
-      width:100%;
-      max-width:200px;
-      height:auto;
-    }
-
-    /* --- Nav --- */
+    header{background:#000;color:#fff;text-align:center;padding:28px;}
+    header img{display:block;margin:0 auto;width:100%;max-width:200px;height:auto;}
     nav#topnav{
       position:sticky;top:0;z-index:20;
       display:flex;gap:18px;justify-content:center;
@@ -73,16 +58,12 @@
       color:#111;text-decoration:none;font-weight:650;font-size:15px;
       padding:8px 10px;border-radius:999px
     }
-    nav#topnav a:hover,nav#topnav a:focus-visible{
-      background:#f3f4f6;outline:none
-    }
-
+    nav#topnav a:hover,nav#topnav a:focus-visible{background:#f3f4f6;outline:none}
     .container{max-width:min(1100px,92vw);margin:auto;padding:28px 18px}
     .hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
     .hero-text{text-align:center}
     .hero-text h1{font-size:26px;font-weight:800;margin-bottom:6px}
     .hero-text p{font-size:15px;color:var(--muted)}
-
     .main-button{display:flex;justify-content:center;margin:18px 0}
     .btn-main{
       background:var(--brand);color:#fff;font-weight:800;font-size:17px;
@@ -90,7 +71,6 @@
       text-align:center;text-decoration:none;transition:transform .25s,opacity .25s;
     }
     .btn-main:hover,.btn-main:focus-visible{opacity:.9;transform:translateY(-2px);outline:none}
-
     .contact-buttons{
       display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;align-items:stretch;margin:20px 0 12px
@@ -108,20 +88,11 @@
       box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;
       font-size:14px;border-radius:999px;display:inline-flex
     }
-
-    /* --- Estimation sticky --- */
     .fare-sticky{
-      position:fixed;
-      top:var(--navH);
-      left:0;right:0;
-      z-index:50;
-      background:#0a0a0a;color:#fff;
-      border-radius:0 0 var(--radius) var(--radius);
-      padding:14px 16px;
-      display:none;
-      box-shadow:0 10px 24px rgba(0,0,0,.25);
-      width:min(1100px,92vw);
-      margin-inline:auto;
+      position:fixed;top:var(--navH);left:0;right:0;z-index:50;
+      background:#0a0a0a;color:#fff;border-radius:0 0 var(--radius) var(--radius);
+      padding:14px 16px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25);
+      width:min(1100px,92vw);margin-inline:auto;
     }
     body.fare-open{padding-top:calc(var(--navH) + 82px);}
     .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -130,27 +101,22 @@
     .fare-price{font-size:34px;font-weight:900}
     .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
     .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
-
     .intro{text-align:center;font-size:15px;color:#444;font-weight:650;margin:20px 0 10px}
     form label{display:block;font-size:14px;font-weight:650;margin-bottom:6px;margin-top:12px}
     input,select,textarea{
       width:100%;padding:14px 12px;border:1px solid var(--border);
-      border-radius:12px;background:#f9f9f9;font-size:16px;
-      transition:border .2s,background .2s
+      border-radius:12px;background:#f9f9f9;font-size:16px;transition:border .2s,background .2s
     }
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
     textarea{min-height:64px;resize:none}
     .form-buttons{display:flex;flex-direction:column;gap:12px;margin:20px 0 24px}
-
     #map{height:320px;border-radius:var(--radius);margin-top:20px}
-
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
     .modal.show{display:flex}
     .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25)}
     .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
     .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
     .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
-
     @media (min-width:700px){
       .hero{grid-template-columns:1.1fr .9fr}
       .hero-text{text-align:left}
@@ -267,10 +233,10 @@
     </form>
 
     <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
-      Besoin d’en savoir plus ? 
-      <a href="services.html">Voir nos services</a> · 
-      <a href="faq.html">Questions fréquentes</a> · 
-      <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> · 
+      Besoin d’en savoir plus ?
+      <a href="services.html">Voir nos services</a> ·
+      <a href="faq.html">Questions fréquentes</a> ·
+      <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> ·
       <a href="contact.html">Nous contacter</a>
     </p>
 
@@ -409,9 +375,6 @@
       window.removeEventListener('keydown',onEscClose);
     }
 
-    function onEscClose(e){ if(e.key==='Escape') hideSuccessModal(); }
-
-    // === Google Maps ===
     let map,directionsService,directionsRenderer;
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
@@ -425,7 +388,6 @@
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
 
-    // === PWA : install Android / explication iPhone ===
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -461,7 +423,6 @@
       });
     });
 
-    // on garde ton PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js?v=3').catch(err => console.log('SW error', err));
@@ -470,5 +431,10 @@
   </script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "4e0fc3063cf2457692748ce00e333cd6"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
