@@ -146,26 +146,27 @@
   </header>
 
   <nav id="topnav">
-    <a href="services.html">Services</a>
-    <a href="faq.html">FAQ</a>
+    <a href="services.html">Services VTC Perpignan</a>
+    <a href="faq.html">FAQ VTC</a>
     <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
   </nav>
 
   <div class="container">
-    <section class="hero" aria-label="Présentation et réservation">
+    <section class="hero" aria-label="Présentation et réservation VTC Perpignan">
       <div class="hero-text">
-        <h1>Chauffeur VTC à Perpignan</h1>
-        <p>Réservez en quelques secondes — confort et fiabilité.</p>
+        <h1>Chauffeur <strong>VTC Perpignan</strong></h1>
+        <p>Réservez en quelques secondes — confort et fiabilité dans tout le secteur de Perpignan.</p>
 
         <div class="main-button">
-          <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
+          <!-- 👉 on descend maintenant sur la phrase "Remplissez le formulaire..." -->
+          <a class="btn btn-main" href="#introForm" onclick="trackEvent('clic_reserver','Réserver maintenant - VTC Perpignan')">📅 Réservez maintenant</a>
         </div>
 
         <div class="contact-buttons" role="group" aria-label="Contact rapide">
-          <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
-          <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
-          <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
+          <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler VTC Perpignan')">📞 Appeler</a>
+          <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp VTC Perpignan')">💬 WhatsApp</a>
+          <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS VTC Perpignan')">✉️ SMS</a>
         </div>
 
         <div style="display:flex;justify-content:center;margin-top:6px;">
@@ -185,13 +186,16 @@
                 <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
               </div>
             </div>
-            <div class="chip">Tarif indicatif</div>
+            <div class="chip">Tarif VTC Perpignan indicatif</div>
           </div>
         </div>
       </aside>
     </section>
 
-    <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
+    <!-- 👉 ancre ajoutée ici -->
+    <p class="intro" id="introForm">
+      <strong>Remplissez le formulaire ci-dessous</strong> pour votre trajet <strong>VTC Perpignan</strong> et soyez recontacté dans les plus brefs délais.
+    </p>
 
     <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
@@ -201,7 +205,7 @@
       <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
 
       <label for="depart">Adresse de départ</label>
-      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ (Perpignan ou alentours)" autocomplete="street-address" required>
 
       <label for="arrivee">Adresse d'arrivée</label>
       <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
@@ -227,13 +231,13 @@
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
       <div class="form-buttons">
-        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
+        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif VTC Perpignan</button>
         <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
       </div>
     </form>
 
     <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
-      Besoin d’en savoir plus ?
+      Besoin d’en savoir plus sur nos <strong>trajets VTC Perpignan</strong> ?
       <a href="services.html">Voir nos services</a> ·
       <a href="faq.html">Questions fréquentes</a> ·
       <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> ·
@@ -241,7 +245,7 @@
     </p>
 
     <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
-    <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
+    <div id="map" role="region" aria-label="Carte de l'itinéraire VTC Perpignan"></div>
 
     <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
       <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
@@ -251,7 +255,7 @@
   </div>
 
   <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px;line-height:1.5">
-    © 2025 OuassVTC - Tous droits réservés. <br>
+    © 2025 OuassVTC - Chauffeur <strong>VTC Perpignan</strong> et alentours. <br>
     <a href="mentions-legales.html" style="color:#fff;text-decoration:none;">Mentions légales</a> ·
     <a href="politique-confidentialite.html" style="color:#fff;text-decoration:none;">Politique de confidentialité</a> ·
     <a href="sitemap.xml" style="color:#fff;text-decoration:none;">Plan du site</a>
