@@ -15,7 +15,6 @@
   <meta name="theme-color" content="#000000">
 
   <!-- Google Analytics (GA4) -->
-  <!-- ⚠️ ne pas modifier cette URL -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -155,11 +154,11 @@
   <div class="container">
     <section class="hero" aria-label="Présentation et réservation">
       <div class="hero-text">
-        <h1>Chauffeur VTC à Perpignan</h1>
-        <p>Réservez en quelques secondes — confort et fiabilité.</p>
+        <h1>Chauffeur <strong>VTC à Perpignan</strong></h1>
+        <p>Réservez votre trajet en VTC Perpignan en quelques secondes — confort, ponctualité et fiabilité.</p>
 
         <div class="main-button">
-          <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
+          <a class="btn btn-main" href="#formResa" id="reserveBtn" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
         </div>
 
         <div class="contact-buttons" role="group" aria-label="Contact rapide">
@@ -191,7 +190,7 @@
       </aside>
     </section>
 
-    <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
+    <p class="intro">Remplissez le formulaire ci-dessous pour votre <strong>trajet VTC Perpignan</strong> et soyez recontacté rapidement.</p>
 
     <form id="formResa" onsubmit="sendEmail(event)">
       <label for="nom">Nom et prénom</label>
@@ -251,7 +250,7 @@
   </div>
 
   <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px;line-height:1.5">
-    © 2025 OuassVTC - Tous droits réservés. <br>
+    © 2025 OuassVTC - Chauffeur <strong>VTC Perpignan</strong> - Tous droits réservés. <br>
     <a href="mentions-legales.html" style="color:#fff;text-decoration:none;">Mentions légales</a> ·
     <a href="politique-confidentialite.html" style="color:#fff;text-decoration:none;">Politique de confidentialité</a> ·
     <a href="sitemap.xml" style="color:#fff;text-decoration:none;">Plan du site</a>
@@ -375,6 +374,41 @@
       window.removeEventListener('keydown',onEscClose);
     }
 
+    function onEscClose(e){
+      if(e.key === 'Escape') hideSuccessModal();
+    }
+
+    // Scroll corrigé du bouton "Réservez maintenant"
+    document.addEventListener("DOMContentLoaded", () => {
+      const reserveBtn = document.getElementById("reserveBtn");
+      if (reserveBtn) {
+        reserveBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = document.querySelector("#formResa");
+          if (!target) return;
+          const nav = document.getElementById("topnav");
+          const fare = document.getElementById("fare");
+          const navH = nav ? nav.offsetHeight : 0;
+          const fareVisible = fare && (fare.style.display === "block" || fare.classList.contains("show"));
+          const fareH = fareVisible ? fare.offsetHeight : 0;
+          const offset = navH + fareH + 20; // petit espace
+          const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top, behavior: "smooth" });
+        });
+      }
+
+      const btnAdd = document.getElementById('btnAddApp');
+      const btnAddModal = document.getElementById('btnAddAppModal');
+      const homeBtn = document.getElementById('homeBtn');
+
+      if (btnAdd) btnAdd.addEventListener('click', triggerInstall);
+      if (btnAddModal) btnAddModal.addEventListener('click', triggerInstall);
+      if (homeBtn) homeBtn.addEventListener('click', () => {
+        hideSuccessModal();
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+
     let map,directionsService,directionsRenderer;
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
@@ -409,19 +443,6 @@
         explainIOS();
       }
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const btnAdd = document.getElementById('btnAddApp');
-      const btnAddModal = document.getElementById('btnAddAppModal');
-      const homeBtn = document.getElementById('homeBtn');
-
-      if (btnAdd) btnAdd.addEventListener('click', triggerInstall);
-      if (btnAddModal) btnAddModal.addEventListener('click', triggerInstall);
-      if (homeBtn) homeBtn.addEventListener('click', () => {
-        hideSuccessModal();
-        window.scrollTo({top:0,behavior:'smooth'});
-      });
-    });
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
