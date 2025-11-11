@@ -6,16 +6,14 @@
   <title>OuassVTC - Chauffeur VTC Perpignan</title>
 
   <meta name="description" content="OuassVTC - Chauffeur VTC Perpignan et ses alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
-  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
+  <meta name="keywords" content="VTC Perpignan, taxi Perpignan, chauffeur privé Perpignan, transport aéroport Perpignan, navette Perpignan, Espagne, Argelès, Canet, Saint-Estève">
 
-  <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <link rel="apple-touch-icon" href="ouassvtc.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
-  <!-- Google Analytics (GA4) -->
-  <!-- ⚠️ ne pas modifier cette URL -->
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -23,7 +21,6 @@
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
 
-    // pour tracer les clics des boutons
     function trackEvent(action, label){
       gtag('event', action, {
         event_category: 'Interaction',
@@ -38,7 +35,6 @@
       --border:#e5e7eb;
       --muted:#6b7280;
       --bg:#fff;
-      --success:#16a34a;
       --radius:14px;
       --navH:56px;
     }
@@ -71,23 +67,42 @@
       text-align:center;text-decoration:none;transition:transform .25s,opacity .25s;
     }
     .btn-main:hover,.btn-main:focus-visible{opacity:.9;transform:translateY(-2px);outline:none}
+    /* --- boutons type "service" (appeler / whatsapp / sms) --- */
     .contact-buttons{
-      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;align-items:stretch;margin:20px 0 12px
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+      gap:10px;
+      margin:12px 0 12px;
     }
-    .btn{
-      display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;
-      border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;
-      padding:12px 10px;font-weight:650;text-decoration:none;text-align:center;
-      transition:transform .25s,opacity .25s;font-size:15px;width:100%;cursor:pointer
+    .contact-btn{
+      border:1px solid #e5e7eb;
+      background:#fff;
+      color:#111;
+      border-radius:16px;
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      font-weight:600;
+      text-decoration:none;
+      transition:transform .2s, box-shadow .2s;
+      min-height:48px;
     }
-    .btn:hover,.btn:focus-visible{opacity:.9;transform:translateY(-1px);outline:none}
-    .btn:disabled{opacity:.6;cursor:not-allowed}
-    .btn-light{
-      background:#fff;color:#111;border:1px solid var(--border);
-      box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;
-      font-size:14px;border-radius:999px;display:inline-flex
+    .contact-btn strong{
+      display:block;
+      font-size:14px;
     }
+    .contact-btn span{
+      font-size:12px;
+      color:#6b7280;
+    }
+    .contact-btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.05)}
+    .contact-icon{
+      width:34px;height:34px;border-radius:999px;background:#000;color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto;
+    }
+    /* barre estimation */
     .fare-sticky{
       position:fixed;top:var(--navH);left:0;right:0;z-index:50;
       background:#0a0a0a;color:#fff;border-radius:0 0 var(--radius) var(--radius);
@@ -117,26 +132,18 @@
     .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
     .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
     .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
+
     @media (min-width:700px){
       .hero{display:grid;grid-template-columns:1.1fr .9fr}
       .hero-text{text-align:left}
       .hero-text h1{font-size:34px}
       .hero-text p{font-size:16px}
-      .contact-buttons{grid-template-columns:repeat(6,minmax(0,1fr))}
-      .contact-buttons a:nth-child(1){grid-column:1/span 2}
-      .contact-buttons a:nth-child(2){grid-column:3/span 2}
-      .contact-buttons a:nth-child(3){grid-column:5/span 2}
       #map{height:420px}
       .fare-price{font-size:38px}
     }
-    @media (min-width:1100px){
-      .container{max-width:1100px}
-      .btn-main{font-size:18px}
-    }
     @media (max-width:560px){
-      .fare-price{font-size:28px}
       .hero-text h1{font-size:22px}
-      .btn{font-size:14px;padding:12px 8px}
+      .fare-price{font-size:28px}
     }
   </style>
 </head>
@@ -147,31 +154,54 @@
 
   <nav id="topnav">
     <a href="services.html">Services VTC Perpignan</a>
-    <a href="faq.html">FAQ VTC</a>
+    <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
   </nav>
 
   <div class="container">
-    <section class="hero" aria-label="Présentation et réservation VTC Perpignan">
+    <section class="hero" aria-label="Présentation VTC Perpignan et réservation">
       <div class="hero-text">
         <h1>Chauffeur <strong>VTC Perpignan</strong></h1>
-        <p>Réservez en quelques secondes — confort et fiabilité dans tout le secteur de Perpignan.</p>
+        <p>Course immédiate ou réservation à l’avance dans tout Perpignan et alentours.</p>
 
         <div class="main-button">
-          <!-- 👉 on descend maintenant sur la phrase "Remplissez le formulaire..." -->
-          <a class="btn btn-main" href="#introForm" onclick="trackEvent('clic_reserver','Réserver maintenant - VTC Perpignan')">📅 Réservez maintenant</a>
+          <!-- on ne laisse plus le lien scroller tout seul, on le gère en JS -->
+          <a class="btn-main" href="#introForm" id="reserveBtn">📅 Réservez maintenant</a>
         </div>
 
-        <div class="contact-buttons" role="group" aria-label="Contact rapide">
-          <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler VTC Perpignan')">📞 Appeler</a>
-          <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp VTC Perpignan')">💬 WhatsApp</a>
-          <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS VTC Perpignan')">✉️ SMS</a>
+        <!-- BOUTONS STYLE "PRO" -->
+        <div class="contact-buttons" aria-label="Contact rapide VTC Perpignan">
+          <a class="contact-btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler VTC Perpignan')">
+            <div class="contact-icon">📞</div>
+            <div>
+              <strong>Appeler</strong>
+              <span>Chauffeur VTC Perpignan</span>
+            </div>
+          </a>
+          <a class="contact-btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp VTC Perpignan')">
+            <div class="contact-icon">💬</div>
+            <div>
+              <strong>WhatsApp</strong>
+              <span>Demande de trajet</span>
+            </div>
+          </a>
+          <a class="contact-btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS VTC Perpignan')">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <strong>SMS</strong>
+              <span>Confirmation rapide</span>
+            </div>
+          </a>
         </div>
 
-        <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
-            Installer l’application sur Android
+        <div style="display:flex;justify-content:flex-start;margin-top:6px;">
+          <button type="button" class="contact-btn" id="btnAddApp" style="max-width:280px;">
+            <div class="contact-icon">⬇️</div>
+            <div>
+              <strong>Installer l’application</strong>
+              <span>Accès rapide à votre VTC</span>
+            </div>
           </button>
         </div>
       </div>
@@ -192,9 +222,9 @@
       </aside>
     </section>
 
-    <!-- 👉 ancre ajoutée ici -->
+    <!-- ancre : c'est là qu'on veut arriver pile -->
     <p class="intro" id="introForm">
-      <strong>Remplissez le formulaire ci-dessous</strong> pour votre trajet <strong>VTC Perpignan</strong> et soyez recontacté dans les plus brefs délais.
+      <strong>Remplissez le formulaire ci-dessous</strong> pour votre trajet <strong>VTC Perpignan</strong>. Nous vous recontactons rapidement.
     </p>
 
     <form id="formResa" onsubmit="sendEmail(event)">
@@ -205,7 +235,7 @@
       <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
 
       <label for="depart">Adresse de départ</label>
-      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ (Perpignan ou alentours)" autocomplete="street-address" required>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
 
       <label for="arrivee">Adresse d'arrivée</label>
       <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
@@ -231,20 +261,20 @@
       <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
 
       <div class="form-buttons">
-        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif VTC Perpignan</button>
-        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
+        <button type="button" class="btn-main" style="max-width:100%;text-align:center" onclick="calculerEstimation()">💶 Estimer le tarif VTC Perpignan</button>
+        <button type="submit" class="btn-main" id="btnSubmit" style="max-width:100%;text-align:center;background:#111;">✅ Envoyer votre formulaire</button>
       </div>
     </form>
 
     <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
-      Besoin d’en savoir plus sur nos <strong>trajets VTC Perpignan</strong> ?
+      En savoir plus sur nos <strong>services VTC Perpignan</strong> :
       <a href="services.html">Voir nos services</a> ·
       <a href="faq.html">Questions fréquentes</a> ·
       <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> ·
       <a href="contact.html">Nous contacter</a>
     </p>
 
-    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
+    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire</h3>
     <div id="map" role="region" aria-label="Carte de l'itinéraire VTC Perpignan"></div>
 
     <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
@@ -255,20 +285,23 @@
   </div>
 
   <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px;line-height:1.5">
-    © 2025 OuassVTC - Chauffeur <strong>VTC Perpignan</strong> et alentours. <br>
+    © 2025 OuassVTC - Chauffeur <strong>VTC Perpignan</strong>. <br>
     <a href="mentions-legales.html" style="color:#fff;text-decoration:none;">Mentions légales</a> ·
     <a href="politique-confidentialite.html" style="color:#fff;text-decoration:none;">Politique de confidentialité</a> ·
     <a href="sitemap.xml" style="color:#fff;text-decoration:none;">Plan du site</a>
   </footer>
 
+  <!-- MODAL -->
   <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
     <div class="modal-content" id="successContent">
       <div class="modal-icon">✅</div>
       <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
       <div class="modal-text">Nous revenons vers vous rapidement !</div>
-      <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
-      <button type="button" class="btn" id="btnAddAppModal" style="margin-top:10px;">
-        Installer l’application sur Android
+      <button type="button" class="contact-btn" id="homeBtn" style="margin:0 auto;max-width:230px;justify-content:center">
+        ↩️ Revenir à l’accueil
+      </button>
+      <button type="button" class="contact-btn" id="btnAddAppModal" style="margin:10px auto 0;max-width:230px;justify-content:center">
+        Installer l’application
       </button>
     </div>
   </div>
@@ -379,6 +412,23 @@
       window.removeEventListener('keydown',onEscClose);
     }
 
+    function onEscClose(e){
+      if(e.key === 'Escape') hideSuccessModal();
+    }
+
+    // 👉 scroll contrôlé : on calcule la hauteur pour que ça n'aille pas "trop bas"
+    function scrollToForm(){
+      const target = document.getElementById('introForm');
+      if(!target) return;
+      const nav = document.getElementById('topnav');
+      const fare = document.getElementById('fare');
+      const navH = nav ? nav.offsetHeight : 0;
+      const fareH = (fare && fare.style.display === 'block') ? fare.offsetHeight : 0;
+      const offset = navH + fareH + 16; // petit espace
+      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+
     let map,directionsService,directionsRenderer;
     function initMap(){
       map = new google.maps.Map(document.getElementById("map"), {
@@ -400,7 +450,7 @@
 
     function explainIOS(){
       alert(
-        "Vous utilisez un iPhone.\n\nPour ajouter OuassVTC :\n1. Touchez le bouton « Partager » (icône avec la flèche vers le haut)\n2. Faites défiler vers le bas\n3. Touchez « Sur l’écran d’accueil »\n4. Validez.\n\nL’icône sera ajoutée comme une application."
+        "Vous utilisez un iPhone.\n\nPour ajouter OuassVTC :\n1. Touchez le bouton « Partager »\n2. « Sur l’écran d’accueil »\n3. Validez."
       );
     }
 
@@ -418,6 +468,7 @@
       const btnAdd = document.getElementById('btnAddApp');
       const btnAddModal = document.getElementById('btnAddAppModal');
       const homeBtn = document.getElementById('homeBtn');
+      const reserveBtn = document.getElementById('reserveBtn');
 
       if (btnAdd) btnAdd.addEventListener('click', triggerInstall);
       if (btnAddModal) btnAddModal.addEventListener('click', triggerInstall);
@@ -425,6 +476,13 @@
         hideSuccessModal();
         window.scrollTo({top:0,behavior:'smooth'});
       });
+      if (reserveBtn) {
+        reserveBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+  trackEvent('clic_reserver','Réserver maintenant - VTC Perpignan');
+          scrollToForm();
+        });
+      }
     });
 
     if ('serviceWorker' in navigator) {
@@ -439,6 +497,5 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token": "5b0e1fd2be224725bdb51d396fc4fdb5"}'></script>
-  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
