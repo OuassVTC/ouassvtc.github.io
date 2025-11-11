@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OuassVTC - Chauffeur VTC Perpignan</title>
 
-  <meta name="description" content="OuassVTC - Chauffeur VTC Perpignan et ses alentours. Réservation rapide, estimation instantanée, confort et sécurité.">
-  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, taxi Perpignan, transport aéroport Perpignan, VTC Canet, VTC Argelès, VTC Espagne">
+  <meta name="description" content="OuassVTC - Chauffeur VTC Perpignan et ses alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis.">
+  <meta name="keywords" content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne">
 
+  <!-- Icônes / couleur appli -->
   <link rel="icon" href="ouassvtc.png" type="image/png">
+  <link rel="apple-touch-icon" href="ouassvtc.png">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000000">
 
+  <!-- Google Analytics (GA4) -->
+  <!-- ⚠️ ne pas modifier cette URL -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -18,6 +23,7 @@
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
 
+    // pour tracer les clics des boutons
     function trackEvent(action, label){
       gtag('event', action, {
         event_category: 'Interaction',
@@ -28,389 +34,238 @@
 
   <style>
     :root{
-      --bg:#f4f5f6;
-      --surface:#ffffff;
+      --brand:#000;
       --border:#e5e7eb;
       --muted:#6b7280;
-      --title:#0f172a;
-      --brand:#000;
-      --radius:18px;
-      --navH:58px;
+      --bg:#fff;
+      --success:#16a34a;
+      --radius:14px;
+      --navH:56px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      background:var(--bg);
-      color:var(--title);
-      line-height:1.4;
-    }
-    header{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:28px 18px;
-    }
-    header img{max-width:160px;display:block;margin:0 auto;}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#111;line-height:1.4}
+    header{background:#000;color:#fff;text-align:center;padding:28px;}
+    header img{display:block;margin:0 auto;width:100%;max-width:200px;height:auto;}
     nav#topnav{
-      position:sticky;top:0;z-index:50;
-      background:rgba(255,255,255,.9);
-      backdrop-filter:blur(10px);
-      border-bottom:1px solid rgba(0,0,0,.03);
-      display:flex;gap:12px;justify-content:center;
-      padding:10px 14px;
+      position:sticky;top:0;z-index:20;
+      display:flex;gap:18px;justify-content:center;
+      padding:12px 10px;background:#fff;
+      border-bottom:1px solid var(--border);
+      backdrop-filter:saturate(180%) blur(8px)
     }
     nav#topnav a{
-      text-decoration:none;
-      color:#111;
-      font-weight:600;
-      font-size:14px;
-      padding:8px 14px;
-      border-radius:999px;
-      transition:.15s;
+      color:#111;text-decoration:none;font-weight:650;font-size:15px;
+      padding:8px 10px;border-radius:999px
     }
-    nav#topnav a:hover{background:#f1f1f1}
-    .page{
-      max-width:1100px;
-      margin:26px auto 40px;
-      padding:0 16px;
-      display:grid;
-      gap:22px;
-      grid-template-columns:1.1fr .9fr;
-    }
-    @media(max-width:900px){
-      .page{grid-template-columns:1fr}
-    }
-    .hero-card{
-      background:var(--surface);
-      border:1px solid rgba(15,23,42,.02);
-      border-radius:20px;
-      padding:22px 20px 20px;
-      box-shadow:0 18px 40px rgba(15,23,42,.04);
-    }
-    .hero-title{
-      font-size:30px;
-      font-weight:750;
-      margin-bottom:4px;
-      letter-spacing:-.01em;
-    }
-    .hero-sub{
-      color:var(--muted);
-      font-size:14.5px;
-      margin-bottom:16px;
-    }
-    .badge-city{
-      display:inline-flex;
-      gap:6px;
-      align-items:center;
-      background:#eef2ff;
-      color:#000;
-      border-radius:999px;
-      padding:6px 13px;
-      font-size:12.5px;
-      margin-bottom:10px;
-      font-weight:600;
-    }
-    .main-button{
-      margin-bottom:14px;
-    }
+    nav#topnav a:hover,nav#topnav a:focus-visible{background:#f3f4f6;outline:none}
+    .container{max-width:min(1100px,92vw);margin:auto;padding:28px 18px}
+    .hero{display:grid;grid-template-columns:1fr;gap:16px;align-items:center}
+    .hero-text{text-align:center}
+    .hero-text h1{font-size:26px;font-weight:800;margin-bottom:6px}
+    .hero-text p{font-size:15px;color:var(--muted)}
+    .main-button{display:flex;justify-content:center;margin:18px 0}
     .btn-main{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:#000;
-      color:#fff;
-      border:none;
-      border-radius:999px;
-      padding:13px 24px;
-      font-weight:650;
-      font-size:14.5px;
-      text-decoration:none;
-      transition:transform .2s;
+      background:var(--brand);color:#fff;font-weight:800;font-size:17px;
+      border:none;border-radius:999px;padding:16px 40px;width:100%;max-width:560px;
+      text-align:center;text-decoration:none;transition:transform .25s,opacity .25s;
     }
-    .btn-main:hover{transform:translateY(-1px);opacity:.96}
-    /* boutons contact style app */
+    .btn-main:hover,.btn-main:focus-visible{opacity:.9;transform:translateY(-2px);outline:none}
     .contact-buttons{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;align-items:stretch;margin:20px 0 12px
     }
-    .contact-btn{
-      flex:1 1 130px;
-      min-width:140px;
-      background:#f8fafc;
-      border:1px solid #edf0f4;
-      border-radius:16px;
-      padding:10px 12px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      text-decoration:none;
-      color:#0f172a;
-      transition:.15s;
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;
+      border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;
+      padding:12px 10px;font-weight:650;text-decoration:none;text-align:center;
+      transition:transform .25s,opacity .25s;font-size:15px;width:100%;cursor:pointer
     }
-    .contact-btn:hover{background:#fff}
-    .contact-icon{
-      width:34px;height:34px;background:#000;color:#fff;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;font-size:16px;
+    .btn:hover,.btn:focus-visible{opacity:.9;transform:translateY(-1px);outline:none}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn-light{
+      background:#fff;color:#111;border:1px solid var(--border);
+      box-shadow:0 2px 6px rgba(0,0,0,.06);padding:10px 14px;
+      font-size:14px;border-radius:999px;display:inline-flex
     }
-    .contact-text strong{font-size:13.5px;display:block}
-    .contact-text span{font-size:11.5px;color:#6b7280}
-    /* bloc formulaire */
-    .form-card{
-      background:var(--surface);
-      border-radius:20px;
-      border:1px solid rgba(15,23,42,.02);
-      box-shadow:0 18px 40px rgba(15,23,42,.03);
-      padding:20px 20px 16px;
-    }
-    .form-title{
-      font-weight:650;
-      margin-bottom:4px;
-    }
-    .form-sub{
-      color:#6b7280;
-      font-size:13px;
-      margin-bottom:14px;
-    }
-    label{display:block;font-size:13px;font-weight:600;margin-top:10px;margin-bottom:5px}
-    input,select,textarea{
-      width:100%;
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      background:#f9fafb;
-      padding:12px 11px;
-      font-size:14px;
-      transition:.15s;
-    }
-    input:focus,select:focus,textarea:focus{outline:none;border-color:#000;background:#fff}
-    textarea{min-height:65px;resize:vertical}
-    .form-buttons{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:18px;
-    }
-    .btn-secondary{
-      background:#fff;
-      border:1px solid #000;
-      border-radius:999px;
-      padding:11px 20px;
-      font-weight:600;
-      text-decoration:none;
-      color:#000;
-      cursor:pointer;
-    }
-    .btn-primary{
-      background:#000;
-      color:#fff;
-      border:none;
-      border-radius:999px;
-      padding:11px 22px;
-      font-weight:600;
-      cursor:pointer;
-    }
-    /* aside */
-    .aside-block{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-    .map-card{
-      background:var(--surface);
-      border-radius:20px;
-      border:1px solid rgba(15,23,42,.02);
-      box-shadow:0 18px 40px rgba(15,23,42,.03);
-      padding:16px 16px 12px;
-    }
-    #map{height:280px;border-radius:16px;margin-top:10px}
-    .links{
-      text-align:center;
-      font-size:12.5px;
-      color:#6b7280;
-      margin-top:8px;
-    }
-    footer{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:22px 16px 24px;
-      font-size:12.5px;
-      margin-top:18px;
-    }
-    footer a{color:#fff;text-decoration:none}
-    /* estimation bar */
     .fare-sticky{
-      position:fixed;top:var(--navH);left:50%;transform:translateX(-50%);
-      width:min(1100px,92vw);
-      background:#0f172a;
-      border-radius:0 0 16px 16px;
-      padding:12px 14px;
-      display:none;
-      z-index:60;
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
-      color:#fff;
+      position:fixed;top:var(--navH);left:0;right:0;z-index:50;
+      background:#0a0a0a;color:#fff;border-radius:0 0 var(--radius) var(--radius);
+      padding:14px 16px;display:none;box-shadow:0 10px 24px rgba(0,0,0,.25);
+      width:min(1100px,92vw);margin-inline:auto;
     }
-    .fare-row{display:flex;justify-content:space-between;align-items:center;gap:14px}
-    .fare-left{display:flex;gap:10px;align-items:center}
-    .badge-est{background:#fff;color:#0f172a;font-weight:700;font-size:11px;padding:3px 9px;border-radius:999px}
-    .fare-price{font-size:30px;font-weight:700}
-    .fare-meta{font-size:12.5px;color:#d1d5db}
-    .chip{font-size:11.5px;border:1px solid rgba(255,255,255,.12);padding:5px 10px;border-radius:999px}
-    body.fare-open{padding-top:calc(var(--navH) + 70px);}
-    @media(max-width:600px){
-      .page{margin-top:14px}
-      .hero-card,.form-card,.map-card{border-radius:16px}
-      .contact-buttons{flex-direction:column}
-      .fare-row{flex-direction:column;align-items:flex-start}
+    body.fare-open{padding-top:calc(var(--navH) + 82px);}
+    .fare-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .fare-left{display:flex;align-items:center;gap:10px}
+    .badge{font-size:12px;font-weight:800;color:#0a0a0a;background:#fff;border-radius:999px;padding:4px 10px}
+    .fare-price{font-size:34px;font-weight:900}
+    .fare-meta{font-size:13px;color:#d1d5db;margin-top:4px}
+    .chip{font-size:12px;border:1px solid rgba(255,255,255,.15);padding:6px 10px;border-radius:999px;color:#86efac;border-color:#22c55e}
+    .intro{text-align:center;font-size:15px;color:#444;font-weight:650;margin:20px 0 10px}
+    form label{display:block;font-size:14px;font-weight:650;margin-bottom:6px;margin-top:12px}
+    input,select,textarea{
+      width:100%;padding:14px 12px;border:1px solid var(--border);
+      border-radius:12px;background:#f9f9f9;font-size:16px;transition:border .2s,background .2s
+    }
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff}
+    textarea{min-height:64px;resize:none}
+    .form-buttons{display:flex;flex-direction:column;gap:12px;margin:20px 0 24px}
+    #map{height:320px;border-radius:var(--radius);margin-top:20px}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:100;padding:16px}
+    .modal.show{display:flex}
+    .modal-content{background:#fff;color:#111;width:100%;max-width:420px;border-radius:18px;padding:22px 18px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+    .modal-icon{font-size:40px;line-height:1;margin-bottom:8px}
+    .modal-title{font-size:18px;font-weight:900;margin-bottom:6px}
+    .modal-text{font-size:14px;color:#4b5563;margin-bottom:14px}
+    @media (min-width:700px){
+      .hero{display:grid;grid-template-columns:1.1fr .9fr}
+      .hero-text{text-align:left}
+      .hero-text h1{font-size:34px}
+      .hero-text p{font-size:16px}
+      .contact-buttons{grid-template-columns:repeat(6,minmax(0,1fr))}
+      .contact-buttons a:nth-child(1){grid-column:1/span 2}
+      .contact-buttons a:nth-child(2){grid-column:3/span 2}
+      .contact-buttons a:nth-child(3){grid-column:5/span 2}
+      #map{height:420px}
+      .fare-price{font-size:38px}
+    }
+    @media (min-width:1100px){
+      .container{max-width:1100px}
+      .btn-main{font-size:18px}
+    }
+    @media (max-width:560px){
+      .fare-price{font-size:28px}
+      .hero-text h1{font-size:22px}
+      .btn{font-size:14px;padding:12px 8px}
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="ouassvtc.png" alt="OuassVTC">
+    <img src="ouassvtc.png" alt="OuassVTC" loading="eager">
   </header>
 
   <nav id="topnav">
-    <a href="services.html">Services VTC Perpignan</a>
+    <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
     <a href="qui-sommes-nous.html">À propos</a>
     <a href="contact.html">Contact</a>
   </nav>
 
-  <div class="fare-sticky" id="fare">
-    <div class="fare-row">
-      <div class="fare-left">
-        <span class="badge-est">Estimation</span>
-        <div>
-          <div class="fare-price" id="prixAffiche">-- €</div>
-          <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
+  <div class="container">
+    <section class="hero" aria-label="Présentation et réservation">
+      <div class="hero-text">
+        <h1>Chauffeur VTC à Perpignan</h1>
+        <p>Réservez en quelques secondes — confort et fiabilité.</p>
+
+        <div class="main-button">
+          <a class="btn btn-main" href="#formResa" onclick="trackEvent('clic_reserver','Réserver maintenant')">📅 Réservez maintenant</a>
+        </div>
+
+        <div class="contact-buttons" role="group" aria-label="Contact rapide">
+          <a class="btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appeler')">📞 Appeler</a>
+          <a class="btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp')">💬 WhatsApp</a>
+          <a class="btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS')">✉️ SMS</a>
+        </div>
+
+        <div style="display:flex;justify-content:center;margin-top:6px;">
+          <button type="button" class="btn" id="btnAddApp" style="background:#fff;color:#000;border:1px solid #000;">
+            Installer l’application sur Android
+          </button>
         </div>
       </div>
-      <div class="chip">Tarif VTC Perpignan indicatif</div>
-    </div>
-  </div>
 
-  <main class="page">
-    <!-- gauche -->
-    <section class="hero-card" aria-label="Chauffeur VTC Perpignan">
-      <span class="badge-city">🚗 VTC Perpignan & alentours</span>
-      <h1 class="hero-title">Votre chauffeur VTC à Perpignan</h1>
-      <p class="hero-sub">Réservation rapide, trajet confortable, disponibilité immédiate ou planifiée.</p>
-
-      <div class="main-button">
-        <a href="#introForm" class="btn-main" id="reserveBtn">📅 Réservez maintenant</a>
-      </div>
-
-      <div class="contact-buttons" aria-label="Contact rapide VTC Perpignan">
-        <a class="contact-btn" href="tel:0644120784" onclick="trackEvent('clic_appel','Appel VTC Perpignan')">
-          <div class="contact-icon">📞</div>
-          <div class="contact-text">
-            <strong>Appeler</strong>
-            <span>Chauffeur disponible</span>
+      <aside>
+        <div id="fare" class="fare-sticky" aria-live="polite">
+          <div class="fare-row">
+            <div class="fare-left">
+              <span class="badge">Estimation</span>
+              <div>
+                <div class="fare-price" id="prixAffiche">-- €</div>
+                <div class="fare-meta" id="detailsTrajet">Distance : -- km · Temps : --</div>
+              </div>
+            </div>
+            <div class="chip">Tarif indicatif</div>
           </div>
-        </a>
-        <a class="contact-btn" href="https://wa.me/33644120784" target="_blank" rel="noopener" onclick="trackEvent('clic_whatsapp','WhatsApp VTC Perpignan')">
-          <div class="contact-icon">💬</div>
-          <div class="contact-text">
-            <strong>WhatsApp</strong>
-            <span>Demande de prix</span>
-          </div>
-        </a>
-        <a class="contact-btn" href="sms:+33644120784" onclick="trackEvent('clic_sms','SMS VTC Perpignan')">
-          <div class="contact-icon">✉️</div>
-          <div class="contact-text">
-            <strong>SMS</strong>
-            <span>Info rapide</span>
-          </div>
-        </a>
-      </div>
-
-      <!-- formulaire -->
-      <div class="form-card" id="introForm" style="margin-top:16px;">
-        <h2 class="form-title">Formulaire de réservation VTC Perpignan</h2>
-        <p class="form-sub">Remplissez ce formulaire, nous vous confirmons le trajet au plus vite.</p>
-
-        <form id="formResa" onsubmit="sendEmail(event)">
-          <label for="nom">Nom et prénom</label>
-          <input type="text" id="nom" placeholder="Ex. Dupont Pierre" required>
-
-          <label for="telephone">Téléphone</label>
-          <input type="tel" id="telephone" placeholder="06 xx xx xx xx" required>
-
-          <label for="depart">Adresse de départ</label>
-          <input type="text" id="depart" placeholder="Perpignan, Canet, Argelès..." required>
-
-          <label for="arrivee">Adresse d'arrivée</label>
-          <input type="text" id="arrivee" placeholder="Aéroport, gare, adresse..." required>
-
-          <label for="dateheure">Date et heure</label>
-          <input type="datetime-local" id="dateheure" required>
-
-          <label for="passagers">Nombre de passagers</label>
-          <select id="passagers" required>
-            <option value="">Sélectionner</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option>
-          </select>
-
-          <label for="paiement">Mode de paiement</label>
-          <select id="paiement" required>
-            <option value="">Sélectionner</option>
-            <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
-            <option value="Paiement CB à bord">CB à bord</option>
-            <option value="Paiement espèces à bord">Espèces à bord</option>
-          </select>
-
-          <label for="message">Informations complémentaires</label>
-          <textarea id="message" placeholder="Bagages, enfant, code porte..."></textarea>
-
-          <div class="form-buttons">
-            <button type="button" class="btn-secondary" onclick="calculerEstimation()">💶 Estimer le tarif</button>
-            <button type="submit" class="btn-primary" id="btnSubmit">✅ Envoyer le formulaire</button>
-          </div>
-        </form>
-      </div>
+        </div>
+      </aside>
     </section>
 
-    <!-- droite -->
-    <aside class="aside-block">
-      <div class="map-card">
-        <h3 style="font-size:14px;font-weight:650;">Itinéraire VTC Perpignan</h3>
-        <p style="font-size:12.5px;color:#6b7280;margin-top:2px;">Visualisez votre trajet estimé.</p>
-        <div id="map" role="region" aria-label="Carte de l'itinéraire VTC"></div>
+    <p class="intro">Remplissez le formulaire ci-dessous et envoyez-le pour être recontacté dans les plus brefs délais.</p>
+
+    <form id="formResa" onsubmit="sendEmail(event)">
+      <label for="nom">Nom et prénom</label>
+      <input type="text" id="nom" placeholder="Ex. Dupont Pierre" autocomplete="name" required>
+
+      <label for="telephone">Téléphone</label>
+      <input type="tel" id="telephone" placeholder="06 xx xx xx xx" inputmode="tel" autocomplete="tel" required>
+
+      <label for="depart">Adresse de départ</label>
+      <input type="text" id="depart" placeholder="Saisissez l'adresse de départ" autocomplete="street-address" required>
+
+      <label for="arrivee">Adresse d'arrivée</label>
+      <input type="text" id="arrivee" placeholder="Saisissez l'adresse d'arrivée" autocomplete="street-address" required>
+
+      <label for="dateheure">📅 Date et heure</label>
+      <input type="datetime-local" id="dateheure" required>
+
+      <label for="passagers">Nombre de passagers</label>
+      <select id="passagers" required>
+        <option value="">Sélectionner</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+      </select>
+
+      <label for="paiement">Mode de paiement</label>
+      <select id="paiement" required>
+        <option value="">Sélectionner</option>
+        <option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option>
+        <option value="Paiement CB à bord">CB à bord</option>
+        <option value="Paiement espèces à bord">Espèces à bord</option>
+      </select>
+
+      <label for="message">Informations complémentaires</label>
+      <textarea id="message" placeholder="Code porte, bagages, enfant, etc."></textarea>
+
+      <div class="form-buttons">
+        <button type="button" class="btn" onclick="calculerEstimation()">💶 Estimer le tarif</button>
+        <button type="submit" class="btn" id="btnSubmit">✅ Envoyer votre formulaire</button>
       </div>
+    </form>
 
-      <div class="map-card" style="text-align:center;">
-        <p style="font-size:13px;color:#0f172a;font-weight:600;">Besoin d’un devis spécifique ?</p>
-        <p style="font-size:12.5px;color:#6b7280;margin-top:3px;">Contact direct VTC Perpignan</p>
-        <p style="margin-top:7px;font-size:13px;">
-          📞 <a href="tel:0644120784" style="text-decoration:none;color:#000">06 44 12 07 84</a><br>
-          💬 <a href="https://wa.me/33644120784" target="_blank" style="text-decoration:none;">WhatsApp</a><br>
-          ✉️ <a href="mailto:contact@ouassvtc.fr" style="text-decoration:none;">contact@ouassvtc.fr</a>
-        </p>
-      </div>
+    <p style="text-align:center;font-size:13px;color:#666;margin-bottom:24px;">
+      Besoin d’en savoir plus ?
+      <a href="services.html">Voir nos services</a> ·
+      <a href="faq.html">Questions fréquentes</a> ·
+      <a href="qui-sommes-nous.html">Qui sommes-nous ?</a> ·
+      <a href="contact.html">Nous contacter</a>
+    </p>
 
-      <p class="links">
-        <a href="services.html">Services VTC</a> ·
-        <a href="faq.html">FAQ</a> ·
-        <a href="qui-sommes-nous.html">Qui sommes-nous ?</a>
-      </p>
-    </aside>
-  </main>
+    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
+    <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
 
-  <footer>
-    © 2025 OuassVTC – Chauffeur <strong>VTC Perpignan</strong>. 
-    <br><a href="mentions-legales.html">Mentions légales</a> · <a href="politique-confidentialite.html">Confidentialité</a>
+    <section class="contact-section" style="text-align:center;margin-top:32px;color:#555;font-size:15px">
+      <p>📞 <a href="tel:0644120784">06 44 12 07 84</a></p>
+      <p>💬 <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a></p>
+      <p>✉️ <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
+    </section>
+  </div>
+
+  <footer style="background:#000;color:#fff;text-align:center;padding:20px;font-size:13px;line-height:1.5">
+    © 2025 OuassVTC - Tous droits réservés. <br>
+    <a href="mentions-legales.html" style="color:#fff;text-decoration:none;">Mentions légales</a> ·
+    <a href="politique-confidentialite.html" style="color:#fff;text-decoration:none;">Politique de confidentialité</a> ·
+    <a href="sitemap.xml" style="color:#fff;text-decoration:none;">Plan du site</a>
   </footer>
 
-  <!-- MODAL -->
-  <div id="successModal" class="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;">
-    <div style="background:#fff;border-radius:18px;padding:20px 18px 16px;max-width:360px;width:92%;text-align:center;">
-      <div style="font-size:34px;margin-bottom:6px;">✅</div>
-      <h2 style="font-size:17px;font-weight:700;margin-bottom:4px;">Formulaire envoyé</h2>
-      <p style="font-size:13px;color:#6b7280;margin-bottom:10px;">Nous revenons vers vous rapidement.</p>
-      <button type="button" onclick="hideSuccessModal()" style="background:#000;color:#fff;border:none;border-radius:999px;padding:10px 16px;font-weight:600;cursor:pointer;">OK</button>
+  <div id="successModal" class="modal" role="dialog" aria-labelledby="successTitle" aria-modal="true" aria-hidden="true">
+    <div class="modal-content" id="successContent">
+      <div class="modal-icon">✅</div>
+      <div class="modal-title" id="successTitle">Formulaire bien envoyé</div>
+      <div class="modal-text">Nous revenons vers vous rapidement !</div>
+      <button type="button" class="btn-light" id="homeBtn">↩️ Revenir à l’accueil</button>
+      <button type="button" class="btn" id="btnAddAppModal" style="margin-top:10px;">
+        Installer l’application sur Android
+      </button>
     </div>
   </div>
 
@@ -421,10 +276,20 @@
     let formEnvoye = false;
 
     function openFareBar(){
-      const fare = document.getElementById('fare');
+      const nav = document.getElementById('topnav');
+      const navH = nav ? nav.offsetHeight : 56;
+      document.documentElement.style.setProperty('--navH', navH + 'px');
       document.body.classList.add('fare-open');
-      fare.style.display = 'block';
+      const wrap = document.getElementById('fare');
+      if (wrap) {
+        wrap.style.display = 'block';
+        wrap.classList.add('show');
+      }
     }
+
+    window.addEventListener('resize', () => {
+      if (document.body.classList.contains('fare-open')) openFareBar();
+    });
 
     async function sendEmail(e){
       e.preventDefault();
@@ -432,8 +297,8 @@
       formEnvoye = true;
       const btn=document.getElementById("btnSubmit");
       btn.disabled=true;
-      const calc = await calculerEstimation();
-      let prixStr = (calc && Number.isFinite(calc.prix)) ? calc.prix.toFixed(2) + " €" : document.getElementById("prixAffiche").textContent || "";
+      const calc=await calculerEstimation();
+      let prixStr = (calc && Number.isFinite(calc.prix)) ? `${calc.prix.toFixed(2)} €` : document.getElementById("prixAffiche").textContent || "";
       const params={
         nom:nom.value,
         telephone:telephone.value,
@@ -457,10 +322,10 @@
 
     function calculerEstimation(){
       return new Promise((resolve)=>{
-        const d = depart.value, a = arrivee.value;
-        const priceEl = document.getElementById("prixAffiche");
-        const detEl = document.getElementById("detailsTrajet");
-        if(!d || !a){ openFareBar(); resolve(null); return; }
+        const d=depart.value,a=arrivee.value;
+        const priceEl=document.getElementById("prixAffiche");
+        const detEl=document.getElementById("detailsTrajet");
+        if(!d||!a){ openFareBar(); resolve(null); return; }
         directionsService.route(
           {origin:d,destination:a,travelMode:google.maps.TravelMode.DRIVING},
           (result,status)=>{
@@ -470,7 +335,7 @@
               const distKm=leg.distance.value/1000;
               const duree=leg.duration.text;
               const prix=+(20+Math.max(0,distKm-7)*1.6).toFixed(2);
-              priceEl.textContent=prix.toFixed(2)+" €";
+              animatePrice(priceEl,prix);
               detEl.textContent=`Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
               openFareBar();
               resolve({prix,distKm,duree});
@@ -485,37 +350,30 @@
       });
     }
 
+    function animatePrice(el,target){
+      const start=performance.now(),dur=600;
+      (function step(now){
+        const p=Math.min((now-start)/dur,1);
+        el.textContent=(target*p).toFixed(2)+" €";
+        if(p<1) requestAnimationFrame(step);
+      })(start);
+    }
+
     function showSuccessModal(){
-      document.getElementById('successModal').style.display='flex';
+      const modal=document.getElementById('successModal');
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
       document.body.style.overflow='hidden';
+      window.addEventListener('keydown',onEscClose);
     }
+
     function hideSuccessModal(){
-      document.getElementById('successModal').style.display='none';
+      const modal=document.getElementById('successModal');
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
       document.body.style.overflow='';
+      window.removeEventListener('keydown',onEscClose);
     }
-
-    // scroll qui s'arrête bien (pas trop bas)
-    function scrollToForm(){
-      const target = document.getElementById('introForm');
-      const nav = document.getElementById('topnav');
-      const fare = document.getElementById('fare');
-      const navH = nav ? nav.offsetHeight : 0;
-      const fareH = (fare && fare.style.display === 'block') ? fare.offsetHeight : 0;
-      const offset = navH + fareH + 12;
-      const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({top,behavior:'smooth'});
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const reserveBtn = document.getElementById('reserveBtn');
-      if(reserveBtn){
-        reserveBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          trackEvent('clic_reserver','Réserver maintenant VTC Perpignan');
-          scrollToForm();
-        });
-      }
-    });
 
     let map,directionsService,directionsRenderer;
     function initMap(){
@@ -529,8 +387,54 @@
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function explainIOS(){
+      alert(
+        "Vous utilisez un iPhone.\n\nPour ajouter OuassVTC :\n1. Touchez le bouton « Partager » (icône avec la flèche vers le haut)\n2. Faites défiler vers le bas\n3. Touchez « Sur l’écran d’accueil »\n4. Validez.\n\nL’icône sera ajoutée comme une application."
+      );
+    }
+
+    async function triggerInstall(){
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      } else {
+        explainIOS();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnAdd = document.getElementById('btnAddApp');
+      const btnAddModal = document.getElementById('btnAddAppModal');
+      const homeBtn = document.getElementById('homeBtn');
+
+      if (btnAdd) btnAdd.addEventListener('click', triggerInstall);
+      if (btnAddModal) btnAddModal.addEventListener('click', triggerInstall);
+      if (homeBtn) homeBtn.addEventListener('click', () => {
+        hideSuccessModal();
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js?v=3').catch(err => console.log('SW error', err));
+      });
+    }
   </script>
 
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async" async defer></script>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon='{"token": "5b0e1fd2be224725bdb51d396fc4fdb5"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
