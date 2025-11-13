@@ -231,13 +231,18 @@
       </div>
     </form>
 
-    <!-- Ancienne section "Besoin d'en savoir plus ?" SUPPRIMÉE -->
+    <!-- Ancienne section liens supprimée -->
 
-    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">🗺️ Visualisez votre itinéraire ci-dessous</h3>
+    <h3 style="font-size:16px;font-weight:700;text-align:center;margin-top:20px;margin-bottom:8px;color:#333">
+      🗺️ Visualisez votre itinéraire ci-dessous
+    </h3>
     <div id="map" role="region" aria-label="Carte de l'itinéraire"></div>
 
-    <!-- NOUVEAU BOUTON COMPACT VTC PERPIGNAN SOUS LA CARTE (STYLE 4, POSITION C) -->
-    <div style="text-align:center;margin:16px 0 28px;">
+    <!-- Texte + petit bouton VTC Perpignan sous la carte -->
+    <div style="text-align:center;margin:16px 0 6px;font-size:13px;color:#555;font-weight:600;">
+      Besoin d’en savoir plus ?
+    </div>
+    <div style="text-align:center;margin:0 0 28px;">
       <a href="vtc-perpignan.html"
          class="btn-light"
          style="padding:8px 18px;font-size:13px;border-color:#000;">
@@ -437,13 +442,29 @@
       );
     }
 
+    function isAndroid(){
+      return /android/i.test(navigator.userAgent || navigator.vendor || window.opera);
+    }
+
     async function triggerInstall(){
       if (deferredPrompt) {
+        // Android : le navigateur propose encore l'installation
         deferredPrompt.prompt();
         await deferredPrompt.userChoice;
         deferredPrompt = null;
       } else {
-        explainIOS();
+        // Plus de prompt dispo : soit déjà installée, soit impossible
+        if (isAndroid()) {
+          alert(
+            "L’application OuassVTC semble déjà installée sur votre téléphone.\n\n" +
+            "Pour l’ouvrir :\n" +
+            "• Recherchez l’icône « OuassVTC » sur votre écran d’accueil ou dans vos applications.\n" +
+            "• Touchez l’icône pour lancer l’application."
+          );
+        } else {
+          // iPhone / autres : explication pour l'ajout manuel
+          explainIOS();
+        }
       }
     }
 
