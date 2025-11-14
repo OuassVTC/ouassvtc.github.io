@@ -2,7 +2,7 @@
 const CACHE_NAME = 'ouassvtc-static-v3';
 const ASSETS = [
   '/',            // la racine
-  '/ouassvtc.png',
+  '/vtc-perpignan.png',
   '/manifest.json'
   // ajoute ici tes autres fichiers statiques si besoin
 ];
