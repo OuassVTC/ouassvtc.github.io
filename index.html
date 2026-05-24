@@ -433,7 +433,7 @@
       });
       directionsService = new google.maps.DirectionsService();
       directionsRenderer = new google.maps.DirectionsRenderer({ map });
-      const acOpts = { componentRestrictions: { country: "fr" } };
+      const acOpts = { componentRestrictions: { country: ["fr", "es"] } };
       new google.maps.places.Autocomplete(document.getElementById("depart"), acOpts);
       new google.maps.places.Autocomplete(document.getElementById("arrivee"), acOpts);
     }
