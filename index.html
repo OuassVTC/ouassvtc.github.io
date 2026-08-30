@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -24,10 +25,7 @@
   <meta name="theme-color" content="#000000">
 
   <!-- Google Analytics (GA4) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL">
-  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
 
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -39,7 +37,6 @@
     gtag('js', new Date());
     gtag('config', 'G-23LLHRH2QL');
 
-    // Pour tracer les clics des boutons
     function trackEvent(action, label){
       gtag('event', action, {
         event_category: 'Interaction',
@@ -492,16 +489,10 @@
 
 <body>
 
-  <!-- EN-TÊTE -->
   <header>
-    <img
-      src="vtc-perpignan.png"
-      alt="vtc-perpignan"
-      loading="eager"
-    >
+    <img src="vtc-perpignan.png" alt="vtc-perpignan" loading="eager">
   </header>
 
-  <!-- MENU -->
   <nav id="topnav">
     <a href="services.html">Services</a>
     <a href="faq.html">FAQ</a>
@@ -511,11 +502,7 @@
 
   <div class="container">
 
-    <!-- PRÉSENTATION -->
-    <section
-      class="hero"
-      aria-label="Présentation et réservation"
-    >
+    <section class="hero" aria-label="Présentation et réservation">
 
       <div class="hero-text">
 
@@ -538,12 +525,7 @@
           </a>
         </div>
 
-        <!-- CONTACT RAPIDE -->
-        <div
-          class="contact-buttons"
-          role="group"
-          aria-label="Contact rapide"
-        >
+        <div class="contact-buttons" role="group" aria-label="Contact rapide">
 
           <a
             class="btn"
@@ -575,14 +557,9 @@
 
       </div>
 
-      <!-- ESTIMATION -->
       <aside>
 
-        <div
-          id="fare"
-          class="fare-sticky"
-          aria-live="polite"
-        >
+        <div id="fare" class="fare-sticky" aria-live="polite">
 
           <div class="fare-row">
 
@@ -594,17 +571,11 @@
 
               <div>
 
-                <div
-                  class="fare-price"
-                  id="prixAffiche"
-                >
+                <div class="fare-price" id="prixAffiche">
                   -- €
                 </div>
 
-                <div
-                  class="fare-meta"
-                  id="detailsTrajet"
-                >
+                <div class="fare-meta" id="detailsTrajet">
                   Distance : -- km · Temps : --
                 </div>
 
@@ -612,7 +583,7 @@
 
             </div>
 
-            <div class="chip">
+            <div class="chip" id="tarifType">
               Tarif indicatif
             </div>
 
@@ -630,11 +601,7 @@
       et soyez recontacté rapidement.
     </p>
 
-    <!-- FORMULAIRE -->
-    <form
-      id="formResa"
-      onsubmit="sendEmail(event)"
-    >
+    <form id="formResa" onsubmit="sendEmail(event)">
 
       <label for="nom">
         Nom et prénom
@@ -699,10 +666,7 @@
         Nombre de passagers
       </label>
 
-      <select
-        id="passagers"
-        required
-      >
+      <select id="passagers" required>
 
         <option value="">
           Sélectionner
@@ -719,10 +683,7 @@
         Mode de paiement
       </label>
 
-      <select
-        id="paiement"
-        required
-      >
+      <select id="paiement" required>
 
         <option value="">
           Sélectionner
@@ -773,7 +734,6 @@
 
     </form>
 
-    <!-- CARTE -->
     <h3
       style="
         font-size:16px;
@@ -793,7 +753,6 @@
       aria-label="Carte de l'itinéraire"
     ></div>
 
-    <!-- LIEN VTC PERPIGNAN -->
     <div
       style="
         text-align:center;
@@ -806,12 +765,7 @@
       Besoin d’en savoir plus ?
     </div>
 
-    <div
-      style="
-        text-align:center;
-        margin:0 0 28px;
-      "
-    >
+    <div style="text-align:center;margin:0 0 28px;">
 
       <a
         href="vtc-perpignan.html"
@@ -827,7 +781,6 @@
 
     </div>
 
-    <!-- CONTACT BAS DE PAGE -->
     <section
       class="contact-section"
       style="
@@ -863,7 +816,6 @@
         </a>
       </p>
 
-      <!-- INSTALLATION APPLICATION -->
       <div class="install-bottom">
 
         <button
@@ -880,7 +832,6 @@
 
   </div>
 
-  <!-- FOOTER -->
   <footer
     style="
       background:#000;
@@ -900,10 +851,7 @@
 
     <a
       href="mentions-legales.html"
-      style="
-        color:#fff;
-        text-decoration:none;
-      "
+      style="color:#fff;text-decoration:none;"
     >
       Mentions légales
     </a>
@@ -912,10 +860,7 @@
 
     <a
       href="politique-confidentialite.html"
-      style="
-        color:#fff;
-        text-decoration:none;
-      "
+      style="color:#fff;text-decoration:none;"
     >
       Politique de confidentialité
     </a>
@@ -924,17 +869,13 @@
 
     <a
       href="sitemap.xml"
-      style="
-        color:#fff;
-        text-decoration:none;
-      "
+      style="color:#fff;text-decoration:none;"
     >
       Plan du site
     </a>
 
   </footer>
 
-  <!-- FENÊTRE APRÈS ENVOI -->
   <div
     id="successModal"
     class="modal"
@@ -944,19 +885,13 @@
     aria-hidden="true"
   >
 
-    <div
-      class="modal-content"
-      id="successContent"
-    >
+    <div class="modal-content" id="successContent">
 
       <div class="modal-icon">
         ✅
       </div>
 
-      <div
-        class="modal-title"
-        id="successTitle"
-      >
+      <div class="modal-title" id="successTitle">
         Formulaire bien envoyé
       </div>
 
@@ -972,7 +907,6 @@
         ↩️ Revenir à l’accueil
       </button>
 
-      <!-- ON CONSERVE LE BOUTON D'INSTALLATION ICI -->
       <button
         type="button"
         class="btn"
@@ -986,7 +920,7 @@
 
   </div>
 
-  <!-- EMAILJS -->
+  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <script>
@@ -995,13 +929,12 @@
 
     let formEnvoye = false;
 
+
     function openFareBar(){
 
       const nav = document.getElementById('topnav');
 
-      const navH = nav
-        ? nav.offsetHeight
-        : 56;
+      const navH = nav ? nav.offsetHeight : 56;
 
       document.documentElement.style.setProperty(
         '--navH',
@@ -1015,6 +948,7 @@
       if (wrap) {
 
         wrap.style.display = 'block';
+
         wrap.classList.add('show');
 
       }
@@ -1033,6 +967,77 @@
       }
 
     });
+
+
+    /*
+      ==========================================
+      TARIFICATION OUASSVTC
+      ==========================================
+
+      TARIF JOUR :
+      Lundi à samedi
+      De 06h00 à 19h59
+      20 € jusqu'à 7 km
+      Puis 1,80 € / km supplémentaire
+
+      TARIF SOIR / NUIT :
+      De 20h00 à 05h59
+      25 € jusqu'à 7 km
+      Puis 2,20 € / km supplémentaire
+
+      TARIF DIMANCHE :
+      Toute la journée
+      25 € jusqu'à 7 km
+      Puis 2,20 € / km supplémentaire
+
+      Les majorations dimanche + nuit
+      ne se cumulent pas.
+      ==========================================
+    */
+
+
+    function obtenirTarif(dateTrajet){
+
+      const jour = dateTrajet.getDay();
+
+      const heure = dateTrajet.getHours();
+
+      const estDimanche = jour === 0;
+
+      const estNuit =
+        heure >= 20 ||
+        heure < 6;
+
+
+      if (estDimanche) {
+
+        return {
+          base: 25,
+          kmSupplementaire: 2.20,
+          nom: "Tarif dimanche"
+        };
+
+      }
+
+
+      if (estNuit) {
+
+        return {
+          base: 25,
+          kmSupplementaire: 2.20,
+          nom: "Tarif soir / nuit"
+        };
+
+      }
+
+
+      return {
+        base: 20,
+        kmSupplementaire: 1.80,
+        nom: "Tarif jour"
+      };
+
+    }
 
 
     async function sendEmail(e){
@@ -1069,27 +1074,37 @@
             .getElementById("prixAffiche")
             .textContent || "";
 
+
       const params = {
 
-        nom: nom.value,
+        nom:
+          document.getElementById("nom").value,
 
-        telephone: telephone.value,
+        telephone:
+          document.getElementById("telephone").value,
 
-        depart: depart.value,
+        depart:
+          document.getElementById("depart").value,
 
-        arrivee: arrivee.value,
+        arrivee:
+          document.getElementById("arrivee").value,
 
-        dateheure: dateheure.value,
+        dateheure:
+          document.getElementById("dateheure").value,
 
-        passagers: passagers.value,
+        passagers:
+          document.getElementById("passagers").value,
 
-        paiement: paiement.value,
+        paiement:
+          document.getElementById("paiement").value,
 
-        message: message.value,
+        message:
+          document.getElementById("message").value,
 
         prix: prixStr
 
       };
+
 
       try{
 
@@ -1124,20 +1139,34 @@
 
       return new Promise((resolve) => {
 
-        const d = depart.value;
-        const a = arrivee.value;
+        const d =
+          document.getElementById("depart").value;
+
+        const a =
+          document.getElementById("arrivee").value;
+
+        const dateHeureValeur =
+          document.getElementById("dateheure").value;
 
         const priceEl =
-          document.getElementById(
-            "prixAffiche"
-          );
+          document.getElementById("prixAffiche");
 
         const detEl =
-          document.getElementById(
-            "detailsTrajet"
-          );
+          document.getElementById("detailsTrajet");
 
-        if(!d || !a){
+        const tarifEl =
+          document.getElementById("tarifType");
+
+
+        if (!d || !a) {
+
+          priceEl.textContent = "-- €";
+
+          detEl.textContent =
+            "Veuillez saisir le départ et l'arrivée.";
+
+          tarifEl.textContent =
+            "Tarif indicatif";
 
           openFareBar();
 
@@ -1146,6 +1175,53 @@
           return;
 
         }
+
+
+        if (!dateHeureValeur) {
+
+          priceEl.textContent = "-- €";
+
+          detEl.textContent =
+            "Veuillez sélectionner la date et l'heure.";
+
+          tarifEl.textContent =
+            "Tarif indicatif";
+
+          openFareBar();
+
+          resolve(null);
+
+          return;
+
+        }
+
+
+        const dateTrajet =
+          new Date(dateHeureValeur);
+
+
+        if (isNaN(dateTrajet.getTime())) {
+
+          priceEl.textContent = "-- €";
+
+          detEl.textContent =
+            "Date ou heure invalide.";
+
+          tarifEl.textContent =
+            "Tarif indicatif";
+
+          openFareBar();
+
+          resolve(null);
+
+          return;
+
+        }
+
+
+        const tarif =
+          obtenirTarif(dateTrajet);
+
 
         directionsService.route(
 
@@ -1167,38 +1243,71 @@
               directionsRenderer
                 .setDirections(result);
 
+
               const leg =
                 result.routes[0].legs[0];
+
 
               const distKm =
                 leg.distance.value / 1000;
 
+
               const duree =
                 leg.duration.text;
 
+
+              /*
+                Jusqu'à 7 km :
+                prix forfaitaire.
+
+                Au-delà de 7 km :
+                prix forfaitaire +
+                kilomètres supplémentaires.
+              */
+
+              const kmSupplementaires =
+                Math.max(
+                  0,
+                  distKm - 7
+                );
+
+
               const prix =
                 +(
-                  20 +
-                  Math.max(
-                    0,
-                    distKm - 7
-                  ) * 1.8
+                  tarif.base +
+                  kmSupplementaires *
+                  tarif.kmSupplementaire
                 ).toFixed(2);
+
 
               animatePrice(
                 priceEl,
                 prix
               );
 
+
               detEl.textContent =
                 `Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
 
+
+              tarifEl.textContent =
+                tarif.nom;
+
+
               openFareBar();
 
+
               resolve({
+
                 prix,
+
                 distKm,
-                duree
+
+                duree,
+
+                tarif:
+                  tarif.nom
+
               });
 
             }else{
@@ -1207,6 +1316,9 @@
                 "Estimation indisponible";
 
               detEl.textContent = "";
+
+              tarifEl.textContent =
+                "Tarif indicatif";
 
               openFareBar();
 
@@ -1230,6 +1342,7 @@
 
       const dur = 600;
 
+
       (function step(now){
 
         const p =
@@ -1238,9 +1351,11 @@
             1
           );
 
+
         el.textContent =
           (target * p).toFixed(2)
           + " €";
+
 
         if(p < 1){
 
@@ -1314,7 +1429,6 @@
     }
 
 
-    // Bouton "Réservez maintenant"
     document.addEventListener(
       "DOMContentLoaded",
       () => {
@@ -1323,6 +1437,7 @@
           document.getElementById(
             "reserveBtn"
           );
+
 
         if (reserveBtn) {
 
@@ -1339,6 +1454,7 @@
 
               if (!target) return;
 
+
               const nav =
                 document.getElementById(
                   "topnav"
@@ -1349,10 +1465,12 @@
                   "fare"
                 );
 
+
               const navH =
                 nav
                   ? nav.offsetHeight
                   : 0;
+
 
               const fareVisible =
                 fare &&
@@ -1364,15 +1482,18 @@
                   )
                 );
 
+
               const fareH =
                 fareVisible
                   ? fare.offsetHeight
                   : 0;
 
+
               const offset =
                 navH +
                 fareH +
                 20;
+
 
               const top =
                 target
@@ -1383,29 +1504,29 @@
                 -
                 offset;
 
+
               window.scrollTo({
                 top,
                 behavior:"smooth"
               });
 
             }
-
           );
 
         }
 
 
-        // Bouton installation en bas
         const btnAdd =
           document.getElementById(
             'btnAddApp'
           );
 
-        // Bouton installation après réservation
+
         const btnAddModal =
           document.getElementById(
             'btnAddAppModal'
           );
+
 
         const homeBtn =
           document.getElementById(
@@ -1447,19 +1568,22 @@
               });
 
             }
-
           );
 
         }
 
       }
-
     );
 
 
-    // GOOGLE MAPS
+    /*
+      GOOGLE MAPS
+    */
+
     let map;
+
     let directionsService;
+
     let directionsRenderer;
 
 
@@ -1517,7 +1641,10 @@
     }
 
 
-    // INSTALLATION APPLICATION
+    /*
+      INSTALLATION APPLICATION
+    */
+
     let deferredPrompt = null;
 
 
@@ -1591,7 +1718,10 @@
     }
 
 
-    // SERVICE WORKER
+    /*
+      SERVICE WORKER
+    */
+
     if ('serviceWorker' in navigator) {
 
       window.addEventListener(
@@ -1615,14 +1745,14 @@
 
   </script>
 
-  <!-- GOOGLE MAPS -->
+  <!-- Google Maps -->
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async"
     async
     defer>
   </script>
 
-  <!-- CLOUDFLARE WEB ANALYTICS -->
+  <!-- Cloudflare Web Analytics -->
   <script
     defer
     src="https://static.cloudflareinsights.com/beacon.min.js"
@@ -1631,3 +1761,4 @@
 
 </body>
 </html>
+```
