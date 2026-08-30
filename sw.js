@@ -1,50 +1,146 @@
-// sw.js v4 - OuassVTC
-const CACHE_NAME = 'ouassvtc-static-v4';
+// sw.js v5 - OuassVTC
+
+const CACHE_NAME = 'ouassvtc-static-v5';
 
 const ASSETS = [
-  '/',
   '/vtc-perpignan.png',
   '/ouassvtc-app.png',
   '/manifest.json'
 ];
 
-// Installation du nouveau cache
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ASSETS))
-      .then(() => self.skipWaiting())
-  );
-});
 
-// Activation + suppression des anciens caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      );
-    }).then(() => self.clients.claim())
-  );
-});
+self.addEventListener(
+  'install',
+  event => {
 
-// Pour les pages HTML : réseau en priorité
-self.addEventListener('fetch', event => {
-  const req = event.request;
+    event.waitUntil(
 
-  if (req.mode === 'navigate') {
-    event.respondWith(
-      fetch(req).catch(() => caches.match(req))
+      caches
+        .open(CACHE_NAME)
+
+        .then(
+          cache =>
+            cache.addAll(ASSETS)
+        )
+
+        .then(
+          () =>
+            self.skipWaiting()
+        )
+
     );
-    return;
-  }
 
-  // Pour les fichiers statiques : cache puis réseau
-  event.respondWith(
-    caches.match(req).then(cached => {
-      return cached || fetch(req);
-    })
-  );
-});
+  }
+);
+
+
+self.addEventListener(
+  'activate',
+  event => {
+
+    event.waitUntil(
+
+      caches
+        .keys()
+
+        .then(
+          keys => {
+
+            return Promise.all(
+
+              keys
+
+                .filter(
+                  key =>
+                    key !== CACHE_NAME
+                )
+
+                .map(
+                  key =>
+                    caches.delete(key)
+                )
+
+            );
+
+          }
+        )
+
+        .then(
+          () =>
+            self.clients.claim()
+        )
+
+    );
+
+  }
+);
+
+
+self.addEventListener(
+  'fetch',
+  event => {
+
+    const req =
+      event.request;
+
+
+    /*
+      LES PAGES HTML SONT TOUJOURS
+      CHARGÉES DEPUIS INTERNET.
+
+      Cela évite de garder
+      un ancien index.html en cache.
+    */
+
+    if(
+      req.mode === 'navigate'
+    ){
+
+      event.respondWith(
+
+        fetch(
+          req,
+          {
+            cache:'no-store'
+          }
+        )
+
+        .catch(
+          () =>
+            caches.match('/')
+        )
+
+      );
+
+      return;
+
+    }
+
+
+    /*
+      IMAGES / MANIFEST
+    */
+
+    event.respondWith(
+
+      caches
+        .match(req)
+
+        .then(
+          cached => {
+
+            if(cached){
+
+              return cached;
+
+            }
+
+            return fetch(req);
+
+          }
+        )
+
+    );
+
+  }
+);
