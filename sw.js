@@ -1,36 +1,39 @@
-// sw.js v3 - laisser passer le HTML pour qu'il se mette à jour
-const CACHE_NAME = 'ouassvtc-static-v3';
+// sw.js v4 - OuassVTC
+const CACHE_NAME = 'ouassvtc-static-v4';
+
 const ASSETS = [
-  '/',            // la racine
+  '/',
   '/vtc-perpignan.png',
+  '/ouassvtc-app.png',
   '/manifest.json'
-  // ajoute ici tes autres fichiers statiques si besoin
 ];
 
-// installer
+// Installation du nouveau cache
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
-// activer (nettoyer anciens caches)
+// Activation + suppression des anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
-// stratégie : pour le HTML -> réseau d'abord
+// Pour les pages HTML : réseau en priorité
 self.addEventListener('fetch', event => {
   const req = event.request;
-  const url = new URL(req.url);
 
-  // pour les pages html, on veut toujours la version en ligne
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req).catch(() => caches.match(req))
@@ -38,7 +41,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // pour le reste (images, manifest...), cache d'abord
+  // Pour les fichiers statiques : cache puis réseau
   event.respondWith(
     caches.match(req).then(cached => {
       return cached || fetch(req);
