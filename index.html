@@ -16,14 +16,16 @@
     content="VTC Perpignan, Taxi Perpignan, chauffeur privé, Uber Perpignan, Bolt, Heetch, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne"
   >
 
-  <!-- Icônes / couleur appli -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <link rel="icon" href="vtc-perpignan.png" type="image/png">
   <link rel="apple-touch-icon" href="vtc-perpignan.png">
   <link rel="manifest" href="/manifest.json">
 
   <meta name="theme-color" content="#000000">
 
-  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
 
   <script>
@@ -44,7 +46,6 @@
     }
   </script>
 
-  <!-- Microsoft Clarity -->
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
       c[a]=c[a]||function(){
@@ -416,7 +417,6 @@
     @media (min-width:700px){
 
       .hero{
-        display:grid;
         grid-template-columns:1.1fr .9fr;
       }
 
@@ -458,7 +458,6 @@
     }
 
     @media (min-width:1100px){
-
       .container{
         max-width:1100px;
       }
@@ -524,13 +523,9 @@
           </a>
         </div>
 
-        <div class="contact-buttons" role="group" aria-label="Contact rapide">
+        <div class="contact-buttons">
 
-          <a
-            class="btn"
-            href="tel:0644120784"
-            onclick="trackEvent('clic_appel','Appeler')"
-          >
+          <a class="btn" href="tel:0644120784">
             📞 Appeler
           </a>
 
@@ -539,7 +534,6 @@
             href="https://wa.me/33644120784"
             target="_blank"
             rel="noopener"
-            onclick="trackEvent('clic_whatsapp','WhatsApp')"
           >
             💬 WhatsApp
           </a>
@@ -547,7 +541,6 @@
           <a
             class="btn"
             href="sms:+33644120784"
-            onclick="trackEvent('clic_sms','SMS')"
           >
             ✉️ SMS
           </a>
@@ -558,7 +551,7 @@
 
       <aside>
 
-        <div id="fare" class="fare-sticky" aria-live="polite">
+        <div id="fare" class="fare-sticky">
 
           <div class="fare-row">
 
@@ -618,7 +611,6 @@
         type="tel"
         id="telephone"
         placeholder="06 xx xx xx xx"
-        inputmode="tel"
         autocomplete="tel"
         required
       >
@@ -629,7 +621,6 @@
         type="text"
         id="depart"
         placeholder="Saisissez l'adresse de départ"
-        autocomplete="street-address"
         required
       >
 
@@ -639,7 +630,6 @@
         type="text"
         id="arrivee"
         placeholder="Saisissez l'adresse d'arrivée"
-        autocomplete="street-address"
         required
       >
 
@@ -664,7 +654,10 @@
       <label for="paiement">Mode de paiement</label>
 
       <select id="paiement" required>
-        <option value="">Sélectionner</option>
+
+        <option value="">
+          Sélectionner
+        </option>
 
         <option value="Lien de paiement sécurisé">
           Lien sécurisé (CB)
@@ -677,9 +670,12 @@
         <option value="Paiement espèces à bord">
           Espèces à bord
         </option>
+
       </select>
 
-      <label for="message">Informations complémentaires</label>
+      <label for="message">
+        Informations complémentaires
+      </label>
 
       <textarea
         id="message"
@@ -708,34 +704,26 @@
 
     </form>
 
-    <h3
-      style="
-        font-size:16px;
-        font-weight:700;
-        text-align:center;
-        margin-top:20px;
-        margin-bottom:8px;
-        color:#333;
-      "
-    >
+    <h3 style="
+      font-size:16px;
+      font-weight:700;
+      text-align:center;
+      margin-top:20px;
+      margin-bottom:8px;
+      color:#333;
+    ">
       🗺️ Visualisez votre itinéraire ci-dessous
     </h3>
 
-    <div
-      id="map"
-      role="region"
-      aria-label="Carte de l'itinéraire"
-    ></div>
+    <div id="map"></div>
 
-    <div
-      style="
-        text-align:center;
-        margin:16px 0 6px;
-        font-size:13px;
-        color:#555;
-        font-weight:600;
-      "
-    >
+    <div style="
+      text-align:center;
+      margin:16px 0 6px;
+      font-size:13px;
+      color:#555;
+      font-weight:600;
+    ">
       Besoin d’en savoir plus ?
     </div>
 
@@ -744,26 +732,18 @@
       <a
         href="vtc-perpignan.html"
         class="btn-light"
-        style="
-          padding:8px 18px;
-          font-size:13px;
-          border-color:#000;
-        "
       >
         VTC Perpignan
       </a>
 
     </div>
 
-    <section
-      class="contact-section"
-      style="
-        text-align:center;
-        margin-top:32px;
-        color:#555;
-        font-size:15px;
-      "
-    >
+    <section style="
+      text-align:center;
+      margin-top:32px;
+      color:#555;
+      font-size:15px;
+    ">
 
       <p>
         📞
@@ -774,11 +754,7 @@
 
       <p>
         💬
-        <a
-          href="https://wa.me/33644120784"
-          target="_blank"
-          rel="noopener"
-        >
+        <a href="https://wa.me/33644120784">
           WhatsApp
         </a>
       </p>
@@ -806,16 +782,13 @@
 
   </div>
 
-  <footer
-    style="
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:20px;
-      font-size:13px;
-      line-height:1.5;
-    "
-  >
+  <footer style="
+    background:#000;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+    font-size:13px;
+  ">
 
     © 2025 OuassVTC -
     Chauffeur <strong>VTC Perpignan</strong> -
@@ -823,28 +796,19 @@
 
     <br>
 
-    <a
-      href="mentions-legales.html"
-      style="color:#fff;text-decoration:none;"
-    >
+    <a href="mentions-legales.html" style="color:#fff;">
       Mentions légales
     </a>
 
     ·
 
-    <a
-      href="politique-confidentialite.html"
-      style="color:#fff;text-decoration:none;"
-    >
+    <a href="politique-confidentialite.html" style="color:#fff;">
       Politique de confidentialité
     </a>
 
     ·
 
-    <a
-      href="sitemap.xml"
-      style="color:#fff;text-decoration:none;"
-    >
+    <a href="sitemap.xml" style="color:#fff;">
       Plan du site
     </a>
 
@@ -853,19 +817,16 @@
   <div
     id="successModal"
     class="modal"
-    role="dialog"
-    aria-labelledby="successTitle"
-    aria-modal="true"
     aria-hidden="true"
   >
 
-    <div class="modal-content" id="successContent">
+    <div class="modal-content">
 
       <div class="modal-icon">
         ✅
       </div>
 
-      <div class="modal-title" id="successTitle">
+      <div class="modal-title">
         Formulaire bien envoyé
       </div>
 
@@ -894,7 +855,6 @@
 
   </div>
 
-  <!-- EmailJS -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
   <script>
@@ -902,123 +862,114 @@
     emailjs.init("U08QGWWRUenJDOllc");
 
     let formEnvoye = false;
-
-    /*
-      Permet de savoir si le client a cliqué
-      sur "Estimer le tarif" avant de choisir
-      la date et l'heure.
-    */
     let estimationEnAttente = false;
 
 
     function openFareBar(){
 
-      const nav = document.getElementById('topnav');
-      const navH = nav ? nav.offsetHeight : 56;
+      const nav =
+        document.getElementById('topnav');
+
+      const navH =
+        nav ? nav.offsetHeight : 56;
 
       document.documentElement.style.setProperty(
         '--navH',
         navH + 'px'
       );
 
-      document.body.classList.add('fare-open');
+      document.body.classList.add(
+        'fare-open'
+      );
 
-      const wrap = document.getElementById('fare');
+      const wrap =
+        document.getElementById('fare');
 
-      if (wrap) {
+      if(wrap){
         wrap.style.display = 'block';
-        wrap.classList.add('show');
       }
+
     }
-
-
-    window.addEventListener('resize', () => {
-
-      if (
-        document.body.classList.contains('fare-open')
-      ) {
-        openFareBar();
-      }
-
-    });
-
-
-    /*
-      ==========================================
-      TARIFICATION OUASSVTC
-      ==========================================
-
-      TARIF JOUR :
-      Lundi à samedi
-      De 06h00 à 19h59
-      20 € jusqu'à 7 km
-      Puis 1,80 € / km supplémentaire
-
-      TARIF SOIR / NUIT :
-      De 20h00 à 05h59
-      25 € jusqu'à 7 km
-      Puis 2,20 € / km supplémentaire
-
-      TARIF DIMANCHE :
-      Toute la journée
-      25 € jusqu'à 7 km
-      Puis 2,20 € / km supplémentaire
-
-      ARRONDI :
-      Toujours au palier supérieur de 5 €.
-
-      Exemples :
-      31,60 € -> 35 €
-      33 € -> 35 €
-      37 € -> 40 €
-      55 € -> 55 €
-      55,01 € -> 60 €
-
-      Les majorations dimanche + nuit
-      ne se cumulent pas.
-      ==========================================
-    */
 
 
     function obtenirTarif(dateTrajet){
 
-      const jour = dateTrajet.getDay();
-      const heure = dateTrajet.getHours();
+      const jour =
+        dateTrajet.getDay();
 
-      const estDimanche = jour === 0;
+      const heure =
+        dateTrajet.getHours();
+
+      const estDimanche =
+        jour === 0;
 
       const estNuit =
         heure >= 20 ||
         heure < 6;
 
 
-      if (estDimanche) {
+      if(estDimanche){
 
         return {
-          base: 25,
-          kmSupplementaire: 2.20,
-          nom: "Tarif dimanche"
+          base:25,
+          kmSupplementaire:2.20,
+          nom:"Tarif dimanche"
         };
 
       }
 
 
-      if (estNuit) {
+      if(estNuit){
 
         return {
-          base: 25,
-          kmSupplementaire: 2.20,
-          nom: "Tarif soir / nuit"
+          base:25,
+          kmSupplementaire:2.20,
+          nom:"Tarif soir / nuit"
         };
 
       }
 
 
       return {
-        base: 20,
-        kmSupplementaire: 1.80,
-        nom: "Tarif jour"
+        base:20,
+        kmSupplementaire:1.80,
+        nom:"Tarif jour"
       };
+
+    }
+
+
+    /*
+      ARRONDI OUASSVTC
+
+      Arrondi au multiple de 5 €
+      LE PLUS PROCHE.
+
+      41 € -> 40 €
+      42 € -> 40 €
+      42,49 € -> 40 €
+
+      42,50 € -> 45 €
+      43 € -> 45 €
+      44 € -> 45 €
+
+      46 € -> 45 €
+      47 € -> 45 €
+
+      47,50 € -> 50 €
+      48 € -> 50 €
+    */
+
+    function arrondirTarif(prix){
+
+      const prixCentimes =
+        Math.round(prix * 100) / 100;
+
+      return (
+        Math.round(
+          prixCentimes / 5
+        ) * 5
+      );
 
     }
 
@@ -1040,51 +991,74 @@
       formEnvoye = true;
 
       const btn =
-        document.getElementById("btnSubmit");
+        document.getElementById(
+          "btnSubmit"
+        );
 
       btn.disabled = true;
+
 
       const calc =
         await calculerEstimation();
 
-      let prixStr =
+
+      const prixStr =
         (
           calc &&
           Number.isFinite(calc.prix)
         )
         ? `${calc.prix} €`
         : document
-            .getElementById("prixAffiche")
-            .textContent || "";
+            .getElementById(
+              "prixAffiche"
+            )
+            .textContent;
 
 
       const params = {
 
         nom:
-          document.getElementById("nom").value,
+          document.getElementById(
+            "nom"
+          ).value,
 
         telephone:
-          document.getElementById("telephone").value,
+          document.getElementById(
+            "telephone"
+          ).value,
 
         depart:
-          document.getElementById("depart").value,
+          document.getElementById(
+            "depart"
+          ).value,
 
         arrivee:
-          document.getElementById("arrivee").value,
+          document.getElementById(
+            "arrivee"
+          ).value,
 
         dateheure:
-          document.getElementById("dateheure").value,
+          document.getElementById(
+            "dateheure"
+          ).value,
 
         passagers:
-          document.getElementById("passagers").value,
+          document.getElementById(
+            "passagers"
+          ).value,
 
         paiement:
-          document.getElementById("paiement").value,
+          document.getElementById(
+            "paiement"
+          ).value,
 
         message:
-          document.getElementById("message").value,
+          document.getElementById(
+            "message"
+          ).value,
 
-        prix: prixStr
+        prix:
+          prixStr
 
       };
 
@@ -1097,15 +1071,22 @@
           params
         );
 
+
         document
-          .getElementById("formResa")
+          .getElementById(
+            "formResa"
+          )
           .reset();
 
-        estimationEnAttente = false;
+
+        estimationEnAttente =
+          false;
+
 
         showSuccessModal();
 
-      }catch(err){
+      }
+      catch(err){
 
         alert(
           "❌ Erreur. Réessayez."
@@ -1122,291 +1103,269 @@
 
     function calculerEstimation(){
 
-      return new Promise((resolve) => {
+      return new Promise(
+        (resolve) => {
 
-        const d =
-          document.getElementById("depart").value;
+          const d =
+            document.getElementById(
+              "depart"
+            ).value;
 
-        const a =
-          document.getElementById("arrivee").value;
+          const a =
+            document.getElementById(
+              "arrivee"
+            ).value;
 
-        const champDate =
-          document.getElementById("dateheure");
+          const champDate =
+            document.getElementById(
+              "dateheure"
+            );
 
-        const dateHeureValeur =
-          champDate.value;
+          const dateHeureValeur =
+            champDate.value;
 
-        const priceEl =
-          document.getElementById("prixAffiche");
+          const priceEl =
+            document.getElementById(
+              "prixAffiche"
+            );
 
-        const detEl =
-          document.getElementById("detailsTrajet");
+          const detEl =
+            document.getElementById(
+              "detailsTrajet"
+            );
 
-        const tarifEl =
-          document.getElementById("tarifType");
-
-
-        if (!d || !a) {
-
-          priceEl.textContent = "-- €";
-
-          detEl.textContent =
-            "Veuillez saisir le départ et l'arrivée.";
-
-          tarifEl.textContent =
-            "Tarif indicatif";
-
-          openFareBar();
-
-          resolve(null);
-
-          return;
-
-        }
+          const tarifEl =
+            document.getElementById(
+              "tarifType"
+            );
 
 
-        /*
-          Si départ + arrivée sont remplis
-          mais que la date manque,
-          ouverture directe du calendrier.
-        */
+          if(!d || !a){
 
-        if (!dateHeureValeur) {
+            priceEl.textContent =
+              "-- €";
 
-          estimationEnAttente = true;
+            detEl.textContent =
+              "Veuillez saisir le départ et l'arrivée.";
 
-          champDate.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-          });
+            tarifEl.textContent =
+              "Tarif indicatif";
 
-          champDate.focus({
-            preventScroll: true
-          });
+            openFareBar();
 
-          if (
-            typeof champDate.showPicker === "function"
-          ) {
+            resolve(null);
 
-            try {
-
-              champDate.showPicker();
-
-            } catch (erreur) {
-
-              /*
-                Sur certains navigateurs mobiles,
-                le focus suffit pour ouvrir
-                le sélecteur.
-              */
-
-            }
+            return;
 
           }
 
-          resolve(null);
 
-          return;
+          if(!dateHeureValeur){
 
-        }
+            estimationEnAttente =
+              true;
 
+            champDate.scrollIntoView({
+              behavior:"smooth",
+              block:"center"
+            });
 
-        estimationEnAttente = false;
-
-
-        const dateTrajet =
-          new Date(dateHeureValeur);
-
-
-        if (isNaN(dateTrajet.getTime())) {
-
-          priceEl.textContent = "-- €";
-
-          detEl.textContent =
-            "Date ou heure invalide.";
-
-          tarifEl.textContent =
-            "Tarif indicatif";
-
-          openFareBar();
-
-          resolve(null);
-
-          return;
-
-        }
+            champDate.focus({
+              preventScroll:true
+            });
 
 
-        const tarif =
-          obtenirTarif(dateTrajet);
+            if(
+              typeof champDate.showPicker
+              === "function"
+            ){
 
+              try{
 
-        directionsService.route(
+                champDate.showPicker();
 
-          {
-
-            origin: d,
-
-            destination: a,
-
-            travelMode:
-              google.maps.TravelMode.DRIVING
-
-          },
-
-          (result,status) => {
-
-            if(status === "OK"){
-
-              directionsRenderer
-                .setDirections(result);
-
-
-              const leg =
-                result.routes[0].legs[0];
-
-
-              const distKm =
-                leg.distance.value / 1000;
-
-
-              const duree =
-                leg.duration.text;
-
-
-              const kmSupplementaires =
-                Math.max(
-                  0,
-                  distKm - 7
-                );
-
-
-              /*
-                PRIX BRUT AVANT ARRONDI
-              */
-
-              const prixBrut =
-                tarif.base +
-                kmSupplementaires *
-                tarif.kmSupplementaire;
-
-
-              /*
-                ARRONDI AU PALIER SUPÉRIEUR
-                DE 5 €
-
-                33 -> 35
-                37 -> 40
-                55 -> 55
-                56 -> 60
-              */
-
-              const prix =
-                Math.ceil(prixBrut / 5) * 5;
-
-
-              animatePrice(
-                priceEl,
-                prix
-              );
-
-
-              detEl.textContent =
-                `Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
-
-
-              tarifEl.textContent =
-                tarif.nom;
-
-
-              openFareBar();
-
-
-              resolve({
-
-                prix,
-
-                distKm,
-
-                duree,
-
-                tarif:
-                  tarif.nom
-
-              });
-
-            }else{
-
-              priceEl.textContent =
-                "Estimation indisponible";
-
-              detEl.textContent = "";
-
-              tarifEl.textContent =
-                "Tarif indicatif";
-
-              openFareBar();
-
-              resolve(null);
+              }
+              catch(erreur){}
 
             }
 
+
+            resolve(null);
+
+            return;
+
           }
 
-        );
 
-      });
-
-    }
+          estimationEnAttente =
+            false;
 
 
-    /*
-      Animation du prix sans centimes.
-    */
-
-    function animatePrice(el,target){
-
-      const start =
-        performance.now();
-
-      const dur = 600;
+          const dateTrajet =
+            new Date(
+              dateHeureValeur
+            );
 
 
-      (function step(now){
+          if(
+            isNaN(
+              dateTrajet.getTime()
+            )
+          ){
 
-        const p =
-          Math.min(
-            (now - start) / dur,
-            1
+            priceEl.textContent =
+              "-- €";
+
+            detEl.textContent =
+              "Date ou heure invalide.";
+
+            tarifEl.textContent =
+              "Tarif indicatif";
+
+            openFareBar();
+
+            resolve(null);
+
+            return;
+
+          }
+
+
+          const tarif =
+            obtenirTarif(
+              dateTrajet
+            );
+
+
+          directionsService.route(
+
+            {
+
+              origin:d,
+
+              destination:a,
+
+              travelMode:
+                google.maps
+                  .TravelMode
+                  .DRIVING
+
+            },
+
+            (result,status) => {
+
+              if(status === "OK"){
+
+                directionsRenderer
+                  .setDirections(
+                    result
+                  );
+
+
+                const leg =
+                  result.routes[0]
+                    .legs[0];
+
+
+                const distKm =
+                  leg.distance.value
+                  / 1000;
+
+
+                const duree =
+                  leg.duration.text;
+
+
+                const kmSupplementaires =
+                  Math.max(
+                    0,
+                    distKm - 7
+                  );
+
+
+                /*
+                  CALCUL DU PRIX BRUT
+                */
+
+                const prixBrut =
+                  tarif.base +
+                  (
+                    kmSupplementaires *
+                    tarif.kmSupplementaire
+                  );
+
+
+                /*
+                  ARRONDI AU 5 €
+                  LE PLUS PROCHE
+                */
+
+                const prix =
+                  arrondirTarif(
+                    prixBrut
+                  );
+
+
+                /*
+                  AFFICHAGE DIRECT
+                  DU PRIX FINAL
+                  SANS CENTIMES
+                */
+
+                priceEl.textContent =
+                  prix + " €";
+
+
+                detEl.textContent =
+                  `Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
+
+
+                tarifEl.textContent =
+                  tarif.nom;
+
+
+                openFareBar();
+
+
+                resolve({
+
+                  prix,
+
+                  prixBrut,
+
+                  distKm,
+
+                  duree,
+
+                  tarif:
+                    tarif.nom
+
+                });
+
+              }
+              else{
+
+                priceEl.textContent =
+                  "Estimation indisponible";
+
+                detEl.textContent =
+                  "";
+
+                tarifEl.textContent =
+                  "Tarif indicatif";
+
+                openFareBar();
+
+                resolve(null);
+
+              }
+
+            }
+
           );
 
-
-        const valeur =
-          Math.round(target * p);
-
-
-        el.textContent =
-          valeur + " €";
-
-
-        if(p < 1){
-
-          requestAnimationFrame(step);
-
-        } else {
-
-          /*
-            On garantit que la valeur finale
-            affichée est exactement le prix
-            arrondi.
-          */
-
-          el.textContent =
-            target + " €";
-
         }
-
-      })(start);
+      );
 
     }
 
@@ -1418,7 +1377,9 @@
           'successModal'
         );
 
-      modal.classList.add('show');
+      modal.classList.add(
+        'show'
+      );
 
       modal.setAttribute(
         'aria-hidden',
@@ -1427,11 +1388,6 @@
 
       document.body.style.overflow =
         'hidden';
-
-      window.addEventListener(
-        'keydown',
-        onEscClose
-      );
 
     }
 
@@ -1443,7 +1399,9 @@
           'successModal'
         );
 
-      modal.classList.remove('show');
+      modal.classList.remove(
+        'show'
+      );
 
       modal.setAttribute(
         'aria-hidden',
@@ -1452,22 +1410,6 @@
 
       document.body.style.overflow =
         '';
-
-      window.removeEventListener(
-        'keydown',
-        onEscClose
-      );
-
-    }
-
-
-    function onEscClose(e){
-
-      if(e.key === 'Escape'){
-
-        hideSuccessModal();
-
-      }
 
     }
 
@@ -1482,7 +1424,7 @@
           );
 
 
-        if (reserveBtn) {
+        if(reserveBtn){
 
           reserveBtn.addEventListener(
             "click",
@@ -1490,68 +1432,14 @@
 
               e.preventDefault();
 
-              const target =
-                document.querySelector(
-                  "#formResa"
-                );
-
-              if (!target) return;
-
-
-              const nav =
-                document.getElementById(
-                  "topnav"
-                );
-
-              const fare =
-                document.getElementById(
-                  "fare"
-                );
-
-
-              const navH =
-                nav
-                  ? nav.offsetHeight
-                  : 0;
-
-
-              const fareVisible =
-                fare &&
-                (
-                  fare.style.display === "block"
-                  ||
-                  fare.classList.contains(
-                    "show"
-                  )
-                );
-
-
-              const fareH =
-                fareVisible
-                  ? fare.offsetHeight
-                  : 0;
-
-
-              const offset =
-                navH +
-                fareH +
-                20;
-
-
-              const top =
-                target
-                  .getBoundingClientRect()
-                  .top
-                +
-                window.pageYOffset
-                -
-                offset;
-
-
-              window.scrollTo({
-                top,
-                behavior:"smooth"
-              });
+              document
+                .getElementById(
+                  "formResa"
+                )
+                .scrollIntoView({
+                  behavior:"smooth",
+                  block:"start"
+                });
 
             }
           );
@@ -1559,30 +1447,25 @@
         }
 
 
-        /*
-          Après sélection de la date et de l'heure,
-          l'estimation se lance automatiquement
-          si elle était en attente.
-        */
-
         const champDate =
           document.getElementById(
             "dateheure"
           );
 
 
-        if (champDate) {
+        if(champDate){
 
           champDate.addEventListener(
             "change",
             () => {
 
-              if (
+              if(
                 estimationEnAttente &&
                 champDate.value
-              ) {
+              ){
 
-                estimationEnAttente = false;
+                estimationEnAttente =
+                  false;
 
                 calculerEstimation();
 
@@ -1612,7 +1495,7 @@
           );
 
 
-        if (btnAdd){
+        if(btnAdd){
 
           btnAdd.addEventListener(
             'click',
@@ -1622,7 +1505,7 @@
         }
 
 
-        if (btnAddModal){
+        if(btnAddModal){
 
           btnAddModal.addEventListener(
             'click',
@@ -1632,7 +1515,7 @@
         }
 
 
-        if (homeBtn){
+        if(homeBtn){
 
           homeBtn.addEventListener(
             'click',
@@ -1654,14 +1537,8 @@
     );
 
 
-    /*
-      GOOGLE MAPS
-    */
-
     let map;
-
     let directionsService;
-
     let directionsRenderer;
 
 
@@ -1669,7 +1546,9 @@
 
       map =
         new google.maps.Map(
-          document.getElementById("map"),
+          document.getElementById(
+            "map"
+          ),
           {
 
             zoom:7,
@@ -1684,13 +1563,15 @@
 
 
       directionsService =
-        new google.maps.DirectionsService();
+        new google.maps
+          .DirectionsService();
 
 
       directionsRenderer =
-        new google.maps.DirectionsRenderer({
-          map
-        });
+        new google.maps
+          .DirectionsRenderer({
+            map
+          });
 
 
       const acOpts = {
@@ -1705,23 +1586,25 @@
       };
 
 
-      new google.maps.places.Autocomplete(
-        document.getElementById("depart"),
-        acOpts
-      );
+      new google.maps.places
+        .Autocomplete(
+          document.getElementById(
+            "depart"
+          ),
+          acOpts
+        );
 
 
-      new google.maps.places.Autocomplete(
-        document.getElementById("arrivee"),
-        acOpts
-      );
+      new google.maps.places
+        .Autocomplete(
+          document.getElementById(
+            "arrivee"
+          ),
+          acOpts
+        );
 
     }
 
-
-    /*
-      INSTALLATION APPLICATION
-    */
 
     let deferredPrompt = null;
 
@@ -1743,11 +1626,10 @@
       alert(
         "Vous utilisez un iPhone.\n\n" +
         "Pour ajouter OuassVTC :\n" +
-        "1. Touchez le bouton « Partager » (icône avec la flèche vers le haut)\n" +
+        "1. Touchez le bouton « Partager »\n" +
         "2. Faites défiler vers le bas\n" +
         "3. Touchez « Sur l’écran d’accueil »\n" +
-        "4. Validez.\n\n" +
-        "L’icône sera ajoutée comme une application."
+        "4. Validez."
       );
 
     }
@@ -1766,7 +1648,7 @@
 
     async function triggerInstall(){
 
-      if (deferredPrompt) {
+      if(deferredPrompt){
 
         deferredPrompt.prompt();
 
@@ -1774,18 +1656,17 @@
 
         deferredPrompt = null;
 
-      } else {
+      }
+      else{
 
-        if (isAndroid()) {
+        if(isAndroid()){
 
           alert(
-            "L’application OuassVTC semble déjà installée sur votre téléphone.\n\n" +
-            "Pour l’ouvrir :\n" +
-            "• Recherchez l’icône « OuassVTC » sur votre écran d’accueil ou dans vos applications.\n" +
-            "• Touchez l’icône pour lancer l’application."
+            "L’application OuassVTC semble déjà installée sur votre téléphone."
           );
 
-        } else {
+        }
+        else{
 
           explainIOS();
 
@@ -1797,17 +1678,31 @@
 
 
     /*
-      SERVICE WORKER - VERSION 4
+      SERVICE WORKER
+      VERSION 5
     */
 
-    if ('serviceWorker' in navigator) {
+    if(
+      'serviceWorker'
+      in navigator
+    ){
 
       window.addEventListener(
         'load',
         () => {
 
-          navigator.serviceWorker
-            .register('/sw.js?v=4')
+          navigator
+            .serviceWorker
+            .register(
+              '/sw.js?v=5'
+            )
+            .then(
+              registration => {
+
+                registration.update();
+
+              }
+            )
             .catch(
               err =>
                 console.log(
@@ -1823,14 +1718,12 @@
 
   </script>
 
-  <!-- Google Maps -->
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async"
     async
     defer>
   </script>
 
-  <!-- Cloudflare Web Analytics -->
   <script
     defer
     src="https://static.cloudflareinsights.com/beacon.min.js"
