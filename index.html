@@ -60,12 +60,14 @@
   </script>
 
   <style>
+
     :root{
       --brand:#000;
       --border:#e5e7eb;
       --muted:#6b7280;
       --bg:#fff;
       --success:#16a34a;
+      --warning:#d97706;
       --radius:14px;
       --navH:56px;
     }
@@ -239,6 +241,44 @@
       justify-content:center;
       gap:6px;
       cursor:pointer;
+    }
+
+    .date-validation{
+      margin-top:10px;
+    }
+
+    .btn-date-validation{
+      width:100%;
+      border:none;
+      background:#111;
+      color:#fff;
+      border-radius:12px;
+      padding:13px 14px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      transition:opacity .2s,transform .2s;
+    }
+
+    .btn-date-validation:hover{
+      opacity:.9;
+      transform:translateY(-1px);
+    }
+
+    .date-status{
+      min-height:22px;
+      text-align:center;
+      font-size:13px;
+      font-weight:700;
+      margin-top:8px;
+    }
+
+    .date-status.success{
+      color:var(--success);
+    }
+
+    .date-status.warning{
+      color:var(--warning);
     }
 
     .fare-sticky{
@@ -458,6 +498,7 @@
     }
 
     @media (min-width:1100px){
+
       .container{
         max-width:1100px;
       }
@@ -482,969 +523,908 @@
         padding:12px 8px;
       }
     }
+
   </style>
 </head>
 
 <body>
 
-  <header>
-    <img src="vtc-perpignan.png" alt="vtc-perpignan" loading="eager">
-  </header>
+<header>
 
-  <nav id="topnav">
-    <a href="services.html">Services</a>
-    <a href="faq.html">FAQ</a>
-    <a href="qui-sommes-nous.html">À propos</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <img
+    src="vtc-perpignan.png"
+    alt="vtc-perpignan"
+    loading="eager"
+  >
 
-  <div class="container">
+</header>
 
-    <section class="hero" aria-label="Présentation et réservation">
 
-      <div class="hero-text">
+<nav id="topnav">
 
-        <h1>
-          Chauffeur <strong>VTC Perpignan</strong>
-        </h1>
+  <a href="services.html">
+    Services
+  </a>
 
-        <p>
-          Votre VTC Perpignan en un clic — confort et ponctualité assurés.
-        </p>
+  <a href="faq.html">
+    FAQ
+  </a>
 
-        <div class="main-button">
-          <a
-            class="btn btn-main"
-            href="#formResa"
-            id="reserveBtn"
-            onclick="trackEvent('clic_reserver','Réserver maintenant')"
-          >
-            📅 Réservez maintenant
-          </a>
-        </div>
+  <a href="qui-sommes-nous.html">
+    À propos
+  </a>
 
-        <div class="contact-buttons">
+  <a href="contact.html">
+    Contact
+  </a>
 
-          <a class="btn" href="tel:0644120784">
-            📞 Appeler
-          </a>
+</nav>
 
-          <a
-            class="btn"
-            href="https://wa.me/33644120784"
-            target="_blank"
-            rel="noopener"
-          >
-            💬 WhatsApp
-          </a>
 
-          <a
-            class="btn"
-            href="sms:+33644120784"
-          >
-            ✉️ SMS
-          </a>
+<div class="container">
 
-        </div>
+  <section
+    class="hero"
+    aria-label="Présentation et réservation"
+  >
+
+    <div class="hero-text">
+
+      <h1>
+        Chauffeur
+        <strong>VTC Perpignan</strong>
+      </h1>
+
+      <p>
+        Votre VTC Perpignan en un clic —
+        confort et ponctualité assurés.
+      </p>
+
+
+      <div class="main-button">
+
+        <a
+          class="btn btn-main"
+          href="#formResa"
+          id="reserveBtn"
+          onclick="trackEvent('clic_reserver','Réserver maintenant')"
+        >
+          📅 Réservez maintenant
+        </a>
 
       </div>
 
-      <aside>
 
-        <div id="fare" class="fare-sticky">
+      <div class="contact-buttons">
 
-          <div class="fare-row">
+        <a
+          class="btn"
+          href="tel:0644120784"
+        >
+          📞 Appeler
+        </a>
 
-            <div class="fare-left">
 
-              <span class="badge">
-                Estimation
-              </span>
+        <a
+          class="btn"
+          href="https://wa.me/33644120784"
+          target="_blank"
+          rel="noopener"
+        >
+          💬 WhatsApp
+        </a>
 
-              <div>
 
-                <div class="fare-price" id="prixAffiche">
-                  -- €
-                </div>
+        <a
+          class="btn"
+          href="sms:+33644120784"
+        >
+          ✉️ SMS
+        </a>
 
-                <div class="fare-meta" id="detailsTrajet">
-                  Distance : -- km · Temps : --
-                </div>
+      </div>
 
+    </div>
+
+
+    <aside>
+
+      <div
+        id="fare"
+        class="fare-sticky"
+        aria-live="polite"
+      >
+
+        <div class="fare-row">
+
+          <div class="fare-left">
+
+            <span class="badge">
+              Estimation
+            </span>
+
+            <div>
+
+              <div
+                class="fare-price"
+                id="prixAffiche"
+              >
+                -- €
+              </div>
+
+
+              <div
+                class="fare-meta"
+                id="detailsTrajet"
+              >
+                Distance : -- km · Temps : --
               </div>
 
             </div>
 
-            <div class="chip" id="tarifType">
-              Tarif indicatif
-            </div>
+          </div>
 
+
+          <div
+            class="chip"
+            id="tarifType"
+          >
+            Tarif indicatif
           </div>
 
         </div>
 
-      </aside>
-
-    </section>
-
-    <p class="intro">
-      Remplissez le formulaire ci-dessous pour votre
-      <strong>trajet VTC Perpignan</strong>
-      et soyez recontacté rapidement.
-    </p>
-
-    <form id="formResa" onsubmit="sendEmail(event)">
-
-      <label for="nom">Nom et prénom</label>
-
-      <input
-        type="text"
-        id="nom"
-        placeholder="Ex. Dupont Pierre"
-        autocomplete="name"
-        required
-      >
-
-      <label for="telephone">Téléphone</label>
-
-      <input
-        type="tel"
-        id="telephone"
-        placeholder="06 xx xx xx xx"
-        autocomplete="tel"
-        required
-      >
-
-      <label for="depart">Adresse de départ</label>
-
-      <input
-        type="text"
-        id="depart"
-        placeholder="Saisissez l'adresse de départ"
-        required
-      >
-
-      <label for="arrivee">Adresse d'arrivée</label>
-
-      <input
-        type="text"
-        id="arrivee"
-        placeholder="Saisissez l'adresse d'arrivée"
-        required
-      >
-
-      <label for="dateheure">📅 Date et heure</label>
-
-      <input
-        type="datetime-local"
-        id="dateheure"
-        required
-      >
-
-      <label for="passagers">Nombre de passagers</label>
-
-      <select id="passagers" required>
-        <option value="">Sélectionner</option>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-      </select>
-
-      <label for="paiement">Mode de paiement</label>
-
-      <select id="paiement" required>
-
-        <option value="">
-          Sélectionner
-        </option>
-
-        <option value="Lien de paiement sécurisé">
-          Lien sécurisé (CB)
-        </option>
-
-        <option value="Paiement CB à bord">
-          CB à bord
-        </option>
-
-        <option value="Paiement espèces à bord">
-          Espèces à bord
-        </option>
-
-      </select>
-
-      <label for="message">
-        Informations complémentaires
-      </label>
-
-      <textarea
-        id="message"
-        placeholder="Code porte, bagages, enfant, etc."
-      ></textarea>
-
-      <div class="form-buttons">
-
-        <button
-          type="button"
-          class="btn"
-          onclick="calculerEstimation()"
-        >
-          💶 Estimer le tarif
-        </button>
-
-        <button
-          type="submit"
-          class="btn"
-          id="btnSubmit"
-        >
-          ✅ Envoyer votre formulaire
-        </button>
-
       </div>
 
-    </form>
+    </aside>
 
-    <h3 style="
+  </section>
+
+
+  <p class="intro">
+
+    Remplissez le formulaire ci-dessous pour votre
+    <strong>trajet VTC Perpignan</strong>
+    et soyez recontacté rapidement.
+
+  </p>
+
+
+  <form
+    id="formResa"
+    onsubmit="sendEmail(event)"
+  >
+
+
+    <label for="nom">
+      Nom et prénom
+    </label>
+
+    <input
+      type="text"
+      id="nom"
+      placeholder="Ex. Dupont Pierre"
+      autocomplete="name"
+      required
+    >
+
+
+    <label for="telephone">
+      Téléphone
+    </label>
+
+    <input
+      type="tel"
+      id="telephone"
+      placeholder="06 xx xx xx xx"
+      autocomplete="tel"
+      required
+    >
+
+
+    <label for="depart">
+      Adresse de départ
+    </label>
+
+    <input
+      type="text"
+      id="depart"
+      placeholder="Saisissez l'adresse de départ"
+      required
+    >
+
+
+    <label for="arrivee">
+      Adresse d'arrivée
+    </label>
+
+    <input
+      type="text"
+      id="arrivee"
+      placeholder="Saisissez l'adresse d'arrivée"
+      required
+    >
+
+
+    <label for="dateheure">
+      📅 Date et heure
+    </label>
+
+    <input
+      type="datetime-local"
+      id="dateheure"
+      required
+    >
+
+
+    <div class="date-validation">
+
+      <button
+        type="button"
+        class="btn-date-validation"
+        id="btnValiderDate"
+        onclick="validerDateHeure()"
+      >
+        ✅ Valider la date et l’heure
+      </button>
+
+
+      <div
+        id="dateStatus"
+        class="date-status"
+        aria-live="polite"
+      >
+      </div>
+
+    </div>
+
+
+    <label for="passagers">
+      Nombre de passagers
+    </label>
+
+    <select
+      id="passagers"
+      required
+    >
+
+      <option value="">
+        Sélectionner
+      </option>
+
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+
+    </select>
+
+
+    <label for="paiement">
+      Mode de paiement
+    </label>
+
+    <select
+      id="paiement"
+      required
+    >
+
+      <option value="">
+        Sélectionner
+      </option>
+
+      <option value="Lien de paiement sécurisé">
+        Lien sécurisé (CB)
+      </option>
+
+      <option value="Paiement CB à bord">
+        CB à bord
+      </option>
+
+      <option value="Paiement espèces à bord">
+        Espèces à bord
+      </option>
+
+    </select>
+
+
+    <label for="message">
+      Informations complémentaires
+    </label>
+
+    <textarea
+      id="message"
+      placeholder="Code porte, bagages, enfant, etc."
+    ></textarea>
+
+
+    <div class="form-buttons">
+
+      <button
+        type="button"
+        class="btn"
+        onclick="calculerEstimation()"
+      >
+        💶 Estimer le tarif
+      </button>
+
+
+      <button
+        type="submit"
+        class="btn"
+        id="btnSubmit"
+      >
+        ✅ Envoyer votre formulaire
+      </button>
+
+    </div>
+
+  </form>
+
+
+  <h3
+    style="
       font-size:16px;
       font-weight:700;
       text-align:center;
       margin-top:20px;
       margin-bottom:8px;
       color:#333;
-    ">
-      🗺️ Visualisez votre itinéraire ci-dessous
-    </h3>
+    "
+  >
+    🗺️ Visualisez votre itinéraire ci-dessous
+  </h3>
 
-    <div id="map"></div>
 
-    <div style="
+  <div id="map"></div>
+
+
+  <div
+    style="
       text-align:center;
       margin:16px 0 6px;
       font-size:13px;
       color:#555;
       font-weight:600;
-    ">
-      Besoin d’en savoir plus ?
-    </div>
+    "
+  >
+    Besoin d’en savoir plus ?
+  </div>
 
-    <div style="text-align:center;margin:0 0 28px;">
 
-      <a
-        href="vtc-perpignan.html"
-        class="btn-light"
-      >
-        VTC Perpignan
-      </a>
+  <div
+    style="
+      text-align:center;
+      margin:0 0 28px;
+    "
+  >
 
-    </div>
+    <a
+      href="vtc-perpignan.html"
+      class="btn-light"
+    >
+      VTC Perpignan
+    </a>
 
-    <section style="
+  </div>
+
+
+  <section
+    style="
       text-align:center;
       margin-top:32px;
       color:#555;
       font-size:15px;
-    ">
-
-      <p>
-        📞
-        <a href="tel:0644120784">
-          06 44 12 07 84
-        </a>
-      </p>
-
-      <p>
-        💬
-        <a href="https://wa.me/33644120784">
-          WhatsApp
-        </a>
-      </p>
-
-      <p>
-        ✉️
-        <a href="mailto:contact@ouassvtc.fr">
-          contact@ouassvtc.fr
-        </a>
-      </p>
-
-      <div class="install-bottom">
-
-        <button
-          type="button"
-          class="btn"
-          id="btnAddApp"
-        >
-          📲 Installer l'application OuassVTC
-        </button>
-
-      </div>
-
-    </section>
-
-  </div>
-
-  <footer style="
-    background:#000;
-    color:#fff;
-    text-align:center;
-    padding:20px;
-    font-size:13px;
-  ">
-
-    © 2025 OuassVTC -
-    Chauffeur <strong>VTC Perpignan</strong> -
-    Tous droits réservés.
-
-    <br>
-
-    <a href="mentions-legales.html" style="color:#fff;">
-      Mentions légales
-    </a>
-
-    ·
-
-    <a href="politique-confidentialite.html" style="color:#fff;">
-      Politique de confidentialité
-    </a>
-
-    ·
-
-    <a href="sitemap.xml" style="color:#fff;">
-      Plan du site
-    </a>
-
-  </footer>
-
-  <div
-    id="successModal"
-    class="modal"
-    aria-hidden="true"
+    "
   >
 
-    <div class="modal-content">
+    <p>
 
-      <div class="modal-icon">
-        ✅
-      </div>
+      📞
 
-      <div class="modal-title">
-        Formulaire bien envoyé
-      </div>
+      <a href="tel:0644120784">
+        06 44 12 07 84
+      </a>
 
-      <div class="modal-text">
-        Nous revenons vers vous rapidement !
-      </div>
+    </p>
 
-      <button
-        type="button"
-        class="btn-light"
-        id="homeBtn"
+
+    <p>
+
+      💬
+
+      <a
+        href="https://wa.me/33644120784"
+        target="_blank"
+        rel="noopener"
       >
-        ↩️ Revenir à l’accueil
-      </button>
+        WhatsApp
+      </a>
+
+    </p>
+
+
+    <p>
+
+      ✉️
+
+      <a href="mailto:contact@ouassvtc.fr">
+        contact@ouassvtc.fr
+      </a>
+
+    </p>
+
+
+    <div class="install-bottom">
 
       <button
         type="button"
         class="btn"
-        id="btnAddAppModal"
-        style="margin-top:10px;"
+        id="btnAddApp"
       >
         📲 Installer l'application OuassVTC
       </button>
 
     </div>
 
+  </section>
+
+</div>
+
+
+<footer
+  style="
+    background:#000;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+    font-size:13px;
+    line-height:1.5;
+  "
+>
+
+  © 2025 OuassVTC -
+  Chauffeur
+  <strong>VTC Perpignan</strong>
+  -
+  Tous droits réservés.
+
+  <br>
+
+
+  <a
+    href="mentions-legales.html"
+    style="
+      color:#fff;
+      text-decoration:none;
+    "
+  >
+    Mentions légales
+  </a>
+
+  ·
+
+  <a
+    href="politique-confidentialite.html"
+    style="
+      color:#fff;
+      text-decoration:none;
+    "
+  >
+    Politique de confidentialité
+  </a>
+
+  ·
+
+  <a
+    href="sitemap.xml"
+    style="
+      color:#fff;
+      text-decoration:none;
+    "
+  >
+    Plan du site
+  </a>
+
+</footer>
+
+
+<div
+  id="successModal"
+  class="modal"
+  aria-hidden="true"
+>
+
+  <div class="modal-content">
+
+    <div class="modal-icon">
+      ✅
+    </div>
+
+    <div class="modal-title">
+      Formulaire bien envoyé
+    </div>
+
+    <div class="modal-text">
+      Nous revenons vers vous rapidement !
+    </div>
+
+
+    <button
+      type="button"
+      class="btn-light"
+      id="homeBtn"
+    >
+      ↩️ Revenir à l’accueil
+    </button>
+
+
+    <button
+      type="button"
+      class="btn"
+      id="btnAddAppModal"
+      style="margin-top:10px;"
+    >
+      📲 Installer l'application OuassVTC
+    </button>
+
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-  <script>
-
-    emailjs.init("U08QGWWRUenJDOllc");
-
-    let formEnvoye = false;
-    let estimationEnAttente = false;
+</div>
 
 
-    function openFareBar(){
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-      const nav =
-        document.getElementById('topnav');
 
-      const navH =
-        nav ? nav.offsetHeight : 56;
+<script>
 
-      document.documentElement.style.setProperty(
-        '--navH',
-        navH + 'px'
+  emailjs.init("U08QGWWRUenJDOllc");
+
+
+  let formEnvoye = false;
+
+  let dateHeureValidee = false;
+
+  let dateHeureConfirmee = "";
+
+
+  /*
+  ==========================================
+  BARRE D'ESTIMATION
+  ==========================================
+  */
+
+  function openFareBar(){
+
+    const nav =
+      document.getElementById("topnav");
+
+
+    const navH =
+      nav
+        ? nav.offsetHeight
+        : 56;
+
+
+    document.documentElement.style.setProperty(
+      "--navH",
+      navH + "px"
+    );
+
+
+    document.body.classList.add(
+      "fare-open"
+    );
+
+
+    const wrap =
+      document.getElementById("fare");
+
+
+    if(wrap){
+
+      wrap.style.display =
+        "block";
+
+    }
+
+  }
+
+
+
+  /*
+  ==========================================
+  VALIDATION DATE / HEURE
+  ==========================================
+
+  IMPORTANT :
+
+  - Le client choisit sa date et son heure.
+  - Aucun tarif n'est calculé automatiquement.
+  - Il doit cliquer sur "Valider la date et l'heure".
+  - Ensuite seulement il peut demander l'estimation.
+  ==========================================
+  */
+
+  function validerDateHeure(){
+
+    const champDate =
+      document.getElementById(
+        "dateheure"
       );
 
-      document.body.classList.add(
-        'fare-open'
+
+    const status =
+      document.getElementById(
+        "dateStatus"
       );
 
-      const wrap =
-        document.getElementById('fare');
 
-      if(wrap){
-        wrap.style.display = 'block';
+    if(!champDate.value){
+
+      dateHeureValidee =
+        false;
+
+
+      dateHeureConfirmee =
+        "";
+
+
+      status.className =
+        "date-status warning";
+
+
+      status.textContent =
+        "⚠️ Choisissez d'abord votre date et votre heure.";
+
+
+      champDate.focus();
+
+
+      if(
+        typeof champDate.showPicker
+        === "function"
+      ){
+
+        try{
+
+          champDate.showPicker();
+
+        }
+        catch(erreur){}
+
       }
+
+
+      return false;
 
     }
 
 
-    function obtenirTarif(dateTrajet){
-
-      const jour =
-        dateTrajet.getDay();
-
-      const heure =
-        dateTrajet.getHours();
-
-      const estDimanche =
-        jour === 0;
-
-      const estNuit =
-        heure >= 20 ||
-        heure < 6;
+    const dateChoisie =
+      new Date(
+        champDate.value
+      );
 
 
-      if(estDimanche){
+    if(
+      isNaN(
+        dateChoisie.getTime()
+      )
+    ){
 
-        return {
-          base:25,
-          kmSupplementaire:2.20,
-          nom:"Tarif dimanche"
-        };
-
-      }
+      dateHeureValidee =
+        false;
 
 
-      if(estNuit){
+      dateHeureConfirmee =
+        "";
 
-        return {
-          base:25,
-          kmSupplementaire:2.20,
-          nom:"Tarif soir / nuit"
-        };
 
-      }
+      status.className =
+        "date-status warning";
 
+
+      status.textContent =
+        "⚠️ La date ou l'heure sélectionnée est invalide.";
+
+
+      return false;
+
+    }
+
+
+    dateHeureValidee =
+      true;
+
+
+    dateHeureConfirmee =
+      champDate.value;
+
+
+    const dateFormatee =
+      dateChoisie.toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:"long",
+          day:"2-digit",
+          month:"2-digit",
+          year:"numeric"
+        }
+      );
+
+
+    const heureFormatee =
+      dateChoisie.toLocaleTimeString(
+        "fr-FR",
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
+
+
+    status.className =
+      "date-status success";
+
+
+    status.textContent =
+      "✅ Validé : " +
+      dateFormatee +
+      " à " +
+      heureFormatee;
+
+
+    return true;
+
+  }
+
+
+
+  /*
+  ==========================================
+  TARIFICATION
+  ==========================================
+
+  JOUR :
+  Lundi à samedi
+  06h00 à 19h59
+
+  20 € jusqu'à 7 km
+  puis 1,80 € / km supplémentaire
+
+
+  SOIR / NUIT :
+  20h00 à 05h59
+
+  25 € jusqu'à 7 km
+  puis 2,20 € / km supplémentaire
+
+
+  DIMANCHE :
+  Toute la journée
+
+  25 € jusqu'à 7 km
+  puis 2,20 € / km supplémentaire
+
+
+  ARRONDI :
+  Multiple de 5 € le plus proche.
+
+  41 -> 40
+  42 -> 40
+  43 -> 45
+  44 -> 45
+  46 -> 45
+  47 -> 45
+  48 -> 50
+  ==========================================
+  */
+
+
+  function obtenirTarif(dateTrajet){
+
+    const jour =
+      dateTrajet.getDay();
+
+
+    const heure =
+      dateTrajet.getHours();
+
+
+    const estDimanche =
+      jour === 0;
+
+
+    const estNuit =
+      heure >= 20 ||
+      heure < 6;
+
+
+    if(estDimanche){
 
       return {
-        base:20,
-        kmSupplementaire:1.80,
-        nom:"Tarif jour"
+
+        base:25,
+
+        kmSupplementaire:2.20,
+
+        nom:"Tarif dimanche"
+
       };
 
     }
 
 
-    /*
-      ARRONDI OUASSVTC
+    if(estNuit){
 
-      Arrondi au multiple de 5 €
-      LE PLUS PROCHE.
+      return {
 
-      41 € -> 40 €
-      42 € -> 40 €
-      42,49 € -> 40 €
+        base:25,
 
-      42,50 € -> 45 €
-      43 € -> 45 €
-      44 € -> 45 €
+        kmSupplementaire:2.20,
 
-      46 € -> 45 €
-      47 € -> 45 €
+        nom:"Tarif soir / nuit"
 
-      47,50 € -> 50 €
-      48 € -> 50 €
-    */
-
-    function arrondirTarif(prix){
-
-      const prixCentimes =
-        Math.round(prix * 100) / 100;
-
-      return (
-        Math.round(
-          prixCentimes / 5
-        ) * 5
-      );
+      };
 
     }
 
 
-    async function sendEmail(e){
+    return {
 
-      e.preventDefault();
+      base:20,
 
-      if(formEnvoye){
+      kmSupplementaire:1.80,
 
-        alert(
-          "Votre demande a déjà été envoyée."
-        );
+      nom:"Tarif jour"
 
-        return;
+    };
 
-      }
-
-      formEnvoye = true;
-
-      const btn =
-        document.getElementById(
-          "btnSubmit"
-        );
-
-      btn.disabled = true;
+  }
 
 
-      const calc =
-        await calculerEstimation();
+
+  function arrondirTarif(prix){
+
+    const prixCentimes =
+      Math.round(
+        prix * 100
+      ) / 100;
 
 
-      const prixStr =
-        (
-          calc &&
-          Number.isFinite(calc.prix)
-        )
-        ? `${calc.prix} €`
-        : document
-            .getElementById(
-              "prixAffiche"
-            )
-            .textContent;
+    return (
+      Math.round(
+        prixCentimes / 5
+      ) * 5
+    );
+
+  }
 
 
-      const params = {
 
-        nom:
-          document.getElementById(
-            "nom"
-          ).value,
+  /*
+  ==========================================
+  ESTIMATION
+  ==========================================
+  */
 
-        telephone:
-          document.getElementById(
-            "telephone"
-          ).value,
+  function calculerEstimation(){
 
-        depart:
+    return new Promise(
+      (resolve) => {
+
+
+        const d =
           document.getElementById(
             "depart"
-          ).value,
+          ).value.trim();
 
-        arrivee:
+
+        const a =
           document.getElementById(
             "arrivee"
-          ).value,
-
-        dateheure:
-          document.getElementById(
-            "dateheure"
-          ).value,
-
-        passagers:
-          document.getElementById(
-            "passagers"
-          ).value,
-
-        paiement:
-          document.getElementById(
-            "paiement"
-          ).value,
-
-        message:
-          document.getElementById(
-            "message"
-          ).value,
-
-        prix:
-          prixStr
-
-      };
-
-
-      try{
-
-        await emailjs.send(
-          "service_kdvgh9f",
-          "template_5xt5vlv",
-          params
-        );
-
-
-        document
-          .getElementById(
-            "formResa"
-          )
-          .reset();
-
-
-        estimationEnAttente =
-          false;
-
-
-        showSuccessModal();
-
-      }
-      catch(err){
-
-        alert(
-          "❌ Erreur. Réessayez."
-        );
-
-        formEnvoye = false;
-
-        btn.disabled = false;
-
-      }
-
-    }
-
-
-    function calculerEstimation(){
-
-      return new Promise(
-        (resolve) => {
-
-          const d =
-            document.getElementById(
-              "depart"
-            ).value;
-
-          const a =
-            document.getElementById(
-              "arrivee"
-            ).value;
-
-          const champDate =
-            document.getElementById(
-              "dateheure"
-            );
-
-          const dateHeureValeur =
-            champDate.value;
-
-          const priceEl =
-            document.getElementById(
-              "prixAffiche"
-            );
-
-          const detEl =
-            document.getElementById(
-              "detailsTrajet"
-            );
-
-          const tarifEl =
-            document.getElementById(
-              "tarifType"
-            );
-
-
-          if(!d || !a){
-
-            priceEl.textContent =
-              "-- €";
-
-            detEl.textContent =
-              "Veuillez saisir le départ et l'arrivée.";
-
-            tarifEl.textContent =
-              "Tarif indicatif";
-
-            openFareBar();
-
-            resolve(null);
-
-            return;
-
-          }
-
-
-          if(!dateHeureValeur){
-
-            estimationEnAttente =
-              true;
-
-            champDate.scrollIntoView({
-              behavior:"smooth",
-              block:"center"
-            });
-
-            champDate.focus({
-              preventScroll:true
-            });
-
-
-            if(
-              typeof champDate.showPicker
-              === "function"
-            ){
-
-              try{
-
-                champDate.showPicker();
-
-              }
-              catch(erreur){}
-
-            }
-
-
-            resolve(null);
-
-            return;
-
-          }
-
-
-          estimationEnAttente =
-            false;
-
-
-          const dateTrajet =
-            new Date(
-              dateHeureValeur
-            );
-
-
-          if(
-            isNaN(
-              dateTrajet.getTime()
-            )
-          ){
-
-            priceEl.textContent =
-              "-- €";
-
-            detEl.textContent =
-              "Date ou heure invalide.";
-
-            tarifEl.textContent =
-              "Tarif indicatif";
-
-            openFareBar();
-
-            resolve(null);
-
-            return;
-
-          }
-
-
-          const tarif =
-            obtenirTarif(
-              dateTrajet
-            );
-
-
-          directionsService.route(
-
-            {
-
-              origin:d,
-
-              destination:a,
-
-              travelMode:
-                google.maps
-                  .TravelMode
-                  .DRIVING
-
-            },
-
-            (result,status) => {
-
-              if(status === "OK"){
-
-                directionsRenderer
-                  .setDirections(
-                    result
-                  );
-
-
-                const leg =
-                  result.routes[0]
-                    .legs[0];
-
-
-                const distKm =
-                  leg.distance.value
-                  / 1000;
-
-
-                const duree =
-                  leg.duration.text;
-
-
-                const kmSupplementaires =
-                  Math.max(
-                    0,
-                    distKm - 7
-                  );
-
-
-                /*
-                  CALCUL DU PRIX BRUT
-                */
-
-                const prixBrut =
-                  tarif.base +
-                  (
-                    kmSupplementaires *
-                    tarif.kmSupplementaire
-                  );
-
-
-                /*
-                  ARRONDI AU 5 €
-                  LE PLUS PROCHE
-                */
-
-                const prix =
-                  arrondirTarif(
-                    prixBrut
-                  );
-
-
-                /*
-                  AFFICHAGE DIRECT
-                  DU PRIX FINAL
-                  SANS CENTIMES
-                */
-
-                priceEl.textContent =
-                  prix + " €";
-
-
-                detEl.textContent =
-                  `Distance : ${distKm.toFixed(1)} km · Temps : ${duree}`;
-
-
-                tarifEl.textContent =
-                  tarif.nom;
-
-
-                openFareBar();
-
-
-                resolve({
-
-                  prix,
-
-                  prixBrut,
-
-                  distKm,
-
-                  duree,
-
-                  tarif:
-                    tarif.nom
-
-                });
-
-              }
-              else{
-
-                priceEl.textContent =
-                  "Estimation indisponible";
-
-                detEl.textContent =
-                  "";
-
-                tarifEl.textContent =
-                  "Tarif indicatif";
-
-                openFareBar();
-
-                resolve(null);
-
-              }
-
-            }
-
-          );
-
-        }
-      );
-
-    }
-
-
-    function showSuccessModal(){
-
-      const modal =
-        document.getElementById(
-          'successModal'
-        );
-
-      modal.classList.add(
-        'show'
-      );
-
-      modal.setAttribute(
-        'aria-hidden',
-        'false'
-      );
-
-      document.body.style.overflow =
-        'hidden';
-
-    }
-
-
-    function hideSuccessModal(){
-
-      const modal =
-        document.getElementById(
-          'successModal'
-        );
-
-      modal.classList.remove(
-        'show'
-      );
-
-      modal.setAttribute(
-        'aria-hidden',
-        'true'
-      );
-
-      document.body.style.overflow =
-        '';
-
-    }
-
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-
-        const reserveBtn =
-          document.getElementById(
-            "reserveBtn"
-          );
-
-
-        if(reserveBtn){
-
-          reserveBtn.addEventListener(
-            "click",
-            (e) => {
-
-              e.preventDefault();
-
-              document
-                .getElementById(
-                  "formResa"
-                )
-                .scrollIntoView({
-                  behavior:"smooth",
-                  block:"start"
-                });
-
-            }
-          );
-
-        }
+          ).value.trim();
 
 
         const champDate =
@@ -1453,282 +1433,1026 @@
           );
 
 
-        if(champDate){
+        const dateStatus =
+          document.getElementById(
+            "dateStatus"
+          );
 
-          champDate.addEventListener(
-            "change",
-            () => {
 
-              if(
-                estimationEnAttente &&
-                champDate.value
-              ){
+        const priceEl =
+          document.getElementById(
+            "prixAffiche"
+          );
 
-                estimationEnAttente =
-                  false;
 
-                calculerEstimation();
+        const detEl =
+          document.getElementById(
+            "detailsTrajet"
+          );
 
-              }
+
+        const tarifEl =
+          document.getElementById(
+            "tarifType"
+          );
+
+
+
+        /*
+        DÉPART / ARRIVÉE
+        */
+
+        if(!d || !a){
+
+          priceEl.textContent =
+            "-- €";
+
+
+          detEl.textContent =
+            "Veuillez saisir le départ et l'arrivée.";
+
+
+          tarifEl.textContent =
+            "Tarif indicatif";
+
+
+          openFareBar();
+
+
+          resolve(null);
+
+          return;
+
+        }
+
+
+
+        /*
+        PAS DE DATE
+        */
+
+        if(!champDate.value){
+
+          dateHeureValidee =
+            false;
+
+
+          dateHeureConfirmee =
+            "";
+
+
+          dateStatus.className =
+            "date-status warning";
+
+
+          dateStatus.textContent =
+            "⚠️ Choisissez votre date et votre heure, puis appuyez sur Valider.";
+
+
+          champDate.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+          });
+
+
+          champDate.focus();
+
+
+          if(
+            typeof champDate.showPicker
+            === "function"
+          ){
+
+            try{
+
+              champDate.showPicker();
 
             }
-          );
+            catch(erreur){}
+
+          }
+
+
+          resolve(null);
+
+          return;
 
         }
 
 
-        const btnAdd =
-          document.getElementById(
-            'btnAddApp'
-          );
+
+        /*
+        DATE MODIFIÉE MAIS PAS REVALIDÉE
+        */
+
+        if(
+          !dateHeureValidee ||
+          champDate.value !==
+          dateHeureConfirmee
+        ){
+
+          dateHeureValidee =
+            false;
 
 
-        const btnAddModal =
-          document.getElementById(
-            'btnAddAppModal'
-          );
+          dateStatus.className =
+            "date-status warning";
 
 
-        const homeBtn =
-          document.getElementById(
-            'homeBtn'
-          );
+          dateStatus.textContent =
+            "⚠️ Appuyez sur « Valider la date et l’heure » avant l’estimation.";
 
 
-        if(btnAdd){
+          document
+            .getElementById(
+              "btnValiderDate"
+            )
+            .scrollIntoView({
+              behavior:"smooth",
+              block:"center"
+            });
 
-          btnAdd.addEventListener(
-            'click',
-            triggerInstall
-          );
+
+          resolve(null);
+
+          return;
 
         }
 
 
-        if(btnAddModal){
 
-          btnAddModal.addEventListener(
-            'click',
-            triggerInstall
+        const dateTrajet =
+          new Date(
+            dateHeureConfirmee
           );
+
+
+        if(
+          isNaN(
+            dateTrajet.getTime()
+          )
+        ){
+
+          dateStatus.className =
+            "date-status warning";
+
+
+          dateStatus.textContent =
+            "⚠️ Date ou heure invalide.";
+
+
+          resolve(null);
+
+          return;
 
         }
 
 
-        if(homeBtn){
 
-          homeBtn.addEventListener(
-            'click',
-            () => {
+        const tarif =
+          obtenirTarif(
+            dateTrajet
+          );
 
-              hideSuccessModal();
 
-              window.scrollTo({
-                top:0,
-                behavior:'smooth'
+
+        directionsService.route(
+
+          {
+
+            origin:d,
+
+            destination:a,
+
+            travelMode:
+              google.maps
+                .TravelMode
+                .DRIVING
+
+          },
+
+
+          (result,status) => {
+
+
+            if(status === "OK"){
+
+              directionsRenderer
+                .setDirections(
+                  result
+                );
+
+
+              const leg =
+                result.routes[0]
+                  .legs[0];
+
+
+              const distKm =
+                leg.distance.value
+                / 1000;
+
+
+              const duree =
+                leg.duration.text;
+
+
+              const kmSupplementaires =
+                Math.max(
+                  0,
+                  distKm - 7
+                );
+
+
+              const prixBrut =
+                tarif.base +
+                (
+                  kmSupplementaires *
+                  tarif.kmSupplementaire
+                );
+
+
+              const prix =
+                arrondirTarif(
+                  prixBrut
+                );
+
+
+              priceEl.textContent =
+                prix + " €";
+
+
+              detEl.textContent =
+                "Distance : " +
+                distKm.toFixed(1) +
+                " km · Temps : " +
+                duree;
+
+
+              tarifEl.textContent =
+                tarif.nom;
+
+
+              openFareBar();
+
+
+              resolve({
+
+                prix,
+
+                prixBrut,
+
+                distKm,
+
+                duree,
+
+                tarif:
+                  tarif.nom
+
               });
 
             }
-          );
 
-        }
+            else{
+
+              priceEl.textContent =
+                "Estimation indisponible";
+
+
+              detEl.textContent =
+                "";
+
+
+              tarifEl.textContent =
+                "Tarif indicatif";
+
+
+              openFareBar();
+
+
+              resolve(null);
+
+            }
+
+          }
+
+        );
 
       }
     );
 
-
-    let map;
-    let directionsService;
-    let directionsRenderer;
+  }
 
 
-    function initMap(){
 
-      map =
-        new google.maps.Map(
-          document.getElementById(
-            "map"
-          ),
-          {
+  /*
+  ==========================================
+  ENVOI EMAIL
+  ==========================================
+  */
 
-            zoom:7,
+  async function sendEmail(e){
 
-            center:{
-              lat:42.6887,
-              lng:2.8948
+    e.preventDefault();
+
+
+    if(formEnvoye){
+
+      alert(
+        "Votre demande a déjà été envoyée."
+      );
+
+      return;
+
+    }
+
+
+
+    const champDate =
+      document.getElementById(
+        "dateheure"
+      );
+
+
+    if(
+      !dateHeureValidee ||
+      champDate.value !==
+      dateHeureConfirmee
+    ){
+
+      alert(
+        "Veuillez valider la date et l'heure avant d'envoyer votre demande."
+      );
+
+
+      document
+        .getElementById(
+          "btnValiderDate"
+        )
+        .scrollIntoView({
+          behavior:"smooth",
+          block:"center"
+        });
+
+
+      return;
+
+    }
+
+
+
+    formEnvoye =
+      true;
+
+
+    const btn =
+      document.getElementById(
+        "btnSubmit"
+      );
+
+
+    btn.disabled =
+      true;
+
+
+
+    const calc =
+      await calculerEstimation();
+
+
+
+    let prixStr =
+      document
+        .getElementById(
+          "prixAffiche"
+        )
+        .textContent ||
+      "Non estimé";
+
+
+    if(
+      calc &&
+      Number.isFinite(
+        calc.prix
+      )
+    ){
+
+      prixStr =
+        calc.prix +
+        " €";
+
+    }
+
+
+
+    const params = {
+
+      nom:
+        document.getElementById(
+          "nom"
+        ).value,
+
+      telephone:
+        document.getElementById(
+          "telephone"
+        ).value,
+
+      depart:
+        document.getElementById(
+          "depart"
+        ).value,
+
+      arrivee:
+        document.getElementById(
+          "arrivee"
+        ).value,
+
+      dateheure:
+        document.getElementById(
+          "dateheure"
+        ).value,
+
+      passagers:
+        document.getElementById(
+          "passagers"
+        ).value,
+
+      paiement:
+        document.getElementById(
+          "paiement"
+        ).value,
+
+      message:
+        document.getElementById(
+          "message"
+        ).value,
+
+      prix:
+        prixStr
+
+    };
+
+
+
+    try{
+
+      await emailjs.send(
+
+        "service_kdvgh9f",
+
+        "template_5xt5vlv",
+
+        params
+
+      );
+
+
+      document
+        .getElementById(
+          "formResa"
+        )
+        .reset();
+
+
+      dateHeureValidee =
+        false;
+
+
+      dateHeureConfirmee =
+        "";
+
+
+      document
+        .getElementById(
+          "dateStatus"
+        )
+        .textContent =
+        "";
+
+
+      showSuccessModal();
+
+    }
+
+    catch(err){
+
+      alert(
+        "❌ Erreur. Réessayez."
+      );
+
+
+      formEnvoye =
+        false;
+
+
+      btn.disabled =
+        false;
+
+    }
+
+  }
+
+
+
+  /*
+  ==========================================
+  MODAL
+  ==========================================
+  */
+
+
+  function showSuccessModal(){
+
+    const modal =
+      document.getElementById(
+        "successModal"
+      );
+
+
+    modal.classList.add(
+      "show"
+    );
+
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+
+    document.body.style.overflow =
+      "hidden";
+
+  }
+
+
+
+  function hideSuccessModal(){
+
+    const modal =
+      document.getElementById(
+        "successModal"
+      );
+
+
+    modal.classList.remove(
+      "show"
+    );
+
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+    document.body.style.overflow =
+      "";
+
+  }
+
+
+
+  /*
+  ==========================================
+  CHARGEMENT PAGE
+  ==========================================
+  */
+
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+      const reserveBtn =
+        document.getElementById(
+          "reserveBtn"
+        );
+
+
+      if(reserveBtn){
+
+        reserveBtn.addEventListener(
+          "click",
+          (e) => {
+
+            e.preventDefault();
+
+
+            document
+              .getElementById(
+                "formResa"
+              )
+              .scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+              });
+
+          }
+        );
+
+      }
+
+
+
+      const champDate =
+        document.getElementById(
+          "dateheure"
+        );
+
+
+      const dateStatus =
+        document.getElementById(
+          "dateStatus"
+        );
+
+
+      /*
+      SI LE CLIENT MODIFIE LA DATE
+      APRÈS L'AVOIR VALIDÉE :
+
+      ON ANNULE LA VALIDATION.
+
+      AUCUNE ESTIMATION
+      N'EST LANCÉE AUTOMATIQUEMENT.
+      */
+
+      if(champDate){
+
+        champDate.addEventListener(
+          "input",
+          () => {
+
+            if(
+              dateHeureConfirmee &&
+              champDate.value !==
+              dateHeureConfirmee
+            ){
+
+              dateHeureValidee =
+                false;
+
+
+              dateStatus.className =
+                "date-status warning";
+
+
+              dateStatus.textContent =
+                "⚠️ Date ou heure modifiée : appuyez de nouveau sur Valider.";
+
             }
 
           }
         );
 
 
-      directionsService =
-        new google.maps
-          .DirectionsService();
+        champDate.addEventListener(
+          "change",
+          () => {
+
+            if(
+              dateHeureConfirmee &&
+              champDate.value !==
+              dateHeureConfirmee
+            ){
+
+              dateHeureValidee =
+                false;
 
 
-      directionsRenderer =
-        new google.maps
-          .DirectionsRenderer({
-            map
-          });
+              dateStatus.className =
+                "date-status warning";
 
 
-      const acOpts = {
+              dateStatus.textContent =
+                "⚠️ Date ou heure modifiée : appuyez de nouveau sur Valider.";
 
-        componentRestrictions:{
-          country:[
-            "fr",
-            "es"
-          ]
+            }
+
+          }
+        );
+
+      }
+
+
+
+      const btnAdd =
+        document.getElementById(
+          "btnAddApp"
+        );
+
+
+      const btnAddModal =
+        document.getElementById(
+          "btnAddAppModal"
+        );
+
+
+      const homeBtn =
+        document.getElementById(
+          "homeBtn"
+        );
+
+
+      if(btnAdd){
+
+        btnAdd.addEventListener(
+          "click",
+          triggerInstall
+        );
+
+      }
+
+
+      if(btnAddModal){
+
+        btnAddModal.addEventListener(
+          "click",
+          triggerInstall
+        );
+
+      }
+
+
+      if(homeBtn){
+
+        homeBtn.addEventListener(
+          "click",
+          () => {
+
+            hideSuccessModal();
+
+
+            window.scrollTo({
+              top:0,
+              behavior:"smooth"
+            });
+
+          }
+        );
+
+      }
+
+    }
+  );
+
+
+
+  /*
+  ==========================================
+  GOOGLE MAPS
+  ==========================================
+  */
+
+
+  let map;
+
+  let directionsService;
+
+  let directionsRenderer;
+
+
+
+  function initMap(){
+
+    map =
+      new google.maps.Map(
+
+        document.getElementById(
+          "map"
+        ),
+
+        {
+
+          zoom:7,
+
+          center:{
+            lat:42.6887,
+            lng:2.8948
+          }
+
         }
 
-      };
+      );
 
 
-      new google.maps.places
-        .Autocomplete(
-          document.getElementById(
-            "depart"
-          ),
-          acOpts
-        );
+    directionsService =
+      new google.maps
+        .DirectionsService();
 
 
-      new google.maps.places
-        .Autocomplete(
-          document.getElementById(
-            "arrivee"
-          ),
-          acOpts
-        );
+    directionsRenderer =
+      new google.maps
+        .DirectionsRenderer({
+          map
+        });
+
+
+
+    const acOpts = {
+
+      componentRestrictions:{
+
+        country:[
+          "fr",
+          "es"
+        ]
+
+      }
+
+    };
+
+
+
+    new google.maps.places.Autocomplete(
+
+      document.getElementById(
+        "depart"
+      ),
+
+      acOpts
+
+    );
+
+
+
+    new google.maps.places.Autocomplete(
+
+      document.getElementById(
+        "arrivee"
+      ),
+
+      acOpts
+
+    );
+
+  }
+
+
+
+  /*
+  ==========================================
+  INSTALLATION APPLICATION
+  ==========================================
+  */
+
+
+  let deferredPrompt =
+    null;
+
+
+
+  window.addEventListener(
+    "beforeinstallprompt",
+    (e) => {
+
+      e.preventDefault();
+
+      deferredPrompt =
+        e;
+
+    }
+  );
+
+
+
+  function explainIOS(){
+
+    alert(
+
+      "Vous utilisez un iPhone.\n\n" +
+
+      "Pour ajouter OuassVTC :\n" +
+
+      "1. Touchez le bouton « Partager »\n" +
+
+      "2. Faites défiler vers le bas\n" +
+
+      "3. Touchez « Sur l’écran d’accueil »\n" +
+
+      "4. Validez."
+
+    );
+
+  }
+
+
+
+  function isAndroid(){
+
+    return /android/i.test(
+
+      navigator.userAgent ||
+
+      navigator.vendor ||
+
+      window.opera
+
+    );
+
+  }
+
+
+
+  async function triggerInstall(){
+
+    if(deferredPrompt){
+
+      deferredPrompt.prompt();
+
+
+      await deferredPrompt
+        .userChoice;
+
+
+      deferredPrompt =
+        null;
 
     }
 
+    else{
 
-    let deferredPrompt = null;
+      if(isAndroid()){
 
+        alert(
+          "L’application OuassVTC semble déjà installée sur votre téléphone."
+        );
+
+      }
+
+      else{
+
+        explainIOS();
+
+      }
+
+    }
+
+  }
+
+
+
+  /*
+  ==========================================
+  SERVICE WORKER VERSION 6
+  ==========================================
+  */
+
+
+  if(
+    "serviceWorker"
+    in navigator
+  ){
 
     window.addEventListener(
-      'beforeinstallprompt',
-      (e) => {
+      "load",
+      () => {
 
-        e.preventDefault();
+        navigator
+          .serviceWorker
+          .register(
+            "/sw.js?v=6"
+          )
+          .then(
+            registration => {
 
-        deferredPrompt = e;
+              registration.update();
+
+            }
+          )
+          .catch(
+            err => {
+
+              console.log(
+                "SW error",
+                err
+              );
+
+            }
+          );
 
       }
     );
 
+  }
 
-    function explainIOS(){
-
-      alert(
-        "Vous utilisez un iPhone.\n\n" +
-        "Pour ajouter OuassVTC :\n" +
-        "1. Touchez le bouton « Partager »\n" +
-        "2. Faites défiler vers le bas\n" +
-        "3. Touchez « Sur l’écran d’accueil »\n" +
-        "4. Validez."
-      );
-
-    }
+</script>
 
 
-    function isAndroid(){
-
-      return /android/i.test(
-        navigator.userAgent ||
-        navigator.vendor ||
-        window.opera
-      );
-
-    }
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async"
+  async
+  defer>
+</script>
 
 
-    async function triggerInstall(){
-
-      if(deferredPrompt){
-
-        deferredPrompt.prompt();
-
-        await deferredPrompt.userChoice;
-
-        deferredPrompt = null;
-
-      }
-      else{
-
-        if(isAndroid()){
-
-          alert(
-            "L’application OuassVTC semble déjà installée sur votre téléphone."
-          );
-
-        }
-        else{
-
-          explainIOS();
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      SERVICE WORKER
-      VERSION 5
-    */
-
-    if(
-      'serviceWorker'
-      in navigator
-    ){
-
-      window.addEventListener(
-        'load',
-        () => {
-
-          navigator
-            .serviceWorker
-            .register(
-              '/sw.js?v=5'
-            )
-            .then(
-              registration => {
-
-                registration.update();
-
-              }
-            )
-            .catch(
-              err =>
-                console.log(
-                  'SW error',
-                  err
-                )
-            );
-
-        }
-      );
-
-    }
-
-  </script>
-
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async"
-    async
-    defer>
-  </script>
-
-  <script
-    defer
-    src="https://static.cloudflareinsights.com/beacon.min.js"
-    data-cf-beacon='{"token":"5b0e1fd2be224725bdb51d396fc4fdb5"}'>
-  </script>
+<script
+  defer
+  src="https://static.cloudflareinsights.com/beacon.min.js"
+  data-cf-beacon='{"token":"5b0e1fd2be224725bdb51d396fc4fdb5"}'
+>
+</script>
 
 </body>
 </html>
