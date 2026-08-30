@@ -964,6 +964,16 @@
       25 € jusqu'à 7 km
       Puis 2,20 € / km supplémentaire
 
+      ARRONDI :
+      Toujours au palier supérieur de 5 €.
+
+      Exemples :
+      31,60 € -> 35 €
+      33 € -> 35 €
+      37 € -> 40 €
+      55 € -> 55 €
+      55,01 € -> 60 €
+
       Les majorations dimanche + nuit
       ne se cumulent pas.
       ==========================================
@@ -1042,7 +1052,7 @@
           calc &&
           Number.isFinite(calc.prix)
         )
-        ? `${calc.prix.toFixed(2)} €`
+        ? `${calc.prix} €`
         : document
             .getElementById("prixAffiche")
             .textContent || "";
@@ -1136,11 +1146,6 @@
           document.getElementById("tarifType");
 
 
-        /*
-          Départ ou arrivée manquant :
-          on garde le message existant.
-        */
-
         if (!d || !a) {
 
           priceEl.textContent = "-- €";
@@ -1161,10 +1166,9 @@
 
 
         /*
-          NOUVEAU :
           Si départ + arrivée sont remplis
           mais que la date manque,
-          on ouvre directement le calendrier.
+          ouverture directe du calendrier.
         */
 
         if (!dateHeureValeur) {
@@ -1180,12 +1184,6 @@
             preventScroll: true
           });
 
-          /*
-            Sur les navigateurs compatibles,
-            ouvre directement le sélecteur
-            date + heure.
-          */
-
           if (
             typeof champDate.showPicker === "function"
           ) {
@@ -1197,9 +1195,9 @@
             } catch (erreur) {
 
               /*
-                Certains navigateurs mobiles
-                ouvrent automatiquement le calendrier
-                grâce au focus.
+                Sur certains navigateurs mobiles,
+                le focus suffit pour ouvrir
+                le sélecteur.
               */
 
             }
@@ -1283,12 +1281,28 @@
                 );
 
 
+              /*
+                PRIX BRUT AVANT ARRONDI
+              */
+
+              const prixBrut =
+                tarif.base +
+                kmSupplementaires *
+                tarif.kmSupplementaire;
+
+
+              /*
+                ARRONDI AU PALIER SUPÉRIEUR
+                DE 5 €
+
+                33 -> 35
+                37 -> 40
+                55 -> 55
+                56 -> 60
+              */
+
               const prix =
-                +(
-                  tarif.base +
-                  kmSupplementaires *
-                  tarif.kmSupplementaire
-                ).toFixed(2);
+                Math.ceil(prixBrut / 5) * 5;
 
 
               animatePrice(
@@ -1346,6 +1360,10 @@
     }
 
 
+    /*
+      Animation du prix sans centimes.
+    */
+
     function animatePrice(el,target){
 
       const start =
@@ -1363,14 +1381,28 @@
           );
 
 
+        const valeur =
+          Math.round(target * p);
+
+
         el.textContent =
-          (target * p).toFixed(2)
-          + " €";
+          valeur + " €";
 
 
         if(p < 1){
 
           requestAnimationFrame(step);
+
+        } else {
+
+          /*
+            On garantit que la valeur finale
+            affichée est exactement le prix
+            arrondi.
+          */
+
+          el.textContent =
+            target + " €";
 
         }
 
@@ -1528,11 +1560,9 @@
 
 
         /*
-          NOUVEAU :
-          Si le client vient d'appuyer sur
-          "Estimer le tarif" et choisit ensuite
-          sa date et son heure,
-          le prix est calculé automatiquement.
+          Après sélection de la date et de l'heure,
+          l'estimation se lance automatiquement
+          si elle était en attente.
         */
 
         const champDate =
