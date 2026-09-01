@@ -35,12 +35,12 @@
       dataLayer.push(arguments);
     }
 
-    gtag('js', new Date());
-    gtag('config', 'G-23LLHRH2QL');
+    gtag("js", new Date());
+    gtag("config", "G-23LLHRH2QL");
 
     function trackEvent(action, label){
-      gtag('event', action, {
-        event_category: 'Interaction',
+      gtag("event", action, {
+        event_category: "Interaction",
         event_label: label
       });
     }
@@ -60,7 +60,6 @@
   </script>
 
   <style>
-
     :root{
       --brand:#000;
       --border:#e5e7eb;
@@ -198,15 +197,18 @@
       font-size:15px;
       width:100%;
       cursor:pointer;
+      transition:opacity .2s, transform .2s;
     }
 
     .btn:hover{
       opacity:.9;
+      transform:translateY(-1px);
     }
 
     .btn:disabled{
       opacity:.5;
       cursor:not-allowed;
+      transform:none;
     }
 
     .btn-light{
@@ -353,8 +355,6 @@
       border-radius:14px;
       margin-top:20px;
     }
-
-    /* CALENDRIER */
 
     .calendar-modal{
       position:fixed;
@@ -554,8 +554,6 @@
       cursor:not-allowed;
     }
 
-    /* MODAL SUCCÈS */
-
     .modal{
       position:fixed;
       inset:0;
@@ -676,7 +674,6 @@
         border-radius:10px;
       }
     }
-
   </style>
 </head>
 
@@ -716,6 +713,7 @@
           class="btn btn-main"
           href="#formResa"
           id="reserveBtn"
+          onclick="trackEvent('clic_reserver','Réserver maintenant')"
         >
           📅 Réservez maintenant
         </a>
@@ -746,7 +744,11 @@
 
     <aside>
 
-      <div id="fare" class="fare-sticky">
+      <div
+        id="fare"
+        class="fare-sticky"
+        aria-live="polite"
+      >
 
         <div class="fare-row">
 
@@ -855,10 +857,10 @@
 
     <select id="passagers" required>
       <option value="">Sélectionner</option>
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
     </select>
 
     <label for="paiement">
@@ -899,7 +901,7 @@
       <button
         type="button"
         class="btn"
-        onclick="ouvrirCalendrierEstimation()"
+        onclick="demanderEstimation()"
       >
         💶 Estimer le tarif
       </button>
@@ -1051,10 +1053,13 @@
   <div class="calendar-box">
 
     <div class="calendar-title">
-      📅 Choisissez votre trajet
+      📅 Date et heure du trajet
     </div>
 
-    <div class="calendar-subtitle">
+    <div
+      class="calendar-subtitle"
+      id="calendarSubtitle"
+    >
       Sélectionnez la date et l’heure de prise en charge
     </div>
 
@@ -1064,6 +1069,7 @@
         type="button"
         class="calendar-nav"
         onclick="moisPrecedent()"
+        aria-label="Mois précédent"
       >
         ‹
       </button>
@@ -1077,6 +1083,7 @@
         type="button"
         class="calendar-nav"
         onclick="moisSuivant()"
+        aria-label="Mois suivant"
       >
         ›
       </button>
@@ -1084,7 +1091,6 @@
     </div>
 
     <div class="weekdays">
-
       <div class="weekday">Lun</div>
       <div class="weekday">Mar</div>
       <div class="weekday">Mer</div>
@@ -1092,7 +1098,6 @@
       <div class="weekday">Ven</div>
       <div class="weekday">Sam</div>
       <div class="weekday">Dim</div>
-
     </div>
 
     <div
@@ -1113,13 +1118,19 @@
 
     <div class="time-row">
 
-      <select id="calendarHour"></select>
+      <select
+        id="calendarHour"
+        aria-label="Heure"
+      ></select>
 
       <div class="time-separator">
         :
       </div>
 
-      <select id="calendarMinute"></select>
+      <select
+        id="calendarMinute"
+        aria-label="Minutes"
+      ></select>
 
     </div>
 
@@ -1137,7 +1148,7 @@
         type="button"
         class="calendar-confirm"
         id="calendarConfirm"
-        onclick="validerCalendrierEtEstimer()"
+        onclick="validerCalendrier()"
         disabled
       >
         ✅ Valider et voir le tarif
@@ -1149,7 +1160,7 @@
 
 </div>
 
-<!-- SUCCÈS -->
+<!-- MODAL SUCCÈS -->
 
 <div
   id="successModal"
@@ -1198,11 +1209,21 @@
 
 emailjs.init("U08QGWWRUenJDOllc");
 
+
 let formEnvoye = false;
 
 let calendarCurrentMonth;
 let calendarCurrentYear;
 let selectedCalendarDate = null;
+
+/*
+  "estimation" :
+  calendrier -> tarif
+
+  "envoi" :
+  calendrier -> tarif -> envoi automatique
+*/
+let actionApresCalendrier = "estimation";
 
 
 /* =========================
@@ -1226,9 +1247,12 @@ function openFareBar(){
     "fare-open"
   );
 
-  document.getElementById(
-    "fare"
-  ).style.display = "block";
+  const fare =
+    document.getElementById("fare");
+
+  if(fare){
+    fare.style.display = "block";
+  }
 
 }
 
@@ -1301,10 +1325,10 @@ function arrondirTarif(prix){
 
 
 /* =========================
-   OUVERTURE CALENDRIER
+   BOUTON ESTIMER
 ========================= */
 
-function ouvrirCalendrierEstimation(){
+function demanderEstimation(){
 
   const depart =
     document.getElementById(
@@ -1329,11 +1353,20 @@ function ouvrirCalendrierEstimation(){
         "detailsTrajet"
       );
 
+    const tarif =
+      document.getElementById(
+        "tarifType"
+      );
+
+
     priceEl.textContent =
       "-- €";
 
     details.textContent =
       "Veuillez saisir le départ et l'arrivée.";
+
+    tarif.textContent =
+      "Tarif indicatif";
 
     openFareBar();
 
@@ -1341,6 +1374,20 @@ function ouvrirCalendrierEstimation(){
 
   }
 
+
+  actionApresCalendrier =
+    "estimation";
+
+  ouvrirCalendrier();
+
+}
+
+
+/* =========================
+   OUVERTURE CALENDRIER
+========================= */
+
+function ouvrirCalendrier(){
 
   const maintenant =
     new Date();
@@ -1369,11 +1416,14 @@ function ouvrirCalendrierEstimation(){
 
   afficherCalendrier();
 
+  mettreAJourBoutonCalendrier();
+
 
   const modal =
     document.getElementById(
       "calendarModal"
     );
+
 
   modal.classList.add(
     "show"
@@ -1386,6 +1436,44 @@ function ouvrirCalendrierEstimation(){
 
   document.body.style.overflow =
     "hidden";
+
+}
+
+
+/* =========================
+   TEXTE BOUTON CALENDRIER
+========================= */
+
+function mettreAJourBoutonCalendrier(){
+
+  const bouton =
+    document.getElementById(
+      "calendarConfirm"
+    );
+
+  const subtitle =
+    document.getElementById(
+      "calendarSubtitle"
+    );
+
+
+  if(actionApresCalendrier === "envoi"){
+
+    bouton.textContent =
+      "✅ Valider et envoyer";
+
+    subtitle.textContent =
+      "Choisissez la date et l’heure. Votre demande sera ensuite estimée et envoyée automatiquement.";
+
+  }else{
+
+    bouton.textContent =
+      "✅ Valider et voir le tarif";
+
+    subtitle.textContent =
+      "Sélectionnez la date et l’heure de prise en charge";
+
+  }
 
 }
 
@@ -1432,9 +1520,7 @@ function afficherCalendrier(){
 
 
   if(premierJour === 0){
-
     premierJour = 7;
-
   }
 
 
@@ -1467,11 +1553,14 @@ function afficherCalendrier(){
     ).getDate();
 
 
-  const maintenant =
+  const aujourdHui =
     new Date();
 
-  maintenant.setHours(
-    0,0,0,0
+  aujourdHui.setHours(
+    0,
+    0,
+    0,
+    0
   );
 
 
@@ -1490,7 +1579,10 @@ function afficherCalendrier(){
 
 
     date.setHours(
-      0,0,0,0
+      0,
+      0,
+      0,
+      0
     );
 
 
@@ -1503,19 +1595,16 @@ function afficherCalendrier(){
     btn.type =
       "button";
 
-
     btn.className =
       "calendar-day";
-
 
     btn.textContent =
       jour;
 
 
     if(
-      date.getTime()
-      <
-      maintenant.getTime()
+      date.getTime() <
+      aujourdHui.getTime()
     ){
 
       btn.classList.add(
@@ -1528,18 +1617,9 @@ function afficherCalendrier(){
     }
 
 
-    const today =
-      new Date();
-
-    today.setHours(
-      0,0,0,0
-    );
-
-
     if(
-      date.getTime()
-      ===
-      today.getTime()
+      date.getTime() ===
+      aujourdHui.getTime()
     ){
 
       btn.classList.add(
@@ -1549,9 +1629,7 @@ function afficherCalendrier(){
     }
 
 
-    if(
-      selectedCalendarDate
-    ){
+    if(selectedCalendarDate){
 
       const selected =
         new Date(
@@ -1561,9 +1639,16 @@ function afficherCalendrier(){
         );
 
 
+      selected.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+
       if(
-        date.getTime()
-        ===
+        date.getTime() ===
         selected.getTime()
       ){
 
@@ -1602,17 +1687,47 @@ function afficherCalendrier(){
 }
 
 
+/* =========================
+   SÉLECTION DATE
+========================= */
+
 function selectionnerDate(
   annee,
   mois,
   jour
 ){
 
+  const ancienneHeure =
+    selectedCalendarDate
+      ? selectedCalendarDate.getHours()
+      : parseInt(
+          document.getElementById(
+            "calendarHour"
+          ).value || "12",
+          10
+        );
+
+
+  const ancienneMinute =
+    selectedCalendarDate
+      ? selectedCalendarDate.getMinutes()
+      : parseInt(
+          document.getElementById(
+            "calendarMinute"
+          ).value || "00",
+          10
+        );
+
+
   selectedCalendarDate =
     new Date(
       annee,
       mois,
-      jour
+      jour,
+      ancienneHeure,
+      ancienneMinute,
+      0,
+      0
     );
 
 
@@ -1621,6 +1736,10 @@ function selectionnerDate(
 }
 
 
+/* =========================
+   MOIS PRÉCÉDENT
+========================= */
+
 function moisPrecedent(){
 
   const maintenant =
@@ -1628,11 +1747,11 @@ function moisPrecedent(){
 
 
   if(
-    calendarCurrentYear
-      === maintenant.getFullYear()
+    calendarCurrentYear ===
+      maintenant.getFullYear()
     &&
-    calendarCurrentMonth
-      === maintenant.getMonth()
+    calendarCurrentMonth ===
+      maintenant.getMonth()
   ){
 
     return;
@@ -1643,9 +1762,7 @@ function moisPrecedent(){
   calendarCurrentMonth--;
 
 
-  if(
-    calendarCurrentMonth < 0
-  ){
+  if(calendarCurrentMonth < 0){
 
     calendarCurrentMonth =
       11;
@@ -1660,14 +1777,16 @@ function moisPrecedent(){
 }
 
 
+/* =========================
+   MOIS SUIVANT
+========================= */
+
 function moisSuivant(){
 
   calendarCurrentMonth++;
 
 
-  if(
-    calendarCurrentMonth > 11
-  ){
+  if(calendarCurrentMonth > 11){
 
     calendarCurrentMonth =
       0;
@@ -1767,27 +1886,27 @@ function remplirHeures(){
 
     heures.value =
       String(
-        selectedCalendarDate
-          .getHours()
+        selectedCalendarDate.getHours()
       ).padStart(
         2,
         "0"
       );
 
 
-    const minute =
+    let minute =
       Math.round(
-        selectedCalendarDate
-          .getMinutes()
-        / 5
+        selectedCalendarDate.getMinutes() / 5
       ) * 5;
+
+
+    if(minute >= 60){
+      minute = 55;
+    }
 
 
     minutes.value =
       String(
-        minute === 60
-          ? 55
-          : minute
+        minute
       ).padStart(
         2,
         "0"
@@ -1799,26 +1918,39 @@ function remplirHeures(){
       new Date();
 
 
+    let nextMinute =
+      Math.ceil(
+        now.getMinutes() / 5
+      ) * 5;
+
+
+    let heure =
+      now.getHours();
+
+
+    if(nextMinute >= 60){
+
+      nextMinute =
+        0;
+
+      heure =
+        (heure + 1) % 24;
+
+    }
+
+
     heures.value =
       String(
-        now.getHours()
+        heure
       ).padStart(
         2,
         "0"
       );
 
 
-    const nextMinute =
-      Math.ceil(
-        now.getMinutes() / 5
-      ) * 5;
-
-
     minutes.value =
       String(
-        nextMinute >= 60
-          ? 55
-          : nextMinute
+        nextMinute
       ).padStart(
         2,
         "0"
@@ -1830,7 +1962,7 @@ function remplirHeures(){
 
 
 /* =========================
-   AFFICHAGE DATE CHOISIE
+   DATE AFFICHÉE
 ========================= */
 
 function mettreAJourDateAffichee(){
@@ -1846,9 +1978,7 @@ function mettreAJourDateAffichee(){
     );
 
 
-  if(
-    !selectedCalendarDate
-  ){
+  if(!selectedCalendarDate){
 
     display.textContent =
       "Choisissez une date";
@@ -1881,7 +2011,7 @@ function mettreAJourDateAffichee(){
 
 
 /* =========================
-   FERMER CALENDRIER
+   FERMETURE CALENDRIER
 ========================= */
 
 function fermerCalendrier(){
@@ -1891,14 +2021,17 @@ function fermerCalendrier(){
       "calendarModal"
     );
 
+
   modal.classList.remove(
     "show"
   );
+
 
   modal.setAttribute(
     "aria-hidden",
     "true"
   );
+
 
   document.body.style.overflow =
     "";
@@ -1907,17 +2040,13 @@ function fermerCalendrier(){
 
 
 /* =========================
-   VALIDER + ESTIMER
+   VALIDATION CALENDRIER
 ========================= */
 
-function validerCalendrierEtEstimer(){
+async function validerCalendrier(){
 
-  if(
-    !selectedCalendarDate
-  ){
-
+  if(!selectedCalendarDate){
     return;
-
   }
 
 
@@ -1947,15 +2076,31 @@ function validerCalendrierEtEstimer(){
   );
 
 
+  const maintenant =
+    new Date();
+
+
+  if(
+    selectedCalendarDate.getTime() <
+    maintenant.getTime()
+  ){
+
+    alert(
+      "Veuillez choisir une date et une heure à venir."
+    );
+
+    return;
+
+  }
+
+
   const annee =
-    selectedCalendarDate
-      .getFullYear();
+    selectedCalendarDate.getFullYear();
 
 
   const mois =
     String(
-      selectedCalendarDate
-        .getMonth() + 1
+      selectedCalendarDate.getMonth() + 1
     ).padStart(
       2,
       "0"
@@ -1964,8 +2109,7 @@ function validerCalendrierEtEstimer(){
 
   const jour =
     String(
-      selectedCalendarDate
-        .getDate()
+      selectedCalendarDate.getDate()
     ).padStart(
       2,
       "0"
@@ -2033,10 +2177,42 @@ function validerCalendrierEtEstimer(){
     minuteStr;
 
 
+  /*
+    On mémorise l'action avant
+    de fermer le calendrier.
+  */
+  const actionDemandee =
+    actionApresCalendrier;
+
+
   fermerCalendrier();
 
 
-  calculerEstimation();
+  /*
+    Dans tous les cas :
+    estimation automatique.
+  */
+  const calc =
+    await calculerEstimation();
+
+
+  /*
+    Si le client avait cliqué
+    sur ENVOYER :
+    le formulaire part maintenant
+    automatiquement.
+  */
+  if(actionDemandee === "envoi"){
+
+    await envoyerFormulaire(
+      calc
+    );
+
+  }
+
+
+  actionApresCalendrier =
+    "estimation";
 
 }
 
@@ -2112,6 +2288,21 @@ function calculerEstimation(){
         );
 
 
+      priceEl.textContent =
+        "Calcul...";
+
+
+      detEl.textContent =
+        "Calcul de votre trajet en cours...";
+
+
+      tarifEl.textContent =
+        tarif.nom;
+
+
+      openFareBar();
+
+
       directionsService.route(
 
         {
@@ -2130,9 +2321,7 @@ function calculerEstimation(){
         (result,status) => {
 
 
-          if(
-            status === "OK"
-          ){
+          if(status === "OK"){
 
             directionsRenderer
               .setDirections(
@@ -2200,16 +2389,15 @@ function calculerEstimation(){
 
             resolve({
 
-              prix,
+              prix:prix,
 
-              prixBrut,
+              prixBrut:prixBrut,
 
-              distKm,
+              distKm:distKm,
 
-              duree,
+              duree:duree,
 
-              tarif:
-                tarif.nom
+              tarif:tarif.nom
 
             });
 
@@ -2222,7 +2410,7 @@ function calculerEstimation(){
 
 
             detEl.textContent =
-              "";
+              "Votre demande peut tout de même être envoyée.";
 
 
             tarifEl.textContent =
@@ -2247,7 +2435,7 @@ function calculerEstimation(){
 
 
 /* =========================
-   EMAIL
+   BOUTON ENVOYER
 ========================= */
 
 async function sendEmail(e){
@@ -2266,6 +2454,80 @@ async function sendEmail(e){
   }
 
 
+  const form =
+    document.getElementById(
+      "formResa"
+    );
+
+
+  /*
+    Vérification des champs :
+    nom, téléphone, départ,
+    arrivée, passagers, paiement.
+  */
+  if(!form.checkValidity()){
+
+    form.reportValidity();
+
+    return;
+
+  }
+
+
+  const dateHeure =
+    document.getElementById(
+      "dateheure"
+    ).value;
+
+
+  /*
+    Aucune date sélectionnée :
+
+    calendrier ->
+    validation ->
+    estimation ->
+    envoi automatique.
+  */
+  if(!dateHeure){
+
+    actionApresCalendrier =
+      "envoi";
+
+    ouvrirCalendrier();
+
+    return;
+
+  }
+
+
+  /*
+    Date déjà renseignée :
+
+    recalcul du prix ->
+    envoi automatique.
+  */
+  const calc =
+    await calculerEstimation();
+
+
+  await envoyerFormulaire(
+    calc
+  );
+
+}
+
+
+/* =========================
+   ENVOI EMAILJS
+========================= */
+
+async function envoyerFormulaire(calc){
+
+  if(formEnvoye){
+    return;
+  }
+
+
   const dateHeure =
     document.getElementById(
       "dateheure"
@@ -2274,11 +2536,10 @@ async function sendEmail(e){
 
   if(!dateHeure){
 
-    alert(
-      "Veuillez d'abord cliquer sur « Estimer le tarif » et choisir la date et l'heure du trajet."
-    );
+    actionApresCalendrier =
+      "envoi";
 
-    ouvrirCalendrierEstimation();
+    ouvrirCalendrier();
 
     return;
 
@@ -2295,18 +2556,24 @@ async function sendEmail(e){
     );
 
 
+  const texteBoutonOriginal =
+    "✅ Envoyer votre formulaire";
+
+
   btn.disabled =
     true;
 
 
-  const calc =
-    await calculerEstimation();
+  btn.textContent =
+    "⏳ Envoi en cours...";
 
 
   let prixStr =
     document.getElementById(
       "prixAffiche"
-    ).textContent;
+    ).textContent
+    ||
+    "Estimation indisponible";
 
 
   if(
@@ -2389,23 +2656,51 @@ async function sendEmail(e){
 
 
     document.getElementById(
-      "dateResume"
-    ).style.display =
+      "dateheure"
+    ).value =
+      "";
+
+
+    const resume =
+      document.getElementById(
+        "dateResume"
+      );
+
+
+    resume.style.display =
       "none";
+
+
+    resume.textContent =
+      "";
 
 
     selectedCalendarDate =
       null;
 
 
+    actionApresCalendrier =
+      "estimation";
+
+
     showSuccessModal();
+
+
+    btn.textContent =
+      texteBoutonOriginal;
 
   }
 
   catch(err){
 
+    console.error(
+      "Erreur EmailJS :",
+      err
+    );
+
+
     alert(
-      "❌ Erreur. Réessayez."
+      "❌ Erreur lors de l'envoi. Réessayez."
     );
 
 
@@ -2415,6 +2710,10 @@ async function sendEmail(e){
 
     btn.disabled =
       false;
+
+
+    btn.textContent =
+      texteBoutonOriginal;
 
   }
 
@@ -2603,8 +2902,7 @@ async function triggerInstall(){
 
     deferredPrompt.prompt();
 
-    await deferredPrompt
-      .userChoice;
+    await deferredPrompt.userChoice;
 
     deferredPrompt =
       null;
@@ -2725,7 +3023,7 @@ document.addEventListener(
 
 
 /* =========================
-   SERVICE WORKER V7
+   SERVICE WORKER V8
 ========================= */
 
 if(
@@ -2739,7 +3037,7 @@ if(
 
       navigator.serviceWorker
         .register(
-          "/sw.js?v=7"
+          "/sw.js?v=8"
         )
         .then(
           registration => {
