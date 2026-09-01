@@ -1,16 +1,21 @@
-// sw.js v5 - OuassVTC
+// sw.js v11 - OuassVTC
 
-const CACHE_NAME = 'ouassvtc-static-v5';
+const CACHE_NAME =
+  "ouassvtc-static-v11";
+
 
 const ASSETS = [
-  '/vtc-perpignan.png',
-  '/ouassvtc-app.png',
-  '/manifest.json'
+  "/",
+  "/vtc-perpignan.png",
+  "/ouassvtc-app.png",
+  "/manifest.json"
 ];
 
 
+/* INSTALLATION */
+
 self.addEventListener(
-  'install',
+  "install",
   event => {
 
     event.waitUntil(
@@ -20,7 +25,9 @@ self.addEventListener(
 
         .then(
           cache =>
-            cache.addAll(ASSETS)
+            cache.addAll(
+              ASSETS
+            )
         )
 
         .then(
@@ -34,8 +41,10 @@ self.addEventListener(
 );
 
 
+/* ACTIVATION */
+
 self.addEventListener(
-  'activate',
+  "activate",
   event => {
 
     event.waitUntil(
@@ -57,7 +66,9 @@ self.addEventListener(
 
                 .map(
                   key =>
-                    caches.delete(key)
+                    caches.delete(
+                      key
+                    )
                 )
 
             );
@@ -76,66 +87,90 @@ self.addEventListener(
 );
 
 
+/* REQUÊTES */
+
 self.addEventListener(
-  'fetch',
+  "fetch",
   event => {
 
-    const req =
+    const request =
       event.request;
 
 
-    /*
-      LES PAGES HTML SONT TOUJOURS
-      CHARGÉES DEPUIS INTERNET.
-
-      Cela évite de garder
-      un ancien index.html en cache.
-    */
-
     if(
-      req.mode === 'navigate'
+      request.mode ===
+      "navigate"
     ){
 
       event.respondWith(
 
         fetch(
-          req,
+          request,
           {
-            cache:'no-store'
+            cache:"no-store"
+          }
+        )
+
+        .then(
+          response => {
+
+            const copy =
+              response.clone();
+
+
+            caches
+              .open(
+                CACHE_NAME
+              )
+
+              .then(
+                cache => {
+
+                  cache.put(
+                    "/",
+                    copy
+                  );
+
+                }
+              );
+
+
+            return response;
+
           }
         )
 
         .catch(
           () =>
-            caches.match('/')
+            caches.match("/")
         )
 
       );
+
 
       return;
 
     }
 
 
-    /*
-      IMAGES / MANIFEST
-    */
-
     event.respondWith(
 
       caches
-        .match(req)
+        .match(
+          request
+        )
 
         .then(
           cached => {
 
             if(cached){
-
               return cached;
-
             }
 
-            return fetch(req);
+
+            return fetch(
+              request
+            );
 
           }
         )
