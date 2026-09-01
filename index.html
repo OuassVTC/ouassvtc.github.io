@@ -2,31 +2,108 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>OuassVTC - Chauffeur VTC Perpignan</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <title>VTC Perpignan | Chauffeur privé OuassVTC</title>
 
   <meta
     name="description"
-    content="OuassVTC - Chauffeur VTC Perpignan et ses alentours. Réservation rapide, estimation instantanée, confort et sécurité garantis."
+    content="OuassVTC, chauffeur VTC à Perpignan. Estimation rapide de votre trajet, réservation en ligne, transferts gare et aéroport, déplacements professionnels et longue distance."
   >
 
   <meta
     name="keywords"
-    content="VTC Perpignan, Taxi Perpignan, chauffeur privé, transport aéroport, gare, Saint-Estève, Canet, Argelès, Espagne"
+    content="VTC Perpignan, chauffeur VTC Perpignan, chauffeur privé Perpignan, transfert gare Perpignan, transfert aéroport Perpignan, VTC Pyrénées-Orientales, transport privé Perpignan, VTC longue distance"
   >
 
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+  <meta
+    name="robots"
+    content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+  >
 
-  <link rel="icon" href="vtc-perpignan.png" type="image/png">
-  <link rel="apple-touch-icon" href="vtc-perpignan.png">
-  <link rel="manifest" href="/manifest.json">
+  <link
+    rel="canonical"
+    href="https://www.ouassvtc.fr/"
+  >
 
-  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"></script>
+  <meta
+    property="og:title"
+    content="OuassVTC - Chauffeur VTC Perpignan"
+  >
+
+  <meta
+    property="og:description"
+    content="Réservez votre chauffeur privé à Perpignan. Estimation rapide, transferts, déplacements professionnels et trajets longue distance."
+  >
+
+  <meta
+    property="og:url"
+    content="https://www.ouassvtc.fr/"
+  >
+
+  <meta
+    property="og:image"
+    content="https://www.ouassvtc.fr/vtc-perpignan.png"
+  >
+
+  <meta
+    name="theme-color"
+    content="#000000"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black"
+  >
+
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  >
+
+  <meta
+    http-equiv="Pragma"
+    content="no-cache"
+  >
+
+  <meta
+    http-equiv="Expires"
+    content="0"
+  >
+
+  <link
+    rel="icon"
+    href="/vtc-perpignan.png"
+    type="image/png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="/vtc-perpignan.png"
+  >
+
+  <link
+    rel="manifest"
+    href="/manifest.json"
+  >
+
+  <!-- GOOGLE ANALYTICS -->
+
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-23LLHRH2QL"
+  ></script>
 
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -40,35 +117,67 @@
 
     function trackEvent(action, label){
       gtag("event", action, {
-        event_category: "Interaction",
-        event_label: label
+        event_category:"Interaction",
+        event_label:label
       });
     }
   </script>
+
+  <!-- CLARITY -->
 
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
       c[a]=c[a]||function(){
         (c[a].q=c[a].q||[]).push(arguments)
       };
+
       t=l.createElement(r);
       t.async=1;
       t.src="https://www.clarity.ms/tag/"+i;
+
       y=l.getElementsByTagName(r)[0];
       y.parentNode.insertBefore(t,y);
+
     })(window,document,"clarity","script","wn2l462oqv");
+  </script>
+
+  <!-- DONNÉES STRUCTURÉES -->
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"LocalBusiness",
+    "name":"OuassVTC",
+    "url":"https://www.ouassvtc.fr/",
+    "logo":"https://www.ouassvtc.fr/vtc-perpignan.png",
+    "image":"https://www.ouassvtc.fr/vtc-perpignan.png",
+    "telephone":"+33644120784",
+    "email":"contact@ouassvtc.fr",
+    "description":"Service de chauffeur VTC à Perpignan, dans les Pyrénées-Orientales et pour les trajets longue distance.",
+    "areaServed":[
+      {
+        "@type":"City",
+        "name":"Perpignan"
+      },
+      {
+        "@type":"AdministrativeArea",
+        "name":"Pyrénées-Orientales"
+      }
+    ],
+    "priceRange":"€€"
+  }
   </script>
 
   <style>
 
     :root{
-      --brand:#000;
+      --black:#000;
+      --dark:#111;
+      --gray:#6b7280;
+      --soft:#f5f5f5;
       --border:#e5e7eb;
-      --muted:#6b7280;
-      --bg:#fff;
-      --success:#16a34a;
-      --radius:14px;
-      --navH:56px;
+      --white:#fff;
+      --navH:58px;
     }
 
     *{
@@ -82,285 +191,766 @@
     }
 
     body{
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
       background:#fff;
       color:#111;
-      line-height:1.4;
+      line-height:1.5;
+      -webkit-font-smoothing:antialiased;
     }
+
+    a{
+      color:inherit;
+    }
+
+    button,
+    input,
+    select,
+    textarea{
+      font-family:inherit;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
 
     header{
       background:#000;
       color:#fff;
-      text-align:center;
-      padding:28px;
     }
 
-    header img{
+    .header-logo{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:22px 20px 16px;
+    }
+
+    .header-logo img{
       display:block;
-      margin:auto;
-      width:100%;
-      max-width:200px;
+      width:170px;
+      max-width:70vw;
       height:auto;
     }
 
-    nav#topnav{
+    /* =========================
+       CONTACT HAUT
+    ========================= */
+
+    .top-contact{
+      background:#000;
+      color:#fff;
+      border-top:1px solid #222;
+      padding:12px 16px 16px;
+    }
+
+    .top-contact-inner{
+      width:min(1120px,92vw);
+      margin:auto;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .top-phone{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:15px;
+      font-weight:850;
+      color:#fff;
+      text-decoration:none;
+    }
+
+    .top-call-btn{
+      background:#fff;
+      color:#000;
+      min-height:42px;
+      padding:0 17px;
+      border-radius:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:900;
+      transition:.2s;
+    }
+
+    .top-call-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    #topnav{
       position:sticky;
       top:0;
-      z-index:20;
+      z-index:80;
+
       display:flex;
-      gap:18px;
       justify-content:center;
-      padding:12px 10px;
-      background:#fff;
+      align-items:center;
+      gap:3px;
+
+      background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+
       border-bottom:1px solid var(--border);
+      padding:8px;
+
+      min-height:58px;
     }
 
-    nav#topnav a{
-      color:#111;
+    #topnav a{
       text-decoration:none;
-      font-weight:650;
-      font-size:15px;
-      padding:8px 10px;
+      color:#111;
+      font-size:13px;
+      font-weight:750;
+      padding:10px 11px;
       border-radius:999px;
+      transition:.2s;
+      white-space:nowrap;
     }
 
-    nav#topnav a:hover{
+    #topnav a:hover{
       background:#f3f4f6;
     }
 
     .container{
-      max-width:min(1100px,92vw);
+      width:min(1120px,92vw);
       margin:auto;
-      padding:28px 18px;
     }
+
+    /* =========================
+       HERO
+    ========================= */
 
     .hero{
+      padding:68px 0 48px;
       display:grid;
       grid-template-columns:1fr;
-      gap:16px;
+      gap:36px;
       align-items:center;
     }
 
-    .hero-text{
-      text-align:center;
-    }
-
-    .hero-text h1{
-      font-size:26px;
-      font-weight:800;
-      margin-bottom:6px;
-    }
-
-    .hero-text p{
-      font-size:15px;
-      color:var(--muted);
-    }
-
-    .main-button{
-      display:flex;
-      justify-content:center;
-      margin:18px 0;
-    }
-
-    .btn-main{
-      background:#000;
-      color:#fff;
-      font-weight:800;
-      font-size:17px;
-      border:none;
-      border-radius:999px;
-      padding:16px 40px;
-      width:100%;
-      max-width:560px;
-      text-align:center;
-      text-decoration:none;
-    }
-
-    .contact-buttons{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin:20px 0 12px;
-    }
-
-    .btn{
-      display:flex;
+    .hero-kicker{
+      display:inline-flex;
       align-items:center;
-      justify-content:center;
-      border:1px solid #000;
-      background:#000;
-      color:#fff;
-      border-radius:999px;
-      padding:13px 10px;
-      font-weight:700;
-      text-decoration:none;
-      text-align:center;
-      font-size:15px;
-      width:100%;
-      cursor:pointer;
-      transition:opacity .2s,transform .2s;
-    }
+      gap:8px;
 
-    .btn:hover{
-      opacity:.9;
-      transform:translateY(-1px);
-    }
-
-    .btn:disabled{
-      opacity:.5;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn-light{
-      background:#fff;
+      background:#f5f5f5;
       color:#111;
-      border:1px solid var(--border);
-      box-shadow:0 2px 6px rgba(0,0,0,.06);
-      padding:10px 14px;
-      font-size:14px;
+
+      font-size:13px;
+      font-weight:850;
+
+      padding:9px 13px;
       border-radius:999px;
+
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      font-size:clamp(38px,7vw,72px);
+      line-height:1;
+      letter-spacing:-2.5px;
+      font-weight:950;
+      max-width:900px;
+    }
+
+    .hero-subtitle{
+      max-width:690px;
+      font-size:18px;
+      color:#555;
+      margin-top:22px;
+      line-height:1.65;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:28px;
+    }
+
+    .primary-button{
+      min-height:54px;
+      border-radius:12px;
+      padding:0 22px;
+
       display:inline-flex;
       align-items:center;
       justify-content:center;
+
+      text-decoration:none;
+
+      font-size:16px;
+      font-weight:850;
+
       cursor:pointer;
-    }
 
-    .fare-sticky{
-      position:fixed;
-      top:var(--navH);
-      left:0;
-      right:0;
-      z-index:50;
-      background:#0a0a0a;
+      transition:.2s;
+      border:none;
+
+      background:#000;
       color:#fff;
-      border-radius:0 0 14px 14px;
-      padding:14px 16px;
-      display:none;
-      box-shadow:0 10px 24px rgba(0,0,0,.25);
-      width:min(1100px,92vw);
-      margin-inline:auto;
     }
 
-    body.fare-open{
-      padding-top:calc(var(--navH) + 82px);
+    .primary-button:hover{
+      transform:translateY(-1px);
+      opacity:.9;
     }
 
-    .fare-row{
+    .hero-trust{
+      margin-top:25px;
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .fare-left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .badge{
-      font-size:12px;
-      font-weight:800;
-      color:#000;
-      background:#fff;
-      border-radius:999px;
-      padding:4px 10px;
-    }
-
-    .fare-price{
-      font-size:34px;
-      font-weight:900;
-    }
-
-    .fare-meta{
+      flex-wrap:wrap;
+      gap:18px;
       font-size:13px;
-      color:#d1d5db;
-      margin-top:4px;
+      font-weight:750;
+      color:#555;
     }
 
-    .chip{
+    /* =========================
+       ESTIMATION
+    ========================= */
+
+    .estimate-showcase{
+      background:#000;
+      color:#fff;
+      border-radius:28px;
+      padding:42px 32px;
+      margin:8px 0 60px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .estimate-showcase::after{
+      content:"";
+      position:absolute;
+      width:300px;
+      height:300px;
+      background:rgba(255,255,255,.07);
+      border-radius:50%;
+      right:-120px;
+      top:-130px;
+    }
+
+    .estimate-showcase-inner{
+      position:relative;
+      z-index:2;
+      max-width:820px;
+    }
+
+    .estimate-label{
+      display:inline-block;
       font-size:12px;
-      border:1px solid #22c55e;
-      padding:6px 10px;
-      border-radius:999px;
-      color:#86efac;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+      color:#bbb;
+      font-weight:900;
+      margin-bottom:14px;
     }
 
-    .intro{
-      text-align:center;
-      font-size:15px;
-      color:#444;
-      font-weight:650;
-      margin:20px 0 10px;
+    .estimate-showcase h2{
+      font-size:clamp(30px,5vw,52px);
+      line-height:1.04;
+      letter-spacing:-1.5px;
+      max-width:780px;
+    }
+
+    .estimate-showcase p{
+      color:#d4d4d4;
+      font-size:17px;
+      max-width:670px;
+      margin-top:16px;
+      line-height:1.65;
+    }
+
+    .estimate-showcase .primary-button{
+      background:#fff;
+      color:#000;
+      margin-top:26px;
+    }
+
+    /* =========================
+       FORMULAIRE
+    ========================= */
+
+    .booking-section{
+      scroll-margin-top:85px;
+      padding:10px 0 50px;
+    }
+
+    .section-eyebrow{
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:1.3px;
+      color:#666;
+      margin-bottom:9px;
+    }
+
+    .booking-section h2{
+      font-size:clamp(30px,4vw,44px);
+      line-height:1.08;
+      letter-spacing:-1px;
+      margin-bottom:12px;
+    }
+
+    .booking-intro{
+      font-size:16px;
+      color:#666;
+      max-width:650px;
+      margin-bottom:28px;
+    }
+
+    .booking-card{
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      background:#fff;
+      box-shadow:0 12px 40px rgba(0,0,0,.05);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:0 18px;
     }
 
     form label{
       display:block;
-      font-size:14px;
-      font-weight:650;
-      margin-bottom:6px;
-      margin-top:12px;
+      font-size:13px;
+      font-weight:800;
+      margin:17px 0 7px;
     }
 
     input,
     select,
     textarea{
       width:100%;
-      padding:14px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:#f9f9f9;
+      min-height:52px;
+
+      padding:14px;
+
+      border:1px solid #d9d9d9;
+      background:#f7f7f7;
+      color:#111;
+
+      border-radius:10px;
+
       font-size:16px;
+
+      transition:.2s;
+    }
+
+    textarea{
+      min-height:90px;
+      resize:vertical;
     }
 
     input:focus,
     select:focus,
     textarea:focus{
-      outline:none;
       border-color:#000;
+      outline:none;
       background:#fff;
-    }
-
-    textarea{
-      min-height:64px;
-      resize:none;
-    }
-
-    .date-help{
-      margin-top:7px;
-      color:#6b7280;
-      font-size:12px;
-      line-height:1.4;
+      box-shadow:0 0 0 2px rgba(0,0,0,.08);
     }
 
     .form-buttons{
-      display:flex;
-      flex-direction:column;
+      display:grid;
+      grid-template-columns:1fr;
       gap:12px;
-      margin:20px 0 24px;
+      margin-top:24px;
     }
 
-    #map{
-      height:320px;
-      border-radius:14px;
-      margin-top:20px;
+    .btn{
+      width:100%;
+      min-height:54px;
+
+      padding:14px 18px;
+
+      border:none;
+      border-radius:12px;
+
+      background:#000;
+      color:#fff;
+
+      font-size:15px;
+      font-weight:900;
+
+      cursor:pointer;
+      transition:.2s;
+
+      text-decoration:none;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .btn:hover{
+      opacity:.88;
+      transform:translateY(-1px);
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    /*
+      LE BOUTON ESTIMER
+      EST MAINTENANT NOIR
+    */
+
+    .estimate-form-btn{
+      background:#000;
+      color:#fff;
     }
 
     /* =========================
-       CALENDRIER ESTIMATION
+       TARIF
+    ========================= */
+
+    .fare-sticky{
+      position:fixed;
+
+      top:var(--navH);
+      left:50%;
+
+      transform:translateX(-50%);
+
+      z-index:110;
+
+      width:min(900px,94vw);
+
+      background:#050505;
+      color:#fff;
+
+      padding:14px 17px;
+
+      border-radius:0 0 18px 18px;
+
+      box-shadow:0 12px 35px rgba(0,0,0,.28);
+
+      display:none;
+    }
+
+    .fare-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+
+    .fare-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .badge{
+      background:#fff;
+      color:#000;
+
+      font-size:11px;
+      font-weight:900;
+
+      padding:5px 9px;
+
+      border-radius:999px;
+      white-space:nowrap;
+    }
+
+    .fare-price{
+      font-size:30px;
+      line-height:1;
+      font-weight:950;
+      letter-spacing:-1px;
+    }
+
+    .fare-meta{
+      font-size:12px;
+      color:#bbb;
+      margin-top:5px;
+    }
+
+    .chip{
+      border:1px solid #333;
+      border-radius:999px;
+      padding:6px 9px;
+      color:#ddd;
+      font-size:11px;
+      font-weight:750;
+      white-space:nowrap;
+    }
+
+    /* =========================
+       SERVICES / SEO
+    ========================= */
+
+    .seo-section{
+      padding:65px 0;
+      border-top:1px solid #eee;
+    }
+
+    .seo-heading{
+      max-width:850px;
+      margin-bottom:38px;
+    }
+
+    .seo-heading h2{
+      font-size:clamp(32px,5vw,50px);
+      line-height:1.05;
+      letter-spacing:-1.5px;
+    }
+
+    .seo-heading p{
+      margin-top:14px;
+      color:#666;
+      font-size:17px;
+      line-height:1.7;
+      max-width:760px;
+    }
+
+    .service-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin:30px 0 42px;
+    }
+
+    .service-card{
+      background:#f6f6f6;
+      border-radius:20px;
+      padding:24px;
+    }
+
+    .service-icon{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:#000;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:18px;
+      font-size:20px;
+    }
+
+    .service-card h3{
+      font-size:19px;
+      margin-bottom:8px;
+    }
+
+    .service-card p{
+      color:#666;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .service-link{
+      display:inline-flex;
+      margin-top:13px;
+      text-decoration:none;
+      color:#000;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .seo-content{
+      max-width:900px;
+      color:#3f3f3f;
+      font-size:16px;
+      line-height:1.8;
+    }
+
+    .seo-content h2{
+      color:#111;
+      font-size:28px;
+      line-height:1.2;
+      margin:34px 0 13px;
+    }
+
+    .seo-content h3{
+      color:#111;
+      font-size:21px;
+      margin:27px 0 10px;
+    }
+
+    .seo-content p{
+      margin-bottom:17px;
+    }
+
+    .seo-content strong{
+      color:#111;
+    }
+
+    /* =========================
+       MAP
+    ========================= */
+
+    .map-section{
+      padding:25px 0 65px;
+    }
+
+    .map-section h2{
+      font-size:28px;
+      letter-spacing:-.6px;
+      margin-bottom:16px;
+    }
+
+    #map{
+      width:100%;
+      height:390px;
+      border-radius:24px;
+      overflow:hidden;
+      background:#eee;
+    }
+
+    /* =========================
+       CONTACT
+    ========================= */
+
+    .contact-strip{
+      background:#f5f5f5;
+      border-radius:24px;
+      padding:32px;
+      margin-bottom:60px;
+      text-align:center;
+    }
+
+    .contact-strip h2{
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .contact-strip p{
+      color:#666;
+      margin-bottom:20px;
+    }
+
+    .contact-buttons{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      max-width:650px;
+      margin:auto;
+    }
+
+    /* =========================
+       DOUBLE BOUTON FLOTTANT
+    ========================= */
+
+    .floating-actions{
+      position:fixed;
+
+      left:50%;
+      bottom:max(16px,env(safe-area-inset-bottom));
+
+      transform:translateX(-50%);
+
+      z-index:170;
+
+      width:min(610px,calc(100vw - 24px));
+
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+
+      transition:.25s;
+    }
+
+    .floating-call,
+    .floating-reserve{
+      min-height:58px;
+
+      border:none;
+      border-radius:16px;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:7px;
+
+      text-decoration:none;
+
+      font-size:14px;
+      font-weight:900;
+
+      cursor:pointer;
+
+      box-shadow:
+        0 14px 35px rgba(0,0,0,.22),
+        0 3px 8px rgba(0,0,0,.1);
+
+      transition:.2s;
+    }
+
+    .floating-call{
+      background:#fff;
+      color:#000;
+      border:1px solid #ddd;
+    }
+
+    .floating-reserve{
+      background:#000;
+      color:#fff;
+    }
+
+    .floating-call:hover,
+    .floating-reserve:hover{
+      transform:translateY(-2px);
+    }
+
+    .floating-reserve.hide-reserve{
+      display:none;
+    }
+
+    .floating-actions.form-visible{
+      grid-template-columns:1fr;
+      width:min(300px,calc(100vw - 30px));
+    }
+
+    /* =========================
+       CALENDRIER
     ========================= */
 
     .calendar-modal{
       position:fixed;
       inset:0;
-      z-index:200;
-      background:rgba(0,0,0,.68);
+      z-index:300;
+
       display:none;
       align-items:center;
       justify-content:center;
+
       padding:14px;
-      backdrop-filter:blur(5px);
+
+      background:rgba(0,0,0,.72);
+
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
     }
 
     .calendar-modal.show{
@@ -370,34 +960,50 @@
     .calendar-box{
       width:100%;
       max-width:430px;
-      background:#fff;
-      border-radius:24px;
-      padding:20px;
-      box-shadow:0 30px 80px rgba(0,0,0,.4);
       max-height:94vh;
       overflow:auto;
+
+      background:#fff;
+
+      border-radius:24px;
+
+      padding:22px;
+
+      box-shadow:0 30px 90px rgba(0,0,0,.45);
     }
 
     .calendar-title{
       text-align:center;
-      font-size:20px;
+      font-size:21px;
       font-weight:900;
-      margin-bottom:4px;
     }
 
     .calendar-subtitle{
+      margin:5px auto 20px;
       text-align:center;
-      color:#6b7280;
+      color:#666;
       font-size:13px;
-      margin-bottom:18px;
+      max-width:300px;
     }
 
     .calendar-header{
       display:grid;
-      grid-template-columns:46px 1fr 46px;
+      grid-template-columns:44px 1fr 44px;
       align-items:center;
       gap:8px;
-      margin-bottom:14px;
+      margin-bottom:13px;
+    }
+
+    .calendar-nav{
+      border:none;
+      background:#f2f2f2;
+      color:#000;
+      border-radius:50%;
+      width:42px;
+      height:42px;
+      font-size:24px;
+      font-weight:900;
+      cursor:pointer;
     }
 
     .calendar-month{
@@ -407,66 +1013,40 @@
       text-transform:capitalize;
     }
 
-    .calendar-nav{
-      border:none;
-      width:42px;
-      height:42px;
-      border-radius:50%;
-      background:#f3f4f6;
-      font-size:24px;
-      font-weight:800;
-      cursor:pointer;
-      color:#111;
+    .weekdays,
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
     }
 
     .weekdays{
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
       margin-bottom:6px;
+    }
+
+    .calendar-grid{
+      gap:5px;
     }
 
     .weekday{
       text-align:center;
+      color:#777;
       font-size:11px;
-      font-weight:800;
-      color:#6b7280;
+      font-weight:850;
       padding:5px 0;
-      text-transform:uppercase;
-    }
-
-    .calendar-grid{
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:5px;
     }
 
     .calendar-day{
-      aspect-ratio:1/1;
-      border:none;
-      border-radius:12px;
-      background:#f8f8f8;
-      font-size:14px;
-      font-weight:700;
-      cursor:pointer;
+      aspect-ratio:1;
+      border:0;
+      border-radius:11px;
+      background:#f7f7f7;
       color:#111;
-    }
-
-    .calendar-day:hover{
-      background:#e5e7eb;
-    }
-
-    .calendar-day.empty{
-      visibility:hidden;
-    }
-
-    .calendar-day.disabled{
-      color:#c7c7c7;
-      background:#fafafa;
-      cursor:not-allowed;
+      cursor:pointer;
+      font-weight:750;
     }
 
     .calendar-day.today{
-      border:2px solid #111;
+      outline:2px solid #111;
     }
 
     .calendar-day.selected{
@@ -474,46 +1054,60 @@
       color:#fff;
     }
 
+    .calendar-day.disabled{
+      color:#ccc;
+      cursor:not-allowed;
+      background:#fafafa;
+    }
+
+    .calendar-day.empty{
+      visibility:hidden;
+    }
+
     .selected-date-display{
-      margin-top:16px;
-      background:#f3f4f6;
-      border-radius:14px;
-      padding:12px;
-      text-align:center;
-      font-size:15px;
-      font-weight:800;
-      min-height:46px;
+      margin-top:15px;
+
+      background:#f4f4f4;
+
+      min-height:48px;
+
+      border-radius:13px;
+
       display:flex;
       align-items:center;
       justify-content:center;
+
+      padding:10px;
+
+      text-align:center;
+      font-size:14px;
+      font-weight:800;
     }
 
     .time-title{
-      margin-top:18px;
-      margin-bottom:8px;
-      font-size:15px;
-      font-weight:900;
       text-align:center;
+      font-weight:900;
+      margin:18px 0 8px;
     }
 
     .time-row{
       display:grid;
-      grid-template-columns:1fr 24px 1fr;
+      grid-template-columns:1fr 20px 1fr;
       gap:8px;
       align-items:center;
     }
 
     .time-row select{
       text-align:center;
-      font-weight:800;
+      background:#f3f3f3;
       font-size:18px;
-      background:#f3f4f6;
+      font-weight:850;
     }
 
     .time-separator{
+      text-align:center;
       font-size:22px;
       font-weight:900;
-      text-align:center;
     }
 
     .calendar-actions{
@@ -523,29 +1117,30 @@
       margin-top:20px;
     }
 
-    .calendar-cancel{
-      border:1px solid #d1d5db;
-      background:#fff;
-      color:#111;
-      border-radius:14px;
-      padding:14px 10px;
-      font-weight:800;
+    .calendar-cancel,
+    .calendar-confirm{
+      min-height:51px;
+      border-radius:12px;
+      padding:10px;
+      font-size:14px;
+      font-weight:900;
       cursor:pointer;
+    }
+
+    .calendar-cancel{
+      background:#f3f3f3;
+      border:none;
+      color:#111;
     }
 
     .calendar-confirm{
-      border:none;
       background:#000;
+      border:none;
       color:#fff;
-      border-radius:14px;
-      padding:14px 10px;
-      font-weight:900;
-      cursor:pointer;
-      font-size:15px;
     }
 
     .calendar-confirm:disabled{
-      opacity:.4;
+      opacity:.35;
       cursor:not-allowed;
     }
 
@@ -556,12 +1151,17 @@
     .modal{
       position:fixed;
       inset:0;
+      z-index:400;
+
       display:none;
-      align-items:center;
       justify-content:center;
-      background:rgba(0,0,0,.5);
-      z-index:300;
+      align-items:center;
+
       padding:16px;
+
+      background:rgba(0,0,0,.62);
+
+      backdrop-filter:blur(5px);
     }
 
     .modal.show{
@@ -569,109 +1169,266 @@
     }
 
     .modal-content{
-      background:#fff;
-      color:#111;
       width:100%;
-      max-width:420px;
-      border-radius:18px;
-      padding:22px 18px;
+      max-width:410px;
+
+      background:#fff;
+
+      border-radius:24px;
+
+      padding:30px 22px;
+
       text-align:center;
-      box-shadow:0 24px 64px rgba(0,0,0,.25);
+
+      box-shadow:0 30px 90px rgba(0,0,0,.4);
     }
 
     .modal-icon{
-      font-size:40px;
-      margin-bottom:8px;
+      width:58px;
+      height:58px;
+
+      margin:0 auto 15px;
+
+      border-radius:50%;
+
+      background:#000;
+      color:#fff;
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      font-size:26px;
     }
 
     .modal-title{
-      font-size:18px;
+      font-size:22px;
       font-weight:900;
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
 
     .modal-text{
+      color:#666;
       font-size:14px;
-      color:#4b5563;
-      margin-bottom:14px;
+      margin-bottom:18px;
     }
 
-    .install-bottom{
-      display:flex;
-      justify-content:center;
-      margin-top:18px;
+    .btn-light{
+      border:1px solid #ddd;
+      background:#fff;
+      color:#111;
+
+      min-height:48px;
+
+      border-radius:12px;
+
+      padding:10px 16px;
+
+      font-weight:800;
+
+      cursor:pointer;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer{
+      background:#000;
+      color:#aaa;
+      padding:44px 20px 105px;
+    }
+
+    .footer-inner{
+      width:min(1120px,92vw);
+      margin:auto;
+    }
+
+    .footer-brand{
+      color:#fff;
+      font-size:20px;
+      font-weight:900;
       margin-bottom:10px;
     }
 
-    .install-bottom .btn{
-      background:#fff;
-      color:#000;
-      border:1px solid #000;
-      max-width:360px;
+    .footer-phone{
+      display:inline-block;
+      color:#fff;
+      text-decoration:none;
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:15px;
     }
 
-    @media (min-width:700px){
+    .footer-text{
+      max-width:600px;
+      font-size:13px;
+      line-height:1.7;
+      margin-bottom:18px;
+    }
+
+    .footer-links{
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+      font-size:13px;
+    }
+
+    .footer-links a{
+      color:#fff;
+      text-decoration:none;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (min-width:720px){
 
       .hero{
-        grid-template-columns:1.1fr .9fr;
+        min-height:560px;
       }
 
-      .hero-text{
-        text-align:left;
+      .form-grid{
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+        gap:0 18px;
       }
 
-      .hero-text h1{
-        font-size:34px;
+      .full-width{
+        grid-column:1/-1;
       }
 
-      .hero-text p{
-        font-size:16px;
+      .form-buttons{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .service-grid{
+        grid-template-columns:
+          repeat(2,1fr);
       }
 
       .contact-buttons{
-        grid-template-columns:repeat(6,minmax(0,1fr));
+        grid-template-columns:
+          repeat(3,1fr);
       }
 
-      .contact-buttons a:nth-child(1){
-        grid-column:1/span 2;
+    }
+
+    @media (min-width:980px){
+
+      .service-grid{
+        grid-template-columns:
+          repeat(4,1fr);
       }
 
-      .contact-buttons a:nth-child(2){
-        grid-column:3/span 2;
+      .booking-card{
+        padding:38px;
       }
 
-      .contact-buttons a:nth-child(3){
-        grid-column:5/span 2;
+    }
+
+    @media (max-width:700px){
+
+      #topnav{
+        justify-content:flex-start;
+        overflow-x:auto;
+        scrollbar-width:none;
+        padding-left:10px;
+      }
+
+      #topnav::-webkit-scrollbar{
+        display:none;
+      }
+
+      #topnav a{
+        font-size:12px;
+      }
+
+      .top-contact-inner{
+        justify-content:space-between;
+      }
+
+      .top-phone{
+        font-size:14px;
+      }
+
+      .top-call-btn{
+        padding:0 13px;
+      }
+
+      .hero{
+        padding:45px 0 38px;
+      }
+
+      .hero h1{
+        letter-spacing:-1.8px;
+      }
+
+      .hero-subtitle{
+        font-size:16px;
+      }
+
+      .hero-actions{
+        display:grid;
+      }
+
+      .primary-button{
+        width:100%;
+      }
+
+      .estimate-showcase{
+        border-radius:22px;
+        padding:30px 22px;
+      }
+
+      .booking-card{
+        border:none;
+        box-shadow:none;
+        padding:0;
+      }
+
+      .fare-price{
+        font-size:25px;
+      }
+
+      .fare-meta{
+        max-width:190px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .chip{
+        display:none;
       }
 
       #map{
-        height:420px;
+        height:320px;
+        border-radius:18px;
       }
 
-      .fare-price{
-        font-size:38px;
-      }
     }
 
-    @media (max-width:560px){
+    @media (max-width:430px){
 
-      .fare-price{
-        font-size:28px;
+      .floating-actions{
+        grid-template-columns:1fr 1.2fr;
       }
 
-      .hero-text h1{
-        font-size:22px;
-      }
-
-      .calendar-box{
-        padding:16px;
-        border-radius:20px;
-      }
-
-      .calendar-day{
+      .floating-call,
+      .floating-reserve{
         font-size:13px;
-        border-radius:10px;
       }
+
+      .top-contact-inner{
+        gap:8px;
+      }
+
+      .top-call-btn{
+        font-size:12px;
+      }
+
     }
 
   </style>
@@ -681,49 +1438,700 @@
 
 <header>
 
-  <img
-    src="vtc-perpignan.png"
-    alt="vtc-perpignan"
-    loading="eager"
-  >
+  <div class="header-logo">
+
+    <img
+      src="/vtc-perpignan.png"
+      alt="OuassVTC - Chauffeur VTC Perpignan"
+      loading="eager"
+    >
+
+  </div>
+
+
+  <!-- TÉLÉPHONE VISIBLE EN HAUT -->
+
+  <div class="top-contact">
+
+    <div class="top-contact-inner">
+
+      <a
+        class="top-phone"
+        href="tel:0644120784"
+        onclick="trackEvent('clic_telephone','Téléphone haut de page')"
+      >
+        ☎ 06 44 12 07 84
+      </a>
+
+      <a
+        class="top-call-btn"
+        href="tel:0644120784"
+        onclick="trackEvent('clic_appeler','Appeler immédiatement haut')"
+      >
+        Appeler immédiatement
+      </a>
+
+    </div>
+
+  </div>
 
 </header>
 
+
+<!-- =========================
+     NAVIGATION COMPLÈTE
+========================= -->
+
 <nav id="topnav">
 
-  <a href="services.html">Services</a>
-  <a href="faq.html">FAQ</a>
-  <a href="qui-sommes-nous.html">À propos</a>
-  <a href="contact.html">Contact</a>
+  <a href="/vtc-perpignan.html">
+    VTC Perpignan
+  </a>
+
+  <a href="/services.html">
+    Services
+  </a>
+
+  <a href="/faq.html">
+    FAQ
+  </a>
+
+  <a href="/qui-sommes-nous.html">
+    À propos
+  </a>
+
+  <a href="/contact.html">
+    Contact
+  </a>
 
 </nav>
 
-<div class="container">
 
-  <section class="hero">
+<!-- =========================
+     TARIF
+========================= -->
 
-    <div class="hero-text">
+<div
+  id="fare"
+  class="fare-sticky"
+  aria-live="polite"
+>
+
+  <div class="fare-row">
+
+    <div class="fare-left">
+
+      <span class="badge">
+        ESTIMATION
+      </span>
+
+      <div>
+
+        <div
+          class="fare-price"
+          id="prixAffiche"
+        >
+          -- €
+        </div>
+
+        <div
+          class="fare-meta"
+          id="detailsTrajet"
+        >
+          Distance : -- km · Temps : --
+        </div>
+
+      </div>
+
+    </div>
+
+    <div
+      class="chip"
+      id="tarifType"
+    >
+      Tarif indicatif
+    </div>
+
+  </div>
+
+</div>
+
+
+<main>
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <section class="container hero">
+
+    <div>
+
+      <div class="hero-kicker">
+        ● Chauffeur privé à Perpignan
+      </div>
 
       <h1>
-        Chauffeur <strong>VTC Perpignan</strong>
+        Votre VTC à Perpignan.
+        Simple, rapide, professionnel.
       </h1>
 
-      <p>
-        Votre VTC Perpignan en un clic — confort et ponctualité assurés.
+      <p class="hero-subtitle">
+        Réservez votre chauffeur privé pour vos transferts,
+        déplacements professionnels, trajets personnels,
+        gares, aéroports et longues distances au départ
+        ou à destination de Perpignan.
       </p>
 
-      <div class="main-button">
+      <div class="hero-actions">
 
         <a
-          class="btn btn-main"
-          href="#formResa"
-          id="reserveBtn"
-          onclick="trackEvent('clic_reserver','Réserver maintenant')"
+          href="#reservation"
+          class="primary-button"
+          onclick="trackEvent('clic_reserver','Hero réserver')"
         >
-          📅 Réservez maintenant
+          Réserver maintenant
+        </a>
+
+        <button
+          type="button"
+          class="primary-button"
+          onclick="allerEstimation()"
+        >
+          Estimer le tarif
+        </button>
+
+      </div>
+
+      <div class="hero-trust">
+
+        <span>
+          ✓ Chauffeur professionnel
+        </span>
+
+        <span>
+          ✓ Réservation rapide
+        </span>
+
+        <span>
+          ✓ Trajets longue distance
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ESTIMATION
+  ========================= -->
+
+  <section class="container">
+
+    <div class="estimate-showcase">
+
+      <div class="estimate-showcase-inner">
+
+        <div class="estimate-label">
+          Estimation immédiate
+        </div>
+
+        <h2>
+          Estimez votre trajet avant votre réservation.
+        </h2>
+
+        <p>
+          Entrez votre adresse de départ, votre destination,
+          la date et l'heure souhaitées pour obtenir immédiatement
+          une estimation claire de votre trajet avec OuassVTC.
+        </p>
+
+        <a
+          href="#reservation"
+          class="primary-button"
+        >
+          Réserver en quelques clics
         </a>
 
       </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FORMULAIRE
+  ========================= -->
+
+  <section
+    class="container booking-section"
+    id="reservation"
+  >
+
+    <div class="section-eyebrow">
+      Réservation OuassVTC
+    </div>
+
+    <h2>
+      Où souhaitez-vous aller ?
+    </h2>
+
+    <p class="booking-intro">
+      Renseignez votre trajet pour obtenir une estimation
+      ou envoyer directement votre demande de réservation.
+    </p>
+
+    <div class="booking-card">
+
+      <form
+        id="formResa"
+        onsubmit="sendEmail(event)"
+      >
+
+        <div class="form-grid">
+
+
+          <div>
+
+            <label for="nom">
+              Nom et prénom
+            </label>
+
+            <input
+              type="text"
+              id="nom"
+              placeholder="Votre nom"
+              autocomplete="name"
+              required
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="telephone">
+              Téléphone
+            </label>
+
+            <input
+              type="tel"
+              id="telephone"
+              placeholder="06 xx xx xx xx"
+              autocomplete="tel"
+              required
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="depart">
+              Adresse de départ
+            </label>
+
+            <input
+              type="text"
+              id="depart"
+              placeholder="Lieu de prise en charge"
+              required
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="arrivee">
+              Destination
+            </label>
+
+            <input
+              type="text"
+              id="arrivee"
+              placeholder="Où allez-vous ?"
+              required
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="dateheure">
+              Date et heure du trajet
+            </label>
+
+            <input
+              type="datetime-local"
+              id="dateheure"
+              required
+            >
+
+          </div>
+
+
+          <div>
+
+            <label for="passagers">
+              Passagers
+            </label>
+
+            <select
+              id="passagers"
+              required
+            >
+
+              <option value="">
+                Sélectionner
+              </option>
+
+              <option value="1">
+                1 passager
+              </option>
+
+              <option value="2">
+                2 passagers
+              </option>
+
+              <option value="3">
+                3 passagers
+              </option>
+
+              <option value="4">
+                4 passagers
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label for="paiement">
+              Mode de paiement
+            </label>
+
+            <select
+              id="paiement"
+              required
+            >
+
+              <option value="">
+                Sélectionner
+              </option>
+
+              <option value="Lien de paiement sécurisé">
+                Lien sécurisé (CB)
+              </option>
+
+              <option value="Paiement CB à bord">
+                Carte bancaire à bord
+              </option>
+
+              <option value="Paiement espèces à bord">
+                Espèces à bord
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="full-width">
+
+            <label for="message">
+              Informations complémentaires
+            </label>
+
+            <textarea
+              id="message"
+              placeholder="Bagages, siège enfant, numéro de vol ou de train, code d'accès..."
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-buttons">
+
+          <button
+            type="button"
+            class="btn estimate-form-btn"
+            onclick="demanderEstimation()"
+          >
+            Estimer le tarif
+          </button>
+
+          <button
+            type="submit"
+            class="btn"
+            id="btnSubmit"
+          >
+            Réserver maintenant
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       SERVICES / SEO
+  ========================= -->
+
+  <section class="seo-section">
+
+    <div class="container">
+
+      <div class="seo-heading">
+
+        <div class="section-eyebrow">
+          OuassVTC Perpignan
+        </div>
+
+        <h2>
+          Chauffeur VTC à Perpignan pour tous vos déplacements.
+        </h2>
+
+        <p>
+          Transport privé pour les particuliers,
+          voyageurs et professionnels à Perpignan,
+          dans les Pyrénées-Orientales
+          et pour les trajets longue distance.
+        </p>
+
+      </div>
+
+
+      <div class="service-grid">
+
+
+        <article class="service-card">
+
+          <div class="service-icon">
+            🚘
+          </div>
+
+          <h3>
+            VTC Perpignan
+          </h3>
+
+          <p>
+            Retrouvez toutes les informations concernant
+            notre service de chauffeur VTC à Perpignan.
+          </p>
+
+          <a
+            href="/vtc-perpignan.html"
+            class="service-link"
+          >
+            Découvrir VTC Perpignan →
+          </a>
+
+        </article>
+
+
+        <article class="service-card">
+
+          <div class="service-icon">
+            ✈
+          </div>
+
+          <h3>
+            Transferts aéroports
+          </h3>
+
+          <p>
+            Prise en charge vers les aéroports
+            pour vos départs et vos arrivées.
+          </p>
+
+          <a
+            href="/services.html"
+            class="service-link"
+          >
+            Voir les services →
+          </a>
+
+        </article>
+
+
+        <article class="service-card">
+
+          <div class="service-icon">
+            🚆
+          </div>
+
+          <h3>
+            Gare de Perpignan
+          </h3>
+
+          <p>
+            Réservez votre chauffeur pour rejoindre
+            ou quitter la gare de Perpignan.
+          </p>
+
+          <a
+            href="/services.html"
+            class="service-link"
+          >
+            Voir les services →
+          </a>
+
+        </article>
+
+
+        <article class="service-card">
+
+          <div class="service-icon">
+            💼
+          </div>
+
+          <h3>
+            Professionnels
+          </h3>
+
+          <p>
+            Déplacements d'affaires,
+            rendez-vous et transferts professionnels.
+          </p>
+
+          <a
+            href="/services.html"
+            class="service-link"
+          >
+            Voir les services →
+          </a>
+
+        </article>
+
+      </div>
+
+
+      <div class="seo-content">
+
+        <h2>
+          VTC Perpignan : réservez votre chauffeur privé avec OuassVTC
+        </h2>
+
+        <p>
+          <strong>OuassVTC</strong> propose un service de
+          <strong>chauffeur VTC à Perpignan</strong>
+          pour les particuliers et les professionnels.
+          Vous pouvez réserver votre chauffeur pour rejoindre
+          la gare de Perpignan, effectuer un transfert vers un
+          aéroport, vous rendre à un rendez-vous professionnel
+          ou organiser un trajet privé.
+        </p>
+
+        <p>
+          Le fonctionnement a été pensé pour rester simple :
+          indiquez votre adresse de départ, votre destination,
+          la date et l'heure du déplacement puis obtenez
+          une <strong>estimation immédiate de votre trajet</strong>.
+        </p>
+
+        <h3>
+          Chauffeur privé à Perpignan et dans les Pyrénées-Orientales
+        </h3>
+
+        <p>
+          OuassVTC intervient à
+          <strong>Perpignan</strong>
+          ainsi que dans les différentes communes
+          des <strong>Pyrénées-Orientales</strong>.
+          Le service convient aussi bien aux déplacements quotidiens
+          qu'aux transferts touristiques, professionnels
+          ou longues distances.
+        </p>
+
+        <h3>
+          Transfert gare et aéroport
+        </h3>
+
+        <p>
+          Pour un départ ou une arrivée à la
+          <strong>gare de Perpignan</strong>,
+          votre réservation peut être organisée à l'avance.
+          Il est également possible de prévoir un
+          <strong>transfert aéroport en VTC</strong>
+          en indiquant les informations utiles dans le formulaire.
+        </p>
+
+        <h3>
+          Déplacements professionnels
+        </h3>
+
+        <p>
+          Les entreprises et voyageurs professionnels peuvent
+          également utiliser OuassVTC pour leurs rendez-vous,
+          réunions, événements ou transferts entre différentes villes.
+        </p>
+
+        <h3>
+          Réservation VTC rapide
+        </h3>
+
+        <p>
+          Renseignez votre trajet, votre horaire,
+          le nombre de passagers et votre mode de paiement.
+          Vous pouvez ensuite obtenir votre estimation
+          et transmettre directement votre demande de réservation.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       CARTE
+  ========================= -->
+
+  <section class="container map-section">
+
+    <div class="section-eyebrow">
+      Votre trajet
+    </div>
+
+    <h2>
+      Visualisez votre itinéraire.
+    </h2>
+
+    <div id="map"></div>
+
+  </section>
+
+
+  <!-- =========================
+       CONTACT
+  ========================= -->
+
+  <section class="container">
+
+    <div class="contact-strip">
+
+      <h2>
+        Besoin d'un chauffeur ?
+      </h2>
+
+      <p>
+        Contactez directement OuassVTC
+        par téléphone, WhatsApp ou SMS.
+      </p>
 
       <div class="contact-buttons">
 
@@ -731,7 +2139,7 @@
           class="btn"
           href="tel:0644120784"
         >
-          📞 Appeler
+          ☎ 06 44 12 07 84
         </a>
 
         <a
@@ -740,375 +2148,57 @@
           target="_blank"
           rel="noopener"
         >
-          💬 WhatsApp
+          WhatsApp
         </a>
 
         <a
           class="btn"
           href="sms:+33644120784"
         >
-          ✉️ SMS
+          SMS
         </a>
 
       </div>
 
     </div>
 
-    <aside>
-
-      <div
-        id="fare"
-        class="fare-sticky"
-        aria-live="polite"
-      >
-
-        <div class="fare-row">
-
-          <div class="fare-left">
-
-            <span class="badge">
-              Estimation
-            </span>
-
-            <div>
-
-              <div
-                class="fare-price"
-                id="prixAffiche"
-              >
-                -- €
-              </div>
-
-              <div
-                class="fare-meta"
-                id="detailsTrajet"
-              >
-                Distance : -- km · Temps : --
-              </div>
-
-            </div>
-
-          </div>
-
-          <div
-            class="chip"
-            id="tarifType"
-          >
-            Tarif indicatif
-          </div>
-
-        </div>
-
-      </div>
-
-    </aside>
-
   </section>
 
-  <p class="intro">
+</main>
 
-    Remplissez le formulaire ci-dessous pour votre
-    <strong>trajet VTC Perpignan</strong>
-    et soyez recontacté rapidement.
 
-  </p>
+<!-- =========================
+     BOUTONS FLOTTANTS
+========================= -->
 
-  <form
-    id="formResa"
-    onsubmit="sendEmail(event)"
+<div
+  class="floating-actions"
+  id="floatingActions"
+>
+
+  <a
+    href="tel:0644120784"
+    class="floating-call"
+    onclick="trackEvent('clic_appeler','Bouton flottant appeler')"
   >
+    ☎ Appeler maintenant
+  </a>
 
-    <label for="nom">
-      Nom et prénom
-    </label>
-
-    <input
-      type="text"
-      id="nom"
-      placeholder="Ex. Dupont Pierre"
-      autocomplete="name"
-      required
-    >
-
-    <label for="telephone">
-      Téléphone
-    </label>
-
-    <input
-      type="tel"
-      id="telephone"
-      placeholder="06 xx xx xx xx"
-      autocomplete="tel"
-      required
-    >
-
-    <label for="depart">
-      Adresse de départ
-    </label>
-
-    <input
-      type="text"
-      id="depart"
-      placeholder="Saisissez l'adresse de départ"
-      required
-    >
-
-    <label for="arrivee">
-      Adresse d'arrivée
-    </label>
-
-    <input
-      type="text"
-      id="arrivee"
-      placeholder="Saisissez l'adresse d'arrivée"
-      required
-    >
-
-    <!--
-      DATE ET HEURE VISIBLES
-      ET OBLIGATOIRES
-    -->
-
-    <label for="dateheure">
-      📅 Date et heure du trajet
-    </label>
-
-    <input
-      type="datetime-local"
-      id="dateheure"
-      required
-    >
-
-    <div class="date-help">
-      Ce champ est obligatoire pour envoyer votre demande de réservation.
-    </div>
-
-    <label for="passagers">
-      Nombre de passagers
-    </label>
-
-    <select
-      id="passagers"
-      required
-    >
-
-      <option value="">
-        Sélectionner
-      </option>
-
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-
-    </select>
-
-    <label for="paiement">
-      Mode de paiement
-    </label>
-
-    <select
-      id="paiement"
-      required
-    >
-
-      <option value="">
-        Sélectionner
-      </option>
-
-      <option value="Lien de paiement sécurisé">
-        Lien sécurisé (CB)
-      </option>
-
-      <option value="Paiement CB à bord">
-        CB à bord
-      </option>
-
-      <option value="Paiement espèces à bord">
-        Espèces à bord
-      </option>
-
-    </select>
-
-    <label for="message">
-      Informations complémentaires
-    </label>
-
-    <textarea
-      id="message"
-      placeholder="Code porte, bagages, enfant, etc."
-    ></textarea>
-
-    <div class="form-buttons">
-
-      <button
-        type="button"
-        class="btn"
-        onclick="demanderEstimation()"
-      >
-        💶 Estimer le tarif
-      </button>
-
-      <button
-        type="submit"
-        class="btn"
-        id="btnSubmit"
-      >
-        ✅ Envoyer votre formulaire
-      </button>
-
-    </div>
-
-  </form>
-
-  <h3
-    style="
-      font-size:16px;
-      font-weight:700;
-      text-align:center;
-      margin-top:20px;
-      margin-bottom:8px;
-      color:#333;
-    "
+  <button
+    type="button"
+    id="floatingReserve"
+    class="floating-reserve"
+    onclick="allerReservation()"
   >
-    🗺️ Visualisez votre itinéraire ci-dessous
-  </h3>
-
-  <div id="map"></div>
-
-  <div
-    style="
-      text-align:center;
-      margin:16px 0 6px;
-      font-size:13px;
-      color:#555;
-      font-weight:600;
-    "
-  >
-    Besoin d’en savoir plus ?
-  </div>
-
-  <div
-    style="
-      text-align:center;
-      margin:0 0 28px;
-    "
-  >
-
-    <a
-      href="vtc-perpignan.html"
-      class="btn-light"
-    >
-      VTC Perpignan
-    </a>
-
-  </div>
-
-  <section
-    style="
-      text-align:center;
-      margin-top:32px;
-      color:#555;
-      font-size:15px;
-    "
-  >
-
-    <p>
-
-      📞
-
-      <a href="tel:0644120784">
-        06 44 12 07 84
-      </a>
-
-    </p>
-
-    <p>
-
-      💬
-
-      <a
-        href="https://wa.me/33644120784"
-        target="_blank"
-        rel="noopener"
-      >
-        WhatsApp
-      </a>
-
-    </p>
-
-    <p>
-
-      ✉️
-
-      <a href="mailto:contact@ouassvtc.fr">
-        contact@ouassvtc.fr
-      </a>
-
-    </p>
-
-    <div class="install-bottom">
-
-      <button
-        type="button"
-        class="btn"
-        id="btnAddApp"
-      >
-        📲 Installer l'application OuassVTC
-      </button>
-
-    </div>
-
-  </section>
+    Réserver
+    <span>→</span>
+  </button>
 
 </div>
 
-<footer
-  style="
-    background:#000;
-    color:#fff;
-    text-align:center;
-    padding:20px;
-    font-size:13px;
-    line-height:1.5;
-  "
->
-
-  © 2025 OuassVTC -
-  Chauffeur <strong>VTC Perpignan</strong> -
-  Tous droits réservés.
-
-  <br>
-
-  <a
-    href="mentions-legales.html"
-    style="color:#fff;text-decoration:none;"
-  >
-    Mentions légales
-  </a>
-
-  ·
-
-  <a
-    href="politique-confidentialite.html"
-    style="color:#fff;text-decoration:none;"
-  >
-    Politique de confidentialité
-  </a>
-
-  ·
-
-  <a
-    href="sitemap.xml"
-    style="color:#fff;text-decoration:none;"
-  >
-    Plan du site
-  </a>
-
-</footer>
 
 <!-- =========================
-     CALENDRIER POUR ESTIMATION
+     CALENDRIER
 ========================= -->
 
 <div
@@ -1120,11 +2210,12 @@
   <div class="calendar-box">
 
     <div class="calendar-title">
-      📅 Date et heure du trajet
+      Date et heure du trajet
     </div>
 
     <div class="calendar-subtitle">
-      Choisissez votre date et votre heure pour calculer le tarif
+      Choisissez votre date et votre heure
+      pour calculer l'estimation.
     </div>
 
     <div class="calendar-header">
@@ -1133,7 +2224,6 @@
         type="button"
         class="calendar-nav"
         onclick="moisPrecedent()"
-        aria-label="Mois précédent"
       >
         ‹
       </button>
@@ -1147,7 +2237,6 @@
         type="button"
         class="calendar-nav"
         onclick="moisSuivant()"
-        aria-label="Mois suivant"
       >
         ›
       </button>
@@ -1179,7 +2268,7 @@
     </div>
 
     <div class="time-title">
-      🕒 Heure de prise en charge
+      Heure de prise en charge
     </div>
 
     <div class="time-row">
@@ -1217,7 +2306,7 @@
         onclick="validerCalendrierEtEstimer()"
         disabled
       >
-        ✅ Valider et voir le tarif
+        Voir mon estimation
       </button>
 
     </div>
@@ -1225,6 +2314,7 @@
   </div>
 
 </div>
+
 
 <!-- =========================
      MODAL SUCCÈS
@@ -1239,53 +2329,179 @@
   <div class="modal-content">
 
     <div class="modal-icon">
-      ✅
+      ✓
     </div>
 
     <div class="modal-title">
-      Formulaire bien envoyé
+      Demande envoyée
     </div>
 
     <div class="modal-text">
-      Nous revenons vers vous rapidement !
+      Votre demande de trajet a bien été transmise.
+      OuassVTC reviendra vers vous rapidement.
     </div>
-
-    <button
-      type="button"
-      class="btn-light"
-      id="homeBtn"
-    >
-      ↩️ Revenir à l’accueil
-    </button>
 
     <button
       type="button"
       class="btn"
-      id="btnAddAppModal"
-      style="margin-top:10px;"
+      id="homeBtn"
     >
-      📲 Installer l'application OuassVTC
+      Terminer
+    </button>
+
+    <button
+      type="button"
+      class="btn-light"
+      id="btnAddAppModal"
+      style="margin-top:10px;width:100%;"
+    >
+      Installer l'application OuassVTC
     </button>
 
   </div>
 
 </div>
 
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      OuassVTC
+    </div>
+
+    <a
+      href="tel:0644120784"
+      class="footer-phone"
+    >
+      ☎ 06 44 12 07 84
+    </a>
+
+    <p class="footer-text">
+      Chauffeur VTC à Perpignan,
+      dans les Pyrénées-Orientales
+      et pour vos trajets longue distance.
+    </p>
+
+    <div class="footer-links">
+
+      <a href="/vtc-perpignan.html">
+        VTC Perpignan
+      </a>
+
+      <a href="/services.html">
+        Services
+      </a>
+
+      <a href="/faq.html">
+        FAQ
+      </a>
+
+      <a href="/qui-sommes-nous.html">
+        À propos
+      </a>
+
+      <a href="/contact.html">
+        Contact
+      </a>
+
+      <a href="/mentions-legales.html">
+        Mentions légales
+      </a>
+
+      <a href="/politique-confidentialite.html">
+        Confidentialité
+      </a>
+
+      <a href="/sitemap.xml">
+        Plan du site
+      </a>
+
+    </div>
+
+    <p
+      style="
+        margin-top:22px;
+        font-size:12px;
+      "
+    >
+      © 2026 OuassVTC. Tous droits réservés.
+    </p>
+
+  </div>
+
+</footer>
+
+
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 
 <script>
 
-emailjs.init("U08QGWWRUenJDOllc");
+emailjs.init(
+  "U08QGWWRUenJDOllc"
+);
 
-let formEnvoye = false;
+
+let formEnvoye =
+  false;
 
 let calendarCurrentMonth;
+
 let calendarCurrentYear;
-let selectedCalendarDate = null;
+
+let selectedCalendarDate =
+  null;
 
 
 /* =========================
-   BARRE TARIF
+   NAVIGATION
+========================= */
+
+function allerReservation(){
+
+  document
+    .getElementById(
+      "reservation"
+    )
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+}
+
+
+function allerEstimation(){
+
+  allerReservation();
+
+  setTimeout(
+    () => {
+
+      const depart =
+        document.getElementById(
+          "depart"
+        );
+
+      if(depart){
+        depart.focus();
+      }
+
+    },
+    550
+  );
+
+}
+
+
+/* =========================
+   TARIF STICKY
 ========================= */
 
 function openFareBar(){
@@ -1298,16 +2514,15 @@ function openFareBar(){
   const navH =
     nav
       ? nav.offsetHeight
-      : 56;
+      : 58;
 
-  document.documentElement.style.setProperty(
-    "--navH",
-    navH + "px"
-  );
-
-  document.body.classList.add(
-    "fare-open"
-  );
+  document
+    .documentElement
+    .style
+    .setProperty(
+      "--navH",
+      navH + "px"
+    );
 
   const fare =
     document.getElementById(
@@ -1315,7 +2530,8 @@ function openFareBar(){
     );
 
   if(fare){
-    fare.style.display = "block";
+    fare.style.display =
+      "block";
   }
 
 }
@@ -1325,7 +2541,9 @@ function openFareBar(){
    TARIFICATION
 ========================= */
 
-function obtenirTarif(dateTrajet){
+function obtenirTarif(
+  dateTrajet
+){
 
   const jour =
     dateTrajet.getDay();
@@ -1337,7 +2555,8 @@ function obtenirTarif(dateTrajet){
     jour === 0;
 
   const estNuit =
-    heure >= 20 ||
+    heure >= 20
+    ||
     heure < 6;
 
 
@@ -1372,66 +2591,81 @@ function obtenirTarif(dateTrajet){
 }
 
 
-function arrondirTarif(prix){
+function arrondirTarif(
+  prix
+){
 
   const prixCentimes =
     Math.round(
       prix * 100
-    ) / 100;
+    )
+    /
+    100;
 
 
   return (
     Math.round(
       prixCentimes / 5
-    ) * 5
+    )
+    *
+    5
   );
 
 }
 
 
 /* =========================
-   ESTIMER TARIF
+   ESTIMATION
 ========================= */
 
 function demanderEstimation(){
 
   const depart =
-    document.getElementById(
-      "depart"
-    ).value.trim();
+    document
+      .getElementById(
+        "depart"
+      )
+      .value
+      .trim();
 
   const arrivee =
-    document.getElementById(
-      "arrivee"
-    ).value.trim();
+    document
+      .getElementById(
+        "arrivee"
+      )
+      .value
+      .trim();
 
 
-  if(!depart || !arrivee){
+  if(
+    !depart
+    ||
+    !arrivee
+  ){
 
-    const priceEl =
-      document.getElementById(
+    document
+      .getElementById(
         "prixAffiche"
-      );
-
-    const details =
-      document.getElementById(
-        "detailsTrajet"
-      );
-
-    const tarif =
-      document.getElementById(
-        "tarifType"
-      );
-
-
-    priceEl.textContent =
+      )
+      .textContent =
       "-- €";
 
-    details.textContent =
-      "Veuillez saisir le départ et l'arrivée.";
 
-    tarif.textContent =
+    document
+      .getElementById(
+        "detailsTrajet"
+      )
+      .textContent =
+      "Renseignez le départ et la destination.";
+
+
+    document
+      .getElementById(
+        "tarifType"
+      )
+      .textContent =
       "Tarif indicatif";
+
 
     openFareBar();
 
@@ -1439,12 +2673,6 @@ function demanderEstimation(){
 
   }
 
-
-  /*
-    Si le client a déjà saisi
-    une date dans le formulaire,
-    le calendrier s'ouvre dessus.
-  */
 
   synchroniserCalendrierDepuisFormulaire();
 
@@ -1454,16 +2682,17 @@ function demanderEstimation(){
 
 
 /* =========================
-   SYNCHRONISATION
    FORMULAIRE -> CALENDRIER
 ========================= */
 
 function synchroniserCalendrierDepuisFormulaire(){
 
   const valeur =
-    document.getElementById(
-      "dateheure"
-    ).value;
+    document
+      .getElementById(
+        "dateheure"
+      )
+      .value;
 
 
   if(!valeur){
@@ -1504,18 +2733,22 @@ function ouvrirCalendrier(){
   if(selectedCalendarDate){
 
     calendarCurrentMonth =
-      selectedCalendarDate.getMonth();
+      selectedCalendarDate
+        .getMonth();
 
     calendarCurrentYear =
-      selectedCalendarDate.getFullYear();
+      selectedCalendarDate
+        .getFullYear();
 
   }else{
 
     calendarCurrentMonth =
-      maintenant.getMonth();
+      maintenant
+        .getMonth();
 
     calendarCurrentYear =
-      maintenant.getFullYear();
+      maintenant
+        .getFullYear();
 
   }
 
@@ -1535,10 +2768,12 @@ function ouvrirCalendrier(){
     "show"
   );
 
+
   modal.setAttribute(
     "aria-hidden",
     "false"
   );
+
 
   document.body.style.overflow =
     "hidden";
@@ -1556,6 +2791,7 @@ function afficherCalendrier(){
     document.getElementById(
       "calendarGrid"
     );
+
 
   const titre =
     document.getElementById(
@@ -1576,20 +2812,23 @@ function afficherCalendrier(){
 
 
   titre.textContent =
-    dateMois.toLocaleDateString(
-      "fr-FR",
-      {
-        month:"long",
-        year:"numeric"
-      }
-    );
+    dateMois
+      .toLocaleDateString(
+        "fr-FR",
+        {
+          month:"long",
+          year:"numeric"
+        }
+      );
 
 
   let premierJour =
     dateMois.getDay();
 
 
-  if(premierJour === 0){
+  if(
+    premierJour === 0
+  ){
     premierJour = 7;
   }
 
@@ -1605,8 +2844,10 @@ function afficherCalendrier(){
         "div"
       );
 
+
     empty.className =
       "calendar-day empty";
+
 
     grid.appendChild(
       empty
@@ -1620,7 +2861,8 @@ function afficherCalendrier(){
       calendarCurrentYear,
       calendarCurrentMonth + 1,
       0
-    ).getDate();
+    )
+    .getDate();
 
 
   const aujourdHui =
@@ -1666,21 +2908,25 @@ function afficherCalendrier(){
     btn.type =
       "button";
 
+
     btn.className =
       "calendar-day";
+
 
     btn.textContent =
       jour;
 
 
     if(
-      date.getTime() <
+      date.getTime()
+      <
       aujourdHui.getTime()
     ){
 
       btn.classList.add(
         "disabled"
       );
+
 
       btn.disabled =
         true;
@@ -1689,7 +2935,8 @@ function afficherCalendrier(){
 
 
     if(
-      date.getTime() ===
+      date.getTime()
+      ===
       aujourdHui.getTime()
     ){
 
@@ -1719,7 +2966,8 @@ function afficherCalendrier(){
 
 
       if(
-        date.getTime() ===
+        date.getTime()
+        ===
         selected.getTime()
       ){
 
@@ -1770,18 +3018,26 @@ function selectionnerDate(
 
   const heure =
     parseInt(
-      document.getElementById(
-        "calendarHour"
-      ).value || "12",
+      document
+        .getElementById(
+          "calendarHour"
+        )
+        .value
+        ||
+        "12",
       10
     );
 
 
   const minute =
     parseInt(
-      document.getElementById(
-        "calendarMinute"
-      ).value || "00",
+      document
+        .getElementById(
+          "calendarMinute"
+        )
+        .value
+        ||
+        "00",
       10
     );
 
@@ -1804,7 +3060,7 @@ function selectionnerDate(
 
 
 /* =========================
-   MOIS PRÉCÉDENT
+   MOIS
 ========================= */
 
 function moisPrecedent(){
@@ -1814,15 +3070,15 @@ function moisPrecedent(){
 
 
   if(
-    calendarCurrentYear ===
+    calendarCurrentYear
+      ===
       maintenant.getFullYear()
     &&
-    calendarCurrentMonth ===
+    calendarCurrentMonth
+      ===
       maintenant.getMonth()
   ){
-
     return;
-
   }
 
 
@@ -1845,10 +3101,6 @@ function moisPrecedent(){
 
 }
 
-
-/* =========================
-   MOIS SUIVANT
-========================= */
 
 function moisSuivant(){
 
@@ -1883,6 +3135,7 @@ function remplirHeures(){
       "calendarHour"
     );
 
+
   const minutes =
     document.getElementById(
       "calendarMinute"
@@ -1891,6 +3144,7 @@ function remplirHeures(){
 
   heures.innerHTML =
     "";
+
 
   minutes.innerHTML =
     "";
@@ -1909,17 +3163,19 @@ function remplirHeures(){
 
 
     option.value =
-      String(h).padStart(
-        2,
-        "0"
-      );
+      String(h)
+        .padStart(
+          2,
+          "0"
+        );
 
 
     option.textContent =
-      String(h).padStart(
-        2,
-        "0"
-      );
+      String(h)
+        .padStart(
+          2,
+          "0"
+        );
 
 
     heures.appendChild(
@@ -1942,17 +3198,19 @@ function remplirHeures(){
 
 
     option.value =
-      String(m).padStart(
-        2,
-        "0"
-      );
+      String(m)
+        .padStart(
+          2,
+          "0"
+        );
 
 
     option.textContent =
-      String(m).padStart(
-        2,
-        "0"
-      );
+      String(m)
+        .padStart(
+          2,
+          "0"
+        );
 
 
     minutes.appendChild(
@@ -1966,8 +3224,10 @@ function remplirHeures(){
 
     heures.value =
       String(
-        selectedCalendarDate.getHours()
-      ).padStart(
+        selectedCalendarDate
+          .getHours()
+      )
+      .padStart(
         2,
         "0"
       );
@@ -1975,23 +3235,31 @@ function remplirHeures(){
 
     let minute =
       Math.round(
-        selectedCalendarDate.getMinutes()
-        / 5
-      ) * 5;
+        selectedCalendarDate
+          .getMinutes()
+        /
+        5
+      )
+      *
+      5;
 
 
-    if(minute >= 60){
-      minute = 55;
+    if(
+      minute >= 60
+    ){
+
+      minute =
+        55;
+
     }
 
 
     minutes.value =
-      String(
-        minute
-      ).padStart(
-        2,
-        "0"
-      );
+      String(minute)
+        .padStart(
+          2,
+          "0"
+        );
 
   }else{
 
@@ -1999,31 +3267,40 @@ function remplirHeures(){
       new Date();
 
 
-    let minute =
-      Math.ceil(
-        now.getMinutes() / 5
-      ) * 5;
+    now.setSeconds(
+      0,
+      0
+    );
 
 
-    let heure =
-      now.getHours();
+    const reste =
+      now.getMinutes()
+      %
+      5;
 
 
-    if(minute >= 60){
+    if(
+      reste !== 0
+    ){
 
-      minute =
-        0;
-
-      heure =
-        (heure + 1) % 24;
+      now.setMinutes(
+        now.getMinutes()
+        +
+        (
+          5
+          -
+          reste
+        )
+      );
 
     }
 
 
     heures.value =
       String(
-        heure
-      ).padStart(
+        now.getHours()
+      )
+      .padStart(
         2,
         "0"
       );
@@ -2031,8 +3308,9 @@ function remplirHeures(){
 
     minutes.value =
       String(
-        minute
-      ).padStart(
+        now.getMinutes()
+      )
+      .padStart(
         2,
         "0"
       );
@@ -2053,6 +3331,7 @@ function mettreAJourDateAffichee(){
       "selectedDateDisplay"
     );
 
+
   const confirm =
     document.getElementById(
       "calendarConfirm"
@@ -2064,8 +3343,10 @@ function mettreAJourDateAffichee(){
     display.textContent =
       "Choisissez une date";
 
+
     confirm.disabled =
       true;
+
 
     return;
 
@@ -2073,15 +3354,16 @@ function mettreAJourDateAffichee(){
 
 
   display.textContent =
-    selectedCalendarDate.toLocaleDateString(
-      "fr-FR",
-      {
-        weekday:"long",
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    );
+    selectedCalendarDate
+      .toLocaleDateString(
+        "fr-FR",
+        {
+          weekday:"long",
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        }
+      );
 
 
   confirm.disabled =
@@ -2091,7 +3373,7 @@ function mettreAJourDateAffichee(){
 
 
 /* =========================
-   FERMETURE CALENDRIER
+   FERMER CALENDRIER
 ========================= */
 
 function fermerCalendrier(){
@@ -2120,9 +3402,7 @@ function fermerCalendrier(){
 
 
 /* =========================
-   VALIDER CALENDRIER
-   + REMPLIR LE FORMULAIRE
-   + ESTIMER
+   VALIDATION CALENDRIER
 ========================= */
 
 async function validerCalendrierEtEstimer(){
@@ -2134,42 +3414,45 @@ async function validerCalendrierEtEstimer(){
 
   const heure =
     parseInt(
-      document.getElementById(
-        "calendarHour"
-      ).value,
+      document
+        .getElementById(
+          "calendarHour"
+        )
+        .value,
       10
     );
 
 
   const minute =
     parseInt(
-      document.getElementById(
-        "calendarMinute"
-      ).value,
+      document
+        .getElementById(
+          "calendarMinute"
+        )
+        .value,
       10
     );
 
 
-  selectedCalendarDate.setHours(
-    heure,
-    minute,
-    0,
-    0
-  );
-
-
-  const maintenant =
-    new Date();
+  selectedCalendarDate
+    .setHours(
+      heure,
+      minute,
+      0,
+      0
+    );
 
 
   if(
-    selectedCalendarDate.getTime() <
-    maintenant.getTime()
+    selectedCalendarDate.getTime()
+    <
+    new Date().getTime()
   ){
 
     alert(
       "Veuillez choisir une date et une heure à venir."
     );
+
 
     return;
 
@@ -2177,13 +3460,18 @@ async function validerCalendrierEtEstimer(){
 
 
   const annee =
-    selectedCalendarDate.getFullYear();
+    selectedCalendarDate
+      .getFullYear();
 
 
   const mois =
     String(
-      selectedCalendarDate.getMonth() + 1
-    ).padStart(
+      selectedCalendarDate
+        .getMonth()
+      +
+      1
+    )
+    .padStart(
       2,
       "0"
     );
@@ -2191,8 +3479,10 @@ async function validerCalendrierEtEstimer(){
 
   const jour =
     String(
-      selectedCalendarDate.getDate()
-    ).padStart(
+      selectedCalendarDate
+        .getDate()
+    )
+    .padStart(
       2,
       "0"
     );
@@ -2201,7 +3491,8 @@ async function validerCalendrierEtEstimer(){
   const heureStr =
     String(
       heure
-    ).padStart(
+    )
+    .padStart(
       2,
       "0"
     );
@@ -2210,25 +3501,19 @@ async function validerCalendrierEtEstimer(){
   const minuteStr =
     String(
       minute
-    ).padStart(
+    )
+    .padStart(
       2,
       "0"
     );
 
 
-  const valeur =
+  document
+    .getElementById(
+      "dateheure"
+    )
+    .value =
     `${annee}-${mois}-${jour}T${heureStr}:${minuteStr}`;
-
-
-  /*
-    On remplit automatiquement
-    le champ visible du formulaire.
-  */
-
-  document.getElementById(
-    "dateheure"
-  ).value =
-    valeur;
 
 
   fermerCalendrier();
@@ -2250,21 +3535,29 @@ function calculerEstimation(){
 
 
       const depart =
-        document.getElementById(
-          "depart"
-        ).value.trim();
+        document
+          .getElementById(
+            "depart"
+          )
+          .value
+          .trim();
 
 
       const arrivee =
-        document.getElementById(
-          "arrivee"
-        ).value.trim();
+        document
+          .getElementById(
+            "arrivee"
+          )
+          .value
+          .trim();
 
 
       const dateHeure =
-        document.getElementById(
-          "dateheure"
-        ).value;
+        document
+          .getElementById(
+            "dateheure"
+          )
+          .value;
 
 
       const priceEl =
@@ -2273,7 +3566,7 @@ function calculerEstimation(){
         );
 
 
-      const detEl =
+      const detailsEl =
         document.getElementById(
           "detailsTrajet"
         );
@@ -2286,8 +3579,10 @@ function calculerEstimation(){
 
 
       if(
-        !depart ||
-        !arrivee ||
+        !depart
+        ||
+        !arrivee
+        ||
         !dateHeure
       ){
 
@@ -2324,11 +3619,11 @@ function calculerEstimation(){
 
 
       priceEl.textContent =
-        "Calcul...";
+        "Calcul…";
 
 
-      detEl.textContent =
-        "Calcul de votre trajet en cours...";
+      detailsEl.textContent =
+        "Calcul de votre trajet en cours";
 
 
       tarifEl.textContent =
@@ -2336,6 +3631,28 @@ function calculerEstimation(){
 
 
       openFareBar();
+
+
+      if(
+        typeof google === "undefined"
+        ||
+        !directionsService
+      ){
+
+        priceEl.textContent =
+          "Indisponible";
+
+
+        detailsEl.textContent =
+          "Le calcul d'itinéraire est momentanément indisponible.";
+
+
+        resolve(null);
+
+
+        return;
+
+      }
 
 
       directionsService.route(
@@ -2353,14 +3670,20 @@ function calculerEstimation(){
 
         },
 
-        (result,status) => {
+        (
+          result,
+          status
+        ) => {
 
 
-          if(status === "OK"){
+          if(
+            status === "OK"
+          ){
 
-            directionsRenderer.setDirections(
-              result
-            );
+            directionsRenderer
+              .setDirections(
+                result
+              );
 
 
             const leg =
@@ -2370,7 +3693,8 @@ function calculerEstimation(){
 
             const distKm =
               leg.distance.value
-              / 1000;
+              /
+              1000;
 
 
             const duree =
@@ -2401,10 +3725,12 @@ function calculerEstimation(){
 
 
             priceEl.textContent =
-              prix + " €";
+              prix
+              +
+              " €";
 
 
-            detEl.textContent =
+            detailsEl.textContent =
               "Distance : "
               +
               distKm.toFixed(1)
@@ -2440,11 +3766,11 @@ function calculerEstimation(){
           else{
 
             priceEl.textContent =
-              "Estimation indisponible";
+              "Indisponible";
 
 
-            detEl.textContent =
-              "Votre demande peut tout de même être envoyée.";
+            detailsEl.textContent =
+              "Votre demande peut toujours être envoyée.";
 
 
             tarifEl.textContent =
@@ -2472,19 +3798,15 @@ function calculerEstimation(){
    ENVOI FORMULAIRE
 ========================= */
 
-async function sendEmail(e){
+async function sendEmail(
+  event
+){
 
-  e.preventDefault();
+  event.preventDefault();
 
 
   if(formEnvoye){
-
-    alert(
-      "Votre demande a déjà été envoyée."
-    );
-
     return;
-
   }
 
 
@@ -2494,18 +3816,9 @@ async function sendEmail(e){
     );
 
 
-  /*
-    Le navigateur vérifie :
-    - nom
-    - téléphone
-    - départ
-    - arrivée
-    - date et heure
-    - passagers
-    - paiement
-  */
-
-  if(!form.checkValidity()){
+  if(
+    !form.checkValidity()
+  ){
 
     form.reportValidity();
 
@@ -2533,7 +3846,7 @@ async function sendEmail(e){
   ){
 
     alert(
-      "Veuillez renseigner une date et une heure valides."
+      "Veuillez sélectionner une date et une heure valides."
     );
 
     return;
@@ -2542,28 +3855,27 @@ async function sendEmail(e){
 
 
   if(
-    dateTrajet.getTime() <
+    dateTrajet.getTime()
+    <
     new Date().getTime()
   ){
 
     alert(
-      "Veuillez choisir une date et une heure à venir."
+      "Veuillez sélectionner une date et une heure à venir."
     );
 
-    document.getElementById(
-      "dateheure"
-    ).focus();
+
+    document
+      .getElementById(
+        "dateheure"
+      )
+      .focus();
+
 
     return;
 
   }
 
-
-  /*
-    Au clic sur envoyer :
-    estimation automatique
-    puis envoi automatique.
-  */
 
   const calc =
     await calculerEstimation();
@@ -2580,7 +3892,9 @@ async function sendEmail(e){
    EMAILJS
 ========================= */
 
-async function envoyerFormulaire(calc){
+async function envoyerFormulaire(
+  calc
+){
 
   if(formEnvoye){
     return;
@@ -2598,7 +3912,7 @@ async function envoyerFormulaire(calc){
 
 
   const texteOriginal =
-    "✅ Envoyer votre formulaire";
+    "Réserver maintenant";
 
 
   btn.disabled =
@@ -2606,26 +3920,31 @@ async function envoyerFormulaire(calc){
 
 
   btn.textContent =
-    "⏳ Envoi en cours...";
+    "Envoi en cours…";
 
 
   let prixStr =
-    document.getElementById(
-      "prixAffiche"
-    ).textContent
-    ||
-    "Estimation indisponible";
+    document
+      .getElementById(
+        "prixAffiche"
+      )
+      .textContent
+      ||
+      "Estimation indisponible";
 
 
   if(
-    calc &&
+    calc
+    &&
     Number.isFinite(
       calc.prix
     )
   ){
 
     prixStr =
-      calc.prix + " €";
+      calc.prix
+      +
+      " €";
 
   }
 
@@ -2633,44 +3952,60 @@ async function envoyerFormulaire(calc){
   const params = {
 
     nom:
-      document.getElementById(
-        "nom"
-      ).value,
+      document
+        .getElementById(
+          "nom"
+        )
+        .value,
 
     telephone:
-      document.getElementById(
-        "telephone"
-      ).value,
+      document
+        .getElementById(
+          "telephone"
+        )
+        .value,
 
     depart:
-      document.getElementById(
-        "depart"
-      ).value,
+      document
+        .getElementById(
+          "depart"
+        )
+        .value,
 
     arrivee:
-      document.getElementById(
-        "arrivee"
-      ).value,
+      document
+        .getElementById(
+          "arrivee"
+        )
+        .value,
 
     dateheure:
-      document.getElementById(
-        "dateheure"
-      ).value,
+      document
+        .getElementById(
+          "dateheure"
+        )
+        .value,
 
     passagers:
-      document.getElementById(
-        "passagers"
-      ).value,
+      document
+        .getElementById(
+          "passagers"
+        )
+        .value,
 
     paiement:
-      document.getElementById(
-        "paiement"
-      ).value,
+      document
+        .getElementById(
+          "paiement"
+        )
+        .value,
 
     message:
-      document.getElementById(
-        "message"
-      ).value,
+      document
+        .getElementById(
+          "message"
+        )
+        .value,
 
     prix:
       prixStr
@@ -2691,33 +4026,43 @@ async function envoyerFormulaire(calc){
     );
 
 
-    document.getElementById(
-      "formResa"
-    ).reset();
+    document
+      .getElementById(
+        "formResa"
+      )
+      .reset();
 
 
     selectedCalendarDate =
       null;
 
 
-    showSuccessModal();
+    btn.disabled =
+      false;
 
 
     btn.textContent =
       texteOriginal;
 
+
+    formEnvoye =
+      false;
+
+
+    showSuccessModal();
+
   }
 
-  catch(err){
+  catch(error){
 
     console.error(
       "Erreur EmailJS :",
-      err
+      error
     );
 
 
     alert(
-      "❌ Erreur lors de l'envoi. Réessayez."
+      "Une erreur est survenue lors de l'envoi. Merci de réessayer."
     );
 
 
@@ -2796,7 +4141,9 @@ function hideSuccessModal(){
 ========================= */
 
 let map;
+
 let directionsService;
+
 let directionsRenderer;
 
 
@@ -2816,7 +4163,11 @@ function initMap(){
         center:{
           lat:42.6887,
           lng:2.8948
-        }
+        },
+
+        disableDefaultUI:true,
+
+        zoomControl:true
 
       }
 
@@ -2831,11 +4182,11 @@ function initMap(){
   directionsRenderer =
     new google.maps
       .DirectionsRenderer({
-        map
+        map:map
       });
 
 
-  const acOpts = {
+  const options = {
 
     componentRestrictions:{
       country:[
@@ -2847,20 +4198,24 @@ function initMap(){
   };
 
 
-  new google.maps.places.Autocomplete(
-    document.getElementById(
-      "depart"
-    ),
-    acOpts
-  );
+  new google.maps
+    .places
+    .Autocomplete(
+      document.getElementById(
+        "depart"
+      ),
+      options
+    );
 
 
-  new google.maps.places.Autocomplete(
-    document.getElementById(
-      "arrivee"
-    ),
-    acOpts
-  );
+  new google.maps
+    .places
+    .Autocomplete(
+      document.getElementById(
+        "arrivee"
+      ),
+      options
+    );
 
 }
 
@@ -2875,12 +4230,12 @@ let deferredPrompt =
 
 window.addEventListener(
   "beforeinstallprompt",
-  e => {
+  event => {
 
-    e.preventDefault();
+    event.preventDefault();
 
     deferredPrompt =
-      e;
+      event;
 
   }
 );
@@ -2889,14 +4244,13 @@ window.addEventListener(
 function explainIOS(){
 
   alert(
-
-    "Vous utilisez un iPhone.\n\n" +
-    "Pour ajouter OuassVTC :\n" +
-    "1. Touchez le bouton « Partager »\n" +
-    "2. Faites défiler vers le bas\n" +
-    "3. Touchez « Sur l’écran d’accueil »\n" +
-    "4. Validez."
-
+    "Pour installer OuassVTC sur votre iPhone :\n\n"
+    +
+    "1. Touchez Partager\n"
+    +
+    "2. Sélectionnez « Sur l’écran d’accueil »\n"
+    +
+    "3. Validez."
   );
 
 }
@@ -2905,8 +4259,10 @@ function explainIOS(){
 function isAndroid(){
 
   return /android/i.test(
-    navigator.userAgent ||
-    navigator.vendor ||
+    navigator.userAgent
+    ||
+    navigator.vendor
+    ||
     window.opera
   );
 
@@ -2929,7 +4285,7 @@ async function triggerInstall(){
     if(isAndroid()){
 
       alert(
-        "L’application OuassVTC semble déjà installée sur votre téléphone."
+        "OuassVTC semble déjà installée ou l'installation n'est pas proposée par votre navigateur."
       );
 
     }else{
@@ -2944,7 +4300,7 @@ async function triggerInstall(){
 
 
 /* =========================
-   CHARGEMENT PAGE
+   CHARGEMENT
 ========================= */
 
 document.addEventListener(
@@ -2952,18 +4308,13 @@ document.addEventListener(
   () => {
 
 
-    /*
-      Empêche la sélection
-      d'une date passée.
-    */
-
     const champDate =
       document.getElementById(
         "dateheure"
       );
 
 
-    if(champDate){
+    function mettreAJourDateMinimum(){
 
       const maintenant =
         new Date();
@@ -2975,8 +4326,11 @@ document.addEventListener(
 
       const mois =
         String(
-          maintenant.getMonth() + 1
-        ).padStart(
+          maintenant.getMonth()
+          +
+          1
+        )
+        .padStart(
           2,
           "0"
         );
@@ -2985,74 +4339,55 @@ document.addEventListener(
       const jour =
         String(
           maintenant.getDate()
-        ).padStart(
+        )
+        .padStart(
           2,
           "0"
         );
 
 
-      const heures =
+      const heure =
         String(
           maintenant.getHours()
-        ).padStart(
+        )
+        .padStart(
           2,
           "0"
         );
 
 
-      const minutes =
+      const minute =
         String(
           maintenant.getMinutes()
-        ).padStart(
+        )
+        .padStart(
           2,
           "0"
         );
 
 
       champDate.min =
-        `${annee}-${mois}-${jour}T${heures}:${minutes}`;
+        `${annee}-${mois}-${jour}T${heure}:${minute}`;
+
+    }
 
 
-      /*
-        Si le client modifie lui-même
-        la date, on synchronise
-        le calendrier personnalisé.
-        AUCUNE estimation automatique.
-      */
+    if(champDate){
+
+      mettreAJourDateMinimum();
+
+
+      champDate.addEventListener(
+        "focus",
+        mettreAJourDateMinimum
+      );
+
 
       champDate.addEventListener(
         "change",
         () => {
 
           synchroniserCalendrierDepuisFormulaire();
-
-        }
-      );
-
-    }
-
-
-    const reserveBtn =
-      document.getElementById(
-        "reserveBtn"
-      );
-
-
-    if(reserveBtn){
-
-      reserveBtn.addEventListener(
-        "click",
-        e => {
-
-          e.preventDefault();
-
-
-          document.getElementById(
-            "formResa"
-          ).scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-          });
 
         }
       );
@@ -3086,21 +4421,15 @@ document.addEventListener(
     }
 
 
-    const btnAdd =
-      document.getElementById(
-        "btnAddApp"
-      );
-
-
-    const btnAddModal =
+    const btnInstall =
       document.getElementById(
         "btnAddAppModal"
       );
 
 
-    if(btnAdd){
+    if(btnInstall){
 
-      btnAdd.addEventListener(
+      btnInstall.addEventListener(
         "click",
         triggerInstall
       );
@@ -3108,11 +4437,100 @@ document.addEventListener(
     }
 
 
-    if(btnAddModal){
+    /*
+      Lorsque le formulaire est visible :
+      on garde le bouton APPELER,
+      mais on retire le bouton RÉSERVER
+      pour ne pas gêner.
+    */
 
-      btnAddModal.addEventListener(
-        "click",
-        triggerInstall
+    const reservation =
+      document.getElementById(
+        "reservation"
+      );
+
+
+    const floatingActions =
+      document.getElementById(
+        "floatingActions"
+      );
+
+
+    const floatingReserve =
+      document.getElementById(
+        "floatingReserve"
+      );
+
+
+    if(
+      reservation
+      &&
+      floatingActions
+      &&
+      floatingReserve
+      &&
+      "IntersectionObserver"
+      in window
+    ){
+
+      const observer =
+        new IntersectionObserver(
+
+          entries => {
+
+            entries.forEach(
+              entry => {
+
+                if(
+                  entry.isIntersecting
+                ){
+
+                  floatingReserve
+                    .classList
+                    .add(
+                      "hide-reserve"
+                    );
+
+
+                  floatingActions
+                    .classList
+                    .add(
+                      "form-visible"
+                    );
+
+                }
+
+                else{
+
+                  floatingReserve
+                    .classList
+                    .remove(
+                      "hide-reserve"
+                    );
+
+
+                  floatingActions
+                    .classList
+                    .remove(
+                      "form-visible"
+                    );
+
+                }
+
+              }
+            );
+
+          },
+
+          {
+            threshold:.15
+          }
+
+        );
+
+
+      observer.observe(
+        reservation
       );
 
     }
@@ -3122,7 +4540,7 @@ document.addEventListener(
 
 
 /* =========================
-   SERVICE WORKER V9
+   SERVICE WORKER V11
 ========================= */
 
 if(
@@ -3134,9 +4552,10 @@ if(
     "load",
     () => {
 
-      navigator.serviceWorker
+      navigator
+        .serviceWorker
         .register(
-          "/sw.js?v=9"
+          "/sw.js?v=11"
         )
         .then(
           registration => {
@@ -3146,11 +4565,11 @@ if(
           }
         )
         .catch(
-          err => {
+          error => {
 
             console.log(
-              "SW error",
-              err
+              "Service Worker :",
+              error
             );
 
           }
@@ -3163,11 +4582,13 @@ if(
 
 </script>
 
+
 <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&callback=initMap&libraries=places&loading=async"
   async
   defer
 ></script>
+
 
 <script
   defer
