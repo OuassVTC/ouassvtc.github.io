@@ -60,6 +60,7 @@
   </script>
 
   <style>
+
     :root{
       --brand:#000;
       --border:#e5e7eb;
@@ -197,7 +198,7 @@
       font-size:15px;
       width:100%;
       cursor:pointer;
-      transition:opacity .2s, transform .2s;
+      transition:opacity .2s,transform .2s;
     }
 
     .btn:hover{
@@ -326,6 +327,13 @@
       resize:none;
     }
 
+    .date-help{
+      margin-top:7px;
+      color:#6b7280;
+      font-size:12px;
+      line-height:1.4;
+    }
+
     .form-buttons{
       display:flex;
       flex-direction:column;
@@ -333,28 +341,15 @@
       margin:20px 0 24px;
     }
 
-    #dateheure{
-      display:none;
-    }
-
-    #dateResume{
-      display:none;
-      margin-top:12px;
-      padding:12px 14px;
-      background:#f0fdf4;
-      border:1px solid #bbf7d0;
-      color:#166534;
-      border-radius:12px;
-      font-size:14px;
-      font-weight:700;
-      text-align:center;
-    }
-
     #map{
       height:320px;
       border-radius:14px;
       margin-top:20px;
     }
+
+    /* =========================
+       CALENDRIER ESTIMATION
+    ========================= */
 
     .calendar-modal{
       position:fixed;
@@ -554,6 +549,10 @@
       cursor:not-allowed;
     }
 
+    /* =========================
+       MODAL SUCCÈS
+    ========================= */
+
     .modal{
       position:fixed;
       inset:0;
@@ -674,24 +673,29 @@
         border-radius:10px;
       }
     }
+
   </style>
 </head>
 
 <body>
 
 <header>
+
   <img
     src="vtc-perpignan.png"
     alt="vtc-perpignan"
     loading="eager"
   >
+
 </header>
 
 <nav id="topnav">
+
   <a href="services.html">Services</a>
   <a href="faq.html">FAQ</a>
   <a href="qui-sommes-nous.html">À propos</a>
   <a href="contact.html">Contact</a>
+
 </nav>
 
 <div class="container">
@@ -709,6 +713,7 @@
       </p>
 
       <div class="main-button">
+
         <a
           class="btn btn-main"
           href="#formResa"
@@ -717,11 +722,15 @@
         >
           📅 Réservez maintenant
         </a>
+
       </div>
 
       <div class="contact-buttons">
 
-        <a class="btn" href="tel:0644120784">
+        <a
+          class="btn"
+          href="tel:0644120784"
+        >
           📞 Appeler
         </a>
 
@@ -734,7 +743,10 @@
           💬 WhatsApp
         </a>
 
-        <a class="btn" href="sms:+33644120784">
+        <a
+          class="btn"
+          href="sms:+33644120784"
+        >
           ✉️ SMS
         </a>
 
@@ -778,7 +790,10 @@
 
           </div>
 
-          <div class="chip" id="tarifType">
+          <div
+            class="chip"
+            id="tarifType"
+          >
             Tarif indicatif
           </div>
 
@@ -791,12 +806,17 @@
   </section>
 
   <p class="intro">
+
     Remplissez le formulaire ci-dessous pour votre
     <strong>trajet VTC Perpignan</strong>
     et soyez recontacté rapidement.
+
   </p>
 
-  <form id="formResa" onsubmit="sendEmail(event)">
+  <form
+    id="formResa"
+    onsubmit="sendEmail(event)"
+  >
 
     <label for="nom">
       Nom et prénom
@@ -844,30 +864,53 @@
       required
     >
 
+    <!--
+      DATE ET HEURE VISIBLES
+      ET OBLIGATOIRES
+    -->
+
+    <label for="dateheure">
+      📅 Date et heure du trajet
+    </label>
+
     <input
-      type="hidden"
+      type="datetime-local"
       id="dateheure"
+      required
     >
 
-    <div id="dateResume"></div>
+    <div class="date-help">
+      Ce champ est obligatoire pour envoyer votre demande de réservation.
+    </div>
 
     <label for="passagers">
       Nombre de passagers
     </label>
 
-    <select id="passagers" required>
-      <option value="">Sélectionner</option>
+    <select
+      id="passagers"
+      required
+    >
+
+      <option value="">
+        Sélectionner
+      </option>
+
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
+
     </select>
 
     <label for="paiement">
       Mode de paiement
     </label>
 
-    <select id="paiement" required>
+    <select
+      id="paiement"
+      required
+    >
 
       <option value="">
         Sélectionner
@@ -918,30 +961,39 @@
 
   </form>
 
-  <h3 style="
-    font-size:16px;
-    font-weight:700;
-    text-align:center;
-    margin-top:20px;
-    margin-bottom:8px;
-    color:#333;
-  ">
+  <h3
+    style="
+      font-size:16px;
+      font-weight:700;
+      text-align:center;
+      margin-top:20px;
+      margin-bottom:8px;
+      color:#333;
+    "
+  >
     🗺️ Visualisez votre itinéraire ci-dessous
   </h3>
 
   <div id="map"></div>
 
-  <div style="
-    text-align:center;
-    margin:16px 0 6px;
-    font-size:13px;
-    color:#555;
-    font-weight:600;
-  ">
+  <div
+    style="
+      text-align:center;
+      margin:16px 0 6px;
+      font-size:13px;
+      color:#555;
+      font-weight:600;
+    "
+  >
     Besoin d’en savoir plus ?
   </div>
 
-  <div style="text-align:center;margin:0 0 28px;">
+  <div
+    style="
+      text-align:center;
+      margin:0 0 28px;
+    "
+  >
 
     <a
       href="vtc-perpignan.html"
@@ -952,22 +1004,29 @@
 
   </div>
 
-  <section style="
-    text-align:center;
-    margin-top:32px;
-    color:#555;
-    font-size:15px;
-  ">
+  <section
+    style="
+      text-align:center;
+      margin-top:32px;
+      color:#555;
+      font-size:15px;
+    "
+  >
 
     <p>
+
       📞
+
       <a href="tel:0644120784">
         06 44 12 07 84
       </a>
+
     </p>
 
     <p>
+
       💬
+
       <a
         href="https://wa.me/33644120784"
         target="_blank"
@@ -975,13 +1034,17 @@
       >
         WhatsApp
       </a>
+
     </p>
 
     <p>
+
       ✉️
+
       <a href="mailto:contact@ouassvtc.fr">
         contact@ouassvtc.fr
       </a>
+
     </p>
 
     <div class="install-bottom">
@@ -1000,14 +1063,16 @@
 
 </div>
 
-<footer style="
-  background:#000;
-  color:#fff;
-  text-align:center;
-  padding:20px;
-  font-size:13px;
-  line-height:1.5;
-">
+<footer
+  style="
+    background:#000;
+    color:#fff;
+    text-align:center;
+    padding:20px;
+    font-size:13px;
+    line-height:1.5;
+  "
+>
 
   © 2025 OuassVTC -
   Chauffeur <strong>VTC Perpignan</strong> -
@@ -1042,7 +1107,9 @@
 
 </footer>
 
-<!-- CALENDRIER -->
+<!-- =========================
+     CALENDRIER POUR ESTIMATION
+========================= -->
 
 <div
   id="calendarModal"
@@ -1056,11 +1123,8 @@
       📅 Date et heure du trajet
     </div>
 
-    <div
-      class="calendar-subtitle"
-      id="calendarSubtitle"
-    >
-      Sélectionnez la date et l’heure de prise en charge
+    <div class="calendar-subtitle">
+      Choisissez votre date et votre heure pour calculer le tarif
     </div>
 
     <div class="calendar-header">
@@ -1091,6 +1155,7 @@
     </div>
 
     <div class="weekdays">
+
       <div class="weekday">Lun</div>
       <div class="weekday">Mar</div>
       <div class="weekday">Mer</div>
@@ -1098,6 +1163,7 @@
       <div class="weekday">Ven</div>
       <div class="weekday">Sam</div>
       <div class="weekday">Dim</div>
+
     </div>
 
     <div
@@ -1148,7 +1214,7 @@
         type="button"
         class="calendar-confirm"
         id="calendarConfirm"
-        onclick="validerCalendrier()"
+        onclick="validerCalendrierEtEstimer()"
         disabled
       >
         ✅ Valider et voir le tarif
@@ -1160,7 +1226,9 @@
 
 </div>
 
-<!-- MODAL SUCCÈS -->
+<!-- =========================
+     MODAL SUCCÈS
+========================= -->
 
 <div
   id="successModal"
@@ -1209,21 +1277,11 @@
 
 emailjs.init("U08QGWWRUenJDOllc");
 
-
 let formEnvoye = false;
 
 let calendarCurrentMonth;
 let calendarCurrentYear;
 let selectedCalendarDate = null;
-
-/*
-  "estimation" :
-  calendrier -> tarif
-
-  "envoi" :
-  calendrier -> tarif -> envoi automatique
-*/
-let actionApresCalendrier = "estimation";
 
 
 /* =========================
@@ -1233,10 +1291,14 @@ let actionApresCalendrier = "estimation";
 function openFareBar(){
 
   const nav =
-    document.getElementById("topnav");
+    document.getElementById(
+      "topnav"
+    );
 
   const navH =
-    nav ? nav.offsetHeight : 56;
+    nav
+      ? nav.offsetHeight
+      : 56;
 
   document.documentElement.style.setProperty(
     "--navH",
@@ -1248,7 +1310,9 @@ function openFareBar(){
   );
 
   const fare =
-    document.getElementById("fare");
+    document.getElementById(
+      "fare"
+    );
 
   if(fare){
     fare.style.display = "block";
@@ -1258,7 +1322,7 @@ function openFareBar(){
 
 
 /* =========================
-   TARIFS
+   TARIFICATION
 ========================= */
 
 function obtenirTarif(dateTrajet){
@@ -1315,6 +1379,7 @@ function arrondirTarif(prix){
       prix * 100
     ) / 100;
 
+
   return (
     Math.round(
       prixCentimes / 5
@@ -1325,7 +1390,7 @@ function arrondirTarif(prix){
 
 
 /* =========================
-   BOUTON ESTIMER
+   ESTIMER TARIF
 ========================= */
 
 function demanderEstimation(){
@@ -1375,10 +1440,53 @@ function demanderEstimation(){
   }
 
 
-  actionApresCalendrier =
-    "estimation";
+  /*
+    Si le client a déjà saisi
+    une date dans le formulaire,
+    le calendrier s'ouvre dessus.
+  */
+
+  synchroniserCalendrierDepuisFormulaire();
 
   ouvrirCalendrier();
+
+}
+
+
+/* =========================
+   SYNCHRONISATION
+   FORMULAIRE -> CALENDRIER
+========================= */
+
+function synchroniserCalendrierDepuisFormulaire(){
+
+  const valeur =
+    document.getElementById(
+      "dateheure"
+    ).value;
+
+
+  if(!valeur){
+    return;
+  }
+
+
+  const date =
+    new Date(
+      valeur
+    );
+
+
+  if(
+    !isNaN(
+      date.getTime()
+    )
+  ){
+
+    selectedCalendarDate =
+      date;
+
+  }
 
 }
 
@@ -1416,8 +1524,6 @@ function ouvrirCalendrier(){
 
   afficherCalendrier();
 
-  mettreAJourBoutonCalendrier();
-
 
   const modal =
     document.getElementById(
@@ -1441,44 +1547,6 @@ function ouvrirCalendrier(){
 
 
 /* =========================
-   TEXTE BOUTON CALENDRIER
-========================= */
-
-function mettreAJourBoutonCalendrier(){
-
-  const bouton =
-    document.getElementById(
-      "calendarConfirm"
-    );
-
-  const subtitle =
-    document.getElementById(
-      "calendarSubtitle"
-    );
-
-
-  if(actionApresCalendrier === "envoi"){
-
-    bouton.textContent =
-      "✅ Valider et envoyer";
-
-    subtitle.textContent =
-      "Choisissez la date et l’heure. Votre demande sera ensuite estimée et envoyée automatiquement.";
-
-  }else{
-
-    bouton.textContent =
-      "✅ Valider et voir le tarif";
-
-    subtitle.textContent =
-      "Sélectionnez la date et l’heure de prise en charge";
-
-  }
-
-}
-
-
-/* =========================
    CALENDRIER
 ========================= */
 
@@ -1494,7 +1562,9 @@ function afficherCalendrier(){
       "calendarMonthTitle"
     );
 
-  grid.innerHTML = "";
+
+  grid.innerHTML =
+    "";
 
 
   const dateMois =
@@ -1555,6 +1625,7 @@ function afficherCalendrier(){
 
   const aujourdHui =
     new Date();
+
 
   aujourdHui.setHours(
     0,
@@ -1697,26 +1768,22 @@ function selectionnerDate(
   jour
 ){
 
-  const ancienneHeure =
-    selectedCalendarDate
-      ? selectedCalendarDate.getHours()
-      : parseInt(
-          document.getElementById(
-            "calendarHour"
-          ).value || "12",
-          10
-        );
+  const heure =
+    parseInt(
+      document.getElementById(
+        "calendarHour"
+      ).value || "12",
+      10
+    );
 
 
-  const ancienneMinute =
-    selectedCalendarDate
-      ? selectedCalendarDate.getMinutes()
-      : parseInt(
-          document.getElementById(
-            "calendarMinute"
-          ).value || "00",
-          10
-        );
+  const minute =
+    parseInt(
+      document.getElementById(
+        "calendarMinute"
+      ).value || "00",
+      10
+    );
 
 
   selectedCalendarDate =
@@ -1724,8 +1791,8 @@ function selectionnerDate(
       annee,
       mois,
       jour,
-      ancienneHeure,
-      ancienneMinute,
+      heure,
+      minute,
       0,
       0
     );
@@ -1762,7 +1829,9 @@ function moisPrecedent(){
   calendarCurrentMonth--;
 
 
-  if(calendarCurrentMonth < 0){
+  if(
+    calendarCurrentMonth < 0
+  ){
 
     calendarCurrentMonth =
       11;
@@ -1786,7 +1855,9 @@ function moisSuivant(){
   calendarCurrentMonth++;
 
 
-  if(calendarCurrentMonth > 11){
+  if(
+    calendarCurrentMonth > 11
+  ){
 
     calendarCurrentMonth =
       0;
@@ -1818,8 +1889,11 @@ function remplirHeures(){
     );
 
 
-  heures.innerHTML = "";
-  minutes.innerHTML = "";
+  heures.innerHTML =
+    "";
+
+  minutes.innerHTML =
+    "";
 
 
   for(
@@ -1833,17 +1907,20 @@ function remplirHeures(){
         "option"
       );
 
+
     option.value =
       String(h).padStart(
         2,
         "0"
       );
 
+
     option.textContent =
       String(h).padStart(
         2,
         "0"
       );
+
 
     heures.appendChild(
       option
@@ -1863,17 +1940,20 @@ function remplirHeures(){
         "option"
       );
 
+
     option.value =
       String(m).padStart(
         2,
         "0"
       );
 
+
     option.textContent =
       String(m).padStart(
         2,
         "0"
       );
+
 
     minutes.appendChild(
       option
@@ -1895,7 +1975,8 @@ function remplirHeures(){
 
     let minute =
       Math.round(
-        selectedCalendarDate.getMinutes() / 5
+        selectedCalendarDate.getMinutes()
+        / 5
       ) * 5;
 
 
@@ -1918,7 +1999,7 @@ function remplirHeures(){
       new Date();
 
 
-    let nextMinute =
+    let minute =
       Math.ceil(
         now.getMinutes() / 5
       ) * 5;
@@ -1928,9 +2009,9 @@ function remplirHeures(){
       now.getHours();
 
 
-    if(nextMinute >= 60){
+    if(minute >= 60){
 
-      nextMinute =
+      minute =
         0;
 
       heure =
@@ -1950,7 +2031,7 @@ function remplirHeures(){
 
     minutes.value =
       String(
-        nextMinute
+        minute
       ).padStart(
         2,
         "0"
@@ -1992,16 +2073,15 @@ function mettreAJourDateAffichee(){
 
 
   display.textContent =
-    selectedCalendarDate
-      .toLocaleDateString(
-        "fr-FR",
-        {
-          weekday:"long",
-          day:"numeric",
-          month:"long",
-          year:"numeric"
-        }
-      );
+    selectedCalendarDate.toLocaleDateString(
+      "fr-FR",
+      {
+        weekday:"long",
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    );
 
 
   confirm.disabled =
@@ -2040,10 +2120,12 @@ function fermerCalendrier(){
 
 
 /* =========================
-   VALIDATION CALENDRIER
+   VALIDER CALENDRIER
+   + REMPLIR LE FORMULAIRE
+   + ESTIMER
 ========================= */
 
-async function validerCalendrier(){
+async function validerCalendrierEtEstimer(){
 
   if(!selectedCalendarDate){
     return;
@@ -2138,87 +2220,27 @@ async function validerCalendrier(){
     `${annee}-${mois}-${jour}T${heureStr}:${minuteStr}`;
 
 
+  /*
+    On remplit automatiquement
+    le champ visible du formulaire.
+  */
+
   document.getElementById(
     "dateheure"
   ).value =
     valeur;
 
 
-  const resume =
-    document.getElementById(
-      "dateResume"
-    );
-
-
-  resume.style.display =
-    "block";
-
-
-  resume.textContent =
-    "✅ Trajet prévu le "
-    +
-    selectedCalendarDate
-      .toLocaleDateString(
-        "fr-FR",
-        {
-          weekday:"long",
-          day:"numeric",
-          month:"long",
-          year:"numeric"
-        }
-      )
-    +
-    " à "
-    +
-    heureStr
-    +
-    "h"
-    +
-    minuteStr;
-
-
-  /*
-    On mémorise l'action avant
-    de fermer le calendrier.
-  */
-  const actionDemandee =
-    actionApresCalendrier;
-
-
   fermerCalendrier();
 
 
-  /*
-    Dans tous les cas :
-    estimation automatique.
-  */
-  const calc =
-    await calculerEstimation();
-
-
-  /*
-    Si le client avait cliqué
-    sur ENVOYER :
-    le formulaire part maintenant
-    automatiquement.
-  */
-  if(actionDemandee === "envoi"){
-
-    await envoyerFormulaire(
-      calc
-    );
-
-  }
-
-
-  actionApresCalendrier =
-    "estimation";
+  await calculerEstimation();
 
 }
 
 
 /* =========================
-   CALCUL ESTIMATION
+   CALCUL DU TARIF
 ========================= */
 
 function calculerEstimation(){
@@ -2282,6 +2304,19 @@ function calculerEstimation(){
         );
 
 
+      if(
+        isNaN(
+          dateTrajet.getTime()
+        )
+      ){
+
+        resolve(null);
+
+        return;
+
+      }
+
+
       const tarif =
         obtenirTarif(
           dateTrajet
@@ -2323,10 +2358,9 @@ function calculerEstimation(){
 
           if(status === "OK"){
 
-            directionsRenderer
-              .setDirections(
-                result
-              );
+            directionsRenderer.setDirections(
+              result
+            );
 
 
             const leg =
@@ -2435,7 +2469,7 @@ function calculerEstimation(){
 
 
 /* =========================
-   BOUTON ENVOYER
+   ENVOI FORMULAIRE
 ========================= */
 
 async function sendEmail(e){
@@ -2461,10 +2495,16 @@ async function sendEmail(e){
 
 
   /*
-    Vérification des champs :
-    nom, téléphone, départ,
-    arrivée, passagers, paiement.
+    Le navigateur vérifie :
+    - nom
+    - téléphone
+    - départ
+    - arrivée
+    - date et heure
+    - passagers
+    - paiement
   */
+
   if(!form.checkValidity()){
 
     form.reportValidity();
@@ -2480,20 +2520,39 @@ async function sendEmail(e){
     ).value;
 
 
-  /*
-    Aucune date sélectionnée :
+  const dateTrajet =
+    new Date(
+      dateHeure
+    );
 
-    calendrier ->
-    validation ->
-    estimation ->
-    envoi automatique.
-  */
-  if(!dateHeure){
 
-    actionApresCalendrier =
-      "envoi";
+  if(
+    isNaN(
+      dateTrajet.getTime()
+    )
+  ){
 
-    ouvrirCalendrier();
+    alert(
+      "Veuillez renseigner une date et une heure valides."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    dateTrajet.getTime() <
+    new Date().getTime()
+  ){
+
+    alert(
+      "Veuillez choisir une date et une heure à venir."
+    );
+
+    document.getElementById(
+      "dateheure"
+    ).focus();
 
     return;
 
@@ -2501,11 +2560,11 @@ async function sendEmail(e){
 
 
   /*
-    Date déjà renseignée :
-
-    recalcul du prix ->
-    envoi automatique.
+    Au clic sur envoyer :
+    estimation automatique
+    puis envoi automatique.
   */
+
   const calc =
     await calculerEstimation();
 
@@ -2518,31 +2577,13 @@ async function sendEmail(e){
 
 
 /* =========================
-   ENVOI EMAILJS
+   EMAILJS
 ========================= */
 
 async function envoyerFormulaire(calc){
 
   if(formEnvoye){
     return;
-  }
-
-
-  const dateHeure =
-    document.getElementById(
-      "dateheure"
-    ).value;
-
-
-  if(!dateHeure){
-
-    actionApresCalendrier =
-      "envoi";
-
-    ouvrirCalendrier();
-
-    return;
-
   }
 
 
@@ -2556,7 +2597,7 @@ async function envoyerFormulaire(calc){
     );
 
 
-  const texteBoutonOriginal =
+  const texteOriginal =
     "✅ Envoyer votre formulaire";
 
 
@@ -2655,39 +2696,15 @@ async function envoyerFormulaire(calc){
     ).reset();
 
 
-    document.getElementById(
-      "dateheure"
-    ).value =
-      "";
-
-
-    const resume =
-      document.getElementById(
-        "dateResume"
-      );
-
-
-    resume.style.display =
-      "none";
-
-
-    resume.textContent =
-      "";
-
-
     selectedCalendarDate =
       null;
-
-
-    actionApresCalendrier =
-      "estimation";
 
 
     showSuccessModal();
 
 
     btn.textContent =
-      texteBoutonOriginal;
+      texteOriginal;
 
   }
 
@@ -2713,7 +2730,7 @@ async function envoyerFormulaire(calc){
 
 
     btn.textContent =
-      texteBoutonOriginal;
+      texteOriginal;
 
   }
 
@@ -2721,7 +2738,7 @@ async function envoyerFormulaire(calc){
 
 
 /* =========================
-   SUCCÈS
+   MODAL SUCCÈS
 ========================= */
 
 function showSuccessModal(){
@@ -2927,12 +2944,92 @@ async function triggerInstall(){
 
 
 /* =========================
-   BOUTONS
+   CHARGEMENT PAGE
 ========================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
+
+
+    /*
+      Empêche la sélection
+      d'une date passée.
+    */
+
+    const champDate =
+      document.getElementById(
+        "dateheure"
+      );
+
+
+    if(champDate){
+
+      const maintenant =
+        new Date();
+
+
+      const annee =
+        maintenant.getFullYear();
+
+
+      const mois =
+        String(
+          maintenant.getMonth() + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const jour =
+        String(
+          maintenant.getDate()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const heures =
+        String(
+          maintenant.getHours()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      const minutes =
+        String(
+          maintenant.getMinutes()
+        ).padStart(
+          2,
+          "0"
+        );
+
+
+      champDate.min =
+        `${annee}-${mois}-${jour}T${heures}:${minutes}`;
+
+
+      /*
+        Si le client modifie lui-même
+        la date, on synchronise
+        le calendrier personnalisé.
+        AUCUNE estimation automatique.
+      */
+
+      champDate.addEventListener(
+        "change",
+        () => {
+
+          synchroniserCalendrierDepuisFormulaire();
+
+        }
+      );
+
+    }
 
 
     const reserveBtn =
@@ -2948,6 +3045,7 @@ document.addEventListener(
         e => {
 
           e.preventDefault();
+
 
           document.getElementById(
             "formResa"
@@ -2975,6 +3073,7 @@ document.addEventListener(
         () => {
 
           hideSuccessModal();
+
 
           window.scrollTo({
             top:0,
@@ -3023,7 +3122,7 @@ document.addEventListener(
 
 
 /* =========================
-   SERVICE WORKER V8
+   SERVICE WORKER V9
 ========================= */
 
 if(
@@ -3037,7 +3136,7 @@ if(
 
       navigator.serviceWorker
         .register(
-          "/sw.js?v=8"
+          "/sw.js?v=9"
         )
         .then(
           registration => {
