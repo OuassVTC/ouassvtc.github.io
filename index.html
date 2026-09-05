@@ -584,14 +584,6 @@
       margin-top:24px;
     }
 
-    #btnSubmit{
-      display:none;
-    }
-
-    #btnSubmit.is-visible{
-      display:flex;
-    }
-
     .btn{
       width:100%;
       min-height:54px;
@@ -3687,27 +3679,6 @@ async function validerCalendrierEtEstimer(){
   await calculerEstimation();
 
 
-  afficherBoutonDemande();
-
-}
-
-
-function afficherBoutonDemande(){
-
-  const bouton =
-    document.getElementById(
-      "btnSubmit"
-    );
-
-
-  if(bouton){
-
-    bouton.classList.add(
-      "is-visible"
-    );
-
-  }
-
 }
 
 
@@ -4224,11 +4195,6 @@ async function envoyerFormulaire(
       null;
 
 
-    btn.classList.remove(
-      "is-visible"
-    );
-
-
     btn.disabled =
       false;
 
@@ -4667,48 +4633,6 @@ document.addEventListener(
       );
 
     }
-
-
-    [
-      "depart",
-      "arrivee",
-      "dateheure"
-    ].forEach(
-      id => {
-
-        const champ =
-          document.getElementById(
-            id
-          );
-
-
-        if(champ){
-
-          champ.addEventListener(
-            "input",
-            () => {
-
-              const bouton =
-                document.getElementById(
-                  "btnSubmit"
-                );
-
-
-              if(bouton){
-
-                bouton.classList.remove(
-                  "is-visible"
-                );
-
-              }
-
-            }
-          );
-
-        }
-
-      }
-    );
 
 
     const homeBtn =
