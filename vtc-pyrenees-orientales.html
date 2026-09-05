@@ -543,6 +543,20 @@
     }
 
     @media (max-width:760px) {
+      nav {
+        justify-content:flex-start;
+        overflow-x:auto;
+        padding-left:14px;
+        padding-right:14px;
+        scroll-padding-left:14px;
+        scroll-snap-type:x proximity;
+      }
+
+      nav a {
+        font-size:12px;
+        scroll-snap-align:start;
+      }
+
       .hero {
         padding:48px 0 42px;
       }
@@ -595,7 +609,6 @@
   </header>
 
   <nav aria-label="Navigation principale">
-    <a href="/">Accueil</a>
     <a href="/vtc-pyrenees-orientales.html" aria-current="page">VTC Pyrénées-Orientales</a>
     <a href="/services.html">Services</a>
     <a href="/zones-desservies.html">Zones desservies</a>
@@ -806,6 +819,18 @@
     <a class="fcall" href="tel:+33644120784">☎ Appeler</a>
     <a class="fbook" href="/#reservation">Estimer et réserver →</a>
   </div>
+
+  <script>
+    function remettreMenuAuDebut() {
+      const menu = document.querySelector('nav[aria-label="Navigation principale"]');
+      if (menu) {
+        menu.scrollLeft = 0;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', remettreMenuAuDebut);
+    window.addEventListener('pageshow', remettreMenuAuDebut);
+  </script>
 </body>
 </html>
 
