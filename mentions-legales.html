@@ -1,131 +1,295 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mentions légales - OuassVTC | Chauffeur VTC à Perpignan</title>
-
-  <meta name="description" content="Mentions légales du site OuassVTC, chauffeur VTC à Perpignan et dans les Pyrénées-Orientales. Informations légales, RGPD et hébergement OVHcloud.">
-  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, taxi Perpignan, mentions légales VTC, RGPD VTC, transport aéroport Perpignan, chauffeur Pyrénées-Orientales">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Mentions légales OuassVTC | VTC Perpignan</title>
+  <meta name="description" content="Consultez les mentions légales du site OuassVTC, service de chauffeur VTC à Perpignan : éditeur, hébergement, données personnelles et propriété intellectuelle.">
+  <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://www.ouassvtc.fr/mentions-legales.html">
-
   <link rel="icon" href="ouassvtc.png" type="image/png">
   <meta name="theme-color" content="#000000">
 
-  <!-- Données structurées LocalBusiness -->
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mentions légales – OuassVTC">
+  <meta property="og:description" content="Informations légales relatives au site OuassVTC, chauffeur VTC à Perpignan.">
+  <meta property="og:url" content="https://www.ouassvtc.fr/mentions-legales.html">
+  <meta property="og:site_name" content="OuassVTC">
+  <meta property="og:image" content="https://www.ouassvtc.fr/vtc-perpignan.png">
+
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "OuassVTC",
-    "image": "https://www.ouassvtc.fr/vtc-perpignan.png",
-    "telephone": "+33644120784",
-    "email": "contact@ouassvtc.fr",
-    "url": "https://www.ouassvtc.fr",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "10 rue Claude Monet",
-      "addressLocality": "Perpignan",
-      "postalCode": "66000",
-      "addressCountry": "FR"
-    },
-    "priceRange": "€€",
-    "areaServed": "Pyrénées-Orientales"
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"LocalBusiness",
+        "@id":"https://www.ouassvtc.fr/#business",
+        "name":"OuassVTC",
+        "description":"Service de chauffeur VTC sur réservation à Perpignan et dans les Pyrénées-Orientales.",
+        "url":"https://www.ouassvtc.fr/",
+        "logo":"https://www.ouassvtc.fr/vtc-perpignan.png",
+        "image":"https://www.ouassvtc.fr/vtc-perpignan.png",
+        "telephone":"+33644120784",
+        "email":"contact@ouassvtc.fr",
+        "priceRange":"€€",
+        "address":{
+          "@type":"PostalAddress",
+          "streetAddress":"10 rue Claude Monet",
+          "addressLocality":"Perpignan",
+          "postalCode":"66000",
+          "addressRegion":"Occitanie",
+          "addressCountry":"FR"
+        },
+        "areaServed":{
+          "@type":"AdministrativeArea",
+          "name":"Pyrénées-Orientales"
+        }
+      },
+      {
+        "@type":"WebPage",
+        "@id":"https://www.ouassvtc.fr/mentions-legales.html#page",
+        "url":"https://www.ouassvtc.fr/mentions-legales.html",
+        "name":"Mentions légales OuassVTC",
+        "description":"Mentions légales du site OuassVTC à Perpignan.",
+        "inLanguage":"fr-FR",
+        "about":{"@id":"https://www.ouassvtc.fr/#business"}
+      }
+    ]
   }
   </script>
 
   <style>
-    :root{--brand:#000;--border:#e5e7eb;--bg:#f9f9f9;}
+    :root{--black:#050505;--white:#fff;--light:#f5f5f5;--text:#191919;--muted:#666;--border:#e6e6e6;--shadow:0 18px 50px rgba(0,0,0,.08)}
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6;margin:0;padding-bottom:90px}
-    header{background:#000;color:#fff;text-align:center;padding:24px 16px}
-    header img{max-height:90px;height:auto}
-    main{max-width:850px;margin:24px auto;background:#fff;padding:24px 18px 100px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.05)}
-    h1{font-size:1.7rem;margin-bottom:16px;text-align:center}
-    h2{font-size:1.2rem;margin-top:22px;margin-bottom:8px;color:#000}
-    p{margin-bottom:12px;color:#555}
-    a{color:#000;text-decoration:none}
-    a:hover{text-decoration:underline}
-    footer{background:#000;color:#fff;text-align:center;padding:18px 12px 28px;font-size:13px}
-    .floating-buttons{position:fixed;bottom:15px;left:0;width:100%;display:flex;justify-content:space-around;gap:10px;padding:8px 10px;z-index:999}
-    .floating-buttons a{flex:1;text-align:center;background:var(--brand);color:#fff;font-weight:700;border-radius:999px;padding:14px 10px;text-decoration:none;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:transform .2s,opacity .2s}
-    .floating-buttons a:hover{transform:translateY(-2px);opacity:0.9}
-    @media(max-width:600px){.floating-buttons a{font-size:14px;padding:12px 8px}}
+    html{scroll-behavior:smooth}
+    body{background:var(--white);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.7;padding-bottom:92px}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    .container{width:min(1050px,calc(100% - 32px));margin:auto}
+
+    header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.97);border-bottom:1px solid rgba(255,255,255,.1)}
+    .navbar{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo img{width:auto;height:60px;object-fit:contain}
+    .navigation{display:flex;align-items:center;gap:24px}
+    .navigation a{color:#fff;font-size:14px;font-weight:700}
+    .navigation a:hover{opacity:.75}
+    .navigation .header-phone{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;background:#fff;color:#000;border-radius:999px;white-space:nowrap}
+
+    .hero{position:relative;overflow:hidden;padding:80px 0 92px;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.14),transparent 24%),linear-gradient(135deg,#050505,#181818);color:#fff}
+    .hero:after{content:"";position:absolute;right:-120px;bottom:-210px;width:460px;height:460px;border:75px solid rgba(255,255,255,.035);border-radius:50%}
+    .hero-content{position:relative;z-index:1;max-width:790px}
+    .eyebrow{display:inline-block;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(255,255,255,.24);border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+    .hero h1{margin-bottom:20px;font-size:clamp(38px,6vw,64px);line-height:1.05;letter-spacing:-2px}
+    .hero p{max-width:690px;color:#d2d2d2;font-size:clamp(17px,2vw,20px)}
+
+    .legal-navigation{position:relative;z-index:5;margin-top:-35px}
+    .legal-navigation-box{display:flex;flex-wrap:wrap;gap:10px;padding:20px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow)}
+    .legal-navigation a{padding:10px 15px;background:#f4f4f4;border-radius:999px;color:#222;font-size:13px;font-weight:800}
+    .legal-navigation a:hover{background:#000;color:#fff}
+
+    .legal-section{padding:75px 0}
+    .legal-layout{display:grid;grid-template-columns:250px 1fr;align-items:start;gap:35px}
+    .legal-summary{position:sticky;top:110px;padding:25px;background:#000;color:#fff;border-radius:21px}
+    .legal-summary h2{margin-bottom:12px;font-size:21px}
+    .legal-summary p{color:#c9c9c9;font-size:14px}
+    .legal-summary a{display:inline-block;margin-top:17px;color:#fff;font-size:14px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+    .legal-content{display:grid;gap:16px}
+    .legal-card{padding:29px;background:#fff;border:1px solid var(--border);border-radius:21px}
+    .legal-card h2{margin-bottom:13px;color:#000;font-size:21px;line-height:1.3}
+    .legal-card p{color:var(--muted);font-size:15px}
+    .legal-card p+p{margin-top:12px}
+    .legal-card strong{color:#222}
+    .legal-card a{color:#000;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+    .legal-card ul{margin:12px 0 0 20px;color:var(--muted);font-size:15px}
+    .legal-card li+li{margin-top:6px}
+    .legal-details{padding:17px 19px;background:var(--light);border-radius:14px;color:#555;font-size:14px}
+    .update{margin-top:22px;color:#777;font-size:13px;text-align:right}
+
+    footer{padding:42px 0 115px;background:#000;color:#fff}
+    .footer-content{display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .footer-content p{color:#aaa;font-size:13px}
+    .footer-links{display:flex;flex-wrap:wrap;gap:18px}
+    .footer-links a{color:#fff;font-size:13px;font-weight:700}
+
+    .floating-buttons{position:fixed;bottom:14px;left:50%;z-index:1100;width:min(660px,calc(100% - 20px));display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.08);border-radius:999px;box-shadow:0 12px 35px rgba(0,0,0,.22);transform:translateX(-50%);backdrop-filter:blur(12px)}
+    .floating-buttons a{min-height:50px;display:flex;align-items:center;justify-content:center;padding:0 10px;background:#000;color:#fff;border-radius:999px;font-size:14px;font-weight:800;text-align:center}
+    .floating-buttons a:hover{opacity:.85}
+
+    @media(max-width:850px){
+      .navigation a:not(.header-phone){display:none}
+      .legal-layout{grid-template-columns:1fr}
+      .legal-summary{position:static}
+    }
+
+    @media(max-width:650px){
+      body{padding-bottom:84px}
+      .container{width:min(100% - 24px,1050px)}
+      .navbar{min-height:72px}
+      .logo img{height:50px}
+      .navigation .header-phone{padding:10px 13px;font-size:13px}
+      .hero{padding:58px 0 75px}
+      .hero h1{letter-spacing:-1.2px}
+      .legal-navigation-box{padding:14px}
+      .legal-section{padding:58px 0}
+      .legal-card,.legal-summary{padding:24px 20px}
+      .footer-content{align-items:flex-start;flex-direction:column}
+      .floating-buttons{bottom:8px;width:calc(100% - 12px);gap:5px;padding:6px}
+      .floating-buttons a{min-height:47px;padding:0 6px;font-size:12px}
+    }
   </style>
 </head>
-<body>
 
+<body>
   <header>
-    <img src="vtc-perpignan.png" alt="Logo OuassVTC, chauffeur privé à Perpignan">
+    <div class="container navbar">
+      <a href="index.html" class="logo" aria-label="Retour à l’accueil OuassVTC">
+        <img src="vtc-perpignan.png" alt="OuassVTC, chauffeur VTC à Perpignan">
+      </a>
+
+      <nav class="navigation" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="tel:0644120784" class="header-phone">📞 06 44 12 07 84</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h1>Mentions légales – OuassVTC, Chauffeur VTC à Perpignan</h1>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="eyebrow">Informations réglementaires</span>
+          <h1>Mentions légales OuassVTC</h1>
+          <p>Informations relatives à l’éditeur, au fonctionnement et à l’hébergement du site officiel OuassVTC, chauffeur VTC sur réservation à Perpignan.</p>
+        </div>
+      </div>
+    </section>
 
-    <p>Bienvenue sur le site officiel de <strong>OuassVTC</strong>, votre chauffeur VTC à <strong>Perpignan</strong> et dans les Pyrénées-Orientales (66). Ce document présente les informations légales relatives à l’exploitation du site <a href="https://www.ouassvtc.fr">www.ouassvtc.fr</a>.</p>
+    <nav class="legal-navigation" aria-label="Sommaire des mentions légales">
+      <div class="container">
+        <div class="legal-navigation-box">
+          <a href="#editeur">Éditeur</a>
+          <a href="#publication">Publication</a>
+          <a href="#hebergement">Hébergement</a>
+          <a href="#propriete">Propriété intellectuelle</a>
+          <a href="#donnees">Données personnelles</a>
+          <a href="#cookies">Cookies</a>
+          <a href="#responsabilite">Responsabilité</a>
+        </div>
+      </div>
+    </nav>
 
-    <h2>1. Éditeur du site</h2>
-    <p>
-      <strong>OuassVTC</strong><br>
-      Entreprise individuelle – Auto-entrepreneur<br>
-      <strong>Nom du responsable :</strong> Bouab Ouassini<br>
-      <strong>Adresse :</strong> 10 rue Claude Monet, 66000 Perpignan, France<br>
-      <strong>SIRET :</strong> 818 284 788 00012<br>
-      <strong>Téléphone :</strong> <a href="tel:0644120784">06 44 12 07 84</a><br>
-      <strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a><br>
-      Activité : Transport de personnes – VTC (Voiture de Transport avec Chauffeur)
-    </p>
+    <section class="legal-section">
+      <div class="container legal-layout">
+        <aside class="legal-summary">
+          <h2>OuassVTC</h2>
+          <p>Entreprise individuelle de transport de personnes avec chauffeur établie à Perpignan.</p>
+          <a href="contact.html">Contacter OuassVTC</a>
+        </aside>
 
-    <h2>2. Directeur de publication</h2>
-    <p>Le directeur de publication du site est <strong>M. Bouab Ouassini</strong>.</p>
+        <div class="legal-content">
+          <article class="legal-card" id="editeur">
+            <h2>1. Éditeur du site</h2>
+            <div class="legal-details">
+              <strong>Nom commercial :</strong> OuassVTC<br>
+              <strong>Forme juridique :</strong> entrepreneur individuel – micro-entrepreneur<br>
+              <strong>Responsable :</strong> Ouassini Bouab<br>
+              <strong>Adresse :</strong> 10 rue Claude Monet, 66000 Perpignan, France<br>
+              <strong>SIRET :</strong> 818 284 788 00012<br>
+              <strong>Téléphone :</strong> <a href="tel:0644120784">06 44 12 07 84</a><br>
+              <strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a><br>
+              <strong>Activité :</strong> transport de personnes avec chauffeur – VTC
+            </div>
+          </article>
 
-    <h2>3. Hébergeur du site</h2>
-    <p>
-      <strong>OVHcloud</strong><br>
-      2 rue Kellermann – 59100 Roubaix – France<br>
-      Site web : <a href="https://www.ovhcloud.com" target="_blank" rel="noopener">www.ovhcloud.com</a><br>
-      Hébergement en France (UE)
-    </p>
+          <article class="legal-card" id="publication">
+            <h2>2. Directeur de la publication</h2>
+            <p>Le directeur de la publication du site est <strong>Ouassini Bouab</strong>, responsable de l’entreprise individuelle OuassVTC.</p>
+          </article>
 
-    <h2>4. Propriété intellectuelle</h2>
-    <p>Le contenu du site <a href="https://www.ouassvtc.fr">www.ouassvtc.fr</a> (textes, photographies, logo, charte graphique) est la propriété exclusive de OuassVTC. Toute reproduction, diffusion ou exploitation sans autorisation est interdite.</p>
+          <article class="legal-card" id="hebergement">
+            <h2>3. Hébergement et nom de domaine</h2>
+            <p>Le site est publié au moyen du service <strong>GitHub Pages</strong>, proposé par :</p>
+            <div class="legal-details">
+              <strong>GitHub, Inc.</strong><br>
+              88 Colin P Kelly Jr Street<br>
+              San Francisco, CA 94107<br>
+              États-Unis<br>
+              Site : <a href="https://github.com" target="_blank" rel="noopener noreferrer">github.com</a>
+            </div>
+            <p>Le nom de domaine <strong>ouassvtc.fr</strong> est enregistré et géré auprès d’<strong>OVH SAS</strong>, 2 rue Kellermann, 59100 Roubaix, France.</p>
+          </article>
 
-    <h2>5. Données personnelles et RGPD</h2>
-    <p>Les informations collectées via les formulaires de contact ou de réservation (nom, téléphone, adresses, messages) sont utilisées uniquement pour le traitement des demandes et ne sont jamais partagées avec des tiers. Conformément au RGPD, vous pouvez exercer vos droits d’accès, de rectification ou de suppression en écrivant à <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a>.</p>
-    <p>Pour plus d’informations, consultez notre <a href="politique-confidentialite.html">Politique de confidentialité RGPD</a>.</p>
+          <article class="legal-card" id="propriete">
+            <h2>4. Propriété intellectuelle</h2>
+            <p>Sauf mention contraire, les textes, éléments graphiques, logos et contenus présents sur <a href="https://www.ouassvtc.fr">www.ouassvtc.fr</a> sont la propriété de OuassVTC ou sont utilisés avec une autorisation adaptée.</p>
+            <p>Toute reproduction, représentation, modification ou exploitation non autorisée de ces contenus est interdite, sous réserve des exceptions prévues par la législation applicable.</p>
+          </article>
 
-    <h2>6. Cookies</h2>
-    <p>Ce site utilise uniquement des cookies techniques et analytiques anonymes afin d’améliorer l’expérience utilisateur. Vous pouvez les désactiver dans les paramètres de votre navigateur.</p>
+          <article class="legal-card" id="donnees">
+            <h2>5. Données personnelles</h2>
+            <p>Les formulaires de contact et de réservation peuvent recueillir notamment le nom, le numéro de téléphone, les adresses du trajet, la date, l’heure et les informations communiquées par le client.</p>
+            <p>Ces données sont utilisées pour répondre aux demandes, calculer une estimation, organiser une réservation et assurer le suivi du trajet. Elles peuvent être traitées par les prestataires techniques nécessaires au fonctionnement du site et de ses formulaires.</p>
+            <p>Vous pouvez demander l’accès, la rectification, l’effacement ou, lorsque cela s’applique, la limitation du traitement de vos données en écrivant à <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a>.</p>
+            <p>Les informations détaillées concernant les traitements et leur durée de conservation figurent dans la <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
+          </article>
 
-    <h2>7. Zone d’intervention</h2>
-    <p>OuassVTC dessert l’ensemble du département des Pyrénées-Orientales : Perpignan, Canet-en-Roussillon, Argelès-sur-Mer, Saint-Estève, Le Barcarès, ainsi que les trajets vers les gares et aéroports (Perpignan, Béziers, Gérone, Barcelone).</p>
+          <article class="legal-card" id="cookies">
+            <h2>6. Cookies et mesure d’audience</h2>
+            <p>Le site peut utiliser des outils techniques, de mesure d’audience et d’analyse de navigation, notamment Google Analytics et Microsoft Clarity.</p>
+            <p>Selon leur fonctionnement et la réglementation applicable, les traceurs non indispensables doivent être déposés uniquement après le recueil du consentement de l’utilisateur. Les choix disponibles et les modalités d’opposition sont précisés dans la politique de confidentialité et le dispositif de gestion des cookies du site.</p>
+          </article>
 
-    <h2>8. Liens utiles</h2>
-    <ul>
-      <li><a href="index.html">Accueil</a></li>
-      <li><a href="services.html">Nos services</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="politique-confidentialite.html">Politique de confidentialité</a></li>
-    </ul>
+          <article class="legal-card" id="responsabilite">
+            <h2>7. Responsabilité</h2>
+            <p>OuassVTC s’efforce de fournir des informations exactes et actualisées. Les informations affichées sur le site sont néanmoins fournies à titre général et peuvent être modifiées.</p>
+            <p>Une estimation ou une demande envoyée depuis le site ne constitue pas automatiquement une réservation confirmée. La prise en charge est validée après confirmation de la disponibilité, de l’horaire et du tarif par OuassVTC.</p>
+          </article>
 
-    <p style="margin-top:20px;font-size:13px;color:#777;">Dernière mise à jour : 10 novembre 2025</p>
+          <article class="legal-card">
+            <h2>8. Service VTC à Perpignan</h2>
+            <p>OuassVTC est un service de VTC fonctionnant sur réservation préalable. Il constitue une alternative au taxi pour les trajets organisés à l’avance à Perpignan, dans les Pyrénées-Orientales et vers certaines destinations longue distance.</p>
+            <p>Pour découvrir les prestations proposées, consultez la page <a href="services.html">Services VTC à Perpignan</a> ou la <a href="faq.html">FAQ taxi et VTC</a>.</p>
+          </article>
 
-    <hr style="margin:30px 0;opacity:0.2;">
-    <p style="font-size:14px;color:#666;">
-      <strong>Référence SEO :</strong> Mentions légales du site OuassVTC, chauffeur privé VTC à Perpignan (66). Informations légales, RGPD, hébergement OVHcloud et transport de personnes dans les Pyrénées-Orientales.
-    </p>
+          <article class="legal-card">
+            <h2>9. Pages utiles</h2>
+            <ul>
+              <li><a href="index.html">Accueil OuassVTC</a></li>
+              <li><a href="services.html">Services VTC à Perpignan</a></li>
+              <li><a href="faq.html">Questions fréquentes</a></li>
+              <li><a href="contact.html">Contacter OuassVTC</a></li>
+              <li><a href="politique-confidentialite.html">Politique de confidentialité</a></li>
+            </ul>
+          </article>
+
+          <p class="update">Dernière mise à jour : 5 septembre 2026</p>
+        </div>
+      </div>
+    </section>
   </main>
 
+  <footer>
+    <div class="container footer-content">
+      <p>© 2026 OuassVTC – Chauffeur VTC à Perpignan. Tous droits réservés.</p>
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Services</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="politique-confidentialite.html">Confidentialité</a>
+      </div>
+    </div>
+  </footer>
+
   <div class="floating-buttons">
-    <a href="index.html">⬅️ Accueil</a>
+    <a href="index.html">← Accueil</a>
     <a href="tel:0644120784">📞 Appeler</a>
     <a href="index.html#formResa">📅 Réserver</a>
   </div>
-
-  <footer>
-    © 2025 OuassVTC - Tous droits réservés.
-  </footer>
-
 </body>
 </html>
