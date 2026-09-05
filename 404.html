@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Page introuvable | OuassVTC</title>
+  <meta name="description" content="La page demandée est introuvable. Retrouvez OuassVTC, votre chauffeur VTC à Perpignan et dans les Pyrénées-Orientales.">
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#000000">
+
+  <link rel="icon" href="/vtc-perpignan.png" type="image/png">
+  <link rel="apple-touch-icon" href="/vtc-perpignan.png">
+
+  <style>
+    :root {
+      --black:#000;
+      --text:#111;
+      --muted:#666;
+      --soft:#f5f5f5;
+      --border:#e5e7eb;
+      --white:#fff;
+    }
+
+    * {
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html {
+      scroll-behavior:smooth;
+    }
+
+    body {
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      background:#fff;
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.5;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a {
+      color:inherit;
+    }
+
+    header {
+      background:#000;
+      color:#fff;
+    }
+
+    .header-logo {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:22px 20px 16px;
+    }
+
+    .header-logo img {
+      display:block;
+      width:170px;
+      max-width:70vw;
+      height:auto;
+    }
+
+    .top-contact {
+      border-top:1px solid #222;
+      padding:12px 16px 16px;
+    }
+
+    .top-contact-inner {
+      width:min(1120px,92vw);
+      margin:auto;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .top-phone {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      font-size:15px;
+      font-weight:850;
+      text-decoration:none;
+    }
+
+    .top-call-btn {
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 17px;
+      background:#fff;
+      color:#000;
+      border-radius:10px;
+      font-size:13px;
+      font-weight:900;
+      text-decoration:none;
+    }
+
+    nav {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:3px;
+      overflow-x:auto;
+      min-height:58px;
+      padding:8px;
+      background:rgba(255,255,255,.97);
+      border-bottom:1px solid var(--border);
+      scrollbar-width:none;
+    }
+
+    nav::-webkit-scrollbar {
+      display:none;
+    }
+
+    nav a {
+      flex:0 0 auto;
+      padding:10px 11px;
+      border-radius:999px;
+      color:#111;
+      font-size:13px;
+      font-weight:750;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    nav a:hover {
+      background:#f3f4f6;
+    }
+
+    main {
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:58px 20px 78px;
+    }
+
+    .error-container {
+      width:min(820px,100%);
+      text-align:center;
+    }
+
+    .error-code {
+      font-size:clamp(88px,24vw,190px);
+      line-height:.8;
+      letter-spacing:-8px;
+      font-weight:950;
+      color:#000;
+    }
+
+    .error-label {
+      display:inline-flex;
+      align-items:center;
+      margin-top:28px;
+      padding:8px 13px;
+      background:var(--soft);
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    h1 {
+      margin-top:20px;
+      font-size:clamp(32px,6vw,52px);
+      line-height:1.05;
+      letter-spacing:-1.5px;
+      font-weight:950;
+    }
+
+    .intro {
+      max-width:640px;
+      margin:18px auto 0;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.65;
+    }
+
+    .actions {
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:30px;
+    }
+
+    .button {
+      min-height:54px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 22px;
+      border:1px solid #000;
+      border-radius:12px;
+      font-size:15px;
+      font-weight:900;
+      text-decoration:none;
+      transition:transform .2s,opacity .2s;
+    }
+
+    .button:hover {
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    .button-primary {
+      background:#000;
+      color:#fff;
+    }
+
+    .button-secondary {
+      background:#fff;
+      color:#000;
+    }
+
+    .help-box {
+      max-width:720px;
+      margin:42px auto 0;
+      padding:24px;
+      background:var(--soft);
+      border-radius:20px;
+    }
+
+    .help-box h2 {
+      font-size:19px;
+      margin-bottom:14px;
+    }
+
+    .help-links {
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:9px;
+    }
+
+    .help-links a {
+      padding:9px 12px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      text-decoration:none;
+    }
+
+    footer {
+      padding:34px 20px 105px;
+      background:#000;
+      color:#aaa;
+      text-align:center;
+    }
+
+    footer strong,
+    footer a {
+      color:#fff;
+    }
+
+    .footer-links {
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:14px;
+      font-size:13px;
+    }
+
+    .footer-links a {
+      text-decoration:none;
+    }
+
+    .floating-actions {
+      position:fixed;
+      left:50%;
+      bottom:max(16px,env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:170;
+      width:min(610px,calc(100vw - 24px));
+      display:grid;
+      grid-template-columns:1fr 1.25fr;
+      gap:9px;
+    }
+
+    .floating-actions a {
+      min-height:58px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      border-radius:16px;
+      font-size:14px;
+      font-weight:900;
+      text-decoration:none;
+      box-shadow:0 14px 35px rgba(0,0,0,.22),0 3px 8px rgba(0,0,0,.1);
+    }
+
+    .floating-call {
+      background:#fff;
+      color:#000;
+      border:1px solid #ddd;
+    }
+
+    .floating-reserve {
+      background:#000;
+      color:#fff;
+    }
+
+    @media (max-width:600px) {
+      main {
+        padding:46px 16px 64px;
+      }
+
+      .error-code {
+        letter-spacing:-5px;
+      }
+
+      .intro {
+        font-size:16px;
+      }
+
+      .actions {
+        display:grid;
+      }
+
+      .button {
+        width:100%;
+      }
+
+      .help-box {
+        padding:21px 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-logo">
+      <a href="/" aria-label="Retour à l’accueil OuassVTC">
+        <img src="/vtc-perpignan.png" alt="OuassVTC, chauffeur VTC à Perpignan">
+      </a>
+    </div>
+
+    <div class="top-contact">
+      <div class="top-contact-inner">
+        <a class="top-phone" href="tel:+33644120784">☎ 06 44 12 07 84</a>
+        <a class="top-call-btn" href="tel:+33644120784">Appeler immédiatement</a>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="Navigation principale">
+    <a href="/">Accueil</a>
+    <a href="/vtc-pyrenees-orientales.html">VTC Pyrénées-Orientales</a>
+    <a href="/services.html">Services</a>
+    <a href="/zones-desservies.html">Zones desservies</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <main>
+    <section class="error-container" aria-labelledby="error-title">
+      <div class="error-code" aria-hidden="true">404</div>
+      <div class="error-label">Page introuvable</div>
+
+      <h1 id="error-title">Cette adresse ne mène nulle part.</h1>
+
+      <p class="intro">
+        La page que vous recherchez a peut-être été déplacée, renommée ou supprimée. Retrouvez immédiatement OuassVTC et réservez votre chauffeur VTC à Perpignan ou dans les Pyrénées-Orientales.
+      </p>
+
+      <div class="actions">
+        <a class="button button-primary" href="/">Retourner à l’accueil</a>
+        <a class="button button-secondary" href="/#reservation">Estimer et réserver</a>
+      </div>
+
+      <div class="help-box">
+        <h2>Vous pouvez aussi consulter :</h2>
+
+        <div class="help-links">
+          <a href="/vtc-pyrenees-orientales.html">VTC Pyrénées-Orientales</a>
+          <a href="/zones-desservies.html">Zones desservies</a>
+          <a href="/services.html">Nos services</a>
+          <a href="/faq.html">Questions fréquentes</a>
+          <a href="/contact.html">Nous contacter</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>OuassVTC</strong>
+    <p><a href="tel:+33644120784">☎ 06 44 12 07 84</a></p>
+    <p>Chauffeur VTC à Perpignan et dans les Pyrénées-Orientales.</p>
+
+    <div class="footer-links">
+      <a href="/">Accueil</a>
+      <a href="/services.html">Services</a>
+      <a href="/zones-desservies.html">Zones desservies</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/mentions-legales.html">Mentions légales</a>
+    </div>
+
+    <p style="margin-top:18px;font-size:12px">© 2026 OuassVTC. Tous droits réservés.</p>
+  </footer>
+
+  <div class="floating-actions">
+    <a class="floating-call" href="tel:+33644120784">☎ Appeler</a>
+    <a class="floating-reserve" href="/#reservation">Réserver maintenant →</a>
+  </div>
+</body>
+</html>
+
