@@ -1,278 +1,426 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact VTC Perpignan | OuassVTC – Réservation chauffeur privé 24h/24</title>
-  <meta name="description" content="Contactez OuassVTC, chauffeur VTC à Perpignan (66) : téléphone 06 44 12 07 84, WhatsApp, formulaire. Réservation 24h/24 pour transferts aéroports, gares, Canet, Argelès, Espagne.">
-  <link rel="canonical" href="https://www.ouassvtc.fr/contact.html" />
-  <meta name="robots" content="index,follow" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact VTC Perpignan | Réserver OuassVTC</title>
+  <meta name="description" content="Contactez OuassVTC pour réserver un chauffeur VTC à Perpignan. Téléphone, WhatsApp ou formulaire pour vos trajets, gares, aéroports et longues distances.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.ouassvtc.fr/contact.html">
 
-  <!-- Schema.org : ContactPage -->
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contactez OuassVTC, chauffeur VTC à Perpignan">
+  <meta property="og:description" content="Réservez votre chauffeur à Perpignan par téléphone, WhatsApp ou formulaire. Prix communiqué à l’avance.">
+  <meta property="og:url" content="https://www.ouassvtc.fr/contact.html">
+  <meta property="og:site_name" content="OuassVTC">
+  <meta property="og:image" content="https://www.ouassvtc.fr/vtc-perpignan.png">
+
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "Contact OuassVTC",
-    "url": "https://www.ouassvtc.fr/contact.html",
-    "description": "Page de contact du service VTC OuassVTC à Perpignan.",
-    "contactPoint": [{
-      "@type": "ContactPoint",
-      "telephone": "+33644120784",
-      "contactType": "customer service",
-      "areaServed": "FR",
-      "availableLanguage": "fr"
-    }]
-  }
-  </script>
-
-  <!-- Schema.org : LocalBusiness pour le local SEO -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "OuassVTC",
-    "url": "https://www.ouassvtc.fr",
-    "image": "https://www.ouassvtc.fr/vtc-perpignan.png",
-    "description": "Chauffeur VTC à Perpignan et dans les Pyrénées-Orientales. Transferts gares, aéroports, Espagne, déplacements professionnels.",
-    "telephone": "+33644120784",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Perpignan",
-      "addressLocality": "Perpignan",
-      "postalCode": "66000",
-      "addressCountry": "FR"
-    },
-    "areaServed": [
-      "Perpignan",
-      "Canet-en-Roussillon",
-      "Saint-Estève",
-      "Argelès-sur-Mer",
-      "Le Barcarès",
-      "Toulouges"
-    ],
-    "openingHours": "Mo-Su 00:00-23:59",
-    "priceRange": "€€"
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"LocalBusiness",
+        "@id":"https://www.ouassvtc.fr/#business",
+        "name":"OuassVTC",
+        "description":"Chauffeur VTC sur réservation à Perpignan pour les trajets locaux, les transferts gare et aéroport et les longues distances.",
+        "url":"https://www.ouassvtc.fr/",
+        "logo":"https://www.ouassvtc.fr/vtc-perpignan.png",
+        "image":"https://www.ouassvtc.fr/vtc-perpignan.png",
+        "telephone":"+33644120784",
+        "email":"contact@ouassvtc.fr",
+        "priceRange":"€€",
+        "address":{
+          "@type":"PostalAddress",
+          "addressLocality":"Perpignan",
+          "postalCode":"66000",
+          "addressRegion":"Occitanie",
+          "addressCountry":"FR"
+        },
+        "areaServed":[
+          "Perpignan",
+          "Canet-en-Roussillon",
+          "Saint-Estève",
+          "Cabestany",
+          "Argelès-sur-Mer",
+          "Saint-Cyprien",
+          "Le Barcarès",
+          "Rivesaltes",
+          "Pyrénées-Orientales"
+        ],
+        "contactPoint":{
+          "@type":"ContactPoint",
+          "telephone":"+33644120784",
+          "contactType":"reservations",
+          "areaServed":"FR",
+          "availableLanguage":"French"
+        }
+      },
+      {
+        "@type":"ContactPage",
+        "@id":"https://www.ouassvtc.fr/contact.html#page",
+        "url":"https://www.ouassvtc.fr/contact.html",
+        "name":"Contact OuassVTC à Perpignan",
+        "description":"Coordonnées et formulaire pour contacter et réserver le chauffeur VTC OuassVTC à Perpignan.",
+        "inLanguage":"fr-FR",
+        "about":{"@id":"https://www.ouassvtc.fr/#business"},
+        "mainEntity":{"@id":"https://www.ouassvtc.fr/#business"}
+      }
+    ]
   }
   </script>
 
   <style>
-    :root{
-      --brand:#000;
-      --border:#e5e7eb;
-      --bg:#f5f5f5;
-    }
+    :root{--black:#050505;--white:#fff;--light:#f5f5f5;--text:#191919;--muted:#666;--border:#e5e5e5;--green:#25d366;--success:#157347;--error:#b42318;--shadow:0 18px 50px rgba(0,0,0,.08)}
     *{box-sizing:border-box;margin:0;padding:0}
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: #333;
-      margin: 0;
-      line-height:1.6;
-      padding-bottom: 90px; /* pour les boutons flottants */
-    }
-    header{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:24px 16px;
-    }
-    header img{max-height:90px;height:auto;width:auto}
-    .contact-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 16px 100px;
-    }
-    h1 {
-      text-align: center;
-      margin: 26px 0 6px;
-      font-size: 1.65rem;
-    }
-    .intro {
-      text-align:center;
-      color:#555;
-      margin-bottom:18px;
-    }
-    p { margin-bottom: 15px; color:#555; }
-    a { color: #000; text-decoration: none; font-weight:600; }
-    a:hover{text-decoration:underline;}
+    html{scroll-behavior:smooth}
+    body{background:var(--white);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6;padding-bottom:92px}
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+    button,input,textarea{font:inherit}
+    .container{width:min(1120px,calc(100% - 32px));margin:auto}
 
-    h2 {
-      font-size:1.08rem;
-      margin-top:20px;
-      margin-bottom:8px;
-      color:#000;
-    }
+    header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.97);border-bottom:1px solid rgba(255,255,255,.1)}
+    .navbar{min-height:82px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo img{width:auto;height:60px;object-fit:contain}
+    .navigation{display:flex;align-items:center;gap:24px}
+    .navigation a{color:#fff;font-size:14px;font-weight:700}
+    .navigation a:hover{opacity:.75}
+    .navigation .header-phone{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;background:#fff;color:#000;border-radius:999px;white-space:nowrap}
 
-    form {
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:16px;
-      margin-top:18px;
-      box-shadow:0 2px 6px rgba(0,0,0,.04);
-    }
-    label {
-      display:block;
-      margin-bottom:6px;
-      font-weight:600;
-    }
-    input, textarea {
-      width:100%;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:10px;
-      margin-bottom:12px;
-      font-size:15px;
-      background:#fff;
-    }
-    textarea{min-height:90px;resize:vertical;}
-    .btn-submit{
-      background:var(--brand);
-      color:#fff;
-      border:none;
-      padding:12px 18px;
-      border-radius:999px;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .btn-submit:hover{opacity:.9;}
-    #contactSuccess {
-      margin-top:10px;
-      color:green;
-      font-size:14px;
-      display:none;
-    }
+    .hero{position:relative;overflow:hidden;padding:88px 0 105px;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.14),transparent 24%),linear-gradient(135deg,#050505 0%,#181818 100%);color:#fff}
+    .hero:after{content:"";position:absolute;right:-120px;bottom:-210px;width:460px;height:460px;border:75px solid rgba(255,255,255,.035);border-radius:50%}
+    .hero-content{position:relative;z-index:1;max-width:810px}
+    .eyebrow{display:inline-block;margin-bottom:18px;padding:8px 13px;border:1px solid rgba(255,255,255,.24);border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+    .hero h1{max-width:800px;margin-bottom:22px;font-size:clamp(38px,6vw,67px);line-height:1.05;letter-spacing:-2px}
+    .hero p{max-width:700px;color:#d2d2d2;font-size:clamp(17px,2vw,20px)}
+    .hero-buttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 
-    footer{
-      font-size:13px;
-      text-align:center;
-      padding:18px 12px 28px;
-      background:#000;
-      color:#fff;
-    }
+    .button{min-height:54px;display:inline-flex;align-items:center;justify-content:center;padding:0 24px;border:1px solid transparent;border-radius:999px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .2s,opacity .2s}
+    .button:hover{transform:translateY(-2px)}
+    .button:disabled{cursor:wait;opacity:.65;transform:none}
+    .button-white{background:#fff;color:#000}
+    .button-outline{border-color:rgba(255,255,255,.35);color:#fff}
+    .button-black{background:#000;color:#fff}
+    .button-whatsapp{background:var(--green);color:#fff}
 
-    /* Boutons flottants bas */
-    .floating-buttons {
-      position: fixed;
-      bottom: 15px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      padding: 8px 10px;
-      z-index: 999;
-    }
-    .floating-buttons a {
-      flex: 1;
-      text-align: center;
-      background: var(--brand);
-      color: #fff;
-      font-weight: 700;
-      border-radius: 999px;
-      padding: 14px 10px;
-      text-decoration: none;
-      font-size: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      transition: transform .2s, opacity .2s;
-    }
-    .floating-buttons a:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
+    .contact-options{position:relative;z-index:5;margin-top:-42px}
+    .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow)}
+    .contact-card{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;text-align:center;transition:background .2s}
+    .contact-card:not(:last-child){border-right:1px solid var(--border)}
+    .contact-card:hover{background:#fafafa}
+    .contact-icon{width:50px;height:50px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:#000;color:#fff;border-radius:15px;font-size:22px}
+    .contact-card strong{margin-bottom:5px;color:#000;font-size:17px}
+    .contact-card span:last-child{color:var(--muted);font-size:14px}
+
+    .content-section{padding:88px 0}
+    .section-light{background:var(--light)}
+    .section-heading{max-width:760px;margin-bottom:38px}
+    .section-label{display:inline-block;margin-bottom:12px;color:#666;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+    .section-heading h2{margin-bottom:15px;color:#000;font-size:clamp(30px,4vw,46px);line-height:1.12;letter-spacing:-1.2px}
+    .section-heading p{color:var(--muted);font-size:17px}
+
+    .form-layout{display:grid;grid-template-columns:1fr .65fr;align-items:start;gap:28px}
+    .contact-form{padding:34px;background:#fff;border:1px solid var(--border);border-radius:25px;box-shadow:var(--shadow)}
+    .form-group{margin-bottom:19px}
+    .form-group label{display:block;margin-bottom:7px;color:#222;font-size:14px;font-weight:800}
+    .form-group input,.form-group textarea{width:100%;padding:14px 15px;border:1px solid #d7d7d7;border-radius:13px;background:#fff;color:#171717;outline:none;font-size:16px;transition:border-color .2s,box-shadow .2s}
+    .form-group input:focus,.form-group textarea:focus{border-color:#000;box-shadow:0 0 0 4px rgba(0,0,0,.07)}
+    .form-group textarea{min-height:145px;resize:vertical}
+    .contact-form .button{width:100%;border:0}
+    .form-help{margin-top:13px;color:#777;font-size:13px;text-align:center}
+    .form-message{display:none;margin-top:15px;padding:13px 15px;border-radius:12px;font-size:14px;font-weight:700}
+    .form-message.success{display:block;background:#eaf7ef;color:var(--success)}
+    .form-message.error{display:block;background:#fff0ee;color:var(--error)}
+    .form-message a{text-decoration:underline}
+    .website-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+    .information-card{padding:31px;background:#000;color:#fff;border-radius:25px}
+    .information-card h3{margin-bottom:12px;font-size:25px;line-height:1.2}
+    .information-card>p{margin-bottom:25px;color:#c8c8c8;font-size:15px}
+    .information-list{display:grid;gap:16px}
+    .information-item{display:grid;grid-template-columns:41px 1fr;align-items:start;gap:12px}
+    .information-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;color:#000;border-radius:12px;font-size:18px}
+    .information-item strong{display:block;margin-bottom:2px;font-size:14px}
+    .information-item span,.information-item a{color:#c8c8c8;font-size:14px}
+
+    .seo-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .seo-card{padding:29px;background:#fff;border:1px solid var(--border);border-radius:22px}
+    .seo-card h3{margin-bottom:12px;color:#000;font-size:21px}
+    .seo-card p{color:var(--muted);font-size:15px}
+    .seo-card p+p{margin-top:12px}
+    .seo-card strong{color:#222}
+    .seo-card a{color:#000;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+    .zones{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+    .zone{padding:11px 17px;background:#fff;border:1px solid var(--border);border-radius:999px;color:#333;font-size:14px;font-weight:700}
+
+    footer{padding:42px 0 115px;background:#000;color:#fff}
+    .footer-content{display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .footer-content p{color:#aaa;font-size:13px}
+    .footer-links{display:flex;flex-wrap:wrap;gap:18px}
+    .footer-links a{color:#fff;font-size:13px;font-weight:700}
+
+    .floating-buttons{position:fixed;bottom:14px;left:50%;z-index:1100;width:min(660px,calc(100% - 20px));display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1px solid rgba(0,0,0,.08);border-radius:999px;box-shadow:0 12px 35px rgba(0,0,0,.22);transform:translateX(-50%);backdrop-filter:blur(12px)}
+    .floating-buttons a{min-height:50px;display:flex;align-items:center;justify-content:center;padding:0 10px;background:#000;color:#fff;border-radius:999px;font-size:14px;font-weight:800;text-align:center}
+    .floating-buttons a:hover{opacity:.85}
+
+    @media(max-width:850px){
+      .navigation a:not(.header-phone){display:none}
+      .form-layout,.seo-layout{grid-template-columns:1fr}
     }
 
-    @media (max-width:600px){
-      .floating-buttons a {
-        font-size: 14px;
-        padding: 12px 8px;
-      }
+    @media(max-width:650px){
+      body{padding-bottom:84px}
+      .container{width:min(100% - 24px,1120px)}
+      .navbar{min-height:72px}
+      .logo img{height:50px}
+      .navigation .header-phone{padding:10px 13px;font-size:13px}
+      .hero{padding:58px 0 80px}
+      .hero h1{letter-spacing:-1.2px}
+      .hero-buttons{flex-direction:column}
+      .hero-buttons .button{width:100%}
+      .contact-grid{grid-template-columns:1fr}
+      .contact-card{min-height:150px}
+      .contact-card:not(:last-child){border-right:0;border-bottom:1px solid var(--border)}
+      .content-section{padding:65px 0}
+      .section-heading{margin-bottom:29px}
+      .contact-form,.information-card,.seo-card{padding:26px 21px}
+      .footer-content{align-items:flex-start;flex-direction:column}
+      .floating-buttons{bottom:8px;width:calc(100% - 12px);gap:5px;padding:6px}
+      .floating-buttons a{min-height:47px;padding:0 6px;font-size:12px}
     }
   </style>
 
-  <!-- EmailJS (comme ta page d'accueil) -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    (function(){
-      emailjs.init("U08QGWWRUenJDOllc");
-    })();
+    (function(){emailjs.init("U08QGWWRUenJDOllc");})();
   </script>
 </head>
-<body>
 
+<body>
   <header>
-    <img src="vtc-perpignan.png" alt="OuassVTC - VTC à Perpignan">
+    <div class="container navbar">
+      <a href="index.html" class="logo" aria-label="Retour à l’accueil OuassVTC">
+        <img src="vtc-perpignan.png" alt="OuassVTC, chauffeur VTC à Perpignan">
+      </a>
+
+      <nav class="navigation" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="faq.html">FAQ</a>
+        <a href="tel:0644120784" class="header-phone">📞 06 44 12 07 84</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="contact-container">
-    <h1>Contactez votre VTC à Perpignan</h1>
-    <p class="intro">Besoin d’un chauffeur privé pour un trajet à Perpignan, un transfert vers l’aéroport de Barcelone ou une mise à disposition ? Écrivez-nous ou appelez-nous.</p>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="eyebrow">Contact et réservation</span>
+          <h1>Contactez votre chauffeur VTC à Perpignan</h1>
+          <p>Un trajet à Perpignan, un transfert vers une gare ou un aéroport ou une longue distance à organiser ? Contactez directement OuassVTC et obtenez un prix communiqué à l’avance.</p>
 
-    <h2>Coordonnées</h2>
-    <p><strong>Téléphone :</strong> <a href="tel:+33644120784">06 44 12 07 84</a></p>
-    <p><strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank" rel="noopener">Discuter sur WhatsApp</a></p>
-    <p><strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></p>
-    <p><strong>Adresse (zone d’intervention) :</strong> Perpignan (66000), Pyrénées-Orientales</p>
-    <p><strong>Disponibilité :</strong> 7j/7 – sur réservation (trajets tôt ou tard possibles)</p>
+          <div class="hero-buttons">
+            <a href="tel:0644120784" class="button button-white">Appeler le chauffeur</a>
+            <a href="https://wa.me/33644120784" target="_blank" rel="noopener" class="button button-outline">Envoyer sur WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h2>Formulaire de contact</h2>
-    <p>Indiquez votre trajet (Perpignan → destination, date et heure) et nous vous répondons rapidement.</p>
-    <form id="contactForm">
-      <label for="nom">Nom</label>
-      <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+    <div class="contact-options">
+      <div class="container">
+        <div class="contact-grid">
+          <a href="tel:0644120784" class="contact-card">
+            <span class="contact-icon">📞</span>
+            <strong>Par téléphone</strong>
+            <span>06 44 12 07 84</span>
+          </a>
 
-      <label for="tel">Téléphone</label>
-      <input type="tel" id="tel" name="tel" placeholder="06 xx xx xx xx" required>
+          <a href="https://wa.me/33644120784" target="_blank" rel="noopener" class="contact-card">
+            <span class="contact-icon">💬</span>
+            <strong>Par WhatsApp</strong>
+            <span>Envoyer votre trajet</span>
+          </a>
 
-      <label for="msg">Votre demande</label>
-      <textarea id="msg" name="msg" placeholder="Ex. Trajet Perpignan → aéroport Barcelone, le 14/01 à 6h00" required></textarea>
+          <a href="mailto:contact@ouassvtc.fr" class="contact-card">
+            <span class="contact-icon">✉️</span>
+            <strong>Par email</strong>
+            <span>contact@ouassvtc.fr</span>
+          </a>
+        </div>
+      </div>
+    </div>
 
-      <button type="submit" class="btn-submit">📩 Envoyer la demande</button>
-      <p id="contactSuccess">✅ Message envoyé. Nous revenons vers vous rapidement.</p>
-    </form>
+    <section class="content-section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Envoyer une demande</span>
+          <h2>Décrivez votre trajet</h2>
+          <p>Indiquez votre départ, votre destination, la date et l’heure souhaitées. OuassVTC vous répondra pour confirmer la disponibilité et le prix.</p>
+        </div>
 
-    <h2>Autres pages utiles</h2>
-    <p>
-      👉 <a href="index.html">Page d’accueil VTC Perpignan</a><br>
-      👉 <a href="services.html">Nos services (gares, aéroports, Espagne)</a><br>
-      👉 <a href="faq.html">FAQ VTC Perpignan</a>
-    </p>
+        <div class="form-layout">
+          <form id="contactForm" class="contact-form">
+            <div class="form-group">
+              <label for="nom">Votre nom</label>
+              <input type="text" id="nom" name="nom" placeholder="Exemple : Jean Dupont" autocomplete="name" required>
+            </div>
 
-    <h2>Zones desservies</h2>
-    <p>Nous intervenons à Perpignan, Saint-Estève, Canet-en-Roussillon, Argelès-sur-Mer, Le Barcarès, Toulouges ainsi que vers les aéroports de Perpignan, Béziers, Gérone et Barcelone.</p>
+            <div class="form-group">
+              <label for="tel">Votre numéro de téléphone</label>
+              <input type="tel" id="tel" name="tel" placeholder="06 XX XX XX XX" autocomplete="tel" inputmode="tel" required>
+            </div>
 
+            <div class="form-group">
+              <label for="msg">Votre demande</label>
+              <textarea id="msg" name="msg" placeholder="Exemple : trajet de Perpignan vers l’aéroport de Barcelone, le 14 janvier à 6h00, pour 3 passagers." required></textarea>
+            </div>
+
+            <div class="website-field" aria-hidden="true">
+              <label for="website">Ne pas remplir ce champ</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button type="submit" id="submitButton" class="button button-black">Envoyer ma demande</button>
+            <p class="form-help">L’envoi du formulaire ne confirme pas automatiquement la réservation. Vous recevrez une réponse de OuassVTC.</p>
+            <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+          </form>
+
+          <aside class="information-card">
+            <h3>Informations pratiques</h3>
+            <p>OuassVTC intervient à Perpignan et dans les Pyrénées-Orientales, uniquement sur réservation préalable.</p>
+
+            <div class="information-list">
+              <div class="information-item">
+                <span class="information-icon">📞</span>
+                <div><strong>Téléphone</strong><a href="tel:0644120784">06 44 12 07 84</a></div>
+              </div>
+
+              <div class="information-item">
+                <span class="information-icon">📍</span>
+                <div><strong>Zone principale</strong><span>Perpignan et Pyrénées-Orientales</span></div>
+              </div>
+
+              <div class="information-item">
+                <span class="information-icon">🕐</span>
+                <div><strong>Disponibilité</strong><span>7j/7, sur réservation et selon disponibilités</span></div>
+              </div>
+
+              <div class="information-item">
+                <span class="information-icon">💳</span>
+                <div><strong>Paiement</strong><span>Carte bancaire, lien sécurisé ou espèces</span></div>
+              </div>
+
+              <div class="information-item">
+                <span class="information-icon">🚘</span>
+                <div><strong>Capacité</strong><span>Jusqu’à quatre passagers</span></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section section-light">
+      <div class="container">
+        <div class="section-heading">
+          <span class="section-label">Chauffeur privé à Perpignan</span>
+          <h2>Réserver un VTC ou une alternative au taxi à Perpignan</h2>
+          <p>OuassVTC propose une solution de transport avec chauffeur pour les déplacements préparés à l’avance.</p>
+        </div>
+
+        <div class="seo-layout">
+          <article class="seo-card">
+            <h3>Comment réserver OuassVTC ?</h3>
+            <p>Pour réserver votre <strong>VTC à Perpignan</strong>, envoyez votre lieu de départ, votre destination, la date, l’heure et le nombre de passagers.</p>
+            <p>Contrairement à un taxi pouvant prendre un client sans réservation préalable, un VTC doit être réservé avant la prise en charge. La disponibilité et le tarif vous sont ensuite confirmés.</p>
+            <p>Vous pouvez aussi effectuer une <a href="index.html#formResa">estimation depuis la page d’accueil</a>.</p>
+          </article>
+
+          <article class="seo-card">
+            <h3>Quels trajets peut-on demander ?</h3>
+            <p>Vous pouvez contacter OuassVTC pour un trajet local, un transfert vers la <strong>gare de Perpignan</strong>, l’aéroport de Perpignan-Rivesaltes, Gérone, Barcelone, Béziers ou Montpellier.</p>
+            <p>Les déplacements professionnels, les longues distances et les prises en charge de nuit ou tôt le matin sont possibles sur réservation et selon les disponibilités.</p>
+            <p>Consultez également la page <a href="services.html">Services VTC à Perpignan</a>.</p>
+          </article>
+        </div>
+
+        <div class="zones">
+          <span class="zone">Perpignan</span>
+          <span class="zone">Canet-en-Roussillon</span>
+          <span class="zone">Saint-Estève</span>
+          <span class="zone">Cabestany</span>
+          <span class="zone">Argelès-sur-Mer</span>
+          <span class="zone">Saint-Cyprien</span>
+          <span class="zone">Le Barcarès</span>
+          <span class="zone">Toulouges</span>
+          <span class="zone">Rivesaltes</span>
+          <span class="zone">Pyrénées-Orientales</span>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Boutons flottants -->
+  <footer>
+    <div class="container footer-content">
+      <p>© 2026 OuassVTC – Chauffeur VTC à Perpignan. Tous droits réservés.</p>
+
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="faq.html">FAQ</a>
+        <a href="qui-sommes-nous.html">À propos</a>
+      </div>
+    </div>
+  </footer>
+
   <div class="floating-buttons">
-    <a href="index.html">⬅️ Accueil</a>
+    <a href="index.html">← Accueil</a>
     <a href="tel:0644120784">📞 Appeler</a>
     <a href="index.html#formResa">📅 Réserver</a>
   </div>
 
-  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
-
   <script>
-    const form = document.getElementById('contactForm');
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      const params = {
-        nom: document.getElementById('nom').value,
-        telephone: document.getElementById('tel').value,
-        message: document.getElementById('msg').value,
-        prix: ''
+    const form=document.getElementById("contactForm");
+    const submitButton=document.getElementById("submitButton");
+    const formMessage=document.getElementById("formMessage");
+
+    form.addEventListener("submit",function(event){
+      event.preventDefault();
+      formMessage.className="form-message";
+      formMessage.textContent="";
+
+      if(document.getElementById("website").value!==""){return;}
+
+      const params={
+        nom:document.getElementById("nom").value.trim(),
+        telephone:document.getElementById("tel").value.trim(),
+        message:document.getElementById("msg").value.trim(),
+        prix:""
       };
-      // même service / template que ton accueil
-      emailjs.send("service_kdvgh9f", "template_5xt5vlv", params)
-        .then(function() {
-          document.getElementById('contactSuccess').style.display = 'block';
+
+      submitButton.disabled=true;
+      submitButton.textContent="Envoi en cours…";
+
+      emailjs.send("service_kdvgh9f","template_5xt5vlv",params)
+        .then(function(){
+          formMessage.className="form-message success";
+          formMessage.textContent="✅ Votre message a bien été envoyé. OuassVTC reviendra vers vous rapidement.";
           form.reset();
-        }, function(err) {
-          alert("❌ Envoi impossible pour le moment. Vous pouvez appeler ou écrire sur WhatsApp.");
-          console.log(err);
+        })
+        .catch(function(error){
+          formMessage.className="form-message error";
+          formMessage.innerHTML='❌ Envoi momentanément impossible. Appelez le <a href="tel:0644120784">06 44 12 07 84</a> ou contactez-nous par WhatsApp.';
+          console.error("Erreur EmailJS :",error);
+        })
+        .finally(function(){
+          submitButton.disabled=false;
+          submitButton.textContent="Envoyer ma demande";
         });
     });
   </script>
-
 </body>
 </html>
