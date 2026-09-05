@@ -876,27 +876,28 @@
       border-radius:26px;
       padding:38px 32px;
       display:grid;
-      grid-template-columns:auto 1fr auto;
+      grid-template-columns:1fr;
       align-items:center;
       gap:22px;
+      text-align:center;
     }
 
     .app-install-icon{
-      width:76px;
-      height:76px;
-      border-radius:19px;
-      background:#111;
+      width:100%;
+      height:112px;
+      border-radius:16px;
+      background:#fff;
       display:flex;
       align-items:center;
       justify-content:center;
       overflow:hidden;
-      border:1px solid #292929;
     }
 
     .app-install-icon img{
-      width:64px;
-      height:64px;
+      width:88px;
+      height:88px;
       object-fit:contain;
+      border-radius:20px;
     }
 
     .app-install-content h2{
@@ -913,6 +914,8 @@
 
     .app-install-button{
       min-height:54px;
+      width:min(420px,100%);
+      margin:auto;
       padding:0 21px;
       border:0;
       border-radius:12px;
@@ -1397,13 +1400,7 @@
     @media (max-width:700px){
 
       .app-install-card{
-        grid-template-columns:1fr;
-        text-align:center;
         padding:30px 22px;
-      }
-
-      .app-install-icon{
-        margin:auto;
       }
 
       .app-install-button{
