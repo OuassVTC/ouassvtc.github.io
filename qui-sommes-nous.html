@@ -1,204 +1,1305 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>À propos de OuassVTC – Chauffeur VTC à Perpignan</title>
-  <meta name="description" content="OuassVTC est un chauffeur VTC professionnel basé à Perpignan (66). Plus de 10 ans d'expérience dans le transport de personnes : trajets locaux, aéroports, Espagne, entreprises. Service fiable et ponctuel, réservation 24h/24.">
-  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, à propos OuassVTC, transport personne Perpignan, VTC 66, alternative taxi Perpignan">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Données structurées : AboutPage -->
+  <title>OuassVTC | Chauffeur VTC et alternative taxi à Perpignan</title>
+
+  <meta
+    name="description"
+    content="Découvrez OuassVTC, chauffeur VTC à Perpignan : plus de 10 ans d’expérience, prix fixe à l’avance, transferts gare et aéroport, trajets locaux et Espagne."
+  >
+
+  <meta name="robots" content="index, follow">
+
+  <link
+    rel="canonical"
+    href="https://www.ouassvtc.fr/qui-sommes-nous.html"
+  >
+
+  <!-- Référencement pour les réseaux sociaux -->
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:type" content="website">
+
+  <meta
+    property="og:title"
+    content="À propos de OuassVTC, chauffeur VTC à Perpignan"
+  >
+
+  <meta
+    property="og:description"
+    content="Un chauffeur local expérimenté pour vos trajets à Perpignan, vos transferts gare et aéroport et vos déplacements longue distance."
+  >
+
+  <meta
+    property="og:url"
+    content="https://www.ouassvtc.fr/qui-sommes-nous.html"
+  >
+
+  <meta property="og:site_name" content="OuassVTC">
+
+  <meta
+    property="og:image"
+    content="https://www.ouassvtc.fr/vtc-perpignan.png"
+  >
+
+  <!-- Données structurées pour Google et les moteurs utilisant l’IA -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "À propos de OuassVTC",
-    "description": "Présentation du service VTC OuassVTC à Perpignan, transport privé 24h/24.",
-    "mainEntityOfPage": "https://www.ouassvtc.fr/qui-sommes-nous.html",
-    "about": {
-      "@type": "LocalBusiness",
-      "name": "OuassVTC",
-      "url": "https://www.ouassvtc.fr",
-      "telephone": "+33644120784",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Perpignan",
-        "postalCode": "66000",
-        "addressCountry": "FR"
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://www.ouassvtc.fr/#business",
+        "name": "OuassVTC",
+        "description": "Service de chauffeur VTC sur réservation à Perpignan et dans les Pyrénées-Orientales.",
+        "url": "https://www.ouassvtc.fr/",
+        "logo": "https://www.ouassvtc.fr/vtc-perpignan.png",
+        "image": "https://www.ouassvtc.fr/vtc-perpignan.png",
+        "telephone": "+33644120784",
+        "email": "contact@ouassvtc.fr",
+        "priceRange": "€€",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Perpignan",
+          "postalCode": "66000",
+          "addressRegion": "Occitanie",
+          "addressCountry": "FR"
+        },
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Perpignan"
+          },
+          {
+            "@type": "City",
+            "name": "Canet-en-Roussillon"
+          },
+          {
+            "@type": "City",
+            "name": "Saint-Estève"
+          },
+          {
+            "@type": "City",
+            "name": "Cabestany"
+          },
+          {
+            "@type": "City",
+            "name": "Argelès-sur-Mer"
+          },
+          {
+            "@type": "City",
+            "name": "Saint-Cyprien"
+          },
+          {
+            "@type": "City",
+            "name": "Le Barcarès"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Pyrénées-Orientales"
+          }
+        ]
       },
-      "areaServed": [
-        "Perpignan",
-        "Saint-Estève",
-        "Canet-en-Roussillon",
-        "Argelès-sur-Mer",
-        "Le Barcarès"
-      ]
-    }
+      {
+        "@type": "AboutPage",
+        "@id": "https://www.ouassvtc.fr/qui-sommes-nous.html#page",
+        "url": "https://www.ouassvtc.fr/qui-sommes-nous.html",
+        "name": "À propos de OuassVTC",
+        "description": "Présentation de OuassVTC, chauffeur VTC à Perpignan pour les trajets locaux, les transferts gare et aéroport et les longues distances.",
+        "inLanguage": "fr-FR",
+        "about": {
+          "@id": "https://www.ouassvtc.fr/#business"
+        },
+        "mainEntity": {
+          "@id": "https://www.ouassvtc.fr/#business"
+        }
+      }
+    ]
   }
   </script>
 
   <style>
-    :root{
-      --brand:#000;
-      --border:#e5e7eb;
-      --bg:#f5f5f5;
+    :root {
+      --black: #050505;
+      --dark: #151515;
+      --white: #ffffff;
+      --light: #f5f5f5;
+      --text: #191919;
+      --muted: #666666;
+      --border: #e7e7e7;
+      --green: #25d366;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: #333;
+
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
       line-height: 1.6;
-      padding-bottom: 90px; /* pour les boutons fixes */
+      padding-bottom: 92px;
     }
 
-    header{
-      background:#000;
-      color:#fff;
-      text-align:center;
-      padding:24px 16px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-    header img{max-height:90px;height:auto;width:auto}
 
-    .about-container {
-      max-width: 820px;
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 0 16px 100px;
     }
 
-    h1 {
-      text-align: center;
-      margin: 26px 0 14px;
-      font-size: 1.65rem;
-    }
-    h2 {
-      font-size: 1.05rem;
-      margin-top: 20px;
-      margin-bottom: 6px;
-      color:#000;
+    /* En-tête */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5, 5, 5, 0.97);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    p {
+    .navbar {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo img {
+      width: auto;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .navigation {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .navigation a {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+    }
+
+    .navigation a:hover {
+      opacity: 0.75;
+    }
+
+    .header-phone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      background: #ffffff;
+      color: #000000 !important;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* Présentation principale */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 90px 0 105px;
+      background:
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(255, 255, 255, 0.14),
+          transparent 24%
+        ),
+        linear-gradient(135deg, #050505 0%, #181818 100%);
+      color: #ffffff;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      bottom: -210px;
+      width: 460px;
+      height: 460px;
+      border: 75px solid rgba(255, 255, 255, 0.035);
+      border-radius: 50%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .eyebrow {
+      display: inline-block;
       margin-bottom: 18px;
-      line-height: 1.6;
-      color:#555;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
     }
 
-    footer{
-      font-size:13px;
-      color:#777;
-      text-align:center;
-      padding:18px 12px 28px;
-      background:#000;
-      color:#fff;
+    .hero h1 {
+      max-width: 800px;
+      margin-bottom: 22px;
+      font-size: clamp(38px, 6vw, 67px);
+      line-height: 1.05;
+      letter-spacing: -2px;
     }
 
-    /* Boutons flottants bas */
+    .hero p {
+      max-width: 700px;
+      color: #d2d2d2;
+      font-size: clamp(17px, 2vw, 20px);
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 800;
+      transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-white {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .button-outline {
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+
+    .button-black {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .button-whatsapp {
+      background: var(--green);
+      color: #ffffff;
+    }
+
+    /* Bloc de confiance */
+    .trust-section {
+      position: relative;
+      z-index: 5;
+      margin-top: -40px;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .trust-card {
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .trust-card:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .trust-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #000000;
+      font-size: 17px;
+    }
+
+    .trust-card span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Sections */
+    section.content-section {
+      padding: 88px 0;
+    }
+
+    .section-light {
+      background: var(--light);
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #666666;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      margin-bottom: 15px;
+      color: #000000;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -1.2px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    /* Présentation */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: start;
+      gap: 55px;
+    }
+
+    .story-text p {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .story-text strong {
+      color: #222222;
+    }
+
+    .story-card {
+      position: sticky;
+      top: 110px;
+      padding: 32px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 25px;
+    }
+
+    .story-card-icon {
+      width: 57px;
+      height: 57px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 17px;
+      font-size: 27px;
+    }
+
+    .story-card h3 {
+      margin-bottom: 12px;
+      font-size: 25px;
+      line-height: 1.2;
+    }
+
+    .story-card p {
+      color: #c8c8c8;
+      font-size: 15px;
+    }
+
+    /* Engagements */
+    .commitments-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .commitment-card {
+      padding: 28px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .commitment-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .commitment-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 23px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 15px;
+      font-size: 22px;
+    }
+
+    .commitment-card h3 {
+      margin-bottom: 9px;
+      color: #000000;
+      font-size: 20px;
+    }
+
+    .commitment-card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Taxi et VTC */
+    .taxi-section {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .taxi-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .taxi-content .section-label {
+      color: #bdbdbd;
+    }
+
+    .taxi-content h2 {
+      margin-bottom: 20px;
+      font-size: clamp(31px, 5vw, 51px);
+      line-height: 1.08;
+      letter-spacing: -1.4px;
+    }
+
+    .taxi-content p {
+      margin-bottom: 18px;
+      color: #c9c9c9;
+      font-size: 16px;
+    }
+
+    .taxi-content strong {
+      color: #ffffff;
+    }
+
+    .taxi-card {
+      padding: 34px;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 25px;
+    }
+
+    .taxi-card h3 {
+      margin-bottom: 20px;
+      font-size: 25px;
+      line-height: 1.2;
+    }
+
+    .taxi-points {
+      display: grid;
+      gap: 15px;
+    }
+
+    .taxi-point {
+      display: grid;
+      grid-template-columns: 27px 1fr;
+      align-items: start;
+      gap: 11px;
+      color: #555555;
+      font-size: 15px;
+    }
+
+    .check {
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    /* Trajets */
+    .journeys-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .journey-card {
+      padding: 26px 20px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+
+    .journey-card span {
+      display: block;
+      margin-bottom: 17px;
+      font-size: 29px;
+    }
+
+    .journey-card h3 {
+      margin-bottom: 7px;
+      color: #000000;
+      font-size: 17px;
+    }
+
+    .journey-card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Zone */
+    .zones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .zone {
+      padding: 11px 17px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Appel à l’action */
+    .booking-section {
+      padding: 0 0 88px;
+    }
+
+    .booking-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 35px;
+      padding: 48px;
+      background: var(--light);
+      border-radius: 28px;
+    }
+
+    .booking-text {
+      max-width: 630px;
+    }
+
+    .booking-text h2 {
+      margin-bottom: 12px;
+      color: #000000;
+      font-size: clamp(29px, 4vw, 43px);
+      line-height: 1.13;
+      letter-spacing: -1px;
+    }
+
+    .booking-text p {
+      color: var(--muted);
+    }
+
+    .booking-buttons {
+      flex: 0 0 235px;
+      display: grid;
+      gap: 10px;
+    }
+
+    /* Pied de page */
+    footer {
+      padding: 42px 0 115px;
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .footer-content p {
+      color: #aaaaaa;
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .footer-links a {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Boutons fixes */
     .floating-buttons {
       position: fixed;
-      bottom: 15px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      padding: 8px 10px;
-      z-index: 999;
-    }
-    .floating-buttons a {
-      flex: 1;
-      text-align: center;
-      background: var(--brand);
-      color: #fff;
-      font-weight: 700;
+      bottom: 14px;
+      left: 50%;
+      z-index: 1100;
+      width: min(660px, calc(100% - 20px));
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 999px;
-      padding: 14px 10px;
-      text-decoration: none;
-      font-size: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      transition: transform .2s, opacity .2s;
-    }
-    .floating-buttons a:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+      transform: translateX(-50%);
+      backdrop-filter: blur(12px);
     }
 
-    @media (max-width:600px){
+    .floating-buttons a {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .floating-buttons a:hover {
+      opacity: 0.85;
+    }
+
+    /* Tablettes */
+    @media (max-width: 900px) {
+      .navigation a:not(.header-phone) {
+        display: none;
+      }
+
+      .story-grid,
+      .taxi-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .story-card {
+        position: static;
+      }
+
+      .journeys-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .booking-box {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .booking-buttons {
+        width: 100%;
+        flex: auto;
+      }
+
+      .booking-buttons .button {
+        width: 100%;
+      }
+    }
+
+    /* Mobiles */
+    @media (max-width: 650px) {
+      body {
+        padding-bottom: 84px;
+      }
+
+      .container {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .navbar {
+        min-height: 72px;
+      }
+
+      .logo img {
+        height: 50px;
+      }
+
+      .header-phone {
+        padding: 10px 13px;
+        font-size: 13px !important;
+      }
+
+      .hero {
+        padding: 58px 0 80px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.2px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .button {
+        width: 100%;
+      }
+
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-card:not(:last-child) {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      section.content-section {
+        padding: 65px 0;
+      }
+
+      .section-heading {
+        margin-bottom: 30px;
+      }
+
+      .commitments-grid,
+      .journeys-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .commitment-card,
+      .taxi-card,
+      .booking-box {
+        padding: 27px 22px;
+      }
+
+      .footer-content {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .floating-buttons {
+        bottom: 8px;
+        width: calc(100% - 12px);
+        gap: 5px;
+        padding: 6px;
+      }
+
       .floating-buttons a {
-        font-size: 14px;
-        padding: 12px 8px;
+        min-height: 47px;
+        padding: 0 6px;
+        font-size: 12px;
       }
     }
   </style>
 </head>
+
 <body>
 
+  <!-- En-tête -->
   <header>
-    <img src="vtc-perpignan.png" alt="OuassVTC">
+    <div class="container navbar">
+
+      <a
+        href="index.html"
+        class="logo"
+        aria-label="Retour à l’accueil OuassVTC"
+      >
+        <img
+          src="vtc-perpignan.png"
+          alt="OuassVTC, chauffeur VTC à Perpignan"
+        >
+      </a>
+
+      <nav class="navigation" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="faq.html">FAQ</a>
+
+        <a href="tel:0644120784" class="header-phone">
+          📞 06 44 12 07 84
+        </a>
+      </nav>
+
+    </div>
   </header>
 
-  <main class="about-container">
-    <h1>À propos de OuassVTC</h1>
-    <p>
-      <strong>OuassVTC</strong> est un service de transport de personnes basé à <strong>Perpignan</strong>, dans les Pyrénées-Orientales (66).
-      Nous accompagnons les particuliers, familles et professionnels pour leurs déplacements quotidiens, leurs transferts vers les gares et aéroports,
-      ainsi que leurs trajets vers l’Espagne.
-    </p>
+  <main>
 
-    <h2>Une expérience de plus de 10 ans</h2>
-    <p>
-      Forts de plus de 10 ans d’expérience dans le transport, nous connaissons parfaitement le secteur de Perpignan, ses axes, ses horaires
-      et les besoins de nos clients (aéroports très tôt, sorties tardives, trajets vers Barcelone…).
-      Cette expérience nous permet de vous proposer un service <strong>ponctuel, organisé et sécurisé</strong>.
-    </p>
+    <!-- Présentation -->
+    <section class="hero">
+      <div class="container">
 
-    <h2>Un service VTC différent d’un taxi</h2>
-    <p>
-      Contrairement à un taxi, le VTC fonctionne <strong>uniquement sur réservation</strong> et le tarif est connu à l’avance.
-      Avec OuassVTC, vous savez qui vient vous chercher, à quelle heure et à quel prix. C’est une alternative pratique au taxi à Perpignan,
-      notamment pour les gares, aéroports, rendez-vous médicaux ou professionnels.
-    </p>
+        <div class="hero-content">
 
-    <h2>Nos engagements</h2>
-    <p>
-      - Ponctualité et respect des horaires<br>
-      - Véhicule propre et confortable<br>
-      - Chauffeur courtois et discret<br>
-      - Plusieurs moyens de paiement (CB, lien sécurisé, espèces)<br>
-      - Zone de service : Perpignan, Canet, Argelès, Saint-Estève, Le Barcarès, et trajets vers l’Espagne
-    </p>
+          <span class="eyebrow">
+            À propos de OuassVTC
+          </span>
 
-    <h2>Pour quels trajets ?</h2>
-    <p>
-      Nous réalisons :
-    </p>
-    <ul style="margin-left:18px;color:#555;line-height:1.5;">
-      <li>Transferts gares et aéroports (Perpignan, Béziers, Gérone, Barcelone)</li>
-      <li>Déplacements locaux dans le 66</li>
-      <li>Longues distances vers la France et l’Espagne</li>
-      <li>Déplacements professionnels et rendez-vous</li>
-    </ul>
+          <h1>Votre chauffeur VTC local à Perpignan</h1>
 
-    <p style="margin-top:18px;">
-      Pour en savoir plus sur nos prestations, consultez aussi la page
-      <a href="services.html" style="color:#000;font-weight:600;">Nos services VTC à Perpignan</a>.
-    </p>
+          <p>
+            Un service de transport sur réservation pour vos trajets à
+            Perpignan, vos transferts gare et aéroport et vos déplacements
+            dans les Pyrénées-Orientales, en France ou vers l’Espagne.
+          </p>
 
-    <p style="margin-top:10px;">
-      📞 Une question ou une réservation ? Appelez le <a href="tel:0644120784" style="color:#000;">06 44 12 07 84</a> ou écrivez-nous sur
-      <a href="https://wa.me/33644120784" target="_blank" rel="noopener" style="color:#000;">WhatsApp</a>.
-    </p>
+          <div class="hero-buttons">
+
+            <a href="index.html#formResa" class="button button-white">
+              Estimer mon tarif
+            </a>
+
+            <a href="tel:0644120784" class="button button-outline">
+              Appeler immédiatement
+            </a>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Éléments de confiance -->
+    <div class="trust-section">
+      <div class="container">
+
+        <div class="trust-grid">
+
+          <div class="trust-card">
+            <strong>Plus de 10 ans d’expérience</strong>
+            <span>Une connaissance précise du transport</span>
+          </div>
+
+          <div class="trust-card">
+            <strong>Prix fixe communiqué</strong>
+            <span>Votre tarif est annoncé à l’avance</span>
+          </div>
+
+          <div class="trust-card">
+            <strong>Service local</strong>
+            <span>Perpignan et Pyrénées-Orientales</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Histoire et expérience -->
+    <section class="content-section">
+      <div class="container">
+
+        <div class="section-heading">
+
+          <span class="section-label">
+            Expérience et proximité
+          </span>
+
+          <h2>Un chauffeur qui connaît votre secteur</h2>
+
+          <p>
+            OuassVTC accompagne les particuliers, les familles, les voyageurs
+            et les professionnels pour leurs déplacements au départ ou à
+            destination de Perpignan.
+          </p>
+
+        </div>
+
+        <div class="story-grid">
+
+          <div class="story-text">
+
+            <p>
+              <strong>OuassVTC</strong> est un service de chauffeur VTC basé à
+              <strong>Perpignan</strong>, au cœur des Pyrénées-Orientales.
+              Cette implantation locale permet de bien connaître les
+              principaux axes, les communes environnantes, les gares, les
+              aéroports et les destinations touristiques du département.
+            </p>
+
+            <p>
+              Avec plus de 10 ans d’expérience dans le transport de personnes,
+              chaque déplacement est préparé avec attention. L’objectif est de
+              proposer une prise en charge organisée, un véhicule propre et
+              confortable ainsi qu’un trajet réalisé dans de bonnes
+              conditions.
+            </p>
+
+            <p>
+              Qu’il s’agisse d’un trajet quotidien, d’un rendez-vous
+              professionnel, d’un départ très tôt, d’une arrivée tardive ou
+              d’un transfert vers l’Espagne, la réservation est étudiée selon
+              votre besoin et les disponibilités.
+            </p>
+
+            <p>
+              Le tarif est communiqué avant la confirmation afin que vous
+              puissiez organiser votre déplacement en toute transparence.
+            </p>
+
+          </div>
+
+          <aside class="story-card">
+
+            <div class="story-card-icon">📍</div>
+
+            <h3>Un service véritablement local</h3>
+
+            <p>
+              Votre demande est traitée directement par OuassVTC. Vous
+              connaissez à l’avance votre horaire, votre point de prise en
+              charge et le prix prévu pour votre trajet.
+            </p>
+
+          </aside>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Engagements -->
+    <section class="content-section section-light">
+      <div class="container">
+
+        <div class="section-heading">
+
+          <span class="section-label">
+            Nos engagements
+          </span>
+
+          <h2>Un service professionnel à chaque trajet</h2>
+
+          <p>
+            Chaque réservation est organisée autour de quatre engagements
+            essentiels.
+          </p>
+
+        </div>
+
+        <div class="commitments-grid">
+
+          <article class="commitment-card">
+
+            <div class="commitment-icon">⏱️</div>
+
+            <h3>Ponctualité</h3>
+
+            <p>
+              L’heure et le lieu de prise en charge sont confirmés afin
+              d’organiser votre déplacement avec précision.
+            </p>
+
+          </article>
+
+          <article class="commitment-card">
+
+            <div class="commitment-icon">✨</div>
+
+            <h3>Propreté et confort</h3>
+
+            <p>
+              Vous voyagez dans un véhicule entretenu, propre et adapté au
+              transport de quatre passagers.
+            </p>
+
+          </article>
+
+          <article class="commitment-card">
+
+            <div class="commitment-icon">🤝</div>
+
+            <h3>Courtoisie et discrétion</h3>
+
+            <p>
+              Une prise en charge professionnelle pour les clients
+              particuliers comme pour les déplacements d’entreprise.
+            </p>
+
+          </article>
+
+          <article class="commitment-card">
+
+            <div class="commitment-icon">💳</div>
+
+            <h3>Paiement simplifié</h3>
+
+            <p>
+              Réglez par carte bancaire à bord, en espèces ou grâce à un lien
+              de paiement sécurisé.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Différence taxi et VTC -->
+    <section class="content-section taxi-section">
+      <div class="container">
+
+        <div class="taxi-layout">
+
+          <div class="taxi-content">
+
+            <span class="section-label">
+              Alternative au taxi à Perpignan
+            </span>
+
+            <h2>Un service VTC réservé à l’avance</h2>
+
+            <p>
+              Un taxi peut notamment attendre sur une station ou prendre un
+              client sans réservation préalable. Un
+              <strong>chauffeur VTC doit obligatoirement être réservé avant la
+              prise en charge</strong>.
+            </p>
+
+            <p>
+              Avec OuassVTC, vous transmettez votre adresse de départ, votre
+              destination, la date et l’heure souhaitées. La disponibilité et
+              le prix sont ensuite confirmés.
+            </p>
+
+            <p>
+              Cette organisation fait de OuassVTC une
+              <strong>alternative pratique au taxi à Perpignan</strong>,
+              notamment pour un transfert vers la gare, un aéroport, un
+              rendez-vous professionnel ou une longue distance.
+            </p>
+
+            <a href="faq.html" class="button button-white">
+              Voir la FAQ taxi ou VTC
+            </a>
+
+          </div>
+
+          <div class="taxi-card">
+
+            <h3>Pourquoi réserver OuassVTC ?</h3>
+
+            <div class="taxi-points">
+
+              <div class="taxi-point">
+                <span class="check">✓</span>
+                <span>Prix communiqué avant votre confirmation</span>
+              </div>
+
+              <div class="taxi-point">
+                <span class="check">✓</span>
+                <span>Prise en charge organisée à l’avance</span>
+              </div>
+
+              <div class="taxi-point">
+                <span class="check">✓</span>
+                <span>Réservation directe par téléphone ou WhatsApp</span>
+              </div>
+
+              <div class="taxi-point">
+                <span class="check">✓</span>
+                <span>Trajets locaux et longues distances</span>
+              </div>
+
+              <div class="taxi-point">
+                <span class="check">✓</span>
+                <span>Jusqu’à quatre passagers</span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Types de trajets -->
+    <section class="content-section">
+      <div class="container">
+
+        <div class="section-heading">
+
+          <span class="section-label">
+            Nos déplacements
+          </span>
+
+          <h2>Pour quels trajets réserver OuassVTC ?</h2>
+
+          <p>
+            Votre chauffeur vous accompagne pour vos déplacements locaux,
+            professionnels, touristiques et longue distance.
+          </p>
+
+        </div>
+
+        <div class="journeys-grid">
+
+          <article class="journey-card">
+            <span>🚉</span>
+            <h3>Gares</h3>
+            <p>Transferts vers ou depuis la gare de Perpignan.</p>
+          </article>
+
+          <article class="journey-card">
+            <span>✈️</span>
+            <h3>Aéroports</h3>
+            <p>Perpignan, Gérone, Barcelone, Béziers et Montpellier.</p>
+          </article>
+
+          <article class="journey-card">
+            <span>📍</span>
+            <h3>Trajets locaux</h3>
+            <p>Déplacements à Perpignan et dans les communes du 66.</p>
+          </article>
+
+          <article class="journey-card">
+            <span>🛣️</span>
+            <h3>Longues distances</h3>
+            <p>Trajets sur réservation en France ou vers l’Espagne.</p>
+          </article>
+
+        </div>
+
+        <div class="zones">
+          <span class="zone">Perpignan</span>
+          <span class="zone">Canet-en-Roussillon</span>
+          <span class="zone">Saint-Estève</span>
+          <span class="zone">Cabestany</span>
+          <span class="zone">Argelès-sur-Mer</span>
+          <span class="zone">Saint-Cyprien</span>
+          <span class="zone">Le Barcarès</span>
+          <span class="zone">Rivesaltes</span>
+          <span class="zone">Pyrénées-Orientales</span>
+          <span class="zone">Gérone</span>
+          <span class="zone">Barcelone</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Réservation -->
+    <section class="booking-section">
+      <div class="container">
+
+        <div class="booking-box">
+
+          <div class="booking-text">
+
+            <h2>Organisez votre prochain déplacement</h2>
+
+            <p>
+              Estimez votre tarif depuis le site ou contactez directement
+              OuassVTC pour vérifier la disponibilité de votre chauffeur à
+              Perpignan.
+            </p>
+
+          </div>
+
+          <div class="booking-buttons">
+
+            <a
+              href="index.html#formResa"
+              class="button button-black"
+            >
+              Estimer mon trajet
+            </a>
+
+            <a
+              href="https://wa.me/33644120784"
+              target="_blank"
+              rel="noopener"
+              class="button button-whatsapp"
+            >
+              Envoyer sur WhatsApp
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
   </main>
+
+  <!-- Pied de page -->
+  <footer>
+    <div class="container footer-content">
+
+      <p>
+        © 2026 OuassVTC – Chauffeur VTC à Perpignan.
+        Tous droits réservés.
+      </p>
+
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="services.html">Nos services</a>
+        <a href="faq.html">FAQ</a>
+        <a href="tel:0644120784">06 44 12 07 84</a>
+      </div>
+
+    </div>
+  </footer>
 
   <!-- Boutons fixes -->
   <div class="floating-buttons">
-    <a href="index.html">⬅️ Accueil</a>
+    <a href="index.html">← Accueil</a>
     <a href="tel:0644120784">📞 Appeler</a>
     <a href="index.html#formResa">📅 Réserver</a>
   </div>
-
-  <footer>© 2025 OuassVTC - Tous droits réservés.</footer>
 
 </body>
 </html>
