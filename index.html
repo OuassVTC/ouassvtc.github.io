@@ -84,13 +84,13 @@
 
   <link
     rel="icon"
-    href="/vtc-perpignan.png"
+    href="/ouassvtc-app.png"
     type="image/png"
   >
 
   <link
     rel="apple-touch-icon"
-    href="/vtc-perpignan.png"
+    href="/ouassvtc-app.png"
   >
 
   <link
@@ -584,6 +584,14 @@
       margin-top:24px;
     }
 
+    #btnSubmit{
+      display:none;
+    }
+
+    #btnSubmit.is-visible{
+      display:flex;
+    }
+
     .btn{
       width:100%;
       min-height:54px;
@@ -860,6 +868,68 @@
       gap:10px;
       max-width:650px;
       margin:auto;
+    }
+
+    /* =========================
+       INSTALLATION APPLICATION
+    ========================= */
+
+    .app-install-section{
+      padding:0 0 65px;
+    }
+
+    .app-install-card{
+      background:#000;
+      color:#fff;
+      border-radius:26px;
+      padding:38px 32px;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:22px;
+    }
+
+    .app-install-icon{
+      width:76px;
+      height:76px;
+      border-radius:19px;
+      background:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border:1px solid #292929;
+    }
+
+    .app-install-icon img{
+      width:64px;
+      height:64px;
+      object-fit:contain;
+    }
+
+    .app-install-content h2{
+      font-size:clamp(24px,4vw,34px);
+      line-height:1.1;
+      letter-spacing:-.8px;
+    }
+
+    .app-install-content p{
+      color:#bbb;
+      margin-top:8px;
+      font-size:15px;
+    }
+
+    .app-install-button{
+      min-height:54px;
+      padding:0 21px;
+      border:0;
+      border-radius:12px;
+      background:#fff;
+      color:#000;
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
     }
 
     /* =========================
@@ -1333,6 +1403,20 @@
     }
 
     @media (max-width:700px){
+
+      .app-install-card{
+        grid-template-columns:1fr;
+        text-align:center;
+        padding:30px 22px;
+      }
+
+      .app-install-icon{
+        margin:auto;
+      }
+
+      .app-install-button{
+        width:100%;
+      }
 
       #topnav{
         justify-content:flex-start;
@@ -1882,7 +1966,7 @@
             class="btn"
             id="btnSubmit"
           >
-            Réserver maintenant
+            Envoyer ma demande de réservation
           </button>
 
         </div>
@@ -2167,6 +2251,40 @@
         </a>
 
       </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       INSTALLER L'APPLICATION
+  ========================= -->
+
+  <section class="container app-install-section">
+
+    <div class="app-install-card">
+
+      <div class="app-install-icon">
+        <img
+          src="/ouassvtc-app.png"
+          alt="Application OuassVTC"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="app-install-content">
+        <h2>OuassVTC sur votre téléphone.</h2>
+        <p>Estimation et réservation accessibles directement depuis votre écran d’accueil.</p>
+      </div>
+
+      <button
+        type="button"
+        class="app-install-button"
+        id="btnInstallBottom"
+      >
+        Installer l’application
+      </button>
 
     </div>
 
@@ -2740,6 +2858,41 @@ function ouvrirCalendrier(){
 
   const maintenant =
     new Date();
+
+
+  if(!selectedCalendarDate){
+
+    const prochaineHeure =
+      new Date(
+        maintenant
+      );
+
+
+    prochaineHeure.setSeconds(
+      0,
+      0
+    );
+
+
+    const minutesArrondies =
+      Math.ceil(
+        prochaineHeure.getMinutes()
+        /
+        15
+      )
+      *
+      15;
+
+
+    prochaineHeure.setMinutes(
+      minutesArrondies
+    );
+
+
+    selectedCalendarDate =
+      prochaineHeure;
+
+  }
 
 
   if(selectedCalendarDate){
@@ -3533,6 +3686,28 @@ async function validerCalendrierEtEstimer(){
 
   await calculerEstimation();
 
+
+  afficherBoutonDemande();
+
+}
+
+
+function afficherBoutonDemande(){
+
+  const bouton =
+    document.getElementById(
+      "btnSubmit"
+    );
+
+
+  if(bouton){
+
+    bouton.classList.add(
+      "is-visible"
+    );
+
+  }
+
 }
 
 
@@ -3924,7 +4099,7 @@ async function envoyerFormulaire(
 
 
   const texteOriginal =
-    "Réserver maintenant";
+    "Envoyer ma demande de réservation";
 
 
   btn.disabled =
@@ -4047,6 +4222,11 @@ async function envoyerFormulaire(
 
     selectedCalendarDate =
       null;
+
+
+    btn.classList.remove(
+      "is-visible"
+    );
 
 
     btn.disabled =
@@ -4391,7 +4571,89 @@ document.addEventListener(
 
       champDate.addEventListener(
         "focus",
-        mettreAJourDateMinimum
+        () => {
+
+          mettreAJourDateMinimum();
+
+
+          if(!champDate.value){
+
+            const maintenant =
+              new Date();
+
+
+            maintenant.setSeconds(
+              0,
+              0
+            );
+
+
+            maintenant.setMinutes(
+              Math.ceil(
+                maintenant.getMinutes()
+                /
+                15
+              )
+              *
+              15
+            );
+
+
+            const annee =
+              maintenant.getFullYear();
+
+
+            const mois =
+              String(
+                maintenant.getMonth()
+                +
+                1
+              )
+              .padStart(
+                2,
+                "0"
+              );
+
+
+            const jour =
+              String(
+                maintenant.getDate()
+              )
+              .padStart(
+                2,
+                "0"
+              );
+
+
+            const heure =
+              String(
+                maintenant.getHours()
+              )
+              .padStart(
+                2,
+                "0"
+              );
+
+
+            const minute =
+              String(
+                maintenant.getMinutes()
+              )
+              .padStart(
+                2,
+                "0"
+              );
+
+
+            champDate.value =
+              `${annee}-${mois}-${jour}T${heure}:${minute}`;
+
+
+            synchroniserCalendrierDepuisFormulaire();
+
+          }
+
+        }
       );
 
 
@@ -4405,6 +4667,48 @@ document.addEventListener(
       );
 
     }
+
+
+    [
+      "depart",
+      "arrivee",
+      "dateheure"
+    ].forEach(
+      id => {
+
+        const champ =
+          document.getElementById(
+            id
+          );
+
+
+        if(champ){
+
+          champ.addEventListener(
+            "input",
+            () => {
+
+              const bouton =
+                document.getElementById(
+                  "btnSubmit"
+                );
+
+
+              if(bouton){
+
+                bouton.classList.remove(
+                  "is-visible"
+                );
+
+              }
+
+            }
+          );
+
+        }
+
+      }
+    );
 
 
     const homeBtn =
@@ -4442,6 +4746,22 @@ document.addEventListener(
     if(btnInstall){
 
       btnInstall.addEventListener(
+        "click",
+        triggerInstall
+      );
+
+    }
+
+
+    const btnInstallBottom =
+      document.getElementById(
+        "btnInstallBottom"
+      );
+
+
+    if(btnInstallBottom){
+
+      btnInstallBottom.addEventListener(
         "click",
         triggerInstall
       );
