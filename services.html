@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nos services VTC à Perpignan - OuassVTC</title>
-  <meta name="description" content="Découvrez tous les services de OuassVTC à Perpignan : transferts aéroports et gares, trajets locaux ou longue distance, déplacements professionnels et mise à disposition. Réservez 24h/24 au 06 44 12 07 84.">
-  <meta name="keywords" content="VTC Perpignan, chauffeur privé Perpignan, transfert aéroport Perpignan, gare Perpignan, VTC 66, transport Perpignan, OuassVTC">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Services VTC à Perpignan | OuassVTC</title>
+
+  <meta name="description" content="Découvrez les services OuassVTC à Perpignan : gares, aéroports, trajets locaux, longues distances, déplacements professionnels et mise à disposition. Prix fixe communiqué à l’avance.">
+
+  <link rel="canonical" href="https://www.ouassvtc.fr/services.html">
 
   <!-- Données structurées SEO -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Service",
-    "serviceType": "Transport VTC à Perpignan",
+    "name": "Services VTC à Perpignan",
+    "serviceType": "Transport avec chauffeur privé",
+    "areaServed": {
+      "@type": "AdministrativeArea",
+      "name": "Pyrénées-Orientales"
+    },
     "provider": {
       "@type": "LocalBusiness",
       "name": "OuassVTC",
-      "image": "https://www.ouassvtc.fr/ouassvtc.png",
+      "image": "https://www.ouassvtc.fr/vtc-perpignan.png",
       "url": "https://www.ouassvtc.fr",
       "telephone": "+33644120784",
       "email": "contact@ouassvtc.fr",
@@ -25,6 +33,7 @@
         "@type": "PostalAddress",
         "addressLocality": "Perpignan",
         "postalCode": "66000",
+        "addressRegion": "Occitanie",
         "addressCountry": "FR"
       }
     }
@@ -33,99 +42,682 @@
 
   <style>
     :root {
-      --brand: #000;
-      --border: #e5e7eb;
-      --bg: #f5f5f5;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: #333;
-      margin: 0;
-      line-height: 1.6;
-      padding-bottom: 90px; /* espace pour les boutons fixes */
-    }
-    header {
-      background: var(--brand);
-      color: #fff;
-      text-align: center;
-      padding: 24px 16px;
-    }
-    header img {
-      max-height: 90px;
-      height: auto;
-    }
-    main {
-      max-width: 850px;
-      margin: 28px auto;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.08);
-      padding: 28px 20px 60px;
-    }
-    h1, h2 { color: #000; }
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-    }
-    h2 {
-      font-size: 1.2rem;
-      margin-top: 26px;
-      margin-bottom: 8px;
-    }
-    a {
-      color: #000;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    ul {
-      margin-left: 22px;
-      color: #555;
-    }
-    footer {
-      font-size: 13px;
-      text-align: center;
-      padding: 18px 12px 28px;
-      background: #000;
-      color: #fff;
+      --black: #050505;
+      --dark: #111111;
+      --text: #181818;
+      --muted: #666666;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --border: #e8e8e8;
+      --green: #25d366;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
     }
 
-    /* === Boutons fixes === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 92px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    /* En-tête */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(5, 5, 5, 0.97);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo img {
+      width: auto;
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .navigation {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .navigation a {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+    }
+
+    .navigation a:hover {
+      opacity: 0.7;
+    }
+
+    .header-phone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #000000 !important;
+      padding: 12px 18px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* Présentation principale */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,0.14), transparent 24%),
+        linear-gradient(135deg, #050505 0%, #171717 100%);
+      color: #ffffff;
+      padding: 90px 0 100px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -100px;
+      bottom: -180px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      border: 70px solid rgba(255, 255, 255, 0.035);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 750px;
+      margin-bottom: 22px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -2px;
+    }
+
+    .hero p {
+      max-width: 680px;
+      color: #d6d6d6;
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 800;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-white {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .btn-outline {
+      border-color: rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+    }
+
+    .btn-black {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    /* Bandeau avantages */
+    .benefits {
+      position: relative;
+      z-index: 5;
+      margin-top: -38px;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .benefit {
+      padding: 27px 24px;
+      text-align: center;
+    }
+
+    .benefit:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .benefit strong {
+      display: block;
+      margin-bottom: 3px;
+      color: #000000;
+      font-size: 16px;
+    }
+
+    .benefit span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Sections générales */
+    section {
+      padding: 88px 0;
+    }
+
+    .section-light {
+      background: var(--light);
+    }
+
+    .section-heading {
+      max-width: 720px;
+      margin-bottom: 42px;
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: #555555;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      margin-bottom: 15px;
+      color: #000000;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -1.2px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    /* Cartes services */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      position: relative;
+      min-height: 285px;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 30px;
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+    }
+
+    .service-icon {
+      width: 54px;
+      height: 54px;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 16px;
+      font-size: 25px;
+    }
+
+    .service-card h3 {
+      margin-bottom: 12px;
+      color: #000000;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Mise en avant prix fixe */
+    .price-section {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .price-box {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .price-content .section-label {
+      color: #bcbcbc;
+    }
+
+    .price-content h2 {
+      margin-bottom: 20px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+    }
+
+    .price-content p {
+      max-width: 650px;
+      color: #c9c9c9;
+      font-size: 17px;
+    }
+
+    .price-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .price-point {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .check {
+      width: 27px;
+      height: 27px;
+      flex: 0 0 27px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 50%;
+      font-size: 14px;
+    }
+
+    .price-action {
+      background: #ffffff;
+      color: #000000;
+      border-radius: 24px;
+      padding: 35px;
+    }
+
+    .price-action h3 {
+      margin-bottom: 10px;
+      font-size: 25px;
+      line-height: 1.2;
+    }
+
+    .price-action p {
+      margin-bottom: 22px;
+      color: #666666;
+      font-size: 15px;
+    }
+
+    .price-action .btn {
+      width: 100%;
+    }
+
+    /* Paiement */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .payment-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 22px;
+      text-align: center;
+    }
+
+    .payment-card span {
+      display: block;
+      margin-bottom: 13px;
+      font-size: 31px;
+    }
+
+    .payment-card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #000000;
+      font-size: 17px;
+    }
+
+    .payment-card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Zones */
+    .zones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .zone {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 11px 17px;
+      color: #333333;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* Réservation */
+    .booking-banner {
+      padding-top: 0;
+    }
+
+    .booking-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 35px;
+      background: var(--light);
+      border-radius: 28px;
+      padding: 48px;
+    }
+
+    .booking-box h2 {
+      margin-bottom: 10px;
+      color: #000000;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+    }
+
+    .booking-box p {
+      max-width: 620px;
+      color: var(--muted);
+    }
+
+    .booking-buttons {
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 230px;
+      gap: 10px;
+    }
+
+    .booking-buttons .btn {
+      width: 100%;
+    }
+
+    .whatsapp-button {
+      background: var(--green);
+      color: #ffffff;
+    }
+
+    /* Pied de page */
+    footer {
+      background: #000000;
+      color: #ffffff;
+      padding: 42px 0 115px;
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .footer-content p {
+      color: #a9a9a9;
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .footer-links a {
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Boutons fixes */
     .floating-buttons {
       position: fixed;
-      bottom: 15px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      gap: 10px;
-      padding: 8px 10px;
-      z-index: 999;
-    }
-    .floating-buttons a {
-      flex: 1;
-      text-align: center;
-      background: var(--brand);
-      color: #fff;
-      font-weight: 700;
+      bottom: 14px;
+      left: 50%;
+      z-index: 1100;
+      width: min(660px, calc(100% - 20px));
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 999px;
-      padding: 14px 10px;
-      text-decoration: none;
-      font-size: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      transition: transform .2s, opacity .2s;
-    }
-    .floating-buttons a:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+      transform: translateX(-50%);
+      backdrop-filter: blur(12px);
     }
 
-    @media (max-width:600px){
+    .floating-buttons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      background: #000000;
+      color: #ffffff;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+    }
+
+    .floating-buttons a:hover {
+      transform: translateY(-2px);
+      opacity: 0.86;
+    }
+
+    /* Tablettes */
+    @media (max-width: 850px) {
+      .navigation a:not(.header-phone) {
+        display: none;
+      }
+
+      .hero {
+        padding: 70px 0 90px;
+      }
+
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .benefit:not(:last-child) {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .price-box {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-box {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .booking-buttons {
+        width: 100%;
+        flex: auto;
+      }
+    }
+
+    /* Mobiles */
+    @media (max-width: 650px) {
+      body {
+        padding-bottom: 84px;
+      }
+
+      .container {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .navbar {
+        min-height: 72px;
+      }
+
+      .logo img {
+        height: 50px;
+      }
+
+      .header-phone {
+        padding: 10px 14px;
+        font-size: 13px !important;
+      }
+
+      .hero {
+        padding: 58px 0 82px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.2px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .btn {
+        width: 100%;
+      }
+
+      section {
+        padding: 65px 0;
+      }
+
+      .section-heading {
+        margin-bottom: 30px;
+      }
+
+      .services-grid,
+      .payment-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .service-card {
+        min-height: auto;
+        padding: 25px;
+      }
+
+      .service-icon {
+        margin-bottom: 22px;
+      }
+
+      .price-action,
+      .booking-box {
+        padding: 28px 22px;
+      }
+
+      .footer-content {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .floating-buttons {
+        bottom: 8px;
+        width: calc(100% - 12px);
+        gap: 5px;
+        padding: 6px;
+      }
+
       .floating-buttons a {
-        font-size: 14px;
-        padding: 12px 8px;
+        min-height: 47px;
+        padding: 0 7px;
+        font-size: 12px;
       }
     }
   </style>
@@ -133,96 +725,328 @@
 
 <body>
 
+  <!-- En-tête -->
   <header>
-    <img src="vtc-perpignan.png" alt="OuassVTC - Chauffeur VTC à Perpignan">
+    <div class="container navbar">
+      <a class="logo" href="index.html" aria-label="Retour à l’accueil OuassVTC">
+        <img src="vtc-perpignan.png" alt="OuassVTC, chauffeur VTC à Perpignan">
+      </a>
+
+      <nav class="navigation" aria-label="Navigation principale">
+        <a href="index.html">Accueil</a>
+        <a href="index.html#formResa">Estimer un trajet</a>
+        <a href="tel:0644120784" class="header-phone">
+          📞 06 44 12 07 84
+        </a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <h1>Nos services VTC à Perpignan</h1>
 
-    <p>Bienvenue chez <strong>OuassVTC</strong>, votre service de <strong>chauffeur VTC à Perpignan</strong> et dans tout le département des <strong>Pyrénées-Orientales (66)</strong>.
-      Nous assurons vos déplacements privés, professionnels ou touristiques, dans les meilleures conditions de confort et de ponctualité.
-    </p>
-    <p>Que vous soyez un habitant du 66, un voyageur de passage ou un professionnel en déplacement,
-      <strong>OuassVTC</strong> vous propose des trajets sur mesure, disponibles <strong>24h/24 et 7j/7</strong>,
-      à un tarif fixe connu à l’avance. Notre mission : vous transporter en toute sérénité, sans attente ni stress.
-    </p>
+    <!-- Présentation -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <span class="eyebrow">Chauffeur privé à Perpignan</span>
 
-    <h2>🚖 Transferts aéroports & gares</h2>
-    <p>
-      Besoin d’un transfert vers ou depuis un aéroport ou une gare ? OuassVTC vous conduit vers :
-      <strong>Perpignan</strong>, <strong>Béziers</strong>, <strong>Gérone</strong>, <strong>Barcelone</strong>, <strong>Toulouse</strong> ou <strong>Montpellier</strong>.
-    </p>
-    <p>
-      Votre chauffeur suit les horaires de votre vol ou train en temps réel.
-      Pas d’attente inutile, pas de surprise — un trajet fluide et confortable.
-    </p>
-    <p>
-      👉 <strong>Réservez dès maintenant</strong> au <a href="tel:0644120784">06 44 12 07 84</a> ou par
-      <a href="https://wa.me/33644120784" target="_blank" rel="noopener">WhatsApp</a>.
-    </p>
+          <h1>Un service VTC adapté à tous vos déplacements</h1>
 
-    <h2>🕐 Mise à disposition à l’heure ou à la journée</h2>
-    <p>
-      Vous avez plusieurs déplacements ? Profitez d’un chauffeur à disposition pour vos
-      <strong>rendez-vous, mariages, événements ou visites</strong>.
-      Un service flexible, confortable et professionnel.
-    </p>
+          <p>
+            Gare, aéroport, trajet local, longue distance ou déplacement
+            professionnel : voyagez confortablement avec un prix fixe communiqué
+            avant votre départ.
+          </p>
 
-    <h2>📍 Trajets locaux & longues distances</h2>
-    <p>
-      Déplacements à <strong>Perpignan</strong>, <strong>Canet</strong>, <strong>Saint-Estève</strong>,
-      <strong>Argelès</strong>, <strong>Le Barcarès</strong>, <strong>Toulouges</strong>…
-      mais aussi <strong>Barcelone</strong>, <strong>Gérone</strong>, <strong>Montpellier</strong>.
-    </p>
-    <p>Tarifs <strong>fixes, transparents</strong> et sans frais cachés.</p>
+          <div class="hero-buttons">
+            <a href="index.html#formResa" class="btn btn-white">
+              Estimer mon tarif
+            </a>
 
-    <h2>💼 Déplacements professionnels</h2>
-    <p>
-      Service dédié aux <strong>entreprises, hôtels et administrations</strong> :
-      transferts clients, séminaires, trajets réguliers. Ponctualité et discrétion garanties.
-    </p>
+            <a href="tel:0644120784" class="btn btn-outline">
+              Appeler immédiatement
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h2>💳 Paiement simplifié</h2>
-    <ul>
-      <li>💳 Carte bancaire à bord</li>
-      <li>🔗 Lien de paiement sécurisé</li>
-      <li>💶 Espèces acceptées</li>
-    </ul>
-    <p>Prix connu à l’avance, sans surprise.</p>
+    <!-- Avantages -->
+    <div class="benefits">
+      <div class="container">
+        <div class="benefits-grid">
 
-    <h2>📞 Réserver un VTC à Perpignan</h2>
-    <ul>
-      <li>📱 <strong>Téléphone :</strong> <a href="tel:0644120784">06 44 12 07 84</a></li>
-      <li>💬 <strong>WhatsApp :</strong> <a href="https://wa.me/33644120784" target="_blank">Envoyer un message</a></li>
-      <li>📧 <strong>Email :</strong> <a href="mailto:contact@ouassvtc.fr">contact@ouassvtc.fr</a></li>
-    </ul>
+          <div class="benefit">
+            <strong>Prix fixe à l’avance</strong>
+            <span>Votre tarif est annoncé avant le trajet</span>
+          </div>
 
-    <h2>🌍 Zones desservies</h2>
-    <ul>
-      <li>Perpignan</li>
-      <li>Saint-Estève</li>
-      <li>Canet-en-Roussillon</li>
-      <li>Argelès-sur-Mer</li>
-      <li>Le Barcarès</li>
-      <li>Toulouges</li>
-      <li>Et tout le département des Pyrénées-Orientales</li>
-    </ul>
+          <div class="benefit">
+            <strong>Réservation rapide</strong>
+            <span>En ligne, par téléphone ou WhatsApp</span>
+          </div>
 
-    <h2>🚗 Votre satisfaction, notre priorité</h2>
-    <p>Avec OuassVTC, chaque trajet est effectué avec confort, sécurité et courtoisie.</p>
-    <p><strong>OuassVTC – votre chauffeur VTC à Perpignan, disponible 24h/24.</strong></p>
+          <div class="benefit">
+            <strong>Jusqu’à 4 passagers</strong>
+            <span>Voyagez confortablement et sereinement</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <section>
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="section-label">Les services OuassVTC</span>
+
+          <h2>Votre chauffeur pour chaque occasion</h2>
+
+          <p>
+            OuassVTC assure vos déplacements privés, professionnels et
+            touristiques au départ ou à destination de Perpignan et des
+            Pyrénées-Orientales.
+          </p>
+        </div>
+
+        <div class="services-grid">
+
+          <article class="service-card">
+            <div class="service-icon">✈️</div>
+
+            <h3>Transferts gares et aéroports</h3>
+
+            <p>
+              Transferts vers ou depuis la gare de Perpignan et les aéroports de
+              Perpignan, Gérone, Barcelone, Béziers, Montpellier ou Toulouse.
+              Votre prise en charge est organisée selon l’horaire communiqué.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">📍</div>
+
+            <h3>Trajets locaux et longues distances</h3>
+
+            <p>
+              Déplacez-vous à Perpignan, Canet-en-Roussillon, Saint-Estève,
+              Argelès-sur-Mer, Le Barcarès et partout dans le département.
+              Les longues distances sont également possibles sur réservation.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">💼</div>
+
+            <h3>Déplacements professionnels</h3>
+
+            <p>
+              Une solution adaptée aux entreprises, hôtels et professionnels :
+              rendez-vous, transferts de clients, séminaires ou déplacements
+              réguliers avec ponctualité et discrétion.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">🕐</div>
+
+            <h3>Mise à disposition</h3>
+
+            <p>
+              Réservez votre chauffeur à l’heure ou pour une durée déterminée
+              lors d’un mariage, d’un événement, d’une visite touristique ou
+              d’une succession de rendez-vous.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Prix fixe -->
+    <section class="price-section">
+      <div class="container price-box">
+
+        <div class="price-content">
+          <span class="section-label">Simple et transparent</span>
+
+          <h2>Le prix de votre trajet est communiqué à l’avance</h2>
+
+          <p>
+            Vous connaissez le montant prévu avant de confirmer votre
+            réservation. Vous pouvez ainsi organiser votre déplacement sans
+            mauvaise surprise.
+          </p>
+
+          <div class="price-points">
+
+            <div class="price-point">
+              <span class="check">✓</span>
+              <span>Estimation rapide depuis le site</span>
+            </div>
+
+            <div class="price-point">
+              <span class="check">✓</span>
+              <span>Tarif communiqué avant confirmation</span>
+            </div>
+
+            <div class="price-point">
+              <span class="check">✓</span>
+              <span>Réservation simple en quelques clics</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="price-action">
+          <h3>Vous avez un trajet à prévoir ?</h3>
+
+          <p>
+            Indiquez votre adresse de départ et votre destination pour obtenir
+            immédiatement une estimation.
+          </p>
+
+          <a href="index.html#formResa" class="btn btn-black">
+            Estimer mon trajet
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Paiements -->
+    <section class="section-light">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="section-label">Paiement simplifié</span>
+
+          <h2>Choisissez votre moyen de paiement</h2>
+
+          <p>
+            Plusieurs solutions sont disponibles pour régler votre trajet
+            facilement.
+          </p>
+        </div>
+
+        <div class="payment-grid">
+
+          <div class="payment-card">
+            <span>💳</span>
+            <strong>Carte bancaire</strong>
+            <p>Paiement directement à bord du véhicule.</p>
+          </div>
+
+          <div class="payment-card">
+            <span>🔗</span>
+            <strong>Lien sécurisé</strong>
+            <p>Réglez à distance grâce à un lien de paiement.</p>
+          </div>
+
+          <div class="payment-card">
+            <span>💶</span>
+            <strong>Espèces</strong>
+            <p>Le règlement en espèces est également accepté.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Zones desservies -->
+    <section>
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="section-label">Pyrénées-Orientales</span>
+
+          <h2>Une prise en charge proche de chez vous</h2>
+
+          <p>
+            OuassVTC intervient à Perpignan et dans les communes environnantes,
+            sur réservation.
+          </p>
+        </div>
+
+        <div class="zones">
+          <span class="zone">Perpignan</span>
+          <span class="zone">Canet-en-Roussillon</span>
+          <span class="zone">Saint-Estève</span>
+          <span class="zone">Cabestany</span>
+          <span class="zone">Argelès-sur-Mer</span>
+          <span class="zone">Saint-Cyprien</span>
+          <span class="zone">Le Barcarès</span>
+          <span class="zone">Rivesaltes</span>
+          <span class="zone">Saleilles</span>
+          <span class="zone">Le Soler</span>
+          <span class="zone">Toulouges</span>
+          <span class="zone">Pyrénées-Orientales</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Réservation -->
+    <section class="booking-banner">
+      <div class="container">
+
+        <div class="booking-box">
+
+          <div>
+            <h2>Réservez votre VTC à Perpignan</h2>
+
+            <p>
+              Obtenez votre estimation en ligne ou contactez directement
+              OuassVTC pour organiser votre prochain déplacement.
+            </p>
+          </div>
+
+          <div class="booking-buttons">
+            <a href="index.html#formResa" class="btn btn-black">
+              Réserver en ligne
+            </a>
+
+            <a
+              href="https://wa.me/33644120784"
+              target="_blank"
+              rel="noopener"
+              class="btn whatsapp-button"
+            >
+              WhatsApp
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
   </main>
 
+  <!-- Pied de page -->
   <footer>
-    © 2025 OuassVTC - Tous droits réservés.
+    <div class="container footer-content">
+
+      <p>
+        © 2026 OuassVTC – Chauffeur VTC à Perpignan.
+        Tous droits réservés.
+      </p>
+
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="tel:0644120784">06 44 12 07 84</a>
+        <a href="mailto:contact@ouassvtc.fr">Contact</a>
+      </div>
+
+    </div>
   </footer>
 
-  <!-- === Boutons fixes === -->
+  <!-- Boutons fixes -->
   <div class="floating-buttons">
-    <a href="index.html">⬅️ Accueil</a>
-    <a href="tel:0644120784">📞 Appeler</a>
-    <a href="index.html#formResa">📅 Réserver</a>
+    <a href="index.html">⌂ Accueil</a>
+    <a href="tel:0644120784">☎ Appeler</a>
+    <a href="index.html#formResa">Estimer</a>
   </div>
 
 </body>
