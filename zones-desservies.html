@@ -355,6 +355,25 @@ footer {
 }
 
 @media(max-width:760px) {
+  nav {
+    justify-content:flex-start;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-left:14px;
+    padding-right:14px;
+    scroll-padding-left:14px;
+    scroll-snap-type:x proximity;
+  }
+
+  nav::-webkit-scrollbar {
+    display:none;
+  }
+
+  nav a {
+    font-size:12px;
+    scroll-snap-align:start;
+  }
+
   .hero {
     padding:48px 0 42px;
   }
@@ -416,7 +435,6 @@ footer {
 </header>
 
 <nav aria-label="Navigation principale">
-  <a href="/">Accueil</a>
   <a href="/vtc-pyrenees-orientales.html">VTC Pyrénées-Orientales</a>
   <a href="/services.html">Services</a>
   <a href="/zones-desservies.html">Zones desservies</a>
@@ -694,6 +712,18 @@ footer {
     Estimer et réserver →
   </a>
 </div>
+
+<script>
+  function remettreMenuAuDebut() {
+    const menu = document.querySelector('nav[aria-label="Navigation principale"]');
+    if (menu) {
+      menu.scrollLeft = 0;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', remettreMenuAuDebut);
+  window.addEventListener('pageshow', remettreMenuAuDebut);
+</script>
 
 </body>
 </html>
