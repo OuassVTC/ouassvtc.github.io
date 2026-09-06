@@ -533,27 +533,18 @@
       </section>
 
       <section class="tab-panel hidden" id="estimatePanel">
-        <h2 class="section-title">Simulateur de tarif</h2>
-        <div class="simulator" style="margin-bottom:16px">
-          <div class="eyebrow">Calcul rapide avec votre GPS</div>
-          <h3 style="font-size:22px;margin-bottom:14px">Estimation au kilomètre</h3>
-          <div class="sim-field"><label for="quickKm">Distance indiquée par le GPS</label><input id="quickKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
-          <div class="sim-field" style="margin-top:12px"><label for="quickFarePhone">Téléphone du client <span style="font-weight:500;color:var(--muted)">(facultatif)</span></label><input id="quickFarePhone" type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-          <button class="primary" id="calculateQuickFare" type="button" style="margin-top:14px">Calculer avec l’heure actuelle</button>
-          <div class="sim-result hidden" id="quickResult"><strong id="quickPrice">—</strong><span id="quickDetails"></span></div>
-        </div>
-        <h3 style="font-size:20px;margin:20px 0 12px">Estimation avec les adresses</h3>
-        <div class="simulator">
-          <div class="simulator-grid">
-            <div class="sim-field full"><label for="simPickup">Adresse de départ</label><input id="simPickup" autocomplete="off" placeholder="Saisir le départ"></div>
-            <div class="sim-field full"><label for="simDestination">Adresse d’arrivée</label><input id="simDestination" autocomplete="off" placeholder="Saisir l’arrivée"></div>
-            <div class="sim-field full"><label for="simPhone">Téléphone du client <span style="font-weight:500;color:var(--muted)">(facultatif)</span></label><input id="simPhone" type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-            <div class="sim-field"><label for="simDate">Date</label><input id="simDate" type="date"></div>
-            <div class="sim-field"><label for="simTime">Heure</label><input id="simTime" type="time"></div>
+        <h2 class="section-title">Course rapide</h2>
+        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
+          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
+          <div class="simulator-grid" style="margin-top:14px">
+            <div class="sim-field"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
+            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 €"></div>
+            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
           </div>
-          <button class="primary" id="simulateFare" type="button" style="margin-top:14px">Calculer le tarif</button>
-          <div class="sim-result hidden" id="simResult"><strong id="simPrice">—</strong><span id="simDetails"></span><button class="primary" id="createFromEstimate" type="button" style="margin-top:14px;background:#fff;color:#000">Créer cette course</button></div>
-        </div>
+          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
+          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
+        </form>
+
         <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid single-column-form">
@@ -580,18 +571,6 @@
           <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
         </section>
         <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
-
-        <h2 class="section-title" style="margin-top:28px">Course rapide</h2>
-        <form class="simulator" id="quickBookingForm" style="margin-bottom:20px">
-          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
-          <div class="simulator-grid" style="margin-top:14px">
-            <div class="sim-field"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 €"></div>
-            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
-          </div>
-          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
-          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
-        </form>
       </section>
     </section>
   </main>
@@ -1439,8 +1418,6 @@
         render();
       }
     }, 60000);
-    $("simDate").value = localDate.toISOString().slice(0, 10);
-    $("simTime").value = localDate.toISOString().slice(11, 16);
     $("driverDateTime").value = localDate.toISOString().slice(0, 16);
 
     let driverDirectionsService = null;
@@ -1487,8 +1464,6 @@
 
     loadGoogleMaps().then(() => {
       driverDirectionsService = new google.maps.DirectionsService();
-      createAddressAutocomplete($("simPickup"));
-      createAddressAutocomplete($("simDestination"));
       const driverPickupAutocomplete = createAddressAutocomplete($("driverPickup"));
       createAddressAutocomplete($("driverDestination"));
       driverPickupAutocomplete.addListener("place_changed", () => {
@@ -1619,66 +1594,6 @@
         });
       });
     }
-
-    $("calculateQuickFare").addEventListener("click", () => {
-      const distance = $("quickKm").valueAsNumber;
-      if (!Number.isFinite(distance) || distance < 0) {
-        alert("Indiquez le nombre de kilomètres affiché par votre GPS.");
-        return;
-      }
-      const now = new Date();
-      const rate = driverRate(now);
-      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-      const price = Math.round(rawPrice / 5) * 5;
-      const optionalPhone = $("quickFarePhone").value.trim();
-      if (optionalPhone) $("driverPhone").value = optionalPhone;
-      $("quickPrice").textContent = `${price} €`;
-      $("quickDetails").textContent = `${distance.toFixed(1)} km · ${rate.label} · calculé à ${now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
-      $("quickResult").classList.remove("hidden");
-    });
-
-    $("simulateFare").addEventListener("click", () => {
-      const origin = $("simPickup").value.trim();
-      const destination = $("simDestination").value.trim();
-      const tripDate = new Date(`${$("simDate").value}T${$("simTime").value}`);
-      if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
-        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
-        return;
-      }
-      if (!driverDirectionsService) {
-        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
-        return;
-      }
-      const button = $("simulateFare");
-      button.disabled = true;
-      button.textContent = "Calcul en cours…";
-      driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
-        button.disabled = false;
-        button.textContent = "Calculer le tarif";
-        if (status !== "OK") {
-          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
-          return;
-        }
-        const leg = result.routes[0].legs[0];
-        const distance = leg.distance.value / 1000;
-        const rate = driverRate(tripDate);
-        const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-        const price = Math.round(rawPrice / 5) * 5;
-        $("simPrice").textContent = `${price} €`;
-        $("simDetails").textContent = `${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`;
-        $("simResult").classList.remove("hidden");
-      });
-    });
-
-    $("createFromEstimate").addEventListener("click", () => {
-      $("driverPickup").value = $("simPickup").value.trim();
-      $("driverDestination").value = $("simDestination").value.trim();
-      $("driverPhone").value = $("simPhone").value.trim();
-      $("driverDateTime").value = `${$("simDate").value}T${$("simTime").value}`;
-      $("driverPrice").value = $("simPrice").textContent.trim();
-      $("driverName").focus();
-      $("driverName").scrollIntoView({ behavior: "smooth", block: "center" });
-    });
 
     $("estimateDriverBooking").addEventListener("click", () => {
       const origin = $("driverPickup").value.trim();
