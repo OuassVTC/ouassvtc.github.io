@@ -415,8 +415,8 @@
   <header class="topbar">
     <div class="topbar-inner">
       <div class="header-left">
-        <button class="icon-button menu-button hidden" id="openMenu" type="button" aria-label="Ouvrir le menu">☰</button>
-        <button class="brand" id="manualSync" type="button" aria-label="Actualiser l’application" title="Actualiser">
+        <button class="icon-button menu-button hidden" id="openMenu" type="button" aria-label="Ouvrir le menu">â˜°</button>
+        <button class="brand" id="manualSync" type="button" aria-label="Actualiser lâ€™application" title="Actualiser">
           <img src="/ouassvtc-app.png" alt="OuassVTC">
           <div>
             <small>Application chauffeur</small>
@@ -428,17 +428,17 @@
 
   <div class="menu-overlay hidden" id="menuOverlay"></div>
   <aside class="side-menu hidden" id="sideMenu" aria-label="Navigation principale">
-    <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">×</button></div>
+    <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">Ã—</button></div>
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
-      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Réservations</button>
+      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">RÃ©servations</button>
       <button class="menu-link" type="button" data-menu-tab="agendaPanel">Agenda complet</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Bilans et historique</button>
       <button class="menu-link" type="button" data-menu-tab="estimatePanel">Estimer une course</button>
       <button class="menu-link" type="button" data-menu-tab="newBookingPanel">Nouvelle course</button>
       <button class="menu-link" id="enableNotifications" type="button">Activer les notifications</button>
     </nav>
-    <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
+    <button class="menu-logout hidden" id="logout" type="button"><span>â†ª</span><span>DÃ©connexion</span></button>
   </aside>
 
   <main class="container">
@@ -446,7 +446,7 @@
       <div class="login-card">
         <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
         <h1>OuassVTC</h1>
-        <p>Ouverture sécurisée de votre espace chauffeur…</p>
+        <p>Ouverture sÃ©curisÃ©e de votre espace chauffeurâ€¦</p>
       </div>
     </section>
 
@@ -454,7 +454,7 @@
       <div class="login-card">
         <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
         <h1>Votre espace chauffeur.</h1>
-        <p>Connectez-vous avec votre compte Google autorisé pour gérer vos demandes.</p>
+        <p>Connectez-vous avec votre compte Google autorisÃ© pour gÃ©rer vos demandes.</p>
         <button class="primary" id="loginGoogle" type="button">Continuer avec Google</button>
         <p class="login-error hidden" id="loginError"></p>
       </div>
@@ -463,22 +463,22 @@
     <section class="dashboard hidden" id="dashboardView">
       <div class="hello-row">
         <div>
-          <div class="eyebrow">Tableau de bord privé</div>
+          <div class="eyebrow">Tableau de bord privÃ©</div>
           <h1>Bonjour Ouassini.</h1>
         </div>
-        <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
+        <button class="install-button hidden" id="installApp" type="button">Installer lâ€™application</button>
       </div>
 
       <div class="setup-warning hidden" id="setupWarning">
-        Firebase n’est pas encore configuré. L’application est prête, mais elle recevra les demandes après la connexion de la base de données.
+        Firebase nâ€™est pas encore configurÃ©. Lâ€™application est prÃªte, mais elle recevra les demandes aprÃ¨s la connexion de la base de donnÃ©es.
       </div>
 
       <section class="tab-panel" id="dashboardHome">
         <div class="stats">
           <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
-          <button class="stat" type="button" data-daily-status="accepted"><strong id="acceptedCount">0</strong><span>Courses acceptées du jour</span></button>
-          <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
-          <button class="stat" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
+          <button class="stat" type="button" data-daily-status="accepted"><strong id="acceptedCount">0</strong><span>Courses acceptÃ©es du jour</span></button>
+          <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminÃ©es du jour</span></button>
+          <button class="stat" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 â‚¬</strong><span>Chiffre dâ€™affaires du jour</span></button>
         </div>
         <div class="home-actions">
           <button class="home-action" type="button" data-open-tab="estimatePanel">Estimer une course</button>
@@ -487,110 +487,110 @@
         <div class="today-card">
           <h2 class="section-title">Agenda du jour</h2>
           <div class="agenda-items" id="todayAgendaList"></div>
-          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
+          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prÃ©vue aujourdâ€™hui.</div>
         </div>
       </section>
 
       <section class="tab-panel hidden" id="bookingsPanel">
         <div class="toolbar">
           <form class="search-form" id="searchForm">
-            <input class="search" id="search" type="search" placeholder="Nom, téléphone ou adresse">
+            <input class="search" id="search" type="search" placeholder="Nom, tÃ©lÃ©phone ou adresse">
             <button class="search-button" type="submit">Rechercher</button>
           </form>
         </div>
         <h2 class="section-title">Nouvelles demandes</h2>
         <div class="booking-list" id="newRequestList"></div>
         <div class="empty hidden" id="newRequestEmpty">Aucune nouvelle demande.</div>
-        <h2 class="section-title">Réservations acceptées</h2>
+        <h2 class="section-title">RÃ©servations acceptÃ©es</h2>
         <div class="booking-list" id="bookingList"></div>
-        <div class="empty hidden" id="emptyState">Aucune réservation acceptée.</div>
+        <div class="empty hidden" id="emptyState">Aucune rÃ©servation acceptÃ©e.</div>
         <div class="hidden" id="archiveSearchSection">
-          <h2 class="section-title">Archives trouvées</h2>
+          <h2 class="section-title">Archives trouvÃ©es</h2>
           <div class="booking-list" id="archiveSearchList"></div>
         </div>
-        <div class="empty hidden" id="searchNoResults">Aucune course trouvée avec cette recherche.</div>
+        <div class="empty hidden" id="searchNoResults">Aucune course trouvÃ©e avec cette recherche.</div>
       </section>
 
       <section class="tab-panel hidden" id="agendaPanel">
         <h2 class="section-title">Agenda des courses</h2>
         <div id="agendaList"></div>
-        <div class="empty hidden" id="agendaEmpty">Aucune course planifiée.</div>
+        <div class="empty hidden" id="agendaEmpty">Aucune course planifiÃ©e.</div>
       </section>
 
       <section class="tab-panel hidden" id="reportPanel">
-        <h2 class="section-title">Activité chauffeur</h2>
+        <h2 class="section-title">ActivitÃ© chauffeur</h2>
         <div class="report-grid">
-          <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée</span></article>
-          <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
+          <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 â‚¬</strong><span id="weekTrips">0 course terminÃ©e</span></article>
+          <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 â‚¬</strong><span id="monthTrips">0 course terminÃ©e</span></article>
         </div>
         <div class="history-wrap">
           <button class="history-toggle" id="toggleMonthHistory" type="button">Historique des mois</button>
           <div class="history-months hidden" id="monthHistoryList"></div>
         </div>
-        <h2 class="section-title">Courses archivées</h2>
+        <h2 class="section-title">Courses archivÃ©es</h2>
         <div class="archive-list" id="archiveList"></div>
-        <div class="empty hidden" id="archiveEmpty">Aucune course terminée pour le moment.</div>
+        <div class="empty hidden" id="archiveEmpty">Aucune course terminÃ©e pour le moment.</div>
       </section>
 
       <section class="tab-panel hidden" id="estimatePanel">
         <h2 class="section-title">Simulateur de tarif</h2>
         <div class="simulator" style="margin-bottom:16px">
           <div class="eyebrow">Calcul rapide avec votre GPS</div>
-          <h3 style="font-size:22px;margin-bottom:14px">Estimation au kilomètre</h3>
-          <div class="sim-field"><label for="quickKm">Distance indiquée par le GPS</label><input id="quickKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
-          <button class="primary" id="calculateQuickFare" type="button" style="margin-top:14px">Calculer avec l’heure actuelle</button>
-          <div class="sim-result hidden" id="quickResult"><strong id="quickPrice">—</strong><span id="quickDetails"></span></div>
+          <h3 style="font-size:22px;margin-bottom:14px">Estimation au kilomÃ¨tre</h3>
+          <div class="sim-field"><label for="quickKm">Distance indiquÃ©e par le GPS</label><input id="quickKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
+          <button class="primary" id="calculateQuickFare" type="button" style="margin-top:14px">Calculer avec lâ€™heure actuelle</button>
+          <div class="sim-result hidden" id="quickResult"><strong id="quickPrice">â€”</strong><span id="quickDetails"></span></div>
         </div>
         <h3 style="font-size:20px;margin:20px 0 12px">Estimation avec les adresses</h3>
         <div class="simulator">
           <div class="simulator-grid">
-            <div class="sim-field full"><label for="simPickup">Adresse de départ</label><input id="simPickup" autocomplete="off" placeholder="Saisir le départ"></div>
-            <div class="sim-field full"><label for="simDestination">Adresse d’arrivée</label><input id="simDestination" autocomplete="off" placeholder="Saisir l’arrivée"></div>
+            <div class="sim-field full"><label for="simPickup">Adresse de dÃ©part</label><input id="simPickup" autocomplete="off" placeholder="Saisir le dÃ©part"></div>
+            <div class="sim-field full"><label for="simDestination">Adresse dâ€™arrivÃ©e</label><input id="simDestination" autocomplete="off" placeholder="Saisir lâ€™arrivÃ©e"></div>
             <div class="sim-field"><label for="simDate">Date</label><input id="simDate" type="date"></div>
             <div class="sim-field"><label for="simTime">Heure</label><input id="simTime" type="time"></div>
           </div>
           <button class="primary" id="simulateFare" type="button" style="margin-top:14px">Calculer le tarif</button>
-          <div class="sim-result hidden" id="simResult"><strong id="simPrice">—</strong><span id="simDetails"></span><button class="primary" id="createFromEstimate" type="button" style="margin-top:14px;background:#fff;color:#000">Créer cette course</button></div>
+          <div class="sim-result hidden" id="simResult"><strong id="simPrice">â€”</strong><span id="simDetails"></span><button class="primary" id="createFromEstimate" type="button" style="margin-top:14px;background:#fff;color:#000">CrÃ©er cette course</button></div>
         </div>
       </section>
 
       <section class="tab-panel hidden" id="newBookingPanel">
         <h2 class="section-title">Course rapide</h2>
         <form class="simulator" id="quickBookingForm" style="margin-bottom:20px">
-          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
+          <div class="eyebrow">Enregistrement dans lâ€™application uniquement</div>
           <div class="simulator-grid" style="margin-top:14px">
-            <div class="sim-field"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 €"></div>
-            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
+            <div class="sim-field"><label for="quickBookingPhone">TÃ©lÃ©phone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
+            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 â‚¬"></div>
+            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Ã‰crivez votre note sur la courseâ€¦"></textarea></div>
           </div>
-          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
-          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
+          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans lâ€™application</button>
+          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrÃ©e</strong><span>Elle est maintenant archivÃ©e et comptabilisÃ©e dans votre bilan.</span></div>
         </form>
 
         <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid single-column-form">
             <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
-            <div class="sim-field"><label for="driverPhone">Téléphone</label><input id="driverPhone" required type="tel" autocomplete="tel"></div>
-            <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
-            <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
+            <div class="sim-field"><label for="driverPhone">TÃ©lÃ©phone</label><input id="driverPhone" required type="tel" autocomplete="tel"></div>
+            <div class="sim-field full"><label for="driverPickup">Adresse de dÃ©part</label><input id="driverPickup" required autocomplete="off"></div>
+            <div class="sim-field full"><label for="driverDestination">Adresse dâ€™arrivÃ©e</label><input id="driverDestination" required autocomplete="off"></div>
             <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
-            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
-            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement CB à bord">Carte bancaire à bord</option><option value="Paiement espèces à bord">Espèces à bord</option></select></div>
-            <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
-            <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
+            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers"><option value="Non prÃ©cisÃ©">Non prÃ©cisÃ©</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
+            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment"><option value="Non prÃ©cisÃ©">Non prÃ©cisÃ©</option><option value="Lien de paiement sÃ©curisÃ©">Lien sÃ©curisÃ© (CB)</option><option value="Paiement CB Ã  bord">Carte bancaire Ã  bord</option><option value="Paiement espÃ¨ces Ã  bord">EspÃ¨ces Ã  bord</option></select></div>
+            <div class="sim-field"><label for="driverPrice">Tarif communiquÃ©</label><input id="driverPrice" placeholder="Exemple : 35 â‚¬"></div>
+            <div class="sim-field full"><label for="driverMessage">Informations complÃ©mentaires</label><textarea id="driverMessage" placeholder="Bagages, siÃ¨ge enfant, train, vol, code dâ€™accÃ¨sâ€¦"></textarea></div>
           </div>
           <button class="primary" id="estimateDriverBooking" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer cette course</button>
           <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer et envoyer sur Zoho</button>
-          <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle est enregistrée dans l’application. Vous pouvez maintenant envoyer la confirmation par SMS.</span></div>
+          <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">RÃ©servation enregistrÃ©e</strong><span>Elle est enregistrÃ©e dans lâ€™application. Vous pouvez maintenant envoyer la confirmation par SMS.</span></div>
         </form>
         <section class="client-route-card">
           <div class="eyebrow">Trajet vers le client</div>
-          <h3>Me rendre au départ</h3>
-          <p>L’application utilise votre position actuelle et l’adresse de départ renseignée dans le formulaire.</p>
+          <h3>Me rendre au dÃ©part</h3>
+          <p>Lâ€™application utilise votre position actuelle et lâ€™adresse de dÃ©part renseignÃ©e dans le formulaire.</p>
           <div class="client-route-map" id="driverLiveMap"></div>
           <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Calculer mon approche</button>
-          <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
+          <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">â€”</span></div>
         </section>
         <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
       </section>
@@ -599,16 +599,16 @@
 
   <div class="detail-overlay hidden" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
     <article class="detail-card">
-      <div class="detail-head"><h2 id="detailTitle">Détail de la réservation</h2><button class="detail-close" id="detailClose" type="button" aria-label="Fermer">×</button></div>
+      <div class="detail-head"><h2 id="detailTitle">DÃ©tail de la rÃ©servation</h2><button class="detail-close" id="detailClose" type="button" aria-label="Fermer">Ã—</button></div>
       <div class="detail-body" id="detailBody"></div>
     </article>
   </div>
 
   <div class="trip-alert hidden" id="tripAlert" role="alertdialog" aria-modal="true" aria-labelledby="tripAlertTitle">
     <div class="trip-alert-card">
-      <div class="alert-icon">🚘</div>
+      <div class="alert-icon">ðŸš˜</div>
       <h2 id="tripAlertTitle">Nouvelle demande de trajet</h2>
-      <p id="tripAlertText">Une nouvelle réservation vient d’arriver.</p>
+      <p id="tripAlertText">Une nouvelle rÃ©servation vient dâ€™arriver.</p>
       <div class="trip-alert-actions"><button class="view-request" id="viewNewRequest" type="button">Voir la demande</button><button id="closeTripAlert" type="button">Fermer</button></div>
     </div>
   </div>
@@ -666,10 +666,10 @@
 
     const statusLabels = {
       new: "Nouvelle",
-      accepted: "Acceptée",
-      completed: "Terminée",
-      rejected: "Refusée",
-      cancelled: "Annulée"
+      accepted: "AcceptÃ©e",
+      completed: "TerminÃ©e",
+      rejected: "RefusÃ©e",
+      cancelled: "AnnulÃ©e"
     };
 
     function escapeHtml(value) {
@@ -686,8 +686,8 @@
     }
 
     function dateLabel(item) {
-      if (item.scheduledAtText) return item.scheduledAtText.replace("T", " à ");
-      return "Horaire non renseigné";
+      if (item.scheduledAtText) return item.scheduledAtText.replace("T", " Ã  ");
+      return "Horaire non renseignÃ©";
     }
 
     function bookingDate(item) {
@@ -703,11 +703,11 @@
       const phone = phoneHref(item.customerPhone);
       const scheduledDate = bookingDate(item);
       if (!phone) {
-        alert("Aucun numéro de téléphone n’est renseigné pour ce client.");
+        alert("Aucun numÃ©ro de tÃ©lÃ©phone nâ€™est renseignÃ© pour ce client.");
         return;
       }
       if (!scheduledDate) {
-        alert("La date et l’heure de cette course ne sont pas renseignées.");
+        alert("La date et lâ€™heure de cette course ne sont pas renseignÃ©es.");
         return;
       }
       const name = item.customerName || "Madame, Monsieur";
@@ -715,11 +715,11 @@
       const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
       const priceAmount = moneyValue(item.estimatedPrice);
       const priceText = priceAmount > 0
-        ? `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
-        : (item.estimatedPrice || "Non renseigné");
+        ? `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} â‚¬`
+        : (item.estimatedPrice || "Non renseignÃ©");
       const message = type === "reminder"
-        ? `Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`
-        : `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`;
+        ? `Bonjour ${name},\n\nðŸš˜ Petit rappel concernant votre trajet OuassVTC.\n\nðŸ“… Date :\n${dateText}\n\nðŸ•’ Heure :\n${timeText}\n\nðŸ“ Adresse de dÃ©part :\n${item.pickup || "Non renseignÃ©e"}\n\nðŸ Adresse dâ€™arrivÃ©e :\n${item.destination || "Non renseignÃ©e"}\n\nVotre trajet est bien confirmÃ©. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini â€“ OuassVTC`
+        : `Bonjour ${name},\n\nðŸš˜ Je vous confirme votre rÃ©servation OuassVTC.\n\nðŸ“ Adresse de dÃ©part :\n${item.pickup || "Non renseignÃ©e"}\n\nðŸ Adresse dâ€™arrivÃ©e :\n${item.destination || "Non renseignÃ©e"}\n\nðŸ“… Date :\n${dateText}\n\nðŸ•’ Heure :\n${timeText}\n\nðŸ’¶ Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini â€“ OuassVTC`;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     }
 
@@ -739,7 +739,7 @@
       $("todayAgendaEmpty").classList.toggle("hidden", todayItems.length !== 0);
       $("todayAgendaList").innerHTML = todayItems.map(item => {
         const date = bookingDate(item);
-        return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} Â· ${escapeHtml(item.estimatedPrice || "â€”")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>â†’ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">â€º</span></button>`;
       }).join("");
       $("todayAgendaList").querySelectorAll("[data-open-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
@@ -763,15 +763,15 @@
       const items = dailyItemsForStatus(status);
       const titles = {
         new: "Nouvelles demandes du jour",
-        accepted: "Courses acceptées du jour",
-        completed: "Courses terminées du jour"
+        accepted: "Courses acceptÃ©es du jour",
+        completed: "Courses terminÃ©es du jour"
       };
       $("detailTitle").textContent = titles[status] || "Courses du jour";
       $("detailBody").innerHTML = items.length ? `<div class="booking-list">${items.map(item => {
         const date = status === "new" ? createdDate(item) : status === "completed" ? completedDate(item) : bookingDate(item);
-        const time = date ? date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) : "—";
-        return `<button class="accepted-row" type="button" data-open-daily-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.customerPhone || "Téléphone non renseigné")}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
-      }).join("")}</div>` : `<div class="empty">Aucune course dans cette catégorie aujourd’hui.</div>`;
+        const time = date ? date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) : "â€”";
+        return `<button class="accepted-row" type="button" data-open-daily-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} Â· ${escapeHtml(item.estimatedPrice || "â€”")}</strong><small>${escapeHtml(item.customerPhone || "TÃ©lÃ©phone non renseignÃ©")}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">â€º</span></button>`;
+      }).join("")}</div>` : `<div class="empty">Aucune course dans cette catÃ©gorie aujourdâ€™hui.</div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelectorAll("[data-open-daily-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openDailyBooking));
@@ -795,7 +795,7 @@
         const title = firstDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
         return `<section class="agenda-day"><h3>${escapeHtml(title)}</h3><div class="agenda-items">${items.map(item => {
           const date = bookingDate(item);
-          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} Â· ${escapeHtml(item.estimatedPrice || "â€”")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>â†’ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">â€º</span></button>`;
         }).join("")}</div></section>`;
       }).join("");
       $("agendaList").querySelectorAll("[data-open-booking]").forEach(button => {
@@ -842,9 +842,9 @@
 
     function loyaltyLabel(item) {
       const completed = customerCompletedCount(item);
-      if (item.status === "completed") return `Fidélité : ${completed} course${completed > 1 ? "s" : ""} réalisée${completed > 1 ? "s" : ""}`;
-      if (completed === 0) return "Nouveau client · Course n°1";
-      return `Fidélité : ${completed} course${completed > 1 ? "s" : ""} réalisée${completed > 1 ? "s" : ""} · Prochaine course n°${completed + 1}`;
+      if (item.status === "completed") return `FidÃ©litÃ© : ${completed} course${completed > 1 ? "s" : ""} rÃ©alisÃ©e${completed > 1 ? "s" : ""}`;
+      if (completed === 0) return "Nouveau client Â· Course nÂ°1";
+      return `FidÃ©litÃ© : ${completed} course${completed > 1 ? "s" : ""} rÃ©alisÃ©e${completed > 1 ? "s" : ""} Â· Prochaine course nÂ°${completed + 1}`;
     }
 
     function mondayOf(date) {
@@ -875,10 +875,10 @@
           const end = new Date(week.start);
           end.setDate(end.getDate() + 6);
           const period = `Du ${week.start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} au ${end.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })}`;
-          return `<div class="history-week"><span>${escapeHtml(period)}<br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} €</strong></div>`;
+          return `<div class="history-week"><span>${escapeHtml(period)}<br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} â‚¬</strong></div>`;
         }).join("");
         const label = month.date.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
-        return `<section class="history-month"><button class="history-month-button" type="button" data-history-month="${key}"><span>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}<br><small>${month.items.length} course${month.items.length > 1 ? "s" : ""}</small></span><span>${total(month.items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="history-${key}">${weekRows}</div></section>`;
+        return `<section class="history-month"><button class="history-month-button" type="button" data-history-month="${key}"><span>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}<br><small>${month.items.length} course${month.items.length > 1 ? "s" : ""}</small></span><span>${total(month.items).toFixed(0)} â‚¬ â€º</span></button><div class="history-weeks hidden" id="history-${key}">${weekRows}</div></section>`;
       }).join("") || `<div class="empty">Aucun historique pour le moment.</div>`;
       $("monthHistoryList").querySelectorAll("[data-history-month]").forEach(button => {
         button.addEventListener("click", () => {
@@ -902,17 +902,17 @@
       const weekItems = allCompleted.filter(item => completedDate(item) >= weekStart);
       const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
       const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
-      const tripLabel = items => `${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}`;
-      $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
+      const tripLabel = items => `${items.length} course${items.length > 1 ? "s" : ""} terminÃ©e${items.length > 1 ? "s" : ""}`;
+      $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} â‚¬`;
       $("weekTrips").textContent = tripLabel(weekItems);
-      $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
+      $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} â‚¬`;
       $("monthTrips").textContent = tripLabel(monthItems);
       renderMonthHistory(allCompleted, total);
       $("archiveEmpty").classList.toggle("hidden", completed.length !== 0);
       $("archiveList").innerHTML = completed.map(item => {
         const date = completedDate(item);
         const dateText = date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" });
-        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
+        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} â†’ ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "â€”")} â€º</span></button>`;
       }).join("");
       $("archiveList").querySelectorAll("[data-open-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
@@ -927,10 +927,10 @@
       }
       if (item.status === "accepted") {
         return `
-          <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
+          <button class="action finish" data-status="completed" data-id="${item.id}">Course terminÃ©e</button>
           <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
       }
-      return `<button class="action" data-status="accepted" data-id="${item.id}">Remettre en acceptée</button>`;
+      return `<button class="action" data-status="accepted" data-id="${item.id}">Remettre en acceptÃ©e</button>`;
     }
 
     function render() {
@@ -947,7 +947,7 @@
       $("acceptedCount").textContent = dailyItemsForStatus("accepted").length;
       const todayCompleted = dailyItemsForStatus("completed");
       $("completedCount").textContent = todayCompleted.length;
-      $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
+      $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} â‚¬`;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
       $("emptyState").classList.toggle("hidden", accepted.length !== 0);
       $("searchNoResults").classList.toggle("hidden", !term || requests.length + accepted.length + archivedMatches.length !== 0);
@@ -966,24 +966,24 @@
                 <span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span>
               </div>
               <div class="route">
-                <div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div>
-                <div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div>
+                <div class="route-line"><span>â—</span><strong>${escapeHtml(item.pickup)}</strong></div>
+                <div class="route-line"><span>â†“</span><strong>${escapeHtml(item.destination)}</strong></div>
               </div>
               <div class="booking-meta">
-                <span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span>
-                <span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span>
-                <span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span>
+                <span class="price-chip">ðŸ’¶ Tarif : ${escapeHtml(item.estimatedPrice || "Non renseignÃ©")}</span>
+                <span>ðŸ‘¥ Nombre de passagers : ${escapeHtml(item.passengers || "Non prÃ©cisÃ©")}</span>
+                <span>ðŸ’³ ${escapeHtml(item.paymentMethod || "Paiement non prÃ©cisÃ©")}</span>
                 <span>${escapeHtml(loyaltyLabel(item))}</span>
               </div>
               ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
             </div>
             <div class="quick-actions">
-              <a href="tel:${phone}">☎ Appeler</a>
+              <a href="tel:${phone}">â˜Ž Appeler</a>
               <a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a>
             </div>
             <div class="waze-actions">
-              <a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a>
-              <a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a>
+              <a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze dÃ©part</a>
+              <a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivÃ©e</a>
             </div>
             <div class="status-actions">${actionButtons(item)}</div>
           </article>`;
@@ -991,13 +991,13 @@
 
       $("bookingList").innerHTML = accepted.map(item => {
         const date = bookingDate(item);
-        const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "—";
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "â€”";
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} Â· ${escapeHtml(item.estimatedPrice || "â€”")}</strong><small>${escapeHtml(item.pickup)} â†’ ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">â€º</span></button>`;
       }).join("");
 
       $("archiveSearchSection").classList.toggle("hidden", archivedMatches.length === 0);
       $("archiveSearchList").innerHTML = archivedMatches.map(item => {
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.customerPhone)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">âœ“</span><span><strong>${escapeHtml(item.customerName)} Â· ${escapeHtml(item.estimatedPrice || "â€”")}</strong><small>${escapeHtml(item.customerPhone)} Â· ${escapeHtml(item.pickup)} â†’ ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">â€º</span></button>`;
       }).join("");
 
       document.querySelectorAll("[data-status]").forEach(button => {
@@ -1017,18 +1017,18 @@
     function openBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
-      $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : "Détail de la réservation";
+      $("detailTitle").textContent = item.status === "completed" ? "Course archivÃ©e" : "DÃ©tail de la rÃ©servation";
       const phone = phoneHref(item.customerPhone);
       const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
       $("detailBody").innerHTML = `
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
-          <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
-          <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
+          <div class="route"><div class="route-line"><span>â—</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>â†“</span><strong>${escapeHtml(item.destination)}</strong></div></div>
+          <div class="booking-meta"><span class="price-chip">ðŸ’¶ Tarif : ${escapeHtml(item.estimatedPrice || "Non renseignÃ©")}</span><span>ðŸ‘¥ Nombre de passagers : ${escapeHtml(item.passengers || "Non prÃ©cisÃ©")}</span><span>ðŸ’³ ${escapeHtml(item.paymentMethod || "Paiement non prÃ©cisÃ©")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
         </div>
-        <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
-        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
+        <div class="quick-actions"><a href="tel:${phone}">â˜Ž Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
+        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze dÃ©part</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivÃ©e</a></div>
         ${item.status === "accepted" ? `<div class="status-actions"><button class="action" type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button class="action" type="button" data-trip-sms="reminder">Rappel du trajet</button></div>` : ""}
         <div class="status-actions"><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
       $("detailOverlay").classList.remove("hidden");
@@ -1045,23 +1045,23 @@
     function openEditBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
-      $("detailTitle").textContent = "Modifier la réservation";
+      $("detailTitle").textContent = "Modifier la rÃ©servation";
       $("detailBody").innerHTML = `
         <form class="simulator" id="editBookingForm">
           <div class="simulator-grid">
             <div class="sim-field"><label for="editName">Nom du client</label><input id="editName" required value="${escapeHtml(item.customerName)}"></div>
-            <div class="sim-field"><label for="editPhone">Téléphone</label><input id="editPhone" required type="tel" value="${escapeHtml(item.customerPhone)}"></div>
-            <div class="sim-field full"><label for="editPickup">Adresse de départ</label><input id="editPickup" required autocomplete="off" value="${escapeHtml(item.pickup)}"></div>
-            <div class="sim-field full"><label for="editDestination">Adresse d’arrivée</label><input id="editDestination" required autocomplete="off" value="${escapeHtml(item.destination)}"></div>
+            <div class="sim-field"><label for="editPhone">TÃ©lÃ©phone</label><input id="editPhone" required type="tel" value="${escapeHtml(item.customerPhone)}"></div>
+            <div class="sim-field full"><label for="editPickup">Adresse de dÃ©part</label><input id="editPickup" required autocomplete="off" value="${escapeHtml(item.pickup)}"></div>
+            <div class="sim-field full"><label for="editDestination">Adresse dâ€™arrivÃ©e</label><input id="editDestination" required autocomplete="off" value="${escapeHtml(item.destination)}"></div>
             <div class="sim-field"><label for="editDateTime">Date et heure</label><input id="editDateTime" required type="datetime-local" value="${escapeHtml(item.scheduledAtText)}"></div>
-            <div class="sim-field"><label for="editPassengers">Passagers</label><input id="editPassengers" value="${escapeHtml(item.passengers || "Non précisé")}"></div>
-            <div class="sim-field"><label for="editPayment">Paiement</label><input id="editPayment" value="${escapeHtml(item.paymentMethod || "Non précisé")}"></div>
+            <div class="sim-field"><label for="editPassengers">Passagers</label><input id="editPassengers" value="${escapeHtml(item.passengers || "Non prÃ©cisÃ©")}"></div>
+            <div class="sim-field"><label for="editPayment">Paiement</label><input id="editPayment" value="${escapeHtml(item.paymentMethod || "Non prÃ©cisÃ©")}"></div>
             <div class="sim-field"><label for="editPrice">Tarif</label><input id="editPrice" value="${escapeHtml(item.estimatedPrice || "")}"></div>
-            <div class="sim-field full"><label for="editMessage">Informations complémentaires</label><textarea id="editMessage">${escapeHtml(item.customerMessage || "")}</textarea></div>
+            <div class="sim-field full"><label for="editMessage">Informations complÃ©mentaires</label><textarea id="editMessage">${escapeHtml(item.customerMessage || "")}</textarea></div>
           </div>
           <button class="primary" type="submit" style="margin-top:14px">Enregistrer les modifications</button>
           <button class="primary" id="cancelEditBooking" type="button" style="margin-top:10px;background:#fff;color:#000;border:1px solid #000">Annuler</button>
-          ${item.status === "completed" ? `<button class="primary" id="deleteArchivedBooking" type="button" style="margin-top:18px;background:#b3261e;color:#fff">Supprimer définitivement la course</button>` : ""}
+          ${item.status === "completed" ? `<button class="primary" id="deleteArchivedBooking" type="button" style="margin-top:18px;background:#b3261e;color:#fff">Supprimer dÃ©finitivement la course</button>` : ""}
         </form>`;
       if (window.google?.maps?.places) {
         const options = { componentRestrictions: { country: ["fr", "es"] }, fields: ["formatted_address", "geometry", "name"] };
@@ -1070,25 +1070,25 @@
       }
       $("cancelEditBooking").addEventListener("click", () => openBooking(id));
       $("deleteArchivedBooking")?.addEventListener("click", async () => {
-        if (!confirm("Supprimer définitivement cette course archivée ? Cette action est irréversible.")) return;
+        if (!confirm("Supprimer dÃ©finitivement cette course archivÃ©e ? Cette action est irrÃ©versible.")) return;
         const button = $("deleteArchivedBooking");
         button.disabled = true;
-        button.textContent = "Suppression en cours…";
+        button.textContent = "Suppression en coursâ€¦";
         try {
           await deleteDoc(doc(db, "bookings", id));
           closeBooking();
         } catch (error) {
           console.error(error);
-          alert("La course n’a pas pu être supprimée. Réessayez.");
+          alert("La course nâ€™a pas pu Ãªtre supprimÃ©e. RÃ©essayez.");
           button.disabled = false;
-          button.textContent = "Supprimer définitivement la course";
+          button.textContent = "Supprimer dÃ©finitivement la course";
         }
       });
       $("editBookingForm").addEventListener("submit", async event => {
         event.preventDefault();
         const button = event.submitter;
         button.disabled = true;
-        button.textContent = "Enregistrement…";
+        button.textContent = "Enregistrementâ€¦";
         try {
           await updateDoc(doc(db, "bookings", id), {
             customerName: $("editName").value.trim(),
@@ -1096,16 +1096,16 @@
             pickup: $("editPickup").value.trim(),
             destination: $("editDestination").value.trim(),
             scheduledAtText: $("editDateTime").value,
-            passengers: $("editPassengers").value.trim() || "Non précisé",
-            paymentMethod: $("editPayment").value.trim() || "Non précisé",
-            estimatedPrice: $("editPrice").value.trim() || "Estimation non renseignée",
+            passengers: $("editPassengers").value.trim() || "Non prÃ©cisÃ©",
+            paymentMethod: $("editPayment").value.trim() || "Non prÃ©cisÃ©",
+            estimatedPrice: $("editPrice").value.trim() || "Estimation non renseignÃ©e",
             customerMessage: $("editMessage").value.trim(),
             updatedAt: serverTimestamp()
           });
           closeBooking();
         } catch (error) {
           console.error(error);
-          alert("Les modifications n’ont pas pu être enregistrées.");
+          alert("Les modifications nâ€™ont pas pu Ãªtre enregistrÃ©es.");
           button.disabled = false;
           button.textContent = "Enregistrer les modifications";
         }
@@ -1114,17 +1114,17 @@
 
     function closeBooking() {
       $("detailOverlay").classList.add("hidden");
-      $("detailTitle").textContent = "Détail de la réservation";
+      $("detailTitle").textContent = "DÃ©tail de la rÃ©servation";
       $("detailBody").innerHTML = "";
     }
 
     async function refuseAndDelete(id) {
-      if (!confirm("Refuser et supprimer définitivement cette demande ?")) return;
+      if (!confirm("Refuser et supprimer dÃ©finitivement cette demande ?")) return;
       try {
         await deleteDoc(doc(db, "bookings", id));
       } catch (error) {
         console.error(error);
-        alert("La demande n’a pas pu être supprimée.");
+        alert("La demande nâ€™a pas pu Ãªtre supprimÃ©e.");
       }
     }
 
@@ -1140,7 +1140,7 @@
         await updateDoc(doc(db, "bookings", id), changes);
       } catch (error) {
         console.error(error);
-        alert("La modification n’a pas pu être enregistrée.");
+        alert("La modification nâ€™a pas pu Ãªtre enregistrÃ©e.");
         if (button) button.disabled = false;
       }
     }
@@ -1176,13 +1176,13 @@
         return;
       }
       $("enableNotifications").textContent = Notification.permission === "granted"
-        ? "✓ Notifications activées"
+        ? "âœ“ Notifications activÃ©es"
         : "Activer les notifications";
     }
 
     async function enableNotifications() {
       if (!("Notification" in window)) {
-        alert("Les notifications ne sont pas disponibles sur ce téléphone.");
+        alert("Les notifications ne sont pas disponibles sur ce tÃ©lÃ©phone.");
         return;
       }
       const permission = await Notification.requestPermission();
@@ -1190,9 +1190,9 @@
       if (permission === "granted") {
         try {
           const registration = await navigator.serviceWorker.ready;
-          if (!messaging) throw new Error("Firebase Messaging n’est pas initialisé");
+          if (!messaging) throw new Error("Firebase Messaging nâ€™est pas initialisÃ©");
           const token = await getToken(messaging, { vapidKey: WEB_PUSH_KEY, serviceWorkerRegistration: registration });
-          if (!token) throw new Error("Aucun jeton de notification reçu");
+          if (!token) throw new Error("Aucun jeton de notification reÃ§u");
           if (!auth?.currentUser || !db) throw new Error("Connexion chauffeur requise");
           await setDoc(doc(db, "notificationTokens", auth.currentUser.uid), {
             token,
@@ -1201,8 +1201,8 @@
             enabled: true,
             updatedAt: serverTimestamp()
           }, { merge: true });
-          await registration.showNotification("Notifications OuassVTC activées", {
-          body: "Vous serez averti dès qu’une nouvelle réservation arrivera.",
+          await registration.showNotification("Notifications OuassVTC activÃ©es", {
+          body: "Vous serez averti dÃ¨s quâ€™une nouvelle rÃ©servation arrivera.",
           icon: "/ouassvtc-app.png",
           badge: "/ouassvtc-app.png",
           tag: "ouassvtc-notifications-enabled",
@@ -1210,10 +1210,10 @@
           });
         } catch (error) {
           console.error(error);
-          alert("L’enregistrement du téléphone a échoué. Vérifiez les règles Firebase puis réessayez.");
+          alert("Lâ€™enregistrement du tÃ©lÃ©phone a Ã©chouÃ©. VÃ©rifiez les rÃ¨gles Firebase puis rÃ©essayez.");
         }
       } else {
-        alert("Autorisez les notifications dans les réglages du téléphone pour recevoir les nouvelles réservations.");
+        alert("Autorisez les notifications dans les rÃ©glages du tÃ©lÃ©phone pour recevoir les nouvelles rÃ©servations.");
       }
     }
 
@@ -1221,8 +1221,8 @@
       if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
       try {
         const registration = await navigator.serviceWorker.ready;
-        await registration.showNotification("Nouvelle réservation OuassVTC", {
-          body: count > 1 ? `${count} nouvelles demandes de trajet viennent d’arriver.` : "Une nouvelle demande de trajet vient d’arriver.",
+        await registration.showNotification("Nouvelle rÃ©servation OuassVTC", {
+          body: count > 1 ? `${count} nouvelles demandes de trajet viennent dâ€™arriver.` : "Une nouvelle demande de trajet vient dâ€™arriver.",
           icon: "/ouassvtc-app.png",
           badge: "/ouassvtc-app.png",
           tag: "ouassvtc-new-booking",
@@ -1247,8 +1247,8 @@
     function showTripAlert(count = 1) {
       closeTripAlert();
       $("tripAlertText").textContent = count > 1
-        ? `${count} nouvelles demandes de trajet viennent d’arriver.`
-        : "Une nouvelle demande de trajet vient d’arriver.";
+        ? `${count} nouvelles demandes de trajet viennent dâ€™arriver.`
+        : "Une nouvelle demande de trajet vient dâ€™arriver.";
       $("tripAlert").classList.remove("hidden");
       prepareAlertSound();
       soundAlertPulse();
@@ -1275,7 +1275,7 @@
       }, error => {
         console.error(error);
         $("manualSync").classList.remove("syncing");
-        $("emptyState").textContent = "Impossible de charger les demandes. Vérifiez les règles Firebase.";
+        $("emptyState").textContent = "Impossible de charger les demandes. VÃ©rifiez les rÃ¨gles Firebase.";
         $("emptyState").classList.remove("hidden");
       });
     }
@@ -1290,7 +1290,7 @@
       $("loginView").classList.add("hidden");
       $("dashboardView").classList.remove("hidden");
       $("setupWarning").classList.remove("hidden");
-      $("emptyState").textContent = "La connexion Firebase est nécessaire pour recevoir les demandes.";
+      $("emptyState").textContent = "La connexion Firebase est nÃ©cessaire pour recevoir les demandes.";
       $("emptyState").classList.remove("hidden");
     } else {
       const app = initializeApp(firebaseConfig);
@@ -1300,7 +1300,7 @@
       try {
         await setPersistence(auth, browserLocalPersistence);
       } catch (error) {
-        console.error("La session locale n’a pas pu être configurée", error);
+        console.error("La session locale nâ€™a pas pu Ãªtre configurÃ©e", error);
       }
 
       $("loginGoogle").addEventListener("click", async () => {
@@ -1308,7 +1308,7 @@
           await signInWithPopup(auth, new GoogleAuthProvider());
         } catch (error) {
           console.error(error);
-          showLoginError("Connexion impossible. Vérifiez que Google est activé dans Firebase.");
+          showLoginError("Connexion impossible. VÃ©rifiez que Google est activÃ© dans Firebase.");
         }
       });
 
@@ -1374,7 +1374,7 @@
       $("driverBookingSuccess").classList.add("hidden");
       $("quickBookingSuccess").classList.add("hidden");
       $("driverRouteResult").classList.add("hidden");
-      $("driverRouteSummary").textContent = "—";
+      $("driverRouteSummary").textContent = "â€”";
       driverCurrentPosition = null;
       if (driverLiveDirectionsRenderer) driverLiveDirectionsRenderer.setMap(null);
       driverLiveDirectionsRenderer = null;
@@ -1412,7 +1412,7 @@
       $("monthHistoryList").classList.toggle("hidden");
       $("toggleMonthHistory").textContent = $("monthHistoryList").classList.contains("hidden")
         ? "Historique des mois"
-        : "Masquer l’historique";
+        : "Masquer lâ€™historique";
     });
 
     $("detailClose").addEventListener("click", closeBooking);
@@ -1482,7 +1482,7 @@
     function calculateDriverRouteToPickup() {
       const pickup = $("driverPickup").value.trim();
       if (!pickup) {
-        alert("Renseignez d’abord l’adresse de départ du client dans le formulaire.");
+        alert("Renseignez dâ€™abord lâ€™adresse de dÃ©part du client dans le formulaire.");
         return;
       }
       if (!driverDirectionsService || !driverCurrentPosition) return;
@@ -1496,12 +1496,12 @@
         button.disabled = false;
         button.textContent = "Recalculer mon approche";
         if (status !== "OK") {
-          alert("Google Maps n’a pas pu calculer le trajet jusqu’au client. Vérifiez l’adresse de départ.");
+          alert("Google Maps nâ€™a pas pu calculer le trajet jusquâ€™au client. VÃ©rifiez lâ€™adresse de dÃ©part.");
           return;
         }
         driverLiveDirectionsRenderer.setDirections(result);
         const leg = result.routes[0].legs[0];
-        $("driverRouteSummary").textContent = `${leg.duration.text} · ${leg.distance.text}`;
+        $("driverRouteSummary").textContent = `${leg.duration.text} Â· ${leg.distance.text}`;
         $("driverRouteResult").classList.remove("hidden");
       });
     }
@@ -1509,21 +1509,21 @@
     $("locateDriver").addEventListener("click", () => {
       const pickup = $("driverPickup").value.trim();
       if (!pickup) {
-        alert("Renseignez d’abord l’adresse de départ du client dans le formulaire.");
+        alert("Renseignez dâ€™abord lâ€™adresse de dÃ©part du client dans le formulaire.");
         $("driverPickup").focus();
         return;
       }
       if (!navigator.geolocation) {
-        alert("La localisation n’est pas disponible sur ce téléphone.");
+        alert("La localisation nâ€™est pas disponible sur ce tÃ©lÃ©phone.");
         return;
       }
       if (!driverDirectionsService) {
-        alert("Google Maps est encore en cours de chargement. Réessayez dans quelques secondes.");
+        alert("Google Maps est encore en cours de chargement. RÃ©essayez dans quelques secondes.");
         return;
       }
       const button = $("locateDriver");
       button.disabled = true;
-      button.textContent = "Localisation en cours…";
+      button.textContent = "Localisation en coursâ€¦";
       navigator.geolocation.getCurrentPosition(position => {
         driverCurrentPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
         calculateDriverRouteToPickup();
@@ -1531,7 +1531,7 @@
         console.error(error);
         button.disabled = false;
         button.textContent = "Calculer mon approche";
-        alert("Autorisez la localisation pour calculer le temps jusqu’au client.");
+        alert("Autorisez la localisation pour calculer le temps jusquâ€™au client.");
       }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
     });
 
@@ -1552,13 +1552,13 @@
       }
       const scheduledDate = new Date(scheduledValue);
       if (!name || !phone || !pickup || !destination || Number.isNaN(scheduledDate.getTime()) || priceAmount <= 0) {
-        alert("Complétez le nom, le téléphone, les deux adresses, la date, l’heure et le montant avant de préparer le SMS.");
+        alert("ComplÃ©tez le nom, le tÃ©lÃ©phone, les deux adresses, la date, lâ€™heure et le montant avant de prÃ©parer le SMS.");
         return;
       }
       const dateText = scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
       const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
-      const priceText = `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`;
-      const message = `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${pickup}\n\n🏁 Adresse d’arrivée :\n${destination}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`;
+      const priceText = `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} â‚¬`;
+      const message = `Bonjour ${name},\n\nðŸš˜ Je vous confirme votre rÃ©servation OuassVTC.\n\nðŸ“ Adresse de dÃ©part :\n${pickup}\n\nðŸ Adresse dâ€™arrivÃ©e :\n${destination}\n\nðŸ“… Date :\n${dateText}\n\nðŸ•’ Heure :\n${timeText}\n\nðŸ’¶ Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini â€“ OuassVTC`;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     });
 
@@ -1578,7 +1578,7 @@
         }
         driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
           if (status !== "OK") {
-            reject(new Error(`Itinéraire impossible : ${status}`));
+            reject(new Error(`ItinÃ©raire impossible : ${status}`));
             return;
           }
           const leg = result.routes[0].legs[0];
@@ -1594,15 +1594,15 @@
     $("calculateQuickFare").addEventListener("click", () => {
       const distance = $("quickKm").valueAsNumber;
       if (!Number.isFinite(distance) || distance < 0) {
-        alert("Indiquez le nombre de kilomètres affiché par votre GPS.");
+        alert("Indiquez le nombre de kilomÃ¨tres affichÃ© par votre GPS.");
         return;
       }
       const now = new Date();
       const rate = driverRate(now);
       const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
       const price = Math.round(rawPrice / 5) * 5;
-      $("quickPrice").textContent = `${price} €`;
-      $("quickDetails").textContent = `${distance.toFixed(1)} km · ${rate.label} · calculé à ${now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
+      $("quickPrice").textContent = `${price} â‚¬`;
+      $("quickDetails").textContent = `${distance.toFixed(1)} km Â· ${rate.label} Â· calculÃ© Ã  ${now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
       $("quickResult").classList.remove("hidden");
     });
 
@@ -1611,21 +1611,21 @@
       const destination = $("simDestination").value.trim();
       const tripDate = new Date(`${$("simDate").value}T${$("simTime").value}`);
       if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
-        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
+        alert("Renseignez le dÃ©part, lâ€™arrivÃ©e, la date et lâ€™heure.");
         return;
       }
       if (!driverDirectionsService) {
-        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
+        alert("Le calcul dâ€™itinÃ©raire nâ€™est pas encore disponible. RÃ©essayez dans quelques secondes.");
         return;
       }
       const button = $("simulateFare");
       button.disabled = true;
-      button.textContent = "Calcul en cours…";
+      button.textContent = "Calcul en coursâ€¦";
       driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
         button.disabled = false;
         button.textContent = "Calculer le tarif";
         if (status !== "OK") {
-          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
+          alert("Lâ€™itinÃ©raire nâ€™a pas pu Ãªtre calculÃ©. VÃ©rifiez les deux adresses.");
           return;
         }
         const leg = result.routes[0].legs[0];
@@ -1633,8 +1633,8 @@
         const rate = driverRate(tripDate);
         const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
         const price = Math.round(rawPrice / 5) * 5;
-        $("simPrice").textContent = `${price} €`;
-        $("simDetails").textContent = `${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`;
+        $("simPrice").textContent = `${price} â‚¬`;
+        $("simDetails").textContent = `${distance.toFixed(1)} km Â· ${leg.duration.text} Â· ${rate.label}`;
         $("simResult").classList.remove("hidden");
       });
     });
@@ -1654,21 +1654,21 @@
       const destination = $("driverDestination").value.trim();
       const tripDate = new Date($("driverDateTime").value);
       if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
-        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
+        alert("Renseignez le dÃ©part, lâ€™arrivÃ©e, la date et lâ€™heure.");
         return;
       }
       if (!driverDirectionsService) {
-        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
+        alert("Le calcul dâ€™itinÃ©raire nâ€™est pas encore disponible. RÃ©essayez dans quelques secondes.");
         return;
       }
       const button = $("estimateDriverBooking");
       button.disabled = true;
-      button.textContent = "Calcul en cours…";
+      button.textContent = "Calcul en coursâ€¦";
       driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
         button.disabled = false;
         button.textContent = "Estimer cette course";
         if (status !== "OK") {
-          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
+          alert("Lâ€™itinÃ©raire nâ€™a pas pu Ãªtre calculÃ©. VÃ©rifiez les deux adresses.");
           return;
         }
         const leg = result.routes[0].legs[0];
@@ -1676,27 +1676,27 @@
         const rate = driverRate(tripDate);
         const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
         const price = Math.round(rawPrice / 5) * 5;
-        $("driverPrice").value = `${price} €`;
-        alert(`Tarif estimé : ${price} €\n${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`);
+        $("driverPrice").value = `${price} â‚¬`;
+        alert(`Tarif estimÃ© : ${price} â‚¬\n${distance.toFixed(1)} km Â· ${leg.duration.text} Â· ${rate.label}`);
       });
     });
 
     $("quickBookingForm").addEventListener("submit", async event => {
       event.preventDefault();
       if (!db || !auth?.currentUser) {
-        alert("Vous devez être connecté pour enregistrer une course.");
+        alert("Vous devez Ãªtre connectÃ© pour enregistrer une course.");
         return;
       }
       const phone = $("quickBookingPhone").value.trim();
       const priceAmount = moneyValue($("quickBookingPrice").value);
       const comment = $("quickBookingComment").value.trim();
       if (!phone || priceAmount <= 0) {
-        alert("Indiquez le numéro du client et un prix valide.");
+        alert("Indiquez le numÃ©ro du client et un prix valide.");
         return;
       }
       const button = $("saveQuickBooking");
       button.disabled = true;
-      button.textContent = "Enregistrement en cours…";
+      button.textContent = "Enregistrement en coursâ€¦";
       try {
         localSaveInProgress = true;
         const current = new Date();
@@ -1705,12 +1705,12 @@
           customerName: "Course manuelle",
           customerPhone: phone,
           pickup: "Ajout manuel",
-          destination: "Trajet non renseigné",
+          destination: "Trajet non renseignÃ©",
           scheduledAtText: currentLocal.toISOString().slice(0, 16),
-          passengers: "Non précisé",
-          paymentMethod: "Non précisé",
+          passengers: "Non prÃ©cisÃ©",
+          paymentMethod: "Non prÃ©cisÃ©",
           customerMessage: comment,
-          estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
+          estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} â‚¬`,
           status: "new",
           source: "website",
           createdAt: serverTimestamp(),
@@ -1728,17 +1728,17 @@
       } catch (error) {
         localSaveInProgress = false;
         console.error(error);
-        alert("La course rapide n’a pas pu être enregistrée. Réessayez.");
+        alert("La course rapide nâ€™a pas pu Ãªtre enregistrÃ©e. RÃ©essayez.");
       } finally {
         button.disabled = false;
-        button.textContent = "Enregistrer dans l’application";
+        button.textContent = "Enregistrer dans lâ€™application";
       }
     });
 
     $("driverBookingForm").addEventListener("submit", async event => {
       event.preventDefault();
       if (!db || !auth?.currentUser) {
-        alert("Vous devez être connecté pour enregistrer une réservation.");
+        alert("Vous devez Ãªtre connectÃ© pour enregistrer une rÃ©servation.");
         return;
       }
       const button = $("saveDriverBooking");
@@ -1746,14 +1746,14 @@
       const arrival = $("driverDestination").value.trim();
       const tripDate = new Date($("driverDateTime").value);
       button.disabled = true;
-      button.textContent = "Calcul automatique du tarif…";
+      button.textContent = "Calcul automatique du tarifâ€¦";
       let fare;
       try {
         fare = await calculateAutomaticFare(departure, arrival, tripDate);
-        $("driverPrice").value = `${fare.price} €`;
+        $("driverPrice").value = `${fare.price} â‚¬`;
       } catch (fareError) {
         console.error(fareError);
-        alert("Le tarif n’a pas pu être calculé. Vérifiez les deux adresses et votre connexion Google Maps.");
+        alert("Le tarif nâ€™a pas pu Ãªtre calculÃ©. VÃ©rifiez les deux adresses et votre connexion Google Maps.");
         button.disabled = false;
         button.textContent = "Enregistrer et envoyer sur Zoho";
         return;
@@ -1767,11 +1767,11 @@
         passagers: $("driverPassengers").value,
         paiement: $("driverPayment").value,
         message: $("driverMessage").value.trim(),
-        prix: `${fare.price} €`
+        prix: `${fare.price} â‚¬`
       };
       lastDriverConfirmation = { ...params };
       localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
-      button.textContent = "Enregistrement en cours…";
+      button.textContent = "Enregistrement en coursâ€¦";
       let savedInApp = false;
       try {
         localSaveInProgress = true;
@@ -1799,14 +1799,14 @@
           await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
         } catch (emailError) {
           console.error(emailError);
-          alert("La réservation est bien enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé.");
+          alert("La rÃ©servation est bien enregistrÃ©e dans lâ€™application, mais lâ€™e-mail Zoho nâ€™a pas pu Ãªtre envoyÃ©.");
         }
       } catch (error) {
         localSaveInProgress = false;
         console.error(error);
         alert(savedInApp
-          ? "La demande est enregistrée, mais son classement automatique a échoué. Elle apparaît dans les nouvelles demandes."
-          : "La réservation n’a pas pu être enregistrée. Réessayez.");
+          ? "La demande est enregistrÃ©e, mais son classement automatique a Ã©chouÃ©. Elle apparaÃ®t dans les nouvelles demandes."
+          : "La rÃ©servation nâ€™a pas pu Ãªtre enregistrÃ©e. RÃ©essayez.");
       } finally {
         button.disabled = false;
         button.textContent = "Enregistrer et envoyer sur Zoho";
@@ -1833,4 +1833,3 @@
   </script>
 </body>
 </html>
-
