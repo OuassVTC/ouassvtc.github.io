@@ -233,6 +233,11 @@
     .sim-result{margin-top:14px;border-radius:16px;background:#000;color:#fff;padding:18px}
     .sim-result strong{display:block;font-size:31px;line-height:1}
     .sim-result span{display:block;color:#bbb;font-size:13px;margin-top:8px}
+    .client-route-card{margin-top:20px;background:#fff;border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0000000a}
+    .client-route-card h3{font-size:22px;margin-bottom:7px}
+    .client-route-card p{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:14px}
+    .client-route-map{width:100%;height:310px;border-radius:17px;background:#e9e9e9;overflow:hidden}
+    .client-route-result{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;padding:16px;border-radius:14px;background:#000;color:#fff;font-size:19px;font-weight:950;text-align:center}
     .waze-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px 12px}
     .waze-actions a{min-height:42px;display:grid;place-items:center;text-decoration:none;border:1px solid #d8d8d8;border-radius:11px;color:#111;font-size:12px;font-weight:900;background:#fff}
     .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
@@ -579,6 +584,14 @@
           <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer et envoyer sur Zoho</button>
           <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle apparaît dans l’application et le récapitulatif a été envoyé sur Zoho.</span></div>
         </form>
+        <section class="client-route-card">
+          <div class="eyebrow">Trajet vers le client</div>
+          <h3>Me rendre au départ</h3>
+          <p>L’application utilise votre position actuelle et l’adresse de départ renseignée dans le formulaire.</p>
+          <div class="client-route-map" id="driverLiveMap"></div>
+          <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Me localiser et calculer</button>
+          <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
+        </section>
       </section>
     </section>
   </main>
@@ -1012,7 +1025,7 @@
           ${item.status === "completed" ? `<button class="primary" id="deleteArchivedBooking" type="button" style="margin-top:18px;background:#b3261e;color:#fff">Supprimer définitivement la course</button>` : ""}
         </form>`;
       if (window.google?.maps?.places) {
-        const options = { componentRestrictions: { country: "fr" }, fields: ["formatted_address", "geometry", "name"] };
+        const options = { componentRestrictions: { country: ["fr", "es"] }, fields: ["formatted_address", "geometry", "name"] };
         new google.maps.places.Autocomplete($("editPickup"), options);
         new google.maps.places.Autocomplete($("editDestination"), options);
       }
@@ -1301,6 +1314,9 @@
     $("driverDateTime").value = localDate.toISOString().slice(0, 16);
 
     let driverDirectionsService = null;
+    let driverLiveMap = null;
+    let driverLiveDirectionsRenderer = null;
+    let driverCurrentPosition = null;
     function loadGoogleMaps() {
       if (window.google?.maps) return Promise.resolve();
       return new Promise((resolve, reject) => {
@@ -1318,12 +1334,83 @@
 
     loadGoogleMaps().then(() => {
       driverDirectionsService = new google.maps.DirectionsService();
-      const options = { componentRestrictions: { country: "fr" }, fields: ["formatted_address", "geometry", "name"] };
+      const options = { componentRestrictions: { country: ["fr", "es"] }, fields: ["formatted_address", "geometry", "name"] };
       new google.maps.places.Autocomplete($("simPickup"), options);
       new google.maps.places.Autocomplete($("simDestination"), options);
-      new google.maps.places.Autocomplete($("driverPickup"), options);
+      const driverPickupAutocomplete = new google.maps.places.Autocomplete($("driverPickup"), options);
       new google.maps.places.Autocomplete($("driverDestination"), options);
+      driverPickupAutocomplete.addListener("place_changed", () => {
+        if (driverCurrentPosition) calculateDriverRouteToPickup();
+      });
     }).catch(error => console.error("Google Maps indisponible", error));
+
+    function ensureDriverLiveMap() {
+      if (driverLiveMap || !window.google?.maps) return;
+      driverLiveMap = new google.maps.Map($("driverLiveMap"), {
+        center: { lat: 42.6887, lng: 2.8948 },
+        zoom: 11,
+        disableDefaultUI: true,
+        zoomControl: true,
+        gestureHandling: "cooperative"
+      });
+      driverLiveDirectionsRenderer = new google.maps.DirectionsRenderer({ map: driverLiveMap });
+    }
+
+    function calculateDriverRouteToPickup() {
+      const pickup = $("driverPickup").value.trim();
+      if (!pickup) {
+        alert("Renseignez d’abord l’adresse de départ du client dans le formulaire.");
+        return;
+      }
+      if (!driverDirectionsService || !driverCurrentPosition) return;
+      ensureDriverLiveMap();
+      driverDirectionsService.route({
+        origin: driverCurrentPosition,
+        destination: pickup,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, (result, status) => {
+        const button = $("locateDriver");
+        button.disabled = false;
+        button.textContent = "Recalculer depuis ma position";
+        if (status !== "OK") {
+          alert("Google Maps n’a pas pu calculer le trajet jusqu’au client. Vérifiez l’adresse de départ.");
+          return;
+        }
+        driverLiveDirectionsRenderer.setDirections(result);
+        const leg = result.routes[0].legs[0];
+        $("driverRouteSummary").textContent = `${leg.duration.text} · ${leg.distance.text}`;
+        $("driverRouteResult").classList.remove("hidden");
+      });
+    }
+
+    $("locateDriver").addEventListener("click", () => {
+      const pickup = $("driverPickup").value.trim();
+      if (!pickup) {
+        alert("Renseignez d’abord l’adresse de départ du client dans le formulaire.");
+        $("driverPickup").focus();
+        return;
+      }
+      if (!navigator.geolocation) {
+        alert("La localisation n’est pas disponible sur ce téléphone.");
+        return;
+      }
+      if (!driverDirectionsService) {
+        alert("Google Maps est encore en cours de chargement. Réessayez dans quelques secondes.");
+        return;
+      }
+      const button = $("locateDriver");
+      button.disabled = true;
+      button.textContent = "Localisation en cours…";
+      navigator.geolocation.getCurrentPosition(position => {
+        driverCurrentPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
+        calculateDriverRouteToPickup();
+      }, error => {
+        console.error(error);
+        button.disabled = false;
+        button.textContent = "Me localiser et calculer";
+        alert("Autorisez la localisation pour calculer le temps jusqu’au client.");
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    });
 
     function driverRate(date) {
       const sunday = date.getDay() === 0;
