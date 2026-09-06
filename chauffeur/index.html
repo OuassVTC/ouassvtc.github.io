@@ -349,7 +349,7 @@
       padding:0 20px 14px;
     }
 
-    .quick-actions a{
+    .quick-actions a,.quick-actions button{
       min-height:44px;
       display:flex;
       align-items:center;
@@ -360,7 +360,14 @@
       text-decoration:none;
       font-size:13px;
       font-weight:900;
+      background:#fff;
+      cursor:pointer;
     }
+
+    .sms-choice-panel{margin:0 20px 14px;padding:14px;border:1px solid var(--border);border-radius:14px;background:#f7f7f7}
+    .sms-choice-panel strong{display:block;margin-bottom:10px;font-size:14px}
+    .sms-choice-grid{display:grid;gap:8px}
+    .sms-choice-grid button{min-height:48px;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;text-align:left;font-weight:850;cursor:pointer}
 
     .status-actions{
       display:grid;
@@ -697,20 +704,24 @@
         alert("Aucun numéro de téléphone n’est renseigné pour ce client.");
         return;
       }
-      if (!scheduledDate) {
+      if ((type === "confirmation" || type === "reminder") && !scheduledDate) {
         alert("La date et l’heure de cette course ne sont pas renseignées.");
         return;
       }
       const name = item.customerName || "Madame, Monsieur";
-      const dateText = scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
-      const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+      const dateText = scheduledDate ? scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" }) : "Non renseignée";
+      const timeText = scheduledDate ? scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }) : "Non renseignée";
       const priceAmount = moneyValue(item.estimatedPrice);
       const priceText = priceAmount > 0
         ? `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
         : (item.estimatedPrice || "Non renseigné");
-      const message = type === "reminder"
-        ? `Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`
-        : `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`;
+      const messages = {
+        confirmation:`Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`,
+        reminder:`Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`,
+        arrived:`Bonjour ${name},\n\nJe vous informe que je suis arrivé à l’adresse de prise en charge. Je vous attends à bord de mon véhicule.\n\nÀ tout de suite.\n\nOuassini – OuassVTC`,
+        security:`Bonjour ${name},\n\nJe suis Ouassini, votre chauffeur VTC. Mon véhicule est une Toyota Auris break immatriculée GB-580-NS. Je serai en charge de vous transporter pour votre trajet.\n\nCordialement,\nOuassini – OuassVTC`
+      };
+      const message = messages[type] || messages.confirmation;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     }
 
@@ -1009,7 +1020,6 @@
       if (!item) return;
       $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : "Détail de la réservation";
       const phone = phoneHref(item.customerPhone);
-      const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
       $("detailBody").innerHTML = `
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
@@ -1017,14 +1027,16 @@
           <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
         </div>
-        <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
+        <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
+        <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button></div></div>
         <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
-        ${item.status === "accepted" ? `<div class="status-actions"><button class="action" type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button class="action" type="button" data-trip-sms="reminder">Rappel du trajet</button></div>` : ""}
-        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-share-purchase-order="${item.id}">Partager le PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
+        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
-      $("detailBody").querySelector("[data-share-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget, true));
+      $("detailBody").querySelector("[data-toggle-sms-menu]")?.addEventListener("click", () => {
+        $("detailBody").querySelector("[data-sms-menu]")?.classList.toggle("hidden");
+      });
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
         button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
       });
@@ -2026,6 +2038,4 @@
   </script>
 </body>
 </html>
-
-
 
