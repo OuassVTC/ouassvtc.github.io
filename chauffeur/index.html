@@ -144,8 +144,18 @@
       cursor:pointer;
       white-space:nowrap;
     }
-    .live-status{display:flex;align-items:center;gap:7px;color:#5e5e5e;font-size:12px;font-weight:800;margin-top:9px}
-    .live-dot{width:8px;height:8px;border-radius:50%;background:#18a957;box-shadow:0 0 0 4px #18a95718}
+    .manual-sync{display:inline-flex;align-items:center;gap:7px;margin-top:10px;min-height:34px;border:1px solid #d7d7d7;border-radius:999px;background:#fff;color:#555;padding:0 12px;font-size:12px;font-weight:850;cursor:pointer}
+    .manual-sync.syncing span:first-child{animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .trip-alert{position:fixed;inset:0;z-index:120;background:#0009;padding:20px;display:grid;place-items:center}
+    .trip-alert-card{width:min(440px,100%);background:#000;color:#fff;border:2px solid #fff;border-radius:25px;padding:27px;text-align:center;box-shadow:0 24px 80px #0008;animation:alertPulse .8s ease-in-out infinite alternate}
+    .trip-alert-card .alert-icon{font-size:42px;margin-bottom:9px}
+    .trip-alert-card h2{font-size:27px;margin-bottom:8px}
+    .trip-alert-card p{color:#ccc;line-height:1.45;margin-bottom:19px}
+    .trip-alert-actions{display:grid;grid-template-columns:1fr auto;gap:9px}
+    .trip-alert-actions button{min-height:50px;border-radius:13px;border:1px solid #444;background:#171717;color:#fff;padding:0 17px;font-weight:900;cursor:pointer}
+    .trip-alert-actions .view-request{background:#fff;color:#000;border-color:#fff}
+    @keyframes alertPulse{from{box-shadow:0 24px 80px #0008,0 0 0 0 #fff5}to{box-shadow:0 24px 80px #0008,0 0 0 10px #fff0}}
 
     .stats{
       display:grid;
@@ -421,7 +431,7 @@
         <div>
           <div class="eyebrow">Tableau de bord privé</div>
           <h1>Bonjour Ouassini.</h1>
-          <div class="live-status"><span class="live-dot"></span><span id="syncStatus">Synchronisation en direct</span></div>
+          <button class="manual-sync" id="manualSync" type="button"><span>↻</span><span>Actualiser</span></button>
         </div>
         <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
       </div>
@@ -552,6 +562,15 @@
     </article>
   </div>
 
+  <div class="trip-alert hidden" id="tripAlert" role="alertdialog" aria-modal="true" aria-labelledby="tripAlertTitle">
+    <div class="trip-alert-card">
+      <div class="alert-icon">🚘</div>
+      <h2 id="tripAlertTitle">Nouvelle demande de trajet</h2>
+      <p id="tripAlertText">Une nouvelle réservation vient d’arriver.</p>
+      <div class="trip-alert-actions"><button class="view-request" id="viewNewRequest" type="button">Voir la demande</button><button id="closeTripAlert" type="button">Fermer</button></div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -584,6 +603,12 @@
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
+    let firstBookingsSnapshot = true;
+    const knownNewBookingIds = new Set();
+    let alertTimeout = null;
+    let ringInterval = null;
+    let audioContext = null;
+    let localSaveInProgress = false;
 
     window.emailjs.init("U08QGWWRUenJDOllc");
 
@@ -1054,16 +1079,71 @@
       }
     }
 
+    function prepareAlertSound() {
+      if (!audioContext) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioContext = new AudioContextClass();
+      }
+      if (audioContext?.state === "suspended") audioContext.resume().catch(() => {});
+    }
+
+    function soundAlertPulse() {
+      if (!audioContext || audioContext.state !== "running") return;
+      [0, 0.32].forEach(offset => {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+        gain.gain.setValueAtTime(0.001, audioContext.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.28, audioContext.currentTime + offset + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + offset + 0.24);
+        oscillator.connect(gain).connect(audioContext.destination);
+        oscillator.start(audioContext.currentTime + offset);
+        oscillator.stop(audioContext.currentTime + offset + 0.26);
+      });
+    }
+
+    function closeTripAlert() {
+      $("tripAlert").classList.add("hidden");
+      clearTimeout(alertTimeout);
+      clearInterval(ringInterval);
+      alertTimeout = null;
+      ringInterval = null;
+      if (navigator.vibrate) navigator.vibrate(0);
+    }
+
+    function showTripAlert(count = 1) {
+      closeTripAlert();
+      $("tripAlertText").textContent = count > 1
+        ? `${count} nouvelles demandes de trajet viennent d’arriver.`
+        : "Une nouvelle demande de trajet vient d’arriver.";
+      $("tripAlert").classList.remove("hidden");
+      prepareAlertSound();
+      soundAlertPulse();
+      ringInterval = setInterval(soundAlertPulse, 1200);
+      if (navigator.vibrate) navigator.vibrate([500, 250, 500, 900, 500, 250, 500, 900, 500, 250, 500, 900, 500]);
+      alertTimeout = setTimeout(closeTripAlert, 20000);
+    }
+
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
       const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
+        const incoming = firstBookingsSnapshot ? [] : snapshot.docChanges().filter(change => {
+          const item = change.doc.data();
+          return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
+        });
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
-        $("syncStatus").textContent = `Synchronisé à ${new Date().toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
+        state.bookings.filter(item => item.status === "new").forEach(item => knownNewBookingIds.add(item.id));
+        firstBookingsSnapshot = false;
         render();
+        $("manualSync").classList.remove("syncing");
+        $("manualSync").querySelector("span:last-child").textContent = "Actualiser";
+        if (incoming.length) showTripAlert(incoming.length);
       }, error => {
         console.error(error);
-        $("syncStatus").textContent = "Connexion interrompue · reconnexion automatique";
+        $("manualSync").classList.remove("syncing");
+        $("manualSync").querySelector("span:last-child").textContent = "Réessayer";
         $("emptyState").textContent = "Impossible de charger les demandes. Vérifiez les règles Firebase.";
         $("emptyState").classList.remove("hidden");
       });
@@ -1135,11 +1215,25 @@
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
     document.querySelectorAll("[data-daily-status]").forEach(button => button.addEventListener("click", () => openDailyList(button.dataset.dailyStatus)));
+    document.addEventListener("pointerdown", prepareAlertSound, { once: true });
+    $("manualSync").addEventListener("click", () => {
+      prepareAlertSound();
+      if (!db || !auth?.currentUser) return;
+      $("manualSync").classList.add("syncing");
+      $("manualSync").querySelector("span:last-child").textContent = "Actualisation…";
+      listenToBookings();
+    });
+    $("closeTripAlert").addEventListener("click", closeTripAlert);
+    $("viewNewRequest").addEventListener("click", () => {
+      closeTripAlert();
+      openPanel("bookingsPanel");
+    });
     window.addEventListener("offline", () => {
-      if ($("syncStatus")) $("syncStatus").textContent = "Hors connexion · données conservées";
+      $("manualSync").classList.remove("syncing");
+      $("manualSync").querySelector("span:last-child").textContent = "Hors connexion";
     });
     window.addEventListener("online", () => {
-      if ($("syncStatus")) $("syncStatus").textContent = "Reconnexion et synchronisation…";
+      $("manualSync").querySelector("span:last-child").textContent = "Actualiser";
     });
 
     $("searchForm").addEventListener("submit", event => {
@@ -1324,6 +1418,7 @@
       button.disabled = true;
       button.textContent = "Enregistrement en cours…";
       try {
+        localSaveInProgress = true;
         const current = new Date();
         const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
         const quickBooking = await addDoc(collection(db, "bookings"), {
@@ -1347,9 +1442,11 @@
           completedAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
+        localSaveInProgress = false;
         $("quickBookingForm").reset();
         $("quickBookingSuccess").classList.remove("hidden");
       } catch (error) {
+        localSaveInProgress = false;
         console.error(error);
         alert("La course rapide n’a pas pu être enregistrée. Réessayez.");
       } finally {
@@ -1380,6 +1477,7 @@
       button.textContent = "Enregistrement en cours…";
       let savedInApp = false;
       try {
+        localSaveInProgress = true;
         const createdBooking = await addDoc(collection(db, "bookings"), {
           customerName: params.nom,
           customerPhone: params.telephone,
@@ -1396,12 +1494,14 @@
           updatedAt: serverTimestamp()
         });
         await updateDoc(createdBooking, { status: "accepted", updatedAt: serverTimestamp() });
+        localSaveInProgress = false;
         savedInApp = true;
         await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
         $("driverBookingForm").reset();
         $("driverDateTime").value = localDate.toISOString().slice(0, 16);
         $("driverBookingSuccess").classList.remove("hidden");
       } catch (error) {
+        localSaveInProgress = false;
         console.error(error);
         alert(savedInApp
           ? "La réservation est enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé."
