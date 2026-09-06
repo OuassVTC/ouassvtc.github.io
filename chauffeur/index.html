@@ -589,7 +589,7 @@
           <h3>Me rendre au départ</h3>
           <p>L’application utilise votre position actuelle et l’adresse de départ renseignée dans le formulaire.</p>
           <div class="client-route-map" id="driverLiveMap"></div>
-          <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Me localiser et calculer</button>
+          <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Calculer</button>
           <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
         </section>
         <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
@@ -1364,7 +1364,7 @@
       }, (result, status) => {
         const button = $("locateDriver");
         button.disabled = false;
-        button.textContent = "Recalculer depuis ma position";
+        button.textContent = "Recalculer";
         if (status !== "OK") {
           alert("Google Maps n’a pas pu calculer le trajet jusqu’au client. Vérifiez l’adresse de départ.");
           return;
@@ -1400,7 +1400,7 @@
       }, error => {
         console.error(error);
         button.disabled = false;
-        button.textContent = "Me localiser et calculer";
+        button.textContent = "Calculer";
         alert("Autorisez la localisation pour calculer le temps jusqu’au client.");
       }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
     });
@@ -1438,6 +1438,27 @@
       return (sunday || night)
         ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif dimanche" : "Tarif soir / nuit" }
         : { base: 20, extraKm: 1.80, label: "Tarif jour" };
+    }
+
+    function calculateAutomaticFare(origin, destination, tripDate) {
+      return new Promise((resolve, reject) => {
+        if (!driverDirectionsService) {
+          reject(new Error("Google Maps indisponible"));
+          return;
+        }
+        driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
+          if (status !== "OK") {
+            reject(new Error(`Itinéraire impossible : ${status}`));
+            return;
+          }
+          const leg = result.routes[0].legs[0];
+          const distance = leg.distance.value / 1000;
+          const rate = driverRate(tripDate);
+          const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+          const price = Math.round(rawPrice / 5) * 5;
+          resolve({ price, distance, duration: leg.duration.text, rate });
+        });
+      });
     }
 
     $("calculateQuickFare").addEventListener("click", () => {
@@ -1590,6 +1611,23 @@
         alert("Vous devez être connecté pour enregistrer une réservation.");
         return;
       }
+      const button = $("saveDriverBooking");
+      const departure = $("driverPickup").value.trim();
+      const arrival = $("driverDestination").value.trim();
+      const tripDate = new Date($("driverDateTime").value);
+      button.disabled = true;
+      button.textContent = "Calcul automatique du tarif…";
+      let fare;
+      try {
+        fare = await calculateAutomaticFare(departure, arrival, tripDate);
+        $("driverPrice").value = `${fare.price} €`;
+      } catch (fareError) {
+        console.error(fareError);
+        alert("Le tarif n’a pas pu être calculé. Vérifiez les deux adresses et votre connexion Google Maps.");
+        button.disabled = false;
+        button.textContent = "Enregistrer et envoyer sur Zoho";
+        return;
+      }
       const params = {
         nom: $("driverName").value.trim(),
         telephone: $("driverPhone").value.trim(),
@@ -1599,14 +1637,10 @@
         passagers: $("driverPassengers").value,
         paiement: $("driverPayment").value,
         message: $("driverMessage").value.trim(),
-        prix: moneyValue($("driverPrice").value) > 0
-          ? `${moneyValue($("driverPrice").value).toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
-          : "Estimation non renseignée"
+        prix: `${fare.price} €`
       };
       lastDriverConfirmation = { ...params };
       localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
-      const button = $("saveDriverBooking");
-      button.disabled = true;
       button.textContent = "Enregistrement en cours…";
       let savedInApp = false;
       try {
