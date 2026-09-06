@@ -36,6 +36,9 @@
     button,a{touch-action:manipulation}
 
     .hidden{display:none!important}
+    .pac-container{z-index:99999!important;border-radius:12px;box-shadow:0 12px 35px #0003;font-family:inherit}
+    .pac-item{padding:10px 12px;font-size:14px;cursor:pointer}
+    .pac-item-query{font-size:14px}
 
     .topbar{
       position:sticky;
@@ -753,10 +756,13 @@
     function loadGoogleMaps() {
       if (window.google?.maps) return Promise.resolve();
       return new Promise((resolve, reject) => {
+        window.initOuassDriverMaps = () => {
+          delete window.initOuassDriverMaps;
+          resolve();
+        };
         const script = document.createElement("script");
-        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&libraries=places&loading=async";
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&libraries=places&loading=async&callback=initOuassDriverMaps";
         script.async = true;
-        script.onload = resolve;
         script.onerror = reject;
         document.head.appendChild(script);
       });
