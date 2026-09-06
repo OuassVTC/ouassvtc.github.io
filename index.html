@@ -2791,6 +2791,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script type="module" src="/ouassvtc-bookings.js"></script>
 
 
 <script>
@@ -4412,6 +4413,36 @@ async function envoyerFormulaire(
       params
 
     );
+
+
+    /* Enregistre aussi la demande dans l'application chauffeur.
+       L'e-mail reste prioritaire : si Firebase n'est pas encore configuré
+       ou momentanément indisponible, la réservation continue normalement. */
+
+    if(
+      typeof window.saveBookingToDriverApp
+      ===
+      "function"
+    ){
+
+      try{
+
+        await window.saveBookingToDriverApp(
+          params
+        );
+
+      }
+
+      catch(firebaseError){
+
+        console.warn(
+          "Application chauffeur indisponible :",
+          firebaseError
+        );
+
+      }
+
+    }
 
 
     document
