@@ -17,7 +17,7 @@ messaging.onBackgroundMessage(payload => {
     body: payload.data?.body || "Une nouvelle demande de trajet vient d’arriver.",
     icon: "/ouassvtc-app.png",
     badge: "/ouassvtc-app.png",
-    tag: "ouassvtc-new-booking",
+    tag: payload.data?.tag || "ouassvtc-new-booking",
     renotify: true,
     vibrate: [500, 250, 500, 900, 500],
     data: { url: "/chauffeur/" }
@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(payload => {
   return self.registration.showNotification(title, options);
 });
 
-const CACHE_NAME = "ouassvtc-chauffeur-v3";
+const CACHE_NAME = "ouassvtc-chauffeur-v4";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
