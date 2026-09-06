@@ -956,6 +956,7 @@
           </div>
           <button class="primary" type="submit" style="margin-top:14px">Enregistrer les modifications</button>
           <button class="primary" id="cancelEditBooking" type="button" style="margin-top:10px;background:#fff;color:#000;border:1px solid #000">Annuler</button>
+          ${item.status === "completed" ? `<button class="primary" id="deleteArchivedBooking" type="button" style="margin-top:18px;background:#b3261e;color:#fff">Supprimer définitivement la course</button>` : ""}
         </form>`;
       if (window.google?.maps?.places) {
         const options = { componentRestrictions: { country: "fr" }, fields: ["formatted_address", "geometry", "name"] };
@@ -963,6 +964,21 @@
         new google.maps.places.Autocomplete($("editDestination"), options);
       }
       $("cancelEditBooking").addEventListener("click", () => openBooking(id));
+      $("deleteArchivedBooking")?.addEventListener("click", async () => {
+        if (!confirm("Supprimer définitivement cette course archivée ? Cette action est irréversible.")) return;
+        const button = $("deleteArchivedBooking");
+        button.disabled = true;
+        button.textContent = "Suppression en cours…";
+        try {
+          await deleteDoc(doc(db, "bookings", id));
+          closeBooking();
+        } catch (error) {
+          console.error(error);
+          alert("La course n’a pas pu être supprimée. Réessayez.");
+          button.disabled = false;
+          button.textContent = "Supprimer définitivement la course";
+        }
+      });
       $("editBookingForm").addEventListener("submit", async event => {
         event.preventDefault();
         const button = event.submitter;
