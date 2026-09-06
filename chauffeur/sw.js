@@ -1,4 +1,4 @@
-const CACHE_NAME = "ouassvtc-chauffeur-v1";
+const CACHE_NAME = "ouassvtc-chauffeur-v2";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
@@ -37,3 +37,19 @@ self.addEventListener("fetch", event => {
       .catch(() => caches.match(event.request).then(hit => hit || caches.match("/chauffeur/")))
   );
 });
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || "/chauffeur/";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(openClients => {
+      const existing = openClients.find(client => new URL(client.url).pathname.startsWith("/chauffeur"));
+      if (existing) {
+        existing.navigate(targetUrl);
+        return existing.focus();
+      }
+      return clients.openWindow(targetUrl);
+    })
+  );
+});
+
