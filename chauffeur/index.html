@@ -222,6 +222,8 @@
     .agenda-route{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
     .simulator{background:#fff;border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0000000a}
     .simulator-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .simulator-grid.single-column-form{grid-template-columns:1fr}
+    .simulator-grid.single-column-form .sim-field.full{grid-column:auto}
     .sim-field{display:grid;gap:6px}
     .sim-field.full{grid-column:1/-1}
     .sim-field label{font-size:12px;font-weight:900;color:#555}
@@ -562,7 +564,7 @@
 
         <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
-          <div class="simulator-grid">
+          <div class="simulator-grid single-column-form">
             <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
             <div class="sim-field"><label for="driverPhone">Téléphone</label><input id="driverPhone" required type="tel" autocomplete="tel"></div>
             <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
