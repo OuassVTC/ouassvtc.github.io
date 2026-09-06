@@ -1,0 +1,25 @@
+{
+  "name": "OuassVTC Chauffeur",
+  "short_name": "Ouass Chauffeur",
+  "description": "Application privée de gestion des réservations OuassVTC",
+  "start_url": "/chauffeur/",
+  "scope": "/chauffeur/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f4f4",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/ouassvtc-app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ouassvtc-app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
