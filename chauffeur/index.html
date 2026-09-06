@@ -164,6 +164,8 @@
       padding:0 15px;
       outline:none;
     }
+    .search-form{display:grid;grid-template-columns:1fr auto;gap:9px}
+    .search-button{min-height:48px;border:0;border-radius:13px;background:#000;color:#fff;padding:0 18px;font-weight:900;cursor:pointer}
 
     .filter{
       min-height:48px;
@@ -211,6 +213,15 @@
     .archive-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .archive-item small{display:block;color:var(--muted);margin-top:4px}
     .archive-price{font-size:18px;font-weight:950;white-space:nowrap}
+    .history-wrap{margin:18px 0 24px}
+    .history-toggle{width:100%;min-height:50px;border:0;border-radius:14px;background:#000;color:#fff;font-weight:900;cursor:pointer}
+    .history-months{display:grid;gap:10px;margin-top:12px}
+    .history-month{border:1px solid var(--border);border-radius:16px;background:#fff;overflow:hidden}
+    .history-month-button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;background:#fff;padding:16px;text-align:left;font-weight:900;cursor:pointer}
+    .history-month-button span:last-child{white-space:nowrap}
+    .history-weeks{display:grid;gap:8px;padding:0 12px 12px}
+    .history-week{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:11px;background:#f4f4f4;font-size:13px}
+    .history-week strong{white-space:nowrap}
     .accepted-row{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer}
     .accepted-row-time{font-size:17px;font-weight:950}
     .accepted-row strong{display:block}
@@ -382,7 +393,10 @@
       </div>
 
       <div class="toolbar">
-        <input class="search" id="search" type="search" placeholder="Rechercher un nom, un téléphone ou une adresse">
+        <form class="search-form" id="searchForm">
+          <input class="search" id="search" type="search" placeholder="Nom, téléphone ou adresse">
+          <button class="search-button" type="submit">Rechercher</button>
+        </form>
       </div>
 
       <div class="app-tabs" role="tablist">
@@ -404,6 +418,7 @@
           <h2 class="section-title">Archives trouvées</h2>
           <div class="booking-list" id="archiveSearchList"></div>
         </div>
+        <div class="empty hidden" id="searchNoResults">Aucune course trouvée avec cette recherche.</div>
       </section>
 
       <section class="tab-panel hidden" id="agendaPanel">
@@ -417,6 +432,10 @@
         <div class="report-grid">
           <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée</span></article>
           <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
+        </div>
+        <div class="history-wrap">
+          <button class="history-toggle" id="toggleMonthHistory" type="button">Historique des mois</button>
+          <div class="history-months hidden" id="monthHistoryList"></div>
         </div>
         <h2 class="section-title">Courses archivées</h2>
         <div class="archive-list" id="archiveList"></div>
@@ -590,15 +609,65 @@
       return bookingDate(item);
     }
 
+    function normalizeSearch(value) {
+      return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
+
+    function matchesSearch(item, rawTerm = state.search) {
+      const term = normalizeSearch(rawTerm);
+      if (!term) return true;
+      const haystack = normalizeSearch([item.customerName, item.customerPhone, item.pickup, item.destination, item.customerMessage].join(" "));
+      const searchedDigits = term.replace(/\D/g, "");
+      const phoneDigits = String(item.customerPhone || "").replace(/\D/g, "");
+      return haystack.includes(term) || (searchedDigits.length >= 3 && phoneDigits.includes(searchedDigits));
+    }
+
+    function mondayOf(date) {
+      const result = new Date(date);
+      const offset = (result.getDay() + 6) % 7;
+      result.setDate(result.getDate() - offset);
+      result.setHours(0, 0, 0, 0);
+      return result;
+    }
+
+    function renderMonthHistory(allCompleted, total) {
+      const months = new Map();
+      allCompleted.forEach(item => {
+        const date = completedDate(item);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        if (!months.has(key)) months.set(key, { date: new Date(date.getFullYear(), date.getMonth(), 1), items: [] });
+        months.get(key).items.push(item);
+      });
+      $("monthHistoryList").innerHTML = [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([key, month]) => {
+        const weeks = new Map();
+        month.items.forEach(item => {
+          const start = mondayOf(completedDate(item));
+          const weekKey = start.toISOString().slice(0, 10);
+          if (!weeks.has(weekKey)) weeks.set(weekKey, { start, items: [] });
+          weeks.get(weekKey).items.push(item);
+        });
+        const weekRows = [...weeks.values()].sort((a, b) => a.start - b.start).map(week => {
+          const end = new Date(week.start);
+          end.setDate(end.getDate() + 6);
+          const period = `Du ${week.start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} au ${end.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })}`;
+          return `<div class="history-week"><span>${escapeHtml(period)}<br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} €</strong></div>`;
+        }).join("");
+        const label = month.date.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+        return `<section class="history-month"><button class="history-month-button" type="button" data-history-month="${key}"><span>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}<br><small>${month.items.length} course${month.items.length > 1 ? "s" : ""}</small></span><span>${total(month.items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="history-${key}">${weekRows}</div></section>`;
+      }).join("") || `<div class="empty">Aucun historique pour le moment.</div>`;
+      $("monthHistoryList").querySelectorAll("[data-history-month]").forEach(button => {
+        button.addEventListener("click", () => {
+          const details = $(`history-${button.dataset.historyMonth}`);
+          details.classList.toggle("hidden");
+        });
+      });
+    }
+
     function renderReport() {
-      const term = state.search.toLowerCase();
       const allCompleted = state.bookings
         .filter(item => item.status === "completed" && completedDate(item))
         .sort((a, b) => completedDate(b) - completedDate(a));
-      const completed = allCompleted.filter(item => {
-          const haystack = [item.customerName, item.customerPhone, item.pickup, item.destination].join(" ").toLowerCase();
-          return !term || haystack.includes(term);
-        });
+      const completed = allCompleted.filter(item => matchesSearch(item));
       const today = new Date();
       const weekStart = new Date(today);
       const day = (weekStart.getDay() + 6) % 7;
@@ -613,6 +682,7 @@
       $("weekTrips").textContent = tripLabel(weekItems);
       $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
       $("monthTrips").textContent = tripLabel(monthItems);
+      renderMonthHistory(allCompleted, total);
       $("archiveEmpty").classList.toggle("hidden", completed.length !== 0);
       $("archiveList").innerHTML = completed.map(item => {
         const date = completedDate(item);
@@ -639,12 +709,7 @@
     }
 
     function render() {
-      const term = state.search.toLowerCase();
-      const matchesSearch = item => {
-        const haystack = [item.customerName, item.customerPhone, item.pickup, item.destination]
-          .join(" ").toLowerCase();
-        return !term || haystack.includes(term);
-      };
+      const term = state.search.trim();
       const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
       const accepted = state.bookings
         .filter(item => item.status === "accepted" && matchesSearch(item))
@@ -658,6 +723,7 @@
       $("completedCount").textContent = state.bookings.filter(x => x.status === "completed").length;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
       $("emptyState").classList.toggle("hidden", accepted.length !== 0);
+      $("searchNoResults").classList.toggle("hidden", !term || requests.length + accepted.length + archivedMatches.length !== 0);
 
       $("newRequestList").innerHTML = requests.map(item => {
         const phone = phoneHref(item.customerPhone);
@@ -846,7 +912,7 @@
 
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
-      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(200));
+      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
         render();
@@ -894,9 +960,26 @@
       });
     }
 
-    $("search").addEventListener("input", event => {
-      state.search = event.target.value;
+    $("searchForm").addEventListener("submit", event => {
+      event.preventDefault();
+      state.search = $("search").value.trim();
       render();
+      const reservationsTab = document.querySelector('[data-tab="bookingsPanel"]');
+      if (reservationsTab) reservationsTab.click();
+    });
+
+    $("search").addEventListener("input", event => {
+      if (event.target.value === "") {
+        state.search = "";
+        render();
+      }
+    });
+
+    $("toggleMonthHistory").addEventListener("click", () => {
+      $("monthHistoryList").classList.toggle("hidden");
+      $("toggleMonthHistory").textContent = $("monthHistoryList").classList.contains("hidden")
+        ? "Historique des mois"
+        : "Masquer l’historique";
     });
 
     $("detailClose").addEventListener("click", closeBooking);
