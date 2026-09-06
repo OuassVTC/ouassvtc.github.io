@@ -263,12 +263,37 @@
     .detail-head h2{font-size:19px}
     .detail-close{width:42px;height:42px;border:1px solid #444;border-radius:12px;background:#171717;color:#fff;font-size:22px;cursor:pointer}
     .detail-body{padding:18px}
+    .detail-body *{min-width:0}
+    .detail-body .route-line strong{overflow-wrap:anywhere;word-break:break-word}
+    .detail-body .booking-main{border:1px solid #e6e6e6;border-radius:18px;background:#fff}
+    .detail-body .route{margin:16px 0;padding:14px;background:#f6f6f6;border-radius:14px}
+    .detail-body .quick-actions,.detail-body .waze-actions{padding-left:0;padding-right:0;margin-top:12px}
+    .detail-body .status-actions{padding:14px 0 0;margin-top:14px}
 
     @media(max-width:600px){
       .app-tabs{grid-template-columns:1fr 1fr}
       .report-grid{grid-template-columns:1fr}
       .app-tab{font-size:12px;padding:0 5px}
       .home-actions{grid-template-columns:1fr 1fr}
+      .detail-overlay{padding:0;place-items:stretch;background:#fff}
+      .detail-card{width:100%;height:100dvh;max-height:none;border-radius:0;box-shadow:none;overflow-x:hidden;overscroll-behavior:contain}
+      .detail-head{padding:max(14px,env(safe-area-inset-top)) 15px 14px}
+      .detail-head h2{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .detail-body{padding:14px 14px max(24px,env(safe-area-inset-bottom));overflow-x:hidden}
+      .detail-body .booking-main{padding:17px}
+      .detail-body .booking-top{display:grid;grid-template-columns:1fr;gap:10px}
+      .detail-body .status{justify-self:start}
+      .detail-body .booking-name{font-size:23px;overflow-wrap:anywhere}
+      .detail-body .route-line{grid-template-columns:18px minmax(0,1fr)}
+      .detail-body .route-line strong{font-size:15px}
+      .detail-body .quick-actions,.detail-body .waze-actions{grid-template-columns:1fr 1fr;gap:9px}
+      .detail-body .quick-actions a,.detail-body .waze-actions a{min-height:50px;padding:8px;text-align:center}
+      .detail-body .status-actions{grid-template-columns:1fr;gap:9px;border-top:0}
+      .detail-body .action{min-height:52px;font-size:14px}
+      .detail-body .simulator{border:0;border-radius:0;padding:0;box-shadow:none}
+      .detail-body .simulator-grid{grid-template-columns:1fr}
+      .detail-body .sim-field.full{grid-column:auto}
+      .detail-body input,.detail-body select,.detail-body textarea{font-size:16px}
     }
 
     .booking{
