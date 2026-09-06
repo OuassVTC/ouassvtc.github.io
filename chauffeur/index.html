@@ -589,7 +589,7 @@
           <h3>Me rendre au départ</h3>
           <p>L’application utilise votre position actuelle et l’adresse de départ renseignée dans le formulaire.</p>
           <div class="client-route-map" id="driverLiveMap"></div>
-          <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Calculer</button>
+          <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Calculer mon approche</button>
           <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
         </section>
         <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
@@ -1252,6 +1252,22 @@
       prepareAlertSound();
       if (!db || !auth?.currentUser) return;
       $("manualSync").classList.add("syncing");
+      $("driverBookingForm").reset();
+      $("quickBookingForm").reset();
+      const current = new Date();
+      const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
+      $("driverDateTime").value = currentLocal.toISOString().slice(0, 16);
+      $("driverBookingSuccess").classList.add("hidden");
+      $("quickBookingSuccess").classList.add("hidden");
+      $("driverRouteResult").classList.add("hidden");
+      $("driverRouteSummary").textContent = "—";
+      driverCurrentPosition = null;
+      if (driverLiveDirectionsRenderer) driverLiveDirectionsRenderer.setMap(null);
+      driverLiveDirectionsRenderer = null;
+      driverLiveMap = null;
+      $("driverLiveMap").innerHTML = "";
+      lastDriverConfirmation = null;
+      localStorage.removeItem("ouassvtcLastDriverConfirmation");
       openPanel("dashboardHome");
       listenToBookings();
     });
@@ -1364,7 +1380,7 @@
       }, (result, status) => {
         const button = $("locateDriver");
         button.disabled = false;
-        button.textContent = "Recalculer";
+        button.textContent = "Recalculer mon approche";
         if (status !== "OK") {
           alert("Google Maps n’a pas pu calculer le trajet jusqu’au client. Vérifiez l’adresse de départ.");
           return;
@@ -1400,7 +1416,7 @@
       }, error => {
         console.error(error);
         button.disabled = false;
-        button.textContent = "Calculer";
+        button.textContent = "Calculer mon approche";
         alert("Autorisez la localisation pour calculer le temps jusqu’au client.");
       }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
     });
@@ -1428,7 +1444,7 @@
       const dateText = scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
       const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
       const priceText = `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`;
-      const message = `Bonjour ${name},\n\nJe vous confirme votre réservation pour le trajet suivant :\n\nDépart : ${pickup}\nArrivée : ${destination}\nDate : ${dateText}\nHeure : ${timeText}\nMontant du trajet : ${priceText}\n\nEn vous remerciant.\n\nOuassini – OuassVTC`;
+      const message = `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${pickup}\n\n🏁 Adresse d’arrivée :\n${destination}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     });
 
