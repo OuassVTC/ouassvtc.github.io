@@ -632,6 +632,8 @@
     let ringInterval = null;
     let audioContext = null;
     let localSaveInProgress = false;
+    let numberingBatchRunning = false;
+    let numberingRequested = false;
     let lastDriverConfirmation = null;
     let messaging = null;
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
@@ -650,6 +652,11 @@
       rejected: "Refusée",
       cancelled: "Annulée"
     };
+
+    function courseNumberLabel(item) {
+      const number = Number(item?.purchaseOrderNumber);
+      return Number.isInteger(number) && number > 0 ? `Course n°${number}` : "Numérotation en cours…";
+    }
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -943,7 +950,7 @@
             <div class="booking-main">
               <div class="booking-top">
                 <div>
-                  <div class="booking-name">${escapeHtml(item.customerName)}</div>
+                  <div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div>
                   <span class="booking-date">${escapeHtml(dateLabel(item))}</span>
                 </div>
                 <span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span>
@@ -975,7 +982,7 @@
       $("bookingList").innerHTML = accepted.map(item => {
         const date = bookingDate(item);
         const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "—";
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
 
       $("archiveSearchSection").classList.toggle("hidden", archivedMatches.length === 0);
@@ -1005,7 +1012,7 @@
       const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
       $("detailBody").innerHTML = `
         <div class="booking-main">
-          <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
+          <div class="booking-top"><div><div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
           <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
@@ -1013,10 +1020,11 @@
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
         <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
         ${item.status === "accepted" ? `<div class="status-actions"><button class="action" type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button class="action" type="button" data-trip-sms="reminder">Rappel du trajet</button></div>` : ""}
-        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
+        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-share-purchase-order="${item.id}">Partager le PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
+      $("detailBody").querySelector("[data-share-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget, true));
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
         button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
       });
@@ -1122,6 +1130,29 @@
       });
     }
 
+    async function numberIncomingCourses() {
+      numberingRequested = true;
+      if (numberingBatchRunning) return;
+      numberingBatchRunning = true;
+      try {
+        while (numberingRequested) {
+          numberingRequested = false;
+          const unnumbered = state.bookings
+            .filter(item => !(Number.isInteger(Number(item.purchaseOrderNumber)) && Number(item.purchaseOrderNumber) > 0))
+            .sort((first, second) => (createdDate(first) || new Date(0)) - (createdDate(second) || new Date(0)));
+          for (const item of unnumbered) {
+            try {
+              await getOrCreatePurchaseOrderNumber(item.id);
+            } catch (error) {
+              console.error(`La course ${item.id} n’a pas pu être numérotée automatiquement`, error);
+            }
+          }
+        }
+      } finally {
+        numberingBatchRunning = false;
+      }
+    }
+
     function loadPdfImage(url) {
       return new Promise((resolve, reject) => {
         const image = new Image();
@@ -1199,7 +1230,7 @@
       return new Blob(chunks, { type:"application/pdf" });
     }
 
-    async function generatePurchaseOrder(bookingId, button) {
+    async function generatePurchaseOrder(bookingId, button, sharePdf = false) {
       if (!db || !auth?.currentUser) {
         alert("Vous devez être connecté pour créer le bon de commande.");
         return;
@@ -1209,9 +1240,9 @@
         alert("Cette course est introuvable.");
         return;
       }
-      const pdfWindow = window.open("", "_blank");
+      const pdfWindow = sharePdf ? null : window.open("", "_blank");
       button.disabled = true;
-      button.textContent = "Création du PDF…";
+      button.textContent = sharePdf ? "Préparation du partage…" : "Création du PDF…";
       try {
         const orderNumber = await getOrCreatePurchaseOrderNumber(bookingId);
         const canvas = document.createElement("canvas");
@@ -1278,7 +1309,17 @@
         context.textAlign = "center";
         context.font = "400 18px Arial";
         context.fillText(`OuassVTC · Bon de commande n° ${orderNumber}`, 620, 1695);
-        const pdfUrl = URL.createObjectURL(canvasAsPdfBlob(canvas));
+        const pdfBlob = canvasAsPdfBlob(canvas);
+        const pdfFile = new File([pdfBlob], `bon-de-commande-${orderNumber}.pdf`, { type:"application/pdf" });
+        if (sharePdf && navigator.share && (!navigator.canShare || navigator.canShare({ files:[pdfFile] }))) {
+          await navigator.share({
+            title:`Bon de commande OuassVTC n°${orderNumber}`,
+            text:`Bon de commande de la course n°${orderNumber}`,
+            files:[pdfFile]
+          });
+          return;
+        }
+        const pdfUrl = URL.createObjectURL(pdfBlob);
         if (pdfWindow) pdfWindow.location.href = pdfUrl;
         else {
           const download = document.createElement("a");
@@ -1292,10 +1333,11 @@
       } catch (error) {
         console.error(error);
         if (pdfWindow) pdfWindow.close();
+        if (error?.name === "AbortError") return;
         alert("Le bon de commande n’a pas pu être créé. Vérifiez votre connexion et réessayez.");
       } finally {
         button.disabled = false;
-        button.textContent = "Bon de commande PDF";
+        button.textContent = sharePdf ? "Partager le PDF" : "Bon de commande PDF";
       }
     }
 
@@ -1450,6 +1492,7 @@
           return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
+        void numberIncomingCourses();
         state.bookings.filter(item => item.status === "new").forEach(item => knownNewBookingIds.add(item.id));
         firstBookingsSnapshot = false;
         render();
@@ -1983,4 +2026,6 @@
   </script>
 </body>
 </html>
+
+
 
