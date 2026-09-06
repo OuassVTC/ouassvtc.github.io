@@ -446,7 +446,19 @@
       </section>
 
       <section class="tab-panel hidden" id="newBookingPanel">
-        <h2 class="section-title">Créer une réservation</h2>
+        <h2 class="section-title">Course rapide</h2>
+        <form class="simulator" id="quickBookingForm" style="margin-bottom:20px">
+          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
+          <div class="simulator-grid" style="margin-top:14px">
+            <div class="sim-field"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
+            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 €"></div>
+            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
+          </div>
+          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
+          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant disponible dans vos réservations.</span></div>
+        </form>
+
+        <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid">
             <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
@@ -1027,6 +1039,51 @@
         $("driverPrice").value = `${price} €`;
         alert(`Tarif estimé : ${price} €\n${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`);
       });
+    });
+
+    $("quickBookingForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!db || !auth?.currentUser) {
+        alert("Vous devez être connecté pour enregistrer une course.");
+        return;
+      }
+      const phone = $("quickBookingPhone").value.trim();
+      const priceAmount = moneyValue($("quickBookingPrice").value);
+      const comment = $("quickBookingComment").value.trim();
+      if (!phone || priceAmount <= 0) {
+        alert("Indiquez le numéro du client et un prix valide.");
+        return;
+      }
+      const button = $("saveQuickBooking");
+      button.disabled = true;
+      button.textContent = "Enregistrement en cours…";
+      try {
+        const current = new Date();
+        const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
+        await addDoc(collection(db, "bookings"), {
+          customerName: "Course manuelle",
+          customerPhone: phone,
+          pickup: "Ajout manuel",
+          destination: "Trajet non renseigné",
+          scheduledAtText: currentLocal.toISOString().slice(0, 16),
+          passengers: "Non précisé",
+          paymentMethod: "Non précisé",
+          customerMessage: comment,
+          estimatedPrice: `${priceAmount.toFixed(0)} €`,
+          status: "accepted",
+          source: "driver-quick",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        $("quickBookingForm").reset();
+        $("quickBookingSuccess").classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        alert("La course rapide n’a pas pu être enregistrée. Réessayez.");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Enregistrer dans l’application";
+      }
     });
 
     $("driverBookingForm").addEventListener("submit", async event => {
