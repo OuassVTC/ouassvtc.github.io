@@ -863,6 +863,137 @@
     }
 
     /* =========================
+       AVIS CLIENTS
+    ========================= */
+
+    .reviews-section{padding:12px 0 72px}
+
+    .reviews-title{
+      max-width:780px;
+      margin-bottom:28px;
+      font-size:clamp(32px,5vw,52px);
+      line-height:1.05;
+      letter-spacing:-1.7px;
+      font-weight:950;
+    }
+
+    .reviews-rating{
+      min-height:112px;
+      padding:24px 30px;
+      border-radius:22px;
+      background:#000;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:24px;
+      margin-bottom:18px;
+    }
+
+    .reviews-score{
+      font-size:44px;
+      line-height:1;
+      font-weight:950;
+      letter-spacing:-1px;
+    }
+
+    .reviews-stars{
+      color:#fbbc04;
+      font-size:30px;
+      line-height:1;
+      letter-spacing:3px;
+      white-space:nowrap;
+    }
+
+    .google-mark{
+      border-left:1px solid #555;
+      padding-left:24px;
+      color:#fff;
+      font-size:31px;
+      font-weight:950;
+    }
+
+    .reviews-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .review-card{
+      min-width:0;
+      padding:24px;
+      border:1px solid #e2e2e2;
+      border-radius:20px;
+      background:#fff;
+    }
+
+    .review-head{
+      display:flex;
+      align-items:center;
+      gap:13px;
+      margin-bottom:16px;
+    }
+
+    .review-avatar{
+      flex:0 0 48px;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#111;
+      color:#fff;
+      font-size:21px;
+      font-weight:850;
+    }
+
+    .review-name{
+      display:block;
+      font-size:17px;
+      line-height:1.2;
+      font-weight:900;
+    }
+
+    .review-source{
+      display:block;
+      margin-top:3px;
+      color:#666;
+      font-size:12px;
+      font-weight:750;
+    }
+
+    .review-card .review-stars{
+      margin-bottom:12px;
+      font-size:19px;
+      letter-spacing:1px;
+    }
+
+    .review-card p{
+      color:#3f3f3f;
+      font-size:15px;
+      line-height:1.65;
+    }
+
+    .reviews-note{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      margin-top:22px;
+      color:#777;
+      font-size:13px;
+    }
+
+    .reviews-note::before,
+    .reviews-note::after{
+      content:"";
+      width:54px;
+      height:1px;
+      background:#bbb;
+    }
+
+    /* =========================
        INSTALLATION APPLICATION
     ========================= */
 
@@ -1398,6 +1529,39 @@
     }
 
     @media (max-width:700px){
+
+      .reviews-section{
+        padding-top:4px;
+        padding-bottom:58px;
+      }
+
+      .reviews-rating{
+        min-height:94px;
+        padding:20px 18px;
+        gap:14px;
+      }
+
+      .reviews-score{
+        font-size:38px;
+      }
+
+      .reviews-stars{
+        font-size:23px;
+        letter-spacing:1px;
+      }
+
+      .google-mark{
+        padding-left:16px;
+        font-size:26px;
+      }
+
+      .reviews-grid{
+        grid-template-columns:1fr;
+      }
+
+      .review-card{
+        padding:21px;
+      }
 
       .app-install-card{
         padding:30px 22px;
@@ -2242,6 +2406,75 @@
       </div>
 
     </div>
+
+  </section>
+
+
+  <!-- =========================
+       AVIS CLIENTS
+  ========================= -->
+
+  <section class="container reviews-section" aria-labelledby="reviews-title">
+
+    <div class="section-eyebrow">Avis clients</div>
+
+    <h2 class="reviews-title" id="reviews-title">
+      Ils nous font confiance.
+    </h2>
+
+    <div class="reviews-rating" aria-label="Note de 5 sur 5 sur Google">
+      <strong class="reviews-score">5,0</strong>
+      <span class="reviews-stars" aria-hidden="true">★★★★★</span>
+      <span class="google-mark" aria-label="Google">G</span>
+    </div>
+
+    <div class="reviews-grid">
+
+      <article class="review-card">
+        <div class="review-head">
+          <span class="review-avatar" aria-hidden="true">F</span>
+          <div>
+            <strong class="review-name">Fabienne B.</strong>
+            <span class="review-source">Avis Google</span>
+          </div>
+        </div>
+        <div class="review-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p>
+          Agréable trajet, voiture confortable et chauffeur super pro et sympa.
+        </p>
+      </article>
+
+      <article class="review-card">
+        <div class="review-head">
+          <span class="review-avatar" aria-hidden="true">L</span>
+          <div>
+            <strong class="review-name">Lila G.</strong>
+            <span class="review-source">Avis Google</span>
+          </div>
+        </div>
+        <div class="review-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p>
+          Chauffeur très sympathique et ponctuel. Voiture impeccable et conduite très agréable.
+        </p>
+      </article>
+
+      <article class="review-card">
+        <div class="review-head">
+          <span class="review-avatar" aria-hidden="true">S</span>
+          <div>
+            <strong class="review-name">Sonia B.</strong>
+            <span class="review-source">Avis Google</span>
+          </div>
+        </div>
+        <div class="review-stars" aria-label="5 étoiles sur 5">★★★★★</div>
+        <p>
+          Disponibilité et professionnalisme, personne souriante et agréable. Faites-lui confiance à 100 %.
+        </p>
+      </article>
+
+    </div>
+
+    <p class="reviews-note">Avis publiés sur Google</p>
 
   </section>
 
