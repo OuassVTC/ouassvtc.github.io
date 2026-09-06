@@ -1,4 +1,31 @@
-const CACHE_NAME = "ouassvtc-chauffeur-v2";
+importScripts("https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js");
+
+firebase.initializeApp({
+  apiKey: "AIzaSyA0DXbsmSkymE55YZfZytGa-newiXBw2lU",
+  authDomain: "ouassvtc-chauffeur-da466.firebaseapp.com",
+  projectId: "ouassvtc-chauffeur-da466",
+  storageBucket: "ouassvtc-chauffeur-da466.firebasestorage.app",
+  messagingSenderId: "394811166195",
+  appId: "1:394811166195:web:23da8a59731c22c6f51686"
+});
+
+const messaging = firebase.messaging();
+messaging.onBackgroundMessage(payload => {
+  const title = payload.data?.title || "Nouvelle réservation OuassVTC";
+  const options = {
+    body: payload.data?.body || "Une nouvelle demande de trajet vient d’arriver.",
+    icon: "/ouassvtc-app.png",
+    badge: "/ouassvtc-app.png",
+    tag: "ouassvtc-new-booking",
+    renotify: true,
+    vibrate: [500, 250, 500, 900, 500],
+    data: { url: "/chauffeur/" }
+  };
+  return self.registration.showNotification(title, options);
+});
+
+const CACHE_NAME = "ouassvtc-chauffeur-v3";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
