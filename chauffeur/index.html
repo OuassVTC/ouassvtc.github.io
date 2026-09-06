@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#000000">
   <title>OuassVTC Chauffeur</title>
@@ -23,7 +23,7 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{overscroll-behavior-y:none}
+    html,body{overscroll-behavior-y:none;touch-action:pan-x pan-y}
 
     body{
       min-height:100vh;
@@ -34,7 +34,7 @@
     }
 
     button,a,input,select,textarea{font:inherit}
-    button,a{touch-action:manipulation}
+    button,a,input,select,textarea{touch-action:manipulation}
 
     .hidden{display:none!important}
     .pac-container{z-index:99999!important;border-radius:12px;box-shadow:0 12px 35px #0003;font-family:inherit}
@@ -144,7 +144,7 @@
       cursor:pointer;
       white-space:nowrap;
     }
-    .manual-sync{display:inline-flex;align-items:center;gap:7px;margin-top:10px;min-height:34px;border:1px solid #d7d7d7;border-radius:999px;background:#fff;color:#555;padding:0 12px;font-size:12px;font-weight:850;cursor:pointer}
+    .manual-sync{display:inline-grid;place-items:center;margin-top:10px;width:36px;height:36px;border:1px solid #d7d7d7;border-radius:50%;background:#fff;color:#555;padding:0;font-size:18px;font-weight:850;cursor:pointer}
     .manual-sync.syncing span:first-child{animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .trip-alert{position:fixed;inset:0;z-index:120;background:#0009;padding:20px;display:grid;place-items:center}
@@ -456,7 +456,7 @@
         <div>
           <div class="eyebrow">Tableau de bord privé</div>
           <h1>Bonjour Ouassini.</h1>
-          <button class="manual-sync" id="manualSync" type="button"><span>↻</span><span>Actualiser</span></button>
+          <button class="manual-sync" id="manualSync" type="button" aria-label="Actualiser les courses" title="Actualiser"><span>↻</span></button>
         </div>
         <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
       </div>
@@ -1163,12 +1163,10 @@
         firstBookingsSnapshot = false;
         render();
         $("manualSync").classList.remove("syncing");
-        $("manualSync").querySelector("span:last-child").textContent = "Actualiser";
         if (incoming.length) showTripAlert(incoming.length);
       }, error => {
         console.error(error);
         $("manualSync").classList.remove("syncing");
-        $("manualSync").querySelector("span:last-child").textContent = "Réessayer";
         $("emptyState").textContent = "Impossible de charger les demandes. Vérifiez les règles Firebase.";
         $("emptyState").classList.remove("hidden");
       });
@@ -1245,7 +1243,6 @@
       prepareAlertSound();
       if (!db || !auth?.currentUser) return;
       $("manualSync").classList.add("syncing");
-      $("manualSync").querySelector("span:last-child").textContent = "Actualisation…";
       listenToBookings();
     });
     $("closeTripAlert").addEventListener("click", closeTripAlert);
@@ -1255,10 +1252,6 @@
     });
     window.addEventListener("offline", () => {
       $("manualSync").classList.remove("syncing");
-      $("manualSync").querySelector("span:last-child").textContent = "Hors connexion";
-    });
-    window.addEventListener("online", () => {
-      $("manualSync").querySelector("span:last-child").textContent = "Actualiser";
     });
 
     $("searchForm").addEventListener("submit", event => {
