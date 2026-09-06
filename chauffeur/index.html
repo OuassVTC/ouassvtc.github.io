@@ -184,9 +184,9 @@
     .agenda-day{margin:18px 0}
     .agenda-day h3{font-size:16px;margin-bottom:9px;text-transform:capitalize}
     .agenda-items{display:grid;gap:8px}
-    .agenda-item{display:grid;grid-template-columns:64px 1fr;gap:12px;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}
+    .agenda-item{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px;cursor:pointer}
     .agenda-time{font-weight:950;font-size:17px}
-    .agenda-route{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .agenda-route{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
     .simulator{background:#fff;border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0000000a}
     .simulator-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .sim-field{display:grid;gap:6px}
@@ -531,7 +531,7 @@
 
     function renderAgenda() {
       const planned = state.bookings
-        .filter(item => ["new", "accepted"].includes(item.status) && bookingDate(item))
+        .filter(item => item.status === "accepted" && bookingDate(item))
         .sort((a, b) => bookingDate(a) - bookingDate(b));
       $("agendaEmpty").classList.toggle("hidden", planned.length !== 0);
       const groups = new Map();
@@ -546,9 +546,12 @@
         const title = firstDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
         return `<section class="agenda-day"><h3>${escapeHtml(title)}</h3><div class="agenda-items">${items.map(item => {
           const date = bookingDate(item);
-          return `<article class="agenda-item"><div class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</div><div><strong>${escapeHtml(item.customerName)}</strong><div class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</div></div></article>`;
+          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
         }).join("")}</div></section>`;
       }).join("");
+      $("agendaList").querySelectorAll("[data-open-booking]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
+      });
     }
 
     function moneyValue(value) {
