@@ -622,6 +622,26 @@
       return haystack.includes(term) || (searchedDigits.length >= 3 && phoneDigits.includes(searchedDigits));
     }
 
+    function customerPhoneKey(value) {
+      let digits = String(value || "").replace(/\D/g, "");
+      if (digits.startsWith("0033")) digits = `0${digits.slice(4)}`;
+      else if (digits.startsWith("33") && digits.length === 11) digits = `0${digits.slice(2)}`;
+      return digits.length >= 6 ? digits : "";
+    }
+
+    function customerCompletedCount(item) {
+      const key = customerPhoneKey(item.customerPhone);
+      if (!key) return 0;
+      return state.bookings.filter(booking => booking.status === "completed" && customerPhoneKey(booking.customerPhone) === key).length;
+    }
+
+    function loyaltyLabel(item) {
+      const completed = customerCompletedCount(item);
+      if (item.status === "completed") return `Fidélité : ${completed} course${completed > 1 ? "s" : ""} réalisée${completed > 1 ? "s" : ""}`;
+      if (completed === 0) return "Nouveau client · Course n°1";
+      return `Fidélité : ${completed} course${completed > 1 ? "s" : ""} réalisée${completed > 1 ? "s" : ""} · Prochaine course n°${completed + 1}`;
+    }
+
     function mondayOf(date) {
       const result = new Date(date);
       const offset = (result.getDay() + 6) % 7;
@@ -687,7 +707,7 @@
       $("archiveList").innerHTML = completed.map(item => {
         const date = completedDate(item);
         const dateText = date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" });
-        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
+        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
       }).join("");
       $("archiveList").querySelectorAll("[data-open-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
@@ -746,6 +766,7 @@
                 <span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span>
                 <span>${escapeHtml(item.passengers || "Passagers non précisés")}</span>
                 <span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span>
+                <span>${escapeHtml(loyaltyLabel(item))}</span>
               </div>
               ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
             </div>
@@ -764,12 +785,12 @@
       $("bookingList").innerHTML = accepted.map(item => {
         const date = bookingDate(item);
         const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "—";
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
 
       $("archiveSearchSection").classList.toggle("hidden", archivedMatches.length === 0);
       $("archiveSearchList").innerHTML = archivedMatches.map(item => {
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.customerPhone)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.customerPhone)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
 
       document.querySelectorAll("[data-status]").forEach(button => {
@@ -795,7 +816,7 @@
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
-          <div class="booking-meta"><span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span><span>${escapeHtml(item.passengers || "Passagers non précisés")}</span><span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span></div>
+          <div class="booking-meta"><span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span><span>${escapeHtml(item.passengers || "Passagers non précisés")}</span><span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
@@ -912,7 +933,7 @@
 
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
-      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
+      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(20000));
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
         render();
