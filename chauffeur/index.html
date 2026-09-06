@@ -37,9 +37,9 @@
     button,a,input,select,textarea{touch-action:manipulation}
 
     .hidden{display:none!important}
-    .pac-container{z-index:99999!important;border-radius:12px;box-shadow:0 12px 35px #0003;font-family:inherit}
-    .pac-item{padding:10px 12px;font-size:14px;cursor:pointer}
-    .pac-item-query{font-size:14px}
+    .pac-container{z-index:99999!important;border-radius:12px;box-shadow:0 12px 35px #0003;font-family:inherit;overflow:hidden}
+    .pac-item{padding:11px 13px;font-size:14px;cursor:pointer;white-space:normal!important;line-height:1.35!important;min-height:58px;overflow-wrap:anywhere}
+    .pac-item-query{display:block;font-size:15px;white-space:normal!important;overflow-wrap:anywhere}
 
     .topbar{
       position:sticky;
@@ -159,7 +159,7 @@
 
     .stats{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:10px;
       margin-bottom:18px;
     }
@@ -226,7 +226,7 @@
     .sim-field{display:grid;gap:6px}
     .sim-field.full{grid-column:1/-1}
     .sim-field label{font-size:12px;font-weight:900;color:#555}
-    .sim-field input{width:100%;min-height:50px;border:1px solid var(--border);border-radius:13px;padding:0 14px;outline:none;background:#fafafa}
+    .sim-field input{width:100%;min-height:50px;border:1px solid var(--border);border-radius:13px;padding:0 14px;outline:none;background:#fafafa;font-size:16px}
     .sim-field select{width:100%;min-height:50px;border:1px solid var(--border);border-radius:13px;padding:0 14px;outline:none;background:#fafafa}
     .sim-field textarea{width:100%;min-height:100px;border:1px solid var(--border);border-radius:13px;padding:13px 14px;outline:none;background:#fafafa;resize:vertical}
     .sim-result{margin-top:14px;border-radius:16px;background:#000;color:#fff;padding:18px}
@@ -278,6 +278,7 @@
     .detail-body .status-actions{padding:14px 0 0;margin-top:14px}
 
     @media(max-width:600px){
+      .pac-container{left:10px!important;width:calc(100vw - 20px)!important;max-width:none!important}
       .app-tabs{grid-template-columns:1fr 1fr}
       .report-grid{grid-template-columns:1fr}
       .app-tab{font-size:12px;padding:0 5px}
@@ -405,6 +406,7 @@
 
     @media(max-width:520px){
       .stats{grid-template-columns:1fr 1fr}
+      .stats .stat:last-child{grid-column:1/-1}
       .hello-row{align-items:flex-start;flex-direction:column}
       .toolbar{grid-template-columns:1fr}
     }
@@ -453,7 +455,7 @@
     <section class="login hidden" id="loginView">
       <div class="login-card">
         <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
-        <h1>Votre espace chauffeur.</h1>
+        <h1>Votre espace chauffeur</h1>
         <p>Connectez-vous avec votre compte Google autorisé pour gérer vos demandes.</p>
         <button class="primary" id="loginGoogle" type="button">Continuer avec Google</button>
         <p class="login-error hidden" id="loginError"></p>
@@ -476,13 +478,12 @@
       <section class="tab-panel" id="dashboardHome">
         <div class="stats">
           <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
-          <button class="stat" type="button" data-daily-status="accepted"><strong id="acceptedCount">0</strong><span>Courses acceptées du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
         </div>
         <div class="home-actions">
-          <button class="home-action" type="button" data-open-tab="estimatePanel">Estimer une course</button>
-          <button class="home-action secondary" type="button" data-open-tab="newBookingPanel">Nouvelle course</button>
+          <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
+          <button class="home-action secondary" type="button" data-open-tab="agendaPanel">Agenda</button>
         </div>
         <div class="today-card">
           <h2 class="section-title">Agenda du jour</h2>
@@ -575,8 +576,8 @@
             <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
             <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
             <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
-            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
-            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement CB à bord">Carte bancaire à bord</option><option value="Paiement espèces à bord">Espèces à bord</option></select></div>
+            <div class="sim-field"><label for="driverPassengers">Nombre de passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
+            <div class="sim-field"><label for="driverPayment">Mode de paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement par carte bancaire à bord">Carte bancaire à bord</option><option value="Paiement en espèces à bord">Espèces à bord</option></select></div>
             <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
             <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
           </div>
@@ -639,7 +640,7 @@
       setDoc,
       updateDoc
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-    import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
+    import { getMessaging, getToken, isSupported, onMessage } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
     const $ = id => document.getElementById(id);
@@ -686,7 +687,12 @@
     }
 
     function dateLabel(item) {
-      if (item.scheduledAtText) return item.scheduledAtText.replace("T", " à ");
+      const date = bookingDate(item);
+      if (date) {
+        const day = date.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+        const time = date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+        return `${day} à ${time}`;
+      }
       return "Horaire non renseigné";
     }
 
@@ -902,7 +908,7 @@
       const weekItems = allCompleted.filter(item => completedDate(item) >= weekStart);
       const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
       const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
-      const tripLabel = items => `${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}`;
+      const tripLabel = items => items.length === 1 ? "1 course terminée" : `${items.length} courses terminées`;
       $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
       $("weekTrips").textContent = tripLabel(weekItems);
       $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
@@ -930,7 +936,7 @@
           <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
           <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
       }
-      return `<button class="action" data-status="accepted" data-id="${item.id}">Remettre en acceptée</button>`;
+      return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
 
     function render() {
@@ -944,7 +950,6 @@
         : [];
 
       $("newCount").textContent = dailyItemsForStatus("new").length;
-      $("acceptedCount").textContent = dailyItemsForStatus("accepted").length;
       const todayCompleted = dailyItemsForStatus("completed");
       $("completedCount").textContent = todayCompleted.length;
       $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
@@ -972,7 +977,7 @@
               <div class="booking-meta">
                 <span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span>
                 <span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span>
-                <span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span>
+                <span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span>
                 <span>${escapeHtml(loyaltyLabel(item))}</span>
               </div>
               ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
@@ -1024,7 +1029,7 @@
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
-          <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
+          <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
@@ -1040,6 +1045,10 @@
         await updateStatus(button.dataset.id, button.dataset.status);
         closeBooking();
       }));
+      $("detailBody").querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", async () => {
+        const deleted = await refuseAndDelete(button.dataset.delete);
+        if (deleted) closeBooking();
+      }));
     }
 
     function openEditBooking(id) {
@@ -1054,8 +1063,8 @@
             <div class="sim-field full"><label for="editPickup">Adresse de départ</label><input id="editPickup" required autocomplete="off" value="${escapeHtml(item.pickup)}"></div>
             <div class="sim-field full"><label for="editDestination">Adresse d’arrivée</label><input id="editDestination" required autocomplete="off" value="${escapeHtml(item.destination)}"></div>
             <div class="sim-field"><label for="editDateTime">Date et heure</label><input id="editDateTime" required type="datetime-local" value="${escapeHtml(item.scheduledAtText)}"></div>
-            <div class="sim-field"><label for="editPassengers">Passagers</label><input id="editPassengers" value="${escapeHtml(item.passengers || "Non précisé")}"></div>
-            <div class="sim-field"><label for="editPayment">Paiement</label><input id="editPayment" value="${escapeHtml(item.paymentMethod || "Non précisé")}"></div>
+            <div class="sim-field"><label for="editPassengers">Nombre de passagers</label><input id="editPassengers" value="${escapeHtml(item.passengers || "Non précisé")}"></div>
+            <div class="sim-field"><label for="editPayment">Mode de paiement</label><input id="editPayment" value="${escapeHtml(item.paymentMethod || "Non précisé")}"></div>
             <div class="sim-field"><label for="editPrice">Tarif</label><input id="editPrice" value="${escapeHtml(item.estimatedPrice || "")}"></div>
             <div class="sim-field full"><label for="editMessage">Informations complémentaires</label><textarea id="editMessage">${escapeHtml(item.customerMessage || "")}</textarea></div>
           </div>
@@ -1064,9 +1073,8 @@
           ${item.status === "completed" ? `<button class="primary" id="deleteArchivedBooking" type="button" style="margin-top:18px;background:#b3261e;color:#fff">Supprimer définitivement la course</button>` : ""}
         </form>`;
       if (window.google?.maps?.places) {
-        const options = { componentRestrictions: { country: ["fr", "es"] }, fields: ["formatted_address", "geometry", "name"] };
-        new google.maps.places.Autocomplete($("editPickup"), options);
-        new google.maps.places.Autocomplete($("editDestination"), options);
+        createAddressAutocomplete($("editPickup"));
+        createAddressAutocomplete($("editDestination"));
       }
       $("cancelEditBooking").addEventListener("click", () => openBooking(id));
       $("deleteArchivedBooking")?.addEventListener("click", async () => {
@@ -1119,12 +1127,14 @@
     }
 
     async function refuseAndDelete(id) {
-      if (!confirm("Refuser et supprimer définitivement cette demande ?")) return;
+      if (!confirm("Refuser et supprimer définitivement cette demande ?")) return false;
       try {
         await deleteDoc(doc(db, "bookings", id));
+        return true;
       } catch (error) {
         console.error(error);
         alert("La demande n’a pas pu être supprimée.");
+        return false;
       }
     }
 
@@ -1297,6 +1307,21 @@
       auth = getAuth(app);
       db = getFirestore(app);
       messaging = await isSupported() ? getMessaging(app) : null;
+      if (messaging) {
+        onMessage(messaging, async payload => {
+          if (Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
+          const registration = await navigator.serviceWorker.ready;
+          await registration.showNotification(payload.data?.title || "Rappel de course OuassVTC", {
+            body: payload.data?.body || "Une course approche.",
+            icon: "/ouassvtc-app.png",
+            badge: "/ouassvtc-app.png",
+            tag: payload.data?.tag || "ouassvtc-course-reminder",
+            renotify: true,
+            vibrate: [500, 250, 500, 900, 500],
+            data: { url: "/chauffeur/" }
+          });
+        });
+      }
       try {
         await setPersistence(auth, browserLocalPersistence);
       } catch (error) {
@@ -1364,26 +1389,10 @@
     document.addEventListener("pointerdown", prepareAlertSound, { once: true });
     $("manualSync").addEventListener("click", () => {
       prepareAlertSound();
-      if (!db || !auth?.currentUser) return;
       $("manualSync").classList.add("syncing");
-      $("driverBookingForm").reset();
-      $("quickBookingForm").reset();
-      const current = new Date();
-      const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
-      $("driverDateTime").value = currentLocal.toISOString().slice(0, 16);
-      $("driverBookingSuccess").classList.add("hidden");
-      $("quickBookingSuccess").classList.add("hidden");
-      $("driverRouteResult").classList.add("hidden");
-      $("driverRouteSummary").textContent = "—";
-      driverCurrentPosition = null;
-      if (driverLiveDirectionsRenderer) driverLiveDirectionsRenderer.setMap(null);
-      driverLiveDirectionsRenderer = null;
-      driverLiveMap = null;
-      $("driverLiveMap").innerHTML = "";
       lastDriverConfirmation = null;
       localStorage.removeItem("ouassvtcLastDriverConfirmation");
-      openPanel("dashboardHome");
-      listenToBookings();
+      window.location.replace(`/chauffeur/?actualisation=${Date.now()}`);
     });
     $("closeTripAlert").addEventListener("click", closeTripAlert);
     $("viewNewRequest").addEventListener("click", () => {
@@ -1440,6 +1449,29 @@
     let driverLiveMap = null;
     let driverLiveDirectionsRenderer = null;
     let driverCurrentPosition = null;
+    const addressBiasCenter = { lat: 42.6887, lng: 2.8948 };
+
+    function applyAddressBias(autocomplete) {
+      if (!window.google?.maps || !autocomplete || !addressBiasCenter) return;
+      const lat = addressBiasCenter.lat;
+      const lng = addressBiasCenter.lng;
+      autocomplete.setBounds(new google.maps.LatLngBounds(
+        { lat:lat - 0.45, lng:lng - 0.65 },
+        { lat:lat + 0.45, lng:lng + 0.65 }
+      ));
+      autocomplete.setOptions({ strictBounds:false });
+    }
+
+    function createAddressAutocomplete(input) {
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country:["fr", "es"] },
+        fields:["formatted_address", "geometry", "name"],
+        strictBounds:false
+      });
+      applyAddressBias(autocomplete);
+      return autocomplete;
+    }
+
     function loadGoogleMaps() {
       if (window.google?.maps) return Promise.resolve();
       return new Promise((resolve, reject) => {
@@ -1457,11 +1489,10 @@
 
     loadGoogleMaps().then(() => {
       driverDirectionsService = new google.maps.DirectionsService();
-      const options = { componentRestrictions: { country: ["fr", "es"] }, fields: ["formatted_address", "geometry", "name"] };
-      new google.maps.places.Autocomplete($("simPickup"), options);
-      new google.maps.places.Autocomplete($("simDestination"), options);
-      const driverPickupAutocomplete = new google.maps.places.Autocomplete($("driverPickup"), options);
-      new google.maps.places.Autocomplete($("driverDestination"), options);
+      createAddressAutocomplete($("simPickup"));
+      createAddressAutocomplete($("simDestination"));
+      const driverPickupAutocomplete = createAddressAutocomplete($("driverPickup"));
+      createAddressAutocomplete($("driverDestination"));
       driverPickupAutocomplete.addListener("place_changed", () => {
         if (driverCurrentPosition) calculateDriverRouteToPickup();
       });
@@ -1566,8 +1597,8 @@
       const sunday = date.getDay() === 0;
       const night = date.getHours() >= 20 || date.getHours() < 6;
       return (sunday || night)
-        ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif dimanche" : "Tarif soir / nuit" }
-        : { base: 20, extraKm: 1.80, label: "Tarif jour" };
+        ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif du dimanche" : "Tarif de soirée / nuit" }
+        : { base: 20, extraKm: 1.80, label: "Tarif de jour" };
     }
 
     function calculateAutomaticFare(origin, destination, tripDate) {
@@ -1828,8 +1859,16 @@
     });
 
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("/chauffeur/sw.js", { scope: "/chauffeur/" }));
+      window.addEventListener("load", async () => {
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js", { scope:"/chauffeur/", updateViaCache:"none" });
+        registration.update();
+      });
     }
+    document.addEventListener("gesturestart", event => event.preventDefault(), { passive:false });
+    document.addEventListener("dblclick", event => event.preventDefault(), { passive:false });
+    document.addEventListener("touchmove", event => {
+      if (event.touches.length > 1) event.preventDefault();
+    }, { passive:false });
   </script>
 </body>
 </html>
