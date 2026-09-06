@@ -1060,7 +1060,7 @@
       try {
         const current = new Date();
         const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
-        await addDoc(collection(db, "bookings"), {
+        const quickBooking = await addDoc(collection(db, "bookings"), {
           customerName: "Course manuelle",
           customerPhone: phone,
           pickup: "Ajout manuel",
@@ -1070,11 +1070,16 @@
           paymentMethod: "Non précisé",
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
+          status: "new",
+          source: "website",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        await updateDoc(quickBooking, {
           status: "completed",
           source: "driver-quick",
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          completedAt: serverTimestamp()
+          completedAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
         });
         $("quickBookingForm").reset();
         $("quickBookingSuccess").classList.remove("hidden");
