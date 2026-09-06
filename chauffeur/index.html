@@ -436,6 +436,7 @@
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Bilans et historique</button>
       <button class="menu-link" type="button" data-menu-tab="estimatePanel">Estimer une course</button>
       <button class="menu-link" type="button" data-menu-tab="newBookingPanel">Nouvelle course</button>
+      <button class="menu-link" id="enableNotifications" type="button">Activer les notifications</button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
   </aside>
@@ -1165,6 +1166,56 @@
       });
     }
 
+    function updateNotificationButton() {
+      if (!("Notification" in window)) {
+        $("enableNotifications").textContent = "Notifications indisponibles";
+        $("enableNotifications").disabled = true;
+        return;
+      }
+      $("enableNotifications").textContent = Notification.permission === "granted"
+        ? "✓ Notifications activées"
+        : "Activer les notifications";
+    }
+
+    async function enableNotifications() {
+      if (!("Notification" in window)) {
+        alert("Les notifications ne sont pas disponibles sur ce téléphone.");
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      updateNotificationButton();
+      if (permission === "granted") {
+        const registration = await navigator.serviceWorker?.ready;
+        await registration?.showNotification("Notifications OuassVTC activées", {
+          body: "Vous serez averti dès qu’une nouvelle réservation arrivera.",
+          icon: "/ouassvtc-app.png",
+          badge: "/ouassvtc-app.png",
+          tag: "ouassvtc-notifications-enabled",
+          vibrate: [200, 100, 200]
+        });
+      } else {
+        alert("Autorisez les notifications dans les réglages du téléphone pour recevoir les nouvelles réservations.");
+      }
+    }
+
+    async function showBookingNotification(count = 1) {
+      if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        await registration.showNotification("Nouvelle réservation OuassVTC", {
+          body: count > 1 ? `${count} nouvelles demandes de trajet viennent d’arriver.` : "Une nouvelle demande de trajet vient d’arriver.",
+          icon: "/ouassvtc-app.png",
+          badge: "/ouassvtc-app.png",
+          tag: "ouassvtc-new-booking",
+          renotify: true,
+          vibrate: [500, 250, 500, 900, 500],
+          data: { url: "/chauffeur/" }
+        });
+      } catch (error) {
+        console.error("Notification impossible", error);
+      }
+    }
+
     function closeTripAlert() {
       $("tripAlert").classList.add("hidden");
       clearTimeout(alertTimeout);
@@ -1184,6 +1235,7 @@
       soundAlertPulse();
       ringInterval = setInterval(soundAlertPulse, 1200);
       if (navigator.vibrate) navigator.vibrate([500, 250, 500, 900, 500, 250, 500, 900, 500, 250, 500, 900, 500]);
+      showBookingNotification(count);
       alertTimeout = setTimeout(closeTripAlert, 20000);
     }
 
@@ -1284,6 +1336,8 @@
     });
     $("closeMenu").addEventListener("click", closeMenu);
     $("menuOverlay").addEventListener("click", closeMenu);
+    $("enableNotifications").addEventListener("click", enableNotifications);
+    updateNotificationButton();
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
     document.querySelectorAll("[data-daily-status]").forEach(button => button.addEventListener("click", () => openDailyList(button.dataset.dailyStatus)));
