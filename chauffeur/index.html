@@ -32,7 +32,7 @@
       padding-bottom:max(30px,env(safe-area-inset-bottom));
     }
 
-    button,a,input{font:inherit}
+    button,a,input,select,textarea{font:inherit}
     button,a{touch-action:manipulation}
 
     .hidden{display:none!important}
@@ -173,6 +173,49 @@
 
     .section-title{font-size:21px;margin:22px 0 12px}
     .booking-list{display:grid;gap:13px}
+
+    .app-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}
+    .app-tab{min-height:46px;border:1px solid var(--border);border-radius:13px;background:#fff;font-weight:900;cursor:pointer}
+    .app-tab.active{background:#000;color:#fff;border-color:#000}
+    .tab-panel.hidden{display:none!important}
+    .agenda-day{margin:18px 0}
+    .agenda-day h3{font-size:16px;margin-bottom:9px;text-transform:capitalize}
+    .agenda-items{display:grid;gap:8px}
+    .agenda-item{display:grid;grid-template-columns:64px 1fr;gap:12px;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}
+    .agenda-time{font-weight:950;font-size:17px}
+    .agenda-route{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .simulator{background:#fff;border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0000000a}
+    .simulator-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .sim-field{display:grid;gap:6px}
+    .sim-field.full{grid-column:1/-1}
+    .sim-field label{font-size:12px;font-weight:900;color:#555}
+    .sim-field input{width:100%;min-height:50px;border:1px solid var(--border);border-radius:13px;padding:0 14px;outline:none;background:#fafafa}
+    .sim-field select{width:100%;min-height:50px;border:1px solid var(--border);border-radius:13px;padding:0 14px;outline:none;background:#fafafa}
+    .sim-field textarea{width:100%;min-height:100px;border:1px solid var(--border);border-radius:13px;padding:13px 14px;outline:none;background:#fafafa;resize:vertical}
+    .sim-result{margin-top:14px;border-radius:16px;background:#000;color:#fff;padding:18px}
+    .sim-result strong{display:block;font-size:31px;line-height:1}
+    .sim-result span{display:block;color:#bbb;font-size:13px;margin-top:8px}
+    .waze-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px 12px}
+    .waze-actions a{min-height:42px;display:grid;place-items:center;text-decoration:none;border:1px solid #d8d8d8;border-radius:11px;color:#111;font-size:12px;font-weight:900;background:#fff}
+    .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+    .report-card{background:#000;color:#fff;border-radius:20px;padding:21px}
+    .report-card small{display:block;color:#aaa;font-weight:800;margin-bottom:12px}
+    .report-card strong{display:block;font-size:34px;line-height:1}
+    .report-card span{display:block;color:#bbb;font-size:13px;margin-top:9px}
+    .archive-list{display:grid;gap:9px}
+    .archive-item{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}
+    .archive-item div{min-width:0}
+    .archive-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .archive-item small{display:block;color:var(--muted);margin-top:4px}
+    .archive-price{font-size:18px;font-weight:950;white-space:nowrap}
+
+    @media(max-width:600px){
+      .simulator-grid{grid-template-columns:1fr}
+      .sim-field.full{grid-column:auto}
+      .app-tabs{grid-template-columns:1fr 1fr}
+      .report-grid{grid-template-columns:1fr}
+      .app-tab{font-size:12px;padding:0 5px}
+    }
 
     .booking{
       overflow:hidden;
@@ -326,23 +369,84 @@
         <div class="stat"><strong id="completedCount">0</strong><span>Courses terminées</span></div>
       </div>
 
-      <div class="toolbar">
-        <input class="search" id="search" type="search" placeholder="Rechercher un client ou une ville">
-        <select class="filter" id="statusFilter" aria-label="Filtrer les demandes">
-          <option value="active">À traiter et acceptées</option>
-          <option value="new">Nouvelles</option>
-          <option value="accepted">Acceptées</option>
-          <option value="completed">Terminées</option>
-          <option value="all">Toutes</option>
-        </select>
+      <div class="app-tabs" role="tablist">
+        <button class="app-tab active" type="button" data-tab="bookingsPanel">Réservations</button>
+        <button class="app-tab" type="button" data-tab="agendaPanel">Agenda</button>
+        <button class="app-tab" type="button" data-tab="reportPanel">Bilan</button>
+        <button class="app-tab" type="button" data-tab="estimatePanel">Estimer</button>
+        <button class="app-tab" type="button" data-tab="newBookingPanel">Nouvelle course</button>
       </div>
 
-      <h2 class="section-title">Demandes de réservation</h2>
-      <div class="booking-list" id="bookingList"></div>
-      <div class="empty hidden" id="emptyState">Aucune demande dans cette catégorie.</div>
+      <section class="tab-panel" id="bookingsPanel">
+        <div class="toolbar">
+          <input class="search" id="search" type="search" placeholder="Rechercher un client ou une ville">
+          <select class="filter" id="statusFilter" aria-label="Filtrer les demandes">
+            <option value="active">À traiter et acceptées</option>
+            <option value="new">Nouvelles</option>
+            <option value="accepted">Acceptées</option>
+            <option value="completed">Terminées</option>
+            <option value="all">Toutes</option>
+          </select>
+        </div>
+        <h2 class="section-title">Demandes de réservation</h2>
+        <div class="booking-list" id="bookingList"></div>
+        <div class="empty hidden" id="emptyState">Aucune demande dans cette catégorie.</div>
+      </section>
+
+      <section class="tab-panel hidden" id="agendaPanel">
+        <h2 class="section-title">Agenda des courses</h2>
+        <div id="agendaList"></div>
+        <div class="empty hidden" id="agendaEmpty">Aucune course planifiée.</div>
+      </section>
+
+      <section class="tab-panel hidden" id="reportPanel">
+        <h2 class="section-title">Activité chauffeur</h2>
+        <div class="report-grid">
+          <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée</span></article>
+          <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
+        </div>
+        <h2 class="section-title">Courses archivées</h2>
+        <div class="archive-list" id="archiveList"></div>
+        <div class="empty hidden" id="archiveEmpty">Aucune course terminée pour le moment.</div>
+      </section>
+
+      <section class="tab-panel hidden" id="estimatePanel">
+        <h2 class="section-title">Simulateur de tarif</h2>
+        <div class="simulator">
+          <div class="simulator-grid">
+            <div class="sim-field full"><label for="simPickup">Adresse de départ</label><input id="simPickup" autocomplete="off" placeholder="Saisir le départ"></div>
+            <div class="sim-field full"><label for="simDestination">Adresse d’arrivée</label><input id="simDestination" autocomplete="off" placeholder="Saisir l’arrivée"></div>
+            <div class="sim-field"><label for="simDate">Date</label><input id="simDate" type="date"></div>
+            <div class="sim-field"><label for="simTime">Heure</label><input id="simTime" type="time"></div>
+          </div>
+          <button class="primary" id="simulateFare" type="button" style="margin-top:14px">Calculer le tarif</button>
+          <div class="sim-result hidden" id="simResult"><strong id="simPrice">—</strong><span id="simDetails"></span></div>
+        </div>
+      </section>
+
+      <section class="tab-panel hidden" id="newBookingPanel">
+        <h2 class="section-title">Créer une réservation</h2>
+        <form class="simulator" id="driverBookingForm">
+          <div class="simulator-grid">
+            <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
+            <div class="sim-field"><label for="driverPhone">Téléphone</label><input id="driverPhone" required type="tel" autocomplete="tel"></div>
+            <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
+            <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
+            <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
+            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers" required><option value="">Sélectionner</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
+            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment" required><option value="">Sélectionner</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement CB à bord">Carte bancaire à bord</option><option value="Paiement espèces à bord">Espèces à bord</option></select></div>
+            <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
+            <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
+          </div>
+          <button class="primary" id="estimateDriverBooking" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer cette course</button>
+          <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer et envoyer sur Zoho</button>
+          <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle apparaît dans l’application et le récapitulatif a été envoyé sur Zoho.</span></div>
+        </form>
+      </section>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
@@ -353,6 +457,7 @@
       signOut
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import {
+      addDoc,
       collection,
       doc,
       getFirestore,
@@ -370,6 +475,8 @@
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
+
+    window.emailjs.init("U08QGWWRUenJDOllc");
 
     const statusLabels = {
       new: "Nouvelle",
@@ -395,6 +502,74 @@
     function dateLabel(item) {
       if (item.scheduledAtText) return item.scheduledAtText.replace("T", " à ");
       return "Horaire non renseigné";
+    }
+
+    function bookingDate(item) {
+      const date = new Date(item.scheduledAtText || "");
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function wazeHref(address) {
+      return `https://www.waze.com/ul?q=${encodeURIComponent(address || "")}&navigate=yes`;
+    }
+
+    function renderAgenda() {
+      const planned = state.bookings
+        .filter(item => ["new", "accepted"].includes(item.status) && bookingDate(item))
+        .sort((a, b) => bookingDate(a) - bookingDate(b));
+      $("agendaEmpty").classList.toggle("hidden", planned.length !== 0);
+      const groups = new Map();
+      planned.forEach(item => {
+        const date = bookingDate(item);
+        const key = date.toISOString().slice(0, 10);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(item);
+      });
+      $("agendaList").innerHTML = [...groups.entries()].map(([, items]) => {
+        const firstDate = bookingDate(items[0]);
+        const title = firstDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+        return `<section class="agenda-day"><h3>${escapeHtml(title)}</h3><div class="agenda-items">${items.map(item => {
+          const date = bookingDate(item);
+          return `<article class="agenda-item"><div class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</div><div><strong>${escapeHtml(item.customerName)}</strong><div class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</div></div></article>`;
+        }).join("")}</div></section>`;
+      }).join("");
+    }
+
+    function moneyValue(value) {
+      const number = Number.parseFloat(String(value || "0").replace(",", ".").replace(/[^0-9.]/g, ""));
+      return Number.isFinite(number) ? number : 0;
+    }
+
+    function completedDate(item) {
+      if (item.completedAt?.toDate) return item.completedAt.toDate();
+      if (item.updatedAt?.toDate) return item.updatedAt.toDate();
+      return bookingDate(item);
+    }
+
+    function renderReport() {
+      const completed = state.bookings
+        .filter(item => item.status === "completed" && completedDate(item))
+        .sort((a, b) => completedDate(b) - completedDate(a));
+      const today = new Date();
+      const weekStart = new Date(today);
+      const day = (weekStart.getDay() + 6) % 7;
+      weekStart.setDate(weekStart.getDate() - day);
+      weekStart.setHours(0, 0, 0, 0);
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const weekItems = completed.filter(item => completedDate(item) >= weekStart);
+      const monthItems = completed.filter(item => completedDate(item) >= monthStart);
+      const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
+      const tripLabel = items => `${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}`;
+      $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
+      $("weekTrips").textContent = tripLabel(weekItems);
+      $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
+      $("monthTrips").textContent = tripLabel(monthItems);
+      $("archiveEmpty").classList.toggle("hidden", completed.length !== 0);
+      $("archiveList").innerHTML = completed.map(item => {
+        const date = completedDate(item);
+        const dateText = date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" });
+        return `<article class="archive-item"><div><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></div><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")}</span></article>`;
+      }).join("");
     }
 
     function actionButtons(item) {
@@ -455,6 +630,10 @@
               <a href="tel:${phone}">☎ Appeler</a>
               <a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a>
             </div>
+            <div class="waze-actions">
+              <a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a>
+              <a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a>
+            </div>
             <div class="status-actions">${actionButtons(item)}</div>
           </article>`;
       }).join("");
@@ -462,6 +641,8 @@
       document.querySelectorAll("[data-status]").forEach(button => {
         button.addEventListener("click", () => updateStatus(button.dataset.id, button.dataset.status));
       });
+      renderAgenda();
+      renderReport();
     }
 
     async function updateStatus(id, status) {
@@ -469,7 +650,25 @@
       const button = document.querySelector(`[data-id="${id}"][data-status="${status}"]`);
       if (button) button.disabled = true;
       try {
-        await updateDoc(doc(db, "bookings", id), { status, updatedAt: serverTimestamp() });
+        const changes = { status, updatedAt: serverTimestamp() };
+        if (status === "completed") {
+          const item = state.bookings.find(booking => booking.id === id);
+          const currentPrice = moneyValue(item?.estimatedPrice) || "";
+          const finalPrice = prompt("Tarif réellement encaissé pour cette course (€) :", currentPrice);
+          if (finalPrice === null) {
+            if (button) button.disabled = false;
+            return;
+          }
+          const amount = moneyValue(finalPrice);
+          if (amount <= 0) {
+            alert("Indiquez un tarif valide avant de terminer la course.");
+            if (button) button.disabled = false;
+            return;
+          }
+          changes.completedAt = serverTimestamp();
+          changes.estimatedPrice = `${amount.toFixed(0)} €`;
+        }
+        await updateDoc(doc(db, "bookings", id), changes);
       } catch (error) {
         console.error(error);
         alert("La modification n’a pas pu être enregistrée.");
@@ -537,6 +736,167 @@
       render();
     });
 
+    document.querySelectorAll(".app-tab").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".app-tab").forEach(tab => tab.classList.toggle("active", tab === button));
+        document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== button.dataset.tab));
+      });
+    });
+
+    const now = new Date();
+    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    $("simDate").value = localDate.toISOString().slice(0, 10);
+    $("simTime").value = localDate.toISOString().slice(11, 16);
+    $("driverDateTime").value = localDate.toISOString().slice(0, 16);
+
+    let driverDirectionsService = null;
+    function loadGoogleMaps() {
+      if (window.google?.maps) return Promise.resolve();
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&libraries=places&loading=async";
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    loadGoogleMaps().then(() => {
+      driverDirectionsService = new google.maps.DirectionsService();
+      const options = { componentRestrictions: { country: "fr" }, fields: ["formatted_address", "geometry", "name"] };
+      new google.maps.places.Autocomplete($("simPickup"), options);
+      new google.maps.places.Autocomplete($("simDestination"), options);
+      new google.maps.places.Autocomplete($("driverPickup"), options);
+      new google.maps.places.Autocomplete($("driverDestination"), options);
+    }).catch(error => console.error("Google Maps indisponible", error));
+
+    function driverRate(date) {
+      const sunday = date.getDay() === 0;
+      const night = date.getHours() >= 20 || date.getHours() < 6;
+      return (sunday || night)
+        ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif dimanche" : "Tarif soir / nuit" }
+        : { base: 20, extraKm: 1.80, label: "Tarif jour" };
+    }
+
+    $("simulateFare").addEventListener("click", () => {
+      const origin = $("simPickup").value.trim();
+      const destination = $("simDestination").value.trim();
+      const tripDate = new Date(`${$("simDate").value}T${$("simTime").value}`);
+      if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
+        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
+        return;
+      }
+      if (!driverDirectionsService) {
+        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
+        return;
+      }
+      const button = $("simulateFare");
+      button.disabled = true;
+      button.textContent = "Calcul en cours…";
+      driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
+        button.disabled = false;
+        button.textContent = "Calculer le tarif";
+        if (status !== "OK") {
+          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
+          return;
+        }
+        const leg = result.routes[0].legs[0];
+        const distance = leg.distance.value / 1000;
+        const rate = driverRate(tripDate);
+        const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+        const price = Math.round(rawPrice / 5) * 5;
+        $("simPrice").textContent = `${price} €`;
+        $("simDetails").textContent = `${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`;
+        $("simResult").classList.remove("hidden");
+      });
+    });
+
+    $("estimateDriverBooking").addEventListener("click", () => {
+      const origin = $("driverPickup").value.trim();
+      const destination = $("driverDestination").value.trim();
+      const tripDate = new Date($("driverDateTime").value);
+      if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
+        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
+        return;
+      }
+      if (!driverDirectionsService) {
+        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
+        return;
+      }
+      const button = $("estimateDriverBooking");
+      button.disabled = true;
+      button.textContent = "Calcul en cours…";
+      driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
+        button.disabled = false;
+        button.textContent = "Estimer cette course";
+        if (status !== "OK") {
+          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
+          return;
+        }
+        const leg = result.routes[0].legs[0];
+        const distance = leg.distance.value / 1000;
+        const rate = driverRate(tripDate);
+        const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+        const price = Math.round(rawPrice / 5) * 5;
+        $("driverPrice").value = `${price} €`;
+        alert(`Tarif estimé : ${price} €\n${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`);
+      });
+    });
+
+    $("driverBookingForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!db || !auth?.currentUser) {
+        alert("Vous devez être connecté pour enregistrer une réservation.");
+        return;
+      }
+      const params = {
+        nom: $("driverName").value.trim(),
+        telephone: $("driverPhone").value.trim(),
+        depart: $("driverPickup").value.trim(),
+        arrivee: $("driverDestination").value.trim(),
+        dateheure: $("driverDateTime").value,
+        passagers: $("driverPassengers").value,
+        paiement: $("driverPayment").value,
+        message: $("driverMessage").value.trim(),
+        prix: $("driverPrice").value.trim() || "Estimation non renseignée"
+      };
+      const button = $("saveDriverBooking");
+      button.disabled = true;
+      button.textContent = "Enregistrement en cours…";
+      let savedInApp = false;
+      try {
+        await addDoc(collection(db, "bookings"), {
+          customerName: params.nom,
+          customerPhone: params.telephone,
+          pickup: params.depart,
+          destination: params.arrivee,
+          scheduledAtText: params.dateheure,
+          passengers: params.passagers,
+          paymentMethod: params.paiement,
+          customerMessage: params.message,
+          estimatedPrice: params.prix,
+          status: "new",
+          source: "website",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        savedInApp = true;
+        await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
+        $("driverBookingForm").reset();
+        $("driverDateTime").value = localDate.toISOString().slice(0, 16);
+        $("driverBookingSuccess").classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        alert(savedInApp
+          ? "La réservation est enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé."
+          : "La réservation n’a pas pu être enregistrée. Réessayez.");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Enregistrer et envoyer sur Zoho";
+      }
+    });
+
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
       deferredInstallPrompt = event;
@@ -557,5 +917,4 @@
   </script>
 </body>
 </html>
-
 
