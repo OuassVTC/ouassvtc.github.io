@@ -455,7 +455,7 @@
             <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
           </div>
           <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
-          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant disponible dans vos réservations.</span></div>
+          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
         </form>
 
         <h2 class="section-title">Formulaire complet</h2>
@@ -1069,11 +1069,12 @@
           passengers: "Non précisé",
           paymentMethod: "Non précisé",
           customerMessage: comment,
-          estimatedPrice: `${priceAmount.toFixed(0)} €`,
-          status: "accepted",
+          estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
+          status: "completed",
           source: "driver-quick",
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
+          updatedAt: serverTimestamp(),
+          completedAt: serverTimestamp()
         });
         $("quickBookingForm").reset();
         $("quickBookingSuccess").classList.remove("hidden");
