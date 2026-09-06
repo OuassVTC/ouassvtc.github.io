@@ -206,7 +206,7 @@
     .report-card strong{display:block;font-size:34px;line-height:1}
     .report-card span{display:block;color:#bbb;font-size:13px;margin-top:9px}
     .archive-list{display:grid;gap:9px}
-    .archive-item{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px}
+    .archive-item{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:15px;padding:14px;cursor:pointer}
     .archive-item div{min-width:0}
     .archive-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .archive-item small{display:block;color:var(--muted);margin-top:4px}
@@ -381,6 +381,10 @@
         <div class="stat"><strong id="completedCount">0</strong><span>Courses terminées</span></div>
       </div>
 
+      <div class="toolbar">
+        <input class="search" id="search" type="search" placeholder="Rechercher un nom, un téléphone ou une adresse">
+      </div>
+
       <div class="app-tabs" role="tablist">
         <button class="app-tab active" type="button" data-tab="bookingsPanel">Réservations</button>
         <button class="app-tab" type="button" data-tab="agendaPanel">Agenda</button>
@@ -390,15 +394,16 @@
       </div>
 
       <section class="tab-panel" id="bookingsPanel">
-        <div class="toolbar">
-          <input class="search" id="search" type="search" placeholder="Rechercher un client ou une ville">
-        </div>
         <h2 class="section-title">Nouvelles demandes</h2>
         <div class="booking-list" id="newRequestList"></div>
         <div class="empty hidden" id="newRequestEmpty">Aucune nouvelle demande.</div>
         <h2 class="section-title">Réservations acceptées</h2>
         <div class="booking-list" id="bookingList"></div>
         <div class="empty hidden" id="emptyState">Aucune réservation acceptée.</div>
+        <div class="hidden" id="archiveSearchSection">
+          <h2 class="section-title">Archives trouvées</h2>
+          <div class="booking-list" id="archiveSearchList"></div>
+        </div>
       </section>
 
       <section class="tab-panel hidden" id="agendaPanel">
@@ -420,6 +425,14 @@
 
       <section class="tab-panel hidden" id="estimatePanel">
         <h2 class="section-title">Simulateur de tarif</h2>
+        <div class="simulator" style="margin-bottom:16px">
+          <div class="eyebrow">Calcul rapide avec votre GPS</div>
+          <h3 style="font-size:22px;margin-bottom:14px">Estimation au kilomètre</h3>
+          <div class="sim-field"><label for="quickKm">Distance indiquée par le GPS</label><input id="quickKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
+          <button class="primary" id="calculateQuickFare" type="button" style="margin-top:14px">Calculer avec l’heure actuelle</button>
+          <div class="sim-result hidden" id="quickResult"><strong id="quickPrice">—</strong><span id="quickDetails"></span></div>
+        </div>
+        <h3 style="font-size:20px;margin:20px 0 12px">Estimation avec les adresses</h3>
         <div class="simulator">
           <div class="simulator-grid">
             <div class="sim-field full"><label for="simPickup">Adresse de départ</label><input id="simPickup" autocomplete="off" placeholder="Saisir le départ"></div>
@@ -546,7 +559,7 @@
         const title = firstDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
         return `<section class="agenda-day"><h3>${escapeHtml(title)}</h3><div class="agenda-items">${items.map(item => {
           const date = bookingDate(item);
-          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
         }).join("")}</div></section>`;
       }).join("");
       $("agendaList").querySelectorAll("[data-open-booking]").forEach(button => {
@@ -566,17 +579,22 @@
     }
 
     function renderReport() {
-      const completed = state.bookings
+      const term = state.search.toLowerCase();
+      const allCompleted = state.bookings
         .filter(item => item.status === "completed" && completedDate(item))
         .sort((a, b) => completedDate(b) - completedDate(a));
+      const completed = allCompleted.filter(item => {
+          const haystack = [item.customerName, item.customerPhone, item.pickup, item.destination].join(" ").toLowerCase();
+          return !term || haystack.includes(term);
+        });
       const today = new Date();
       const weekStart = new Date(today);
       const day = (weekStart.getDay() + 6) % 7;
       weekStart.setDate(weekStart.getDate() - day);
       weekStart.setHours(0, 0, 0, 0);
       const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      const weekItems = completed.filter(item => completedDate(item) >= weekStart);
-      const monthItems = completed.filter(item => completedDate(item) >= monthStart);
+      const weekItems = allCompleted.filter(item => completedDate(item) >= weekStart);
+      const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
       const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
       const tripLabel = items => `${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}`;
       $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
@@ -587,8 +605,11 @@
       $("archiveList").innerHTML = completed.map(item => {
         const date = completedDate(item);
         const dateText = date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" });
-        return `<article class="archive-item"><div><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></div><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")}</span></article>`;
+        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
       }).join("");
+      $("archiveList").querySelectorAll("[data-open-booking]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
+      });
     }
 
     function actionButtons(item) {
@@ -616,6 +637,9 @@
       const accepted = state.bookings
         .filter(item => item.status === "accepted" && matchesSearch(item))
         .sort((a, b) => (bookingDate(a) || new Date(0)) - (bookingDate(b) || new Date(0)));
+      const archivedMatches = term
+        ? state.bookings.filter(item => item.status === "completed" && matchesSearch(item))
+        : [];
 
       $("newCount").textContent = state.bookings.filter(x => x.status === "new").length;
       $("acceptedCount").textContent = state.bookings.filter(x => x.status === "accepted").length;
@@ -662,7 +686,12 @@
       $("bookingList").innerHTML = accepted.map(item => {
         const date = bookingDate(item);
         const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "—";
-        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
+      }).join("");
+
+      $("archiveSearchSection").classList.toggle("hidden", archivedMatches.length === 0);
+      $("archiveSearchList").innerHTML = archivedMatches.map(item => {
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(item.customerPhone)} · ${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
 
       document.querySelectorAll("[data-status]").forEach(button => {
@@ -681,11 +710,12 @@
     function openBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
+      $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : "Détail de la réservation";
       const phone = phoneHref(item.customerPhone);
       const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
       $("detailBody").innerHTML = `
         <div class="booking-main">
-          <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">Acceptée</span></div>
+          <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
           <div class="booking-meta"><span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span><span>${escapeHtml(item.passengers || "Passagers non précisés")}</span><span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
@@ -777,8 +807,8 @@
       if (button) button.disabled = true;
       try {
         const changes = { status, updatedAt: serverTimestamp() };
+        const item = state.bookings.find(booking => booking.id === id);
         if (status === "completed") {
-          const item = state.bookings.find(booking => booking.id === id);
           const currentPrice = moneyValue(item?.estimatedPrice) || "";
           const finalPrice = prompt("Tarif réellement encaissé pour cette course (€) :", currentPrice);
           if (finalPrice === null) {
@@ -907,6 +937,21 @@
         ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif dimanche" : "Tarif soir / nuit" }
         : { base: 20, extraKm: 1.80, label: "Tarif jour" };
     }
+
+    $("calculateQuickFare").addEventListener("click", () => {
+      const distance = $("quickKm").valueAsNumber;
+      if (!Number.isFinite(distance) || distance < 0) {
+        alert("Indiquez le nombre de kilomètres affiché par votre GPS.");
+        return;
+      }
+      const now = new Date();
+      const rate = driverRate(now);
+      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+      const price = Math.round(rawPrice / 5) * 5;
+      $("quickPrice").textContent = `${price} €`;
+      $("quickDetails").textContent = `${distance.toFixed(1)} km · ${rate.label} · calculé à ${now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
+      $("quickResult").classList.remove("hidden");
+    });
 
     $("simulateFare").addEventListener("click", () => {
       const origin = $("simPickup").value.trim();
