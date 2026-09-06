@@ -60,8 +60,9 @@
       gap:12px;
     }
 
-    .brand{display:flex;align-items:center;gap:11px}
+    .brand{display:flex;align-items:center;gap:11px;border:0;background:transparent;color:inherit;padding:0;cursor:pointer;text-align:left}
     .brand img{width:58px;height:58px;border-radius:14px;object-fit:cover;background:#000}
+    .brand.syncing img{animation:spin .8s linear infinite}
     .brand small{display:block;color:#ddd;font-size:13px;text-transform:uppercase;letter-spacing:.12em;font-weight:750}
 
     .icon-button{
@@ -145,8 +146,6 @@
       cursor:pointer;
       white-space:nowrap;
     }
-    .manual-sync{display:inline-grid;place-items:center;margin-top:10px;width:36px;height:36px;border:1px solid #d7d7d7;border-radius:50%;background:#fff;color:#555;padding:0;font-size:18px;font-weight:850;cursor:pointer}
-    .manual-sync.syncing span:first-child{animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .trip-alert{position:fixed;inset:0;z-index:120;background:#0009;padding:20px;display:grid;place-items:center}
     .trip-alert-card{width:min(440px,100%);background:#000;color:#fff;border:2px solid #fff;border-radius:25px;padding:27px;text-align:center;box-shadow:0 24px 80px #0008;animation:alertPulse .8s ease-in-out infinite alternate}
@@ -337,8 +336,9 @@
     .route-line span:first-child{font-weight:950}
     .route-line strong{font-size:14px;line-height:1.4}
 
-    .booking-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
-    .booking-meta span{padding:6px 9px;background:#f4f4f4;border-radius:8px;font-size:11px;font-weight:750}
+    .booking-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+    .booking-meta span{padding:9px 11px;background:#f1f1f1;border-radius:10px;font-size:13px;line-height:1.25;font-weight:800}
+    .booking-meta .price-chip{background:#000;color:#fff;font-size:14px;font-weight:950}
     .message{margin-top:13px;padding:12px;background:#faf7ef;border-radius:10px;font-size:13px;color:#4b4433}
 
     .quick-actions{
@@ -416,12 +416,12 @@
     <div class="topbar-inner">
       <div class="header-left">
         <button class="icon-button menu-button hidden" id="openMenu" type="button" aria-label="Ouvrir le menu">☰</button>
-        <div class="brand">
+        <button class="brand" id="manualSync" type="button" aria-label="Actualiser l’application" title="Actualiser">
           <img src="/ouassvtc-app.png" alt="OuassVTC">
           <div>
             <small>Application chauffeur</small>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   </header>
@@ -465,7 +465,6 @@
         <div>
           <div class="eyebrow">Tableau de bord privé</div>
           <h1>Bonjour Ouassini.</h1>
-          <button class="manual-sync" id="manualSync" type="button" aria-label="Actualiser les courses" title="Actualiser"><span>↻</span></button>
         </div>
         <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
       </div>
@@ -967,9 +966,9 @@
                 <div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div>
               </div>
               <div class="booking-meta">
-                <span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span>
-                <span>${escapeHtml(item.passengers || "Passagers non précisés")}</span>
-                <span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span>
+                <span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span>
+                <span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span>
+                <span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span>
                 <span>${escapeHtml(loyaltyLabel(item))}</span>
               </div>
               ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
@@ -1021,7 +1020,7 @@
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
-          <div class="booking-meta"><span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span><span>${escapeHtml(item.passengers || "Passagers non précisés")}</span><span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
+          <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 ${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
