@@ -1264,6 +1264,18 @@
       document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      if (panelId === "newBookingPanel") {
+        setTimeout(() => {
+          ensureDriverLiveMap();
+          if (driverLiveMap && window.google?.maps) {
+            google.maps.event.trigger(driverLiveMap, "resize");
+            if (!driverCurrentPosition) {
+              driverLiveMap.setCenter({ lat: 42.6887, lng: 2.8948 });
+              driverLiveMap.setZoom(10);
+            }
+          }
+        }, 100);
+      }
     }
 
     $("openMenu").addEventListener("click", () => {
@@ -1385,7 +1397,7 @@
       if (driverLiveMap || !window.google?.maps) return;
       driverLiveMap = new google.maps.Map($("driverLiveMap"), {
         center: { lat: 42.6887, lng: 2.8948 },
-        zoom: 11,
+        zoom: 10,
         disableDefaultUI: true,
         zoomControl: true,
         gestureHandling: "cooperative"
