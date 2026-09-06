@@ -582,7 +582,7 @@
           </div>
           <button class="primary" id="estimateDriverBooking" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer cette course</button>
           <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer et envoyer sur Zoho</button>
-          <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle apparaît dans l’application et le récapitulatif a été envoyé sur Zoho.</span></div>
+          <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle est enregistrée dans l’application. Vous pouvez maintenant envoyer la confirmation par SMS.</span></div>
         </form>
         <section class="client-route-card">
           <div class="eyebrow">Trajet vers le client</div>
@@ -652,6 +652,11 @@
     let audioContext = null;
     let localSaveInProgress = false;
     let lastDriverConfirmation = null;
+    try {
+      lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
+    } catch (error) {
+      lastDriverConfirmation = null;
+    }
 
     window.emailjs.init("U08QGWWRUenJDOllc");
 
@@ -1097,22 +1102,8 @@
       if (button) button.disabled = true;
       try {
         const changes = { status, updatedAt: serverTimestamp() };
-        const item = state.bookings.find(booking => booking.id === id);
         if (status === "completed") {
-          const currentPrice = moneyValue(item?.estimatedPrice) || "";
-          const finalPrice = prompt("Tarif réellement encaissé pour cette course (€) :", currentPrice);
-          if (finalPrice === null) {
-            if (button) button.disabled = false;
-            return;
-          }
-          const amount = moneyValue(finalPrice);
-          if (amount <= 0) {
-            alert("Indiquez un tarif valide avant de terminer la course.");
-            if (button) button.disabled = false;
-            return;
-          }
           changes.completedAt = serverTimestamp();
-          changes.estimatedPrice = `${amount.toFixed(0)} €`;
         }
         await updateDoc(doc(db, "bookings", id), changes);
       } catch (error) {
@@ -1608,9 +1599,12 @@
         passagers: $("driverPassengers").value,
         paiement: $("driverPayment").value,
         message: $("driverMessage").value.trim(),
-        prix: $("driverPrice").value.trim() || "Estimation non renseignée"
+        prix: moneyValue($("driverPrice").value) > 0
+          ? `${moneyValue($("driverPrice").value).toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
+          : "Estimation non renseignée"
       };
       lastDriverConfirmation = { ...params };
+      localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
       const button = $("saveDriverBooking");
       button.disabled = true;
       button.textContent = "Enregistrement en cours…";
@@ -1632,18 +1626,22 @@
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
+        savedInApp = true;
         await updateDoc(createdBooking, { status: "accepted", updatedAt: serverTimestamp() });
         localSaveInProgress = false;
-        savedInApp = true;
-        await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
-        $("driverBookingForm").reset();
-        $("driverDateTime").value = localDate.toISOString().slice(0, 16);
+        $("driverPrice").value = params.prix;
         $("driverBookingSuccess").classList.remove("hidden");
+        try {
+          await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
+        } catch (emailError) {
+          console.error(emailError);
+          alert("La réservation est bien enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé.");
+        }
       } catch (error) {
         localSaveInProgress = false;
         console.error(error);
         alert(savedInApp
-          ? "La réservation est enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé."
+          ? "La demande est enregistrée, mais son classement automatique a échoué. Elle apparaît dans les nouvelles demandes."
           : "La réservation n’a pas pu être enregistrée. Réessayez.");
       } finally {
         button.disabled = false;
