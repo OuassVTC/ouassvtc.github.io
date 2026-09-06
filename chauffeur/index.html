@@ -933,7 +933,7 @@
 
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
-      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(20000));
+      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
         render();
