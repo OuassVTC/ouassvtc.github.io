@@ -592,6 +592,7 @@
           <button class="primary" id="locateDriver" type="button" style="margin-top:14px">Me localiser et calculer</button>
           <div class="client-route-result hidden" id="driverRouteResult"><span id="driverRouteSummary">—</span></div>
         </section>
+        <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
       </section>
     </section>
   </main>
@@ -650,6 +651,7 @@
     let ringInterval = null;
     let audioContext = null;
     let localSaveInProgress = false;
+    let lastDriverConfirmation = null;
 
     window.emailjs.init("U08QGWWRUenJDOllc");
 
@@ -1412,6 +1414,33 @@
       }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
     });
 
+    $("sendDriverConfirmationSms").addEventListener("click", () => {
+      let name = $("driverName").value.trim();
+      let phone = phoneHref($("driverPhone").value);
+      let pickup = $("driverPickup").value.trim();
+      let destination = $("driverDestination").value.trim();
+      let scheduledValue = $("driverDateTime").value;
+      let priceAmount = moneyValue($("driverPrice").value);
+      if ((!name || !phone || !pickup || !destination || !scheduledValue || priceAmount <= 0) && lastDriverConfirmation) {
+        name = lastDriverConfirmation.nom;
+        phone = phoneHref(lastDriverConfirmation.telephone);
+        pickup = lastDriverConfirmation.depart;
+        destination = lastDriverConfirmation.arrivee;
+        scheduledValue = lastDriverConfirmation.dateheure;
+        priceAmount = moneyValue(lastDriverConfirmation.prix);
+      }
+      const scheduledDate = new Date(scheduledValue);
+      if (!name || !phone || !pickup || !destination || Number.isNaN(scheduledDate.getTime()) || priceAmount <= 0) {
+        alert("Complétez le nom, le téléphone, les deux adresses, la date, l’heure et le montant avant de préparer le SMS.");
+        return;
+      }
+      const dateText = scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+      const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+      const priceText = `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`;
+      const message = `Bonjour ${name},\n\nJe vous confirme votre réservation pour le trajet suivant :\n\nDépart : ${pickup}\nArrivée : ${destination}\nDate : ${dateText}\nHeure : ${timeText}\nMontant du trajet : ${priceText}\n\nEn vous remerciant.\n\nOuassini – OuassVTC`;
+      window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
+    });
+
     function driverRate(date) {
       const sunday = date.getDay() === 0;
       const night = date.getHours() >= 20 || date.getHours() < 6;
@@ -1581,6 +1610,7 @@
         message: $("driverMessage").value.trim(),
         prix: $("driverPrice").value.trim() || "Estimation non renseignée"
       };
+      lastDriverConfirmation = { ...params };
       const button = $("saveDriverBooking");
       button.disabled = true;
       button.textContent = "Enregistrement en cours…";
