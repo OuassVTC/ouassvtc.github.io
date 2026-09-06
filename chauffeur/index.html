@@ -213,8 +213,6 @@
     .archive-price{font-size:18px;font-weight:950;white-space:nowrap}
 
     @media(max-width:600px){
-      .simulator-grid{grid-template-columns:1fr}
-      .sim-field.full{grid-column:auto}
       .app-tabs{grid-template-columns:1fr 1fr}
       .report-grid{grid-template-columns:1fr}
       .app-tab{font-size:12px;padding:0 5px}
@@ -423,7 +421,7 @@
             <div class="sim-field"><label for="simTime">Heure</label><input id="simTime" type="time"></div>
           </div>
           <button class="primary" id="simulateFare" type="button" style="margin-top:14px">Calculer le tarif</button>
-          <div class="sim-result hidden" id="simResult"><strong id="simPrice">—</strong><span id="simDetails"></span></div>
+          <div class="sim-result hidden" id="simResult"><strong id="simPrice">—</strong><span id="simDetails"></span><button class="primary" id="createFromEstimate" type="button" style="margin-top:14px;background:#fff;color:#000">Créer cette course</button></div>
         </div>
       </section>
 
@@ -436,8 +434,8 @@
             <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
             <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
             <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
-            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers" required><option value="">Sélectionner</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
-            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment" required><option value="">Sélectionner</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement CB à bord">Carte bancaire à bord</option><option value="Paiement espèces à bord">Espèces à bord</option></select></div>
+            <div class="sim-field"><label for="driverPassengers">Passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
+            <div class="sim-field"><label for="driverPayment">Paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement CB à bord">Carte bancaire à bord</option><option value="Paiement espèces à bord">Espèces à bord</option></select></div>
             <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
             <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
           </div>
@@ -816,6 +814,17 @@
         $("simDetails").textContent = `${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`;
         $("simResult").classList.remove("hidden");
       });
+    });
+
+    $("createFromEstimate").addEventListener("click", () => {
+      $("driverPickup").value = $("simPickup").value.trim();
+      $("driverDestination").value = $("simDestination").value.trim();
+      $("driverDateTime").value = `${$("simDate").value}T${$("simTime").value}`;
+      $("driverPrice").value = $("simPrice").textContent.trim();
+      const newCourseTab = document.querySelector('[data-tab="newBookingPanel"]');
+      if (newCourseTab) newCourseTab.click();
+      $("driverName").focus();
+      $("driverName").scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
     $("estimateDriverBooking").addEventListener("click", () => {
