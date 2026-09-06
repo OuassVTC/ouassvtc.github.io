@@ -636,8 +636,10 @@
       orderBy,
       query,
       serverTimestamp,
+      setDoc,
       updateDoc
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    import { getMessaging, getToken, isSupported } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
     const $ = id => document.getElementById(id);
@@ -652,6 +654,8 @@
     let audioContext = null;
     let localSaveInProgress = false;
     let lastDriverConfirmation = null;
+    let messaging = null;
+    const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
     } catch (error) {
@@ -1184,14 +1188,30 @@
       const permission = await Notification.requestPermission();
       updateNotificationButton();
       if (permission === "granted") {
-        const registration = await navigator.serviceWorker?.ready;
-        await registration?.showNotification("Notifications OuassVTC activées", {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          if (!messaging) throw new Error("Firebase Messaging n’est pas initialisé");
+          const token = await getToken(messaging, { vapidKey: WEB_PUSH_KEY, serviceWorkerRegistration: registration });
+          if (!token) throw new Error("Aucun jeton de notification reçu");
+          if (!auth?.currentUser || !db) throw new Error("Connexion chauffeur requise");
+          await setDoc(doc(db, "notificationTokens", auth.currentUser.uid), {
+            token,
+            email: auth.currentUser.email || "",
+            platform: navigator.userAgent,
+            enabled: true,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+          await registration.showNotification("Notifications OuassVTC activées", {
           body: "Vous serez averti dès qu’une nouvelle réservation arrivera.",
           icon: "/ouassvtc-app.png",
           badge: "/ouassvtc-app.png",
           tag: "ouassvtc-notifications-enabled",
           vibrate: [200, 100, 200]
-        });
+          });
+        } catch (error) {
+          console.error(error);
+          alert("L’enregistrement du téléphone a échoué. Vérifiez les règles Firebase puis réessayez.");
+        }
       } else {
         alert("Autorisez les notifications dans les réglages du téléphone pour recevoir les nouvelles réservations.");
       }
@@ -1276,6 +1296,7 @@
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
+      messaging = await isSupported() ? getMessaging(app) : null;
       try {
         await setPersistence(auth, browserLocalPersistence);
       } catch (error) {
