@@ -23,6 +23,7 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
+    html,body{overscroll-behavior-y:none}
 
     body{
       min-height:100vh;
@@ -74,6 +75,21 @@
       cursor:pointer;
       font-weight:900;
     }
+    .header-left{display:flex;align-items:center;gap:11px}
+    .menu-button{font-size:22px;line-height:1}
+    .menu-overlay{position:fixed;inset:0;z-index:80;background:#0008;opacity:1;transition:opacity .2s}
+    .side-menu{position:fixed;inset:0 auto 0 0;z-index:81;width:min(350px,88vw);background:#000;color:#fff;padding:max(24px,env(safe-area-inset-top)) 20px 24px;box-shadow:20px 0 60px #0006;overflow:auto}
+    .menu-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:30px}
+    .menu-head strong{font-size:23px}
+    .menu-close{width:44px;height:44px;border:1px solid #333;border-radius:12px;background:#151515;color:#fff;font-size:24px;cursor:pointer}
+    .menu-nav{display:grid;gap:8px}
+    .menu-link{width:100%;min-height:55px;border:1px solid #292929;border-radius:14px;background:#111;color:#fff;padding:0 17px;text-align:left;font-weight:900;cursor:pointer}
+    .menu-link.active{background:#fff;color:#000;border-color:#fff}
+    .home-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+    .home-action{min-height:64px;border:0;border-radius:17px;background:#000;color:#fff;font-weight:950;cursor:pointer}
+    .home-action.secondary{background:#fff;color:#000;border:1px solid var(--border)}
+    .today-card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:18px}
+    .today-card .section-title{margin-top:0}
 
     .container{width:min(1100px,92vw);margin:auto}
 
@@ -129,6 +145,8 @@
       cursor:pointer;
       white-space:nowrap;
     }
+    .live-status{display:flex;align-items:center;gap:7px;color:#5e5e5e;font-size:12px;font-weight:800;margin-top:9px}
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#18a957;box-shadow:0 0 0 4px #18a95718}
 
     .stats{
       display:grid;
@@ -238,6 +256,7 @@
       .app-tabs{grid-template-columns:1fr 1fr}
       .report-grid{grid-template-columns:1fr}
       .app-tab{font-size:12px;padding:0 5px}
+      .home-actions{grid-template-columns:1fr 1fr}
     }
 
     .booking{
@@ -351,19 +370,43 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
-        <img src="/ouassvtc-app.png" alt="OuassVTC">
-        <div>
-          <strong>OuassVTC</strong>
-          <small>Application chauffeur</small>
+      <div class="header-left">
+        <button class="icon-button menu-button hidden" id="openMenu" type="button" aria-label="Ouvrir le menu">☰</button>
+        <div class="brand">
+          <img src="/ouassvtc-app.png" alt="OuassVTC">
+          <div>
+            <strong>OuassVTC</strong>
+            <small>Application chauffeur</small>
+          </div>
         </div>
       </div>
       <button class="icon-button hidden" id="logout" type="button" aria-label="Se déconnecter">↪</button>
     </div>
   </header>
 
+  <div class="menu-overlay hidden" id="menuOverlay"></div>
+  <aside class="side-menu hidden" id="sideMenu" aria-label="Navigation principale">
+    <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">×</button></div>
+    <nav class="menu-nav">
+      <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
+      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Réservations</button>
+      <button class="menu-link" type="button" data-menu-tab="agendaPanel">Agenda complet</button>
+      <button class="menu-link" type="button" data-menu-tab="reportPanel">Bilans et historique</button>
+      <button class="menu-link" type="button" data-menu-tab="estimatePanel">Estimer une course</button>
+      <button class="menu-link" type="button" data-menu-tab="newBookingPanel">Nouvelle course</button>
+    </nav>
+  </aside>
+
   <main class="container">
-    <section class="login" id="loginView">
+    <section class="login" id="authLoadingView">
+      <div class="login-card">
+        <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
+        <h1>OuassVTC</h1>
+        <p>Ouverture sécurisée de votre espace chauffeur…</p>
+      </div>
+    </section>
+
+    <section class="login hidden" id="loginView">
       <div class="login-card">
         <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
         <h1>Votre espace chauffeur.</h1>
@@ -378,6 +421,7 @@
         <div>
           <div class="eyebrow">Tableau de bord privé</div>
           <h1>Bonjour Ouassini.</h1>
+          <div class="live-status"><span class="live-dot"></span><span id="syncStatus">Synchronisation en direct</span></div>
         </div>
         <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
       </div>
@@ -386,28 +430,30 @@
         Firebase n’est pas encore configuré. L’application est prête, mais elle recevra les demandes après la connexion de la base de données.
       </div>
 
-      <div class="stats">
-        <div class="stat"><strong id="newCount">0</strong><span>Nouvelles demandes</span></div>
-        <div class="stat"><strong id="acceptedCount">0</strong><span>Courses acceptées</span></div>
-        <div class="stat"><strong id="completedCount">0</strong><span>Courses terminées</span></div>
-      </div>
+      <section class="tab-panel" id="dashboardHome">
+        <div class="stats">
+          <div class="stat"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></div>
+          <div class="stat"><strong id="acceptedCount">0</strong><span>Courses acceptées du jour</span></div>
+          <div class="stat"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></div>
+        </div>
+        <div class="home-actions">
+          <button class="home-action" type="button" data-open-tab="estimatePanel">Estimer une course</button>
+          <button class="home-action secondary" type="button" data-open-tab="newBookingPanel">Nouvelle course</button>
+        </div>
+        <div class="today-card">
+          <h2 class="section-title">Agenda du jour</h2>
+          <div class="agenda-items" id="todayAgendaList"></div>
+          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
+        </div>
+      </section>
 
-      <div class="toolbar">
-        <form class="search-form" id="searchForm">
-          <input class="search" id="search" type="search" placeholder="Nom, téléphone ou adresse">
-          <button class="search-button" type="submit">Rechercher</button>
-        </form>
-      </div>
-
-      <div class="app-tabs" role="tablist">
-        <button class="app-tab active" type="button" data-tab="bookingsPanel">Réservations</button>
-        <button class="app-tab" type="button" data-tab="agendaPanel">Agenda</button>
-        <button class="app-tab" type="button" data-tab="reportPanel">Bilan</button>
-        <button class="app-tab" type="button" data-tab="estimatePanel">Estimer</button>
-        <button class="app-tab" type="button" data-tab="newBookingPanel">Nouvelle course</button>
-      </div>
-
-      <section class="tab-panel" id="bookingsPanel">
+      <section class="tab-panel hidden" id="bookingsPanel">
+        <div class="toolbar">
+          <form class="search-form" id="searchForm">
+            <input class="search" id="search" type="search" placeholder="Nom, téléphone ou adresse">
+            <button class="search-button" type="submit">Rechercher</button>
+          </form>
+        </div>
         <h2 class="section-title">Nouvelles demandes</h2>
         <div class="booking-list" id="newRequestList"></div>
         <div class="empty hidden" id="newRequestEmpty">Aucune nouvelle demande.</div>
@@ -509,9 +555,11 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
+      browserLocalPersistence,
       getAuth,
       GoogleAuthProvider,
       onAuthStateChanged,
+      setPersistence,
       signInWithPopup,
       signOut
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
@@ -571,6 +619,29 @@
 
     function wazeHref(address) {
       return `https://www.waze.com/ul?q=${encodeURIComponent(address || "")}&navigate=yes`;
+    }
+
+    function isSameDay(date, reference = new Date()) {
+      return Boolean(date) && date.getFullYear() === reference.getFullYear() && date.getMonth() === reference.getMonth() && date.getDate() === reference.getDate();
+    }
+
+    function createdDate(item) {
+      if (item.createdAt?.toDate) return item.createdAt.toDate();
+      return bookingDate(item);
+    }
+
+    function renderTodayAgenda() {
+      const todayItems = state.bookings
+        .filter(item => item.status === "accepted" && isSameDay(bookingDate(item)))
+        .sort((a, b) => bookingDate(a) - bookingDate(b));
+      $("todayAgendaEmpty").classList.toggle("hidden", todayItems.length !== 0);
+      $("todayAgendaList").innerHTML = todayItems.map(item => {
+        const date = bookingDate(item);
+        return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+      }).join("");
+      $("todayAgendaList").querySelectorAll("[data-open-booking]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
+      });
     }
 
     function renderAgenda() {
@@ -738,9 +809,9 @@
         ? state.bookings.filter(item => item.status === "completed" && matchesSearch(item))
         : [];
 
-      $("newCount").textContent = state.bookings.filter(x => x.status === "new").length;
-      $("acceptedCount").textContent = state.bookings.filter(x => x.status === "accepted").length;
-      $("completedCount").textContent = state.bookings.filter(x => x.status === "completed").length;
+      $("newCount").textContent = state.bookings.filter(x => x.status === "new" && isSameDay(createdDate(x))).length;
+      $("acceptedCount").textContent = state.bookings.filter(x => x.status === "accepted" && isSameDay(bookingDate(x))).length;
+      $("completedCount").textContent = state.bookings.filter(x => x.status === "completed" && isSameDay(completedDate(x))).length;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
       $("emptyState").classList.toggle("hidden", accepted.length !== 0);
       $("searchNoResults").classList.toggle("hidden", !term || requests.length + accepted.length + archivedMatches.length !== 0);
@@ -803,6 +874,7 @@
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
       });
       renderAgenda();
+      renderTodayAgenda();
       renderReport();
     }
 
@@ -936,9 +1008,11 @@
       const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
+        $("syncStatus").textContent = `Synchronisé à ${new Date().toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`;
         render();
       }, error => {
         console.error(error);
+        $("syncStatus").textContent = "Connexion interrompue · reconnexion automatique";
         $("emptyState").textContent = "Impossible de charger les demandes. Vérifiez les règles Firebase.";
         $("emptyState").classList.remove("hidden");
       });
@@ -950,6 +1024,7 @@
     }
 
     if (!firebaseReady) {
+      $("authLoadingView").classList.add("hidden");
       $("loginView").classList.add("hidden");
       $("dashboardView").classList.remove("hidden");
       $("setupWarning").classList.remove("hidden");
@@ -959,6 +1034,11 @@
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+      } catch (error) {
+        console.error("La session locale n’a pas pu être configurée", error);
+      }
 
       $("loginGoogle").addEventListener("click", async () => {
         try {
@@ -973,20 +1053,48 @@
 
       onAuthStateChanged(auth, user => {
         const connected = Boolean(user);
+        $("authLoadingView").classList.add("hidden");
         $("loginView").classList.toggle("hidden", connected);
         $("dashboardView").classList.toggle("hidden", !connected);
         $("logout").classList.toggle("hidden", !connected);
+        $("openMenu").classList.toggle("hidden", !connected);
         if (connected) listenToBookings();
         else if (state.unsubscribe) state.unsubscribe();
       });
     }
 
+    function closeMenu() {
+      $("sideMenu").classList.add("hidden");
+      $("menuOverlay").classList.add("hidden");
+    }
+
+    function openPanel(panelId) {
+      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== panelId));
+      document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
+      closeMenu();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    $("openMenu").addEventListener("click", () => {
+      $("sideMenu").classList.remove("hidden");
+      $("menuOverlay").classList.remove("hidden");
+    });
+    $("closeMenu").addEventListener("click", closeMenu);
+    $("menuOverlay").addEventListener("click", closeMenu);
+    document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
+    document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
+    window.addEventListener("offline", () => {
+      if ($("syncStatus")) $("syncStatus").textContent = "Hors connexion · données conservées";
+    });
+    window.addEventListener("online", () => {
+      if ($("syncStatus")) $("syncStatus").textContent = "Reconnexion et synchronisation…";
+    });
+
     $("searchForm").addEventListener("submit", event => {
       event.preventDefault();
       state.search = $("search").value.trim();
       render();
-      const reservationsTab = document.querySelector('[data-tab="bookingsPanel"]');
-      if (reservationsTab) reservationsTab.click();
+      openPanel("bookingsPanel");
     });
 
     $("search").addEventListener("input", event => {
@@ -1008,15 +1116,18 @@
       if (event.target === $("detailOverlay")) closeBooking();
     });
 
-    document.querySelectorAll(".app-tab").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".app-tab").forEach(tab => tab.classList.toggle("active", tab === button));
-        document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== button.dataset.tab));
-      });
-    });
-
     const now = new Date();
     const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    let dashboardDayKey = localDate.toISOString().slice(0, 10);
+    setInterval(() => {
+      const current = new Date();
+      const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
+      const currentDayKey = currentLocal.toISOString().slice(0, 10);
+      if (currentDayKey !== dashboardDayKey) {
+        dashboardDayKey = currentDayKey;
+        render();
+      }
+    }, 60000);
     $("simDate").value = localDate.toISOString().slice(0, 10);
     $("simTime").value = localDate.toISOString().slice(11, 16);
     $("driverDateTime").value = localDate.toISOString().slice(0, 16);
@@ -1107,8 +1218,7 @@
       $("driverDestination").value = $("simDestination").value.trim();
       $("driverDateTime").value = `${$("simDate").value}T${$("simTime").value}`;
       $("driverPrice").value = $("simPrice").textContent.trim();
-      const newCourseTab = document.querySelector('[data-tab="newBookingPanel"]');
-      if (newCourseTab) newCourseTab.click();
+      openPanel("newBookingPanel");
       $("driverName").focus();
       $("driverName").scrollIntoView({ behavior: "smooth", block: "center" });
     });
