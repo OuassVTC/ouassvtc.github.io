@@ -150,7 +150,7 @@
 
     .toolbar{
       display:grid;
-      grid-template-columns:1fr auto;
+      grid-template-columns:1fr;
       gap:10px;
       margin-bottom:18px;
     }
@@ -211,6 +211,17 @@
     .archive-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .archive-item small{display:block;color:var(--muted);margin-top:4px}
     .archive-price{font-size:18px;font-weight:950;white-space:nowrap}
+    .accepted-row{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer}
+    .accepted-row-time{font-size:17px;font-weight:950}
+    .accepted-row strong{display:block}
+    .accepted-row small{display:block;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .accepted-row-arrow{font-size:24px;font-weight:900}
+    .detail-overlay{position:fixed;inset:0;z-index:100;background:#0009;padding:20px;display:grid;place-items:center}
+    .detail-card{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px;box-shadow:0 25px 70px #0005}
+    .detail-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#000;color:#fff;padding:17px 18px}
+    .detail-head h2{font-size:19px}
+    .detail-close{width:42px;height:42px;border:1px solid #444;border-radius:12px;background:#171717;color:#fff;font-size:22px;cursor:pointer}
+    .detail-body{padding:18px}
 
     @media(max-width:600px){
       .app-tabs{grid-template-columns:1fr 1fr}
@@ -381,17 +392,13 @@
       <section class="tab-panel" id="bookingsPanel">
         <div class="toolbar">
           <input class="search" id="search" type="search" placeholder="Rechercher un client ou une ville">
-          <select class="filter" id="statusFilter" aria-label="Filtrer les demandes">
-            <option value="active">À traiter et acceptées</option>
-            <option value="new">Nouvelles</option>
-            <option value="accepted">Acceptées</option>
-            <option value="completed">Terminées</option>
-            <option value="all">Toutes</option>
-          </select>
         </div>
-        <h2 class="section-title">Demandes de réservation</h2>
+        <h2 class="section-title">Nouvelles demandes</h2>
+        <div class="booking-list" id="newRequestList"></div>
+        <div class="empty hidden" id="newRequestEmpty">Aucune nouvelle demande.</div>
+        <h2 class="section-title">Réservations acceptées</h2>
         <div class="booking-list" id="bookingList"></div>
-        <div class="empty hidden" id="emptyState">Aucune demande dans cette catégorie.</div>
+        <div class="empty hidden" id="emptyState">Aucune réservation acceptée.</div>
       </section>
 
       <section class="tab-panel hidden" id="agendaPanel">
@@ -447,6 +454,13 @@
     </section>
   </main>
 
+  <div class="detail-overlay hidden" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <article class="detail-card">
+      <div class="detail-head"><h2 id="detailTitle">Détail de la réservation</h2><button class="detail-close" id="detailClose" type="button" aria-label="Fermer">×</button></div>
+      <div class="detail-body" id="detailBody"></div>
+    </article>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -460,6 +474,7 @@
     import {
       addDoc,
       collection,
+      deleteDoc,
       doc,
       getFirestore,
       limit,
@@ -577,7 +592,7 @@
       if (item.status === "new") {
         return `
           <button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button>
-          <button class="action reject" data-status="rejected" data-id="${item.id}">Refuser</button>`;
+          <button class="action reject" data-delete="${item.id}">Refuser</button>`;
       }
       if (item.status === "accepted") {
         return `
@@ -589,21 +604,23 @@
 
     function render() {
       const term = state.search.toLowerCase();
-      const visible = state.bookings.filter(item => {
-        const matchesFilter = state.filter === "all"
-          || (state.filter === "active" && ["new", "accepted"].includes(item.status))
-          || item.status === state.filter;
+      const matchesSearch = item => {
         const haystack = [item.customerName, item.customerPhone, item.pickup, item.destination]
           .join(" ").toLowerCase();
-        return matchesFilter && (!term || haystack.includes(term));
-      });
+        return !term || haystack.includes(term);
+      };
+      const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
+      const accepted = state.bookings
+        .filter(item => item.status === "accepted" && matchesSearch(item))
+        .sort((a, b) => (bookingDate(a) || new Date(0)) - (bookingDate(b) || new Date(0)));
 
       $("newCount").textContent = state.bookings.filter(x => x.status === "new").length;
       $("acceptedCount").textContent = state.bookings.filter(x => x.status === "accepted").length;
       $("completedCount").textContent = state.bookings.filter(x => x.status === "completed").length;
-      $("emptyState").classList.toggle("hidden", visible.length !== 0);
+      $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
+      $("emptyState").classList.toggle("hidden", accepted.length !== 0);
 
-      $("bookingList").innerHTML = visible.map(item => {
+      $("newRequestList").innerHTML = requests.map(item => {
         const phone = phoneHref(item.customerPhone);
         const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
         return `
@@ -639,11 +656,60 @@
           </article>`;
       }).join("");
 
+      $("bookingList").innerHTML = accepted.map(item => {
+        const date = bookingDate(item);
+        const time = date ? date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"}) : "—";
+        return `<button class="accepted-row" type="button" data-open-booking="${item.id}"><span class="accepted-row-time">${escapeHtml(time)}</span><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}</small></span><span class="accepted-row-arrow">›</span></button>`;
+      }).join("");
+
       document.querySelectorAll("[data-status]").forEach(button => {
         button.addEventListener("click", () => updateStatus(button.dataset.id, button.dataset.status));
       });
+      document.querySelectorAll("[data-delete]").forEach(button => {
+        button.addEventListener("click", () => refuseAndDelete(button.dataset.delete));
+      });
+      document.querySelectorAll("[data-open-booking]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
+      });
       renderAgenda();
       renderReport();
+    }
+
+    function openBooking(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item) return;
+      const phone = phoneHref(item.customerPhone);
+      const whatsapp = phone.startsWith("0") ? `33${phone.slice(1)}` : phone.replace("+", "");
+      $("detailBody").innerHTML = `
+        <div class="booking-main">
+          <div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">Acceptée</span></div>
+          <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
+          <div class="booking-meta"><span>${escapeHtml(item.estimatedPrice || "Sans estimation")}</span><span>${escapeHtml(item.passengers || "Passagers non précisés")}</span><span>${escapeHtml(item.paymentMethod || "Paiement non précisé")}</span></div>
+          ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
+        </div>
+        <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a></div>
+        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
+        <div class="status-actions">${actionButtons(item)}</div>`;
+      $("detailOverlay").classList.remove("hidden");
+      $("detailBody").querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", async () => {
+        await updateStatus(button.dataset.id, button.dataset.status);
+        closeBooking();
+      }));
+    }
+
+    function closeBooking() {
+      $("detailOverlay").classList.add("hidden");
+      $("detailBody").innerHTML = "";
+    }
+
+    async function refuseAndDelete(id) {
+      if (!confirm("Refuser et supprimer définitivement cette demande ?")) return;
+      try {
+        await deleteDoc(doc(db, "bookings", id));
+      } catch (error) {
+        console.error(error);
+        alert("La demande n’a pas pu être supprimée.");
+      }
     }
 
     async function updateStatus(id, status) {
@@ -732,9 +798,9 @@
       render();
     });
 
-    $("statusFilter").addEventListener("change", event => {
-      state.filter = event.target.value;
-      render();
+    $("detailClose").addEventListener("click", closeBooking);
+    $("detailOverlay").addEventListener("click", event => {
+      if (event.target === $("detailOverlay")) closeBooking();
     });
 
     document.querySelectorAll(".app-tab").forEach(button => {
@@ -881,7 +947,7 @@
       button.textContent = "Enregistrement en cours…";
       let savedInApp = false;
       try {
-        await addDoc(collection(db, "bookings"), {
+        const createdBooking = await addDoc(collection(db, "bookings"), {
           customerName: params.nom,
           customerPhone: params.telephone,
           pickup: params.depart,
@@ -896,6 +962,7 @@
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
+        await updateDoc(createdBooking, { status: "accepted", updatedAt: serverTimestamp() });
         savedInApp = true;
         await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
         $("driverBookingForm").reset();
