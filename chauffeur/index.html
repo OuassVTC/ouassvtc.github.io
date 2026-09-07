@@ -545,9 +545,13 @@
         <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
           <div class="eyebrow">Enregistrement dans l’application uniquement</div>
           <div class="simulator-grid" style="margin-top:14px">
-            <div class="sim-field"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-            <div class="sim-field"><label for="quickBookingPrice">Prix de la course</label><input id="quickBookingPrice" required inputmode="decimal" placeholder="Exemple : 35 €"></div>
-            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" placeholder="Écrivez votre note sur la course…"></textarea></div>
+            <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
+            <div class="sim-field"><label for="quickBookingPrice">Tarif estimé</label><input id="quickBookingPrice" readonly aria-readonly="true" placeholder="— €"></div>
+          </div>
+          <button class="primary" id="estimateQuickBookingFare" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer le tarif</button>
+          <div class="simulator-grid" style="margin-top:14px">
+            <div class="sim-field full"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
+            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" required placeholder="Écrivez votre note sur la course…"></textarea></div>
           </div>
           <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
           <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
@@ -1828,6 +1832,25 @@
         : { base: 20, extraKm: 1.80, label: "Tarif de jour" };
     }
 
+    $("quickBookingKm").addEventListener("input", () => {
+      $("quickBookingPrice").value = "";
+      delete $("quickBookingPrice").dataset.amount;
+      $("quickBookingSuccess").classList.add("hidden");
+    });
+
+    $("estimateQuickBookingFare").addEventListener("click", () => {
+      const distance = $("quickBookingKm").valueAsNumber;
+      if (!Number.isFinite(distance) || distance < 0) {
+        alert("Indiquez le kilométrage du trajet pour estimer le tarif.");
+        return;
+      }
+      const rate = driverRate(new Date());
+      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+      const price = Math.round(rawPrice / 5) * 5;
+      $("quickBookingPrice").value = `${price} €`;
+      $("quickBookingPrice").dataset.amount = String(price);
+    });
+
     function calculateAutomaticFare(origin, destination, tripDate) {
       return new Promise((resolve, reject) => {
         if (!driverDirectionsService) {
@@ -1888,10 +1911,14 @@
         return;
       }
       const phone = $("quickBookingPhone").value.trim();
-      const priceAmount = moneyValue($("quickBookingPrice").value);
+      const priceAmount = Number($("quickBookingPrice").dataset.amount || 0);
       const comment = $("quickBookingComment").value.trim();
-      if (!phone || priceAmount <= 0) {
-        alert("Indiquez le numéro du client et un prix valide.");
+      if (priceAmount <= 0) {
+        alert("Estimez d’abord le tarif à partir du kilométrage.");
+        return;
+      }
+      if (!phone || !comment) {
+        alert("Indiquez le numéro du client et un commentaire pour enregistrer la course.");
         return;
       }
       const button = $("saveQuickBooking");
@@ -1924,6 +1951,7 @@
         });
         localSaveInProgress = false;
         $("quickBookingForm").reset();
+        delete $("quickBookingPrice").dataset.amount;
         $("quickBookingSuccess").classList.remove("hidden");
       } catch (error) {
         localSaveInProgress = false;
