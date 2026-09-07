@@ -413,7 +413,7 @@
 
     @media(max-width:520px){
       .stats{grid-template-columns:1fr 1fr}
-      .stats .stat:last-child{grid-column:1/-1}
+      .stats .stat.full-width{grid-column:1/-1}
       .hello-row{align-items:flex-start;flex-direction:column}
       .toolbar{grid-template-columns:1fr}
     }
@@ -485,7 +485,8 @@
         <div class="stats">
           <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
-          <button class="stat" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
+          <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
+          <button class="stat full-width" type="button" data-open-tab="agendaPanel"><strong id="forecastRevenue">0 €</strong><span>Chiffre d’affaires prévisionnel des courses à venir</span></button>
         </div>
         <div class="home-actions">
           <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
@@ -950,6 +951,7 @@
       const todayCompleted = dailyItemsForStatus("completed");
       $("completedCount").textContent = todayCompleted.length;
       $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
+      $("forecastRevenue").textContent = `${accepted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
       $("emptyState").classList.toggle("hidden", accepted.length !== 0);
       $("searchNoResults").classList.toggle("hidden", !term || requests.length + accepted.length + archivedMatches.length !== 0);
