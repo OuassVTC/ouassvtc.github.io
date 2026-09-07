@@ -290,6 +290,18 @@
     .history-week-course small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
     .history-week-course .archive-price{flex:0 0 auto}
     .annual-card{grid-column:1/-1}
+    #bookingsPanel{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+    #bookingsPanel .toolbar,#bookingsPanel .search-form,#bookingsPanel .booking-list{width:100%;max-width:100%;min-width:0}
+    #bookingsPanel .accepted-row{width:100%;max-width:100%;min-width:0}
+    #bookingsPanel .accepted-row>span:nth-child(2){min-width:0;overflow:hidden}
+    #bookingsPanel .accepted-row strong,#bookingsPanel .accepted-row small{overflow-wrap:anywhere;word-break:break-word}
+    @media(max-width:520px){
+      #bookingsPanel{padding-left:0;padding-right:0}
+      #bookingsPanel .toolbar{display:block}
+      #bookingsPanel .search-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+      #bookingsPanel .search{min-width:0;width:100%;font-size:16px}
+      #bookingsPanel .search-button{white-space:nowrap}
+    }
     .transfer-stat-button{font-family:inherit;text-align:left;cursor:pointer}
     .transfer-driver-badge{display:inline-flex;margin-top:8px;padding:7px 10px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:900}
     .transfer-course-note{margin-top:8px;font-size:12px;color:var(--muted)}
@@ -1217,14 +1229,17 @@ Ouassini – OuassVTC`;
  
     function renderCourseHistory() {
       const term = state.search.trim();
+      if (!term) {
+        $("historyCourseList").innerHTML = "";
+        $("historyCourseEmpty").classList.add("hidden");
+        return;
+      }
       const items = state.bookings
         .filter(item => item.status === "completed" && matchesSearch(item))
         .sort((a, b) => completedDate(b) - completedDate(a));
  
       $("historyCourseEmpty").classList.toggle("hidden", items.length !== 0);
-      $("historyCourseEmpty").textContent = term
-        ? "Aucune course archivée trouvée avec cette recherche."
-        : "Aucune course archivée pour le moment.";
+      $("historyCourseEmpty").textContent = "Aucune course archivée trouvée avec cette recherche.";
  
       $("historyCourseList").innerHTML = items.map(item => {
         const date = completedDate(item);
