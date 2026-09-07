@@ -1,6 +1,6 @@
 importScripts("https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js");
-
+ 
 firebase.initializeApp({
   apiKey: "AIzaSyA0DXbsmSkymE55YZfZytGa-newiXBw2lU",
   authDomain: "ouassvtc-chauffeur-da466.firebaseapp.com",
@@ -9,7 +9,7 @@ firebase.initializeApp({
   messagingSenderId: "394811166195",
   appId: "1:394811166195:web:23da8a59731c22c6f51686"
 });
-
+ 
 const messaging = firebase.messaging();
 messaging.onBackgroundMessage(payload => {
   const title = payload.data?.title || "Nouvelle réservation OuassVTC";
@@ -24,14 +24,14 @@ messaging.onBackgroundMessage(payload => {
   };
   return self.registration.showNotification(title, options);
 });
-
-const CACHE_NAME = "ouassvtc-chauffeur-v14";
+ 
+const CACHE_NAME = "ouassvtc-chauffeur-v15";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
   "/ouassvtc-app.png"
 ];
-
+ 
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -39,7 +39,7 @@ self.addEventListener("install", event => {
       .then(() => self.skipWaiting())
   );
 });
-
+ 
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
@@ -50,10 +50,10 @@ self.addEventListener("activate", event => {
       .then(() => self.clients.claim())
   );
 });
-
+ 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
-
+ 
   event.respondWith(
     fetch(event.request)
       .then(response => {
@@ -64,7 +64,7 @@ self.addEventListener("fetch", event => {
       .catch(() => caches.match(event.request).then(hit => hit || caches.match("/chauffeur/")))
   );
 });
-
+ 
 self.addEventListener("notificationclick", event => {
   event.notification.close();
   const targetUrl = event.notification.data?.url || "/chauffeur/";
@@ -79,4 +79,3 @@ self.addEventListener("notificationclick", event => {
     })
   );
 });
-
