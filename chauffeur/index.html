@@ -280,8 +280,16 @@
     .history-month-button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;background:#fff;padding:16px;text-align:left;font-weight:900;cursor:pointer}
     .history-month-button span:last-child{white-space:nowrap}
     .history-weeks{display:grid;gap:8px;padding:0 12px 12px}
-    .history-week{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:11px;background:#f4f4f4;font-size:13px}
-    .history-week strong{white-space:nowrap}
+    .history-week{border-radius:11px;background:#f4f4f4;overflow:hidden}
+    .history-week-button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:0;background:#f4f4f4;text-align:left;font-size:13px;cursor:pointer}
+    .history-week-button strong{white-space:nowrap}
+    .history-week-courses{display:grid;gap:8px;padding:0 10px 10px}
+    .history-week-course{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px;border:1px solid var(--border);border-radius:11px;background:#fff;text-align:left;cursor:pointer}
+    .history-week-course span:first-child{min-width:0}
+    .history-week-course strong{display:block;overflow:hidden;text-overflow:ellipsis}
+    .history-week-course small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
+    .history-week-course .archive-price{flex:0 0 auto}
+    .annual-card{grid-column:1/-1}
     .accepted-row{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer}
     .accepted-row-time{font-size:17px;font-weight:950}
     .accepted-row strong{display:block}
@@ -580,14 +588,12 @@
         <div class="report-grid">
           <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée</span></article>
           <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
+          <article class="report-card annual-card"><small>Cette année</small><strong id="yearRevenue">0 €</strong><span id="yearTrips">0 course terminée</span></article>
         </div>
         <div class="history-wrap">
           <button class="history-toggle" id="toggleMonthHistory" type="button">Historique des mois</button>
           <div class="history-months hidden" id="monthHistoryList"></div>
         </div>
-        <h2 class="section-title">Courses archivées</h2>
-        <div class="archive-list" id="archiveList"></div>
-        <div class="empty hidden" id="archiveEmpty">Aucune course terminée pour le moment.</div>
       </section>
  
       <section class="tab-panel hidden" id="estimatePanel">
@@ -930,6 +936,7 @@
         if (!months.has(key)) months.set(key, { date: new Date(date.getFullYear(), date.getMonth(), 1), items: [] });
         months.get(key).items.push(item);
       });
+ 
       $("monthHistoryList").innerHTML = [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([key, month]) => {
         const weeks = new Map();
         month.items.forEach(item => {
@@ -938,20 +945,41 @@
           if (!weeks.has(weekKey)) weeks.set(weekKey, { start, items: [] });
           weeks.get(weekKey).items.push(item);
         });
-        const weekRows = [...weeks.values()].sort((a, b) => a.start - b.start).map(week => {
+ 
+        const weekRows = [...weeks.entries()].sort((a, b) => b[1].start - a[1].start).map(([weekKey, week]) => {
           const end = new Date(week.start);
           end.setDate(end.getDate() + 6);
           const period = `Du ${week.start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} au ${end.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })}`;
-          return `<div class="history-week"><span>${escapeHtml(period)}<br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} €</strong></div>`;
+          const courses = [...week.items].sort((a, b) => completedDate(b) - completedDate(a)).map(item => {
+            const date = completedDate(item);
+            const dateText = date.toLocaleDateString("fr-FR", { weekday:"short", day:"2-digit", month:"2-digit" });
+            const timeText = date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+            return `<button class="history-week-course" type="button" data-open-history-booking="${item.id}"><span><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${escapeHtml(dateText)} à ${escapeHtml(timeText)}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
+          }).join("");
+ 
+          return `<section class="history-week"><button class="history-week-button" type="button" data-history-week="${weekKey}"><span><strong>${escapeHtml(period)}</strong><br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} € ›</strong></button><div class="history-week-courses hidden" id="history-week-${weekKey}">${courses}</div></section>`;
         }).join("");
+ 
         const label = month.date.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
         return `<section class="history-month"><button class="history-month-button" type="button" data-history-month="${key}"><span>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}<br><small>${month.items.length} course${month.items.length > 1 ? "s" : ""}</small></span><span>${total(month.items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="history-${key}">${weekRows}</div></section>`;
       }).join("") || `<div class="empty">Aucun historique pour le moment.</div>`;
+ 
       $("monthHistoryList").querySelectorAll("[data-history-month]").forEach(button => {
         button.addEventListener("click", () => {
           const details = $(`history-${button.dataset.historyMonth}`);
           details.classList.toggle("hidden");
         });
+      });
+ 
+      $("monthHistoryList").querySelectorAll("[data-history-week]").forEach(button => {
+        button.addEventListener("click", () => {
+          const details = $(`history-week-${button.dataset.historyWeek}`);
+          details.classList.toggle("hidden");
+        });
+      });
+ 
+      $("monthHistoryList").querySelectorAll("[data-open-history-booking]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openHistoryBooking));
       });
     }
  
@@ -959,31 +987,29 @@
       const allCompleted = state.bookings
         .filter(item => item.status === "completed" && completedDate(item))
         .sort((a, b) => completedDate(b) - completedDate(a));
-      const completed = allCompleted.filter(item => matchesSearch(item));
       const today = new Date();
       const weekStart = new Date(today);
       const day = (weekStart.getDay() + 6) % 7;
       weekStart.setDate(weekStart.getDate() - day);
       weekStart.setHours(0, 0, 0, 0);
       const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const yearStart = new Date(today.getFullYear(), 0, 1);
+      const nextYearStart = new Date(today.getFullYear() + 1, 0, 1);
       const weekItems = allCompleted.filter(item => completedDate(item) >= weekStart);
       const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
+      const yearItems = allCompleted.filter(item => {
+        const date = completedDate(item);
+        return date >= yearStart && date < nextYearStart;
+      });
       const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
       const tripLabel = items => items.length === 1 ? "1 course terminée" : `${items.length} courses terminées`;
       $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
       $("weekTrips").textContent = tripLabel(weekItems);
       $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
       $("monthTrips").textContent = tripLabel(monthItems);
+      $("yearRevenue").textContent = `${total(yearItems).toFixed(0)} €`;
+      $("yearTrips").textContent = tripLabel(yearItems);
       renderMonthHistory(allCompleted, total);
-      $("archiveEmpty").classList.toggle("hidden", completed.length !== 0);
-      $("archiveList").innerHTML = completed.map(item => {
-        const date = completedDate(item);
-        const dateText = date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" });
-        return `<button class="archive-item" type="button" data-open-booking="${item.id}"><span><strong>${escapeHtml(item.customerName)}</strong><small>${escapeHtml(dateText)}<br>${escapeHtml(item.pickup)} → ${escapeHtml(item.destination)}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
-      }).join("");
-      $("archiveList").querySelectorAll("[data-open-booking]").forEach(button => {
-        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
-      });
     }
  
     function actionButtons(item) {
