@@ -548,23 +548,26 @@
             </svg>
           </button>
         </div>
+        <div class="eyebrow">Archives</div>
+        <h2 class="section-title">Historique des courses</h2>
         <div class="toolbar">
           <form class="search-form" id="searchForm">
             <input class="search" id="search" type="search" placeholder="Nom, téléphone ou adresse">
             <button class="search-button" type="submit">Rechercher</button>
           </form>
         </div>
-        <h2 class="section-title">Nouvelles demandes</h2>
-        <div class="booking-list" id="newRequestList"></div>
-        <div class="empty hidden" id="newRequestEmpty">Aucune nouvelle demande.</div>
-        <h2 class="section-title">Réservations acceptées</h2>
-        <div class="booking-list" id="bookingList"></div>
-        <div class="empty hidden" id="emptyState">Aucune réservation acceptée.</div>
-        <div class="hidden" id="archiveSearchSection">
-          <h2 class="section-title">Archives trouvées</h2>
-          <div class="booking-list" id="archiveSearchList"></div>
+        <div class="booking-list" id="historyCourseList"></div>
+        <div class="empty hidden" id="historyCourseEmpty">Aucune course archivée pour le moment.</div>
+ 
+        <!-- Éléments techniques conservés mais non affichés pour ne pas casser les fonctions existantes. -->
+        <div class="hidden" aria-hidden="true">
+          <div id="newRequestList"></div>
+          <div id="newRequestEmpty"></div>
+          <div id="bookingList"></div>
+          <div id="emptyState"></div>
+          <div id="archiveSearchSection"><div id="archiveSearchList"></div></div>
+          <div id="searchNoResults"></div>
         </div>
-        <div class="empty hidden" id="searchNoResults">Aucune course trouvée avec cette recherche.</div>
       </section>
  
       <section class="tab-panel hidden" id="transferPanel">
@@ -1212,6 +1215,28 @@ Ouassini – OuassVTC`;
       return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
  
+    function renderCourseHistory() {
+      const term = state.search.trim();
+      const items = state.bookings
+        .filter(item => item.status === "completed" && matchesSearch(item))
+        .sort((a, b) => completedDate(b) - completedDate(a));
+ 
+      $("historyCourseEmpty").classList.toggle("hidden", items.length !== 0);
+      $("historyCourseEmpty").textContent = term
+        ? "Aucune course archivée trouvée avec cette recherche."
+        : "Aucune course archivée pour le moment.";
+ 
+      $("historyCourseList").innerHTML = items.map(item => {
+        const date = completedDate(item);
+        const dateText = date ? date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" }) : "—";
+        return `<button class="accepted-row" type="button" data-open-history-course="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName || "Client")} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(dateText)} · ${escapeHtml(item.customerPhone || "Téléphone non renseigné")}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
+      }).join("");
+ 
+      $("historyCourseList").querySelectorAll("[data-open-history-course]").forEach(button => {
+        button.addEventListener("click", () => openBooking(button.dataset.openHistoryCourse));
+      });
+    }
+ 
     function render() {
       const term = state.search.trim();
       const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
@@ -1295,6 +1320,7 @@ Ouassini – OuassVTC`;
       renderTodayAgenda();
       renderReport();
       renderTransfers();
+      renderCourseHistory();
     }
  
     function openBooking(id) {
