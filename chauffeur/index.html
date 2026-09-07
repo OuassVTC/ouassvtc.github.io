@@ -290,6 +290,13 @@
     .history-week-course small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
     .history-week-course .archive-price{flex:0 0 auto}
     .annual-card{grid-column:1/-1}
+    .transfer-stat-button{font-family:inherit;text-align:left;cursor:pointer}
+    .transfer-driver-badge{display:inline-flex;margin-top:8px;padding:7px 10px;border-radius:999px;background:#000;color:#fff;font-size:12px;font-weight:900}
+    .transfer-course-note{margin-top:8px;font-size:12px;color:var(--muted)}
+    .transfer-form{display:grid;gap:12px}
+    .transfer-form label{display:block;margin-bottom:6px;font-size:12px;font-weight:900}
+    .transfer-form input{width:100%;min-height:48px;padding:0 13px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;font:inherit}
+ 
     .accepted-row{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer}
     .accepted-row-time{font-size:17px;font-weight:950}
     .accepted-row strong{display:block}
@@ -472,6 +479,7 @@
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Réservations</button>
+      <button class="menu-link" type="button" data-menu-tab="transferPanel">Transferts chauffeurs</button>
       <button class="menu-link" type="button" data-menu-tab="agendaPanel">Agenda complet</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Bilans et historique</button>
       <button class="menu-link" type="button" data-menu-tab="estimatePanel">Nouvelle course</button>
@@ -557,6 +565,30 @@
           <div class="booking-list" id="archiveSearchList"></div>
         </div>
         <div class="empty hidden" id="searchNoResults">Aucune course trouvée avec cette recherche.</div>
+      </section>
+ 
+      <section class="tab-panel hidden" id="transferPanel">
+        <div class="panel-home-row">
+          <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5 12 3l9 7.5"></path>
+              <path d="M5 9.5V21h14V9.5"></path>
+              <path d="M9 21v-7h6v7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="eyebrow">Sous-traitance</div>
+        <h2 class="section-title">Transferts chauffeurs</h2>
+        <div class="report-grid transfer-stats">
+          <article class="report-card"><small>Aujourd’hui</small><strong id="transferDayRevenue">0 €</strong><span id="transferDayTrips">0 course transférée</span></article>
+          <button class="report-card transfer-stat-button" id="toggleTransferMonths" type="button"><small>Ce mois-ci</small><strong id="transferMonthRevenue">0 €</strong><span id="transferMonthTrips">0 course transférée · Voir les mois ›</span></button>
+          <button class="report-card annual-card transfer-stat-button" id="toggleTransferYears" type="button"><small>Cette année</small><strong id="transferYearRevenue">0 €</strong><span id="transferYearTrips">0 course transférée · Voir les années ›</span></button>
+        </div>
+        <div class="history-list hidden" id="transferMonthsList"></div>
+        <div class="history-list hidden" id="transferYearsList"></div>
+        <h2 class="section-title">Par chauffeur</h2>
+        <div class="history-list" id="transferDriverList"></div>
+        <div class="empty hidden" id="transferEmpty">Aucune course transférée pour le moment.</div>
       </section>
  
       <section class="tab-panel hidden" id="agendaPanel">
@@ -726,6 +758,7 @@
       new: "Nouvelle",
       accepted: "Acceptée",
       completed: "Terminée",
+      transferred: "Transférée",
       rejected: "Refusée",
       cancelled: "Annulée"
     };
@@ -910,7 +943,7 @@
     function customerCompletedCount(item) {
       const key = customerPhoneKey(item.customerPhone);
       if (!key) return 0;
-      return state.bookings.filter(booking => booking.status === "completed" && customerPhoneKey(booking.customerPhone) === key).length;
+      return state.bookings.filter(booking => ["completed", "transferred"].includes(booking.status) && customerPhoneKey(booking.customerPhone) === key).length;
     }
  
     function loyaltyLabel(item) {
@@ -1012,16 +1045,169 @@
       renderMonthHistory(allCompleted, total);
     }
  
+    function transferArchiveDate(item) {
+      return bookingDate(item) || (item.transferredAt?.toDate ? item.transferredAt.toDate() : completedDate(item));
+    }
+ 
+    function transferSmsText(item, driverName) {
+      const date = bookingDate(item);
+      const when = date
+        ? date.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" }) + " à " + date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })
+        : "Date / heure à confirmer";
+      return `Bonjour ${driverName},
+ 
+Je te transfère cette course OuassVTC :
+ 
+Client : ${item.customerName || "Non renseigné"}
+Téléphone : ${item.customerPhone || "Non renseigné"}
+Date et heure : ${when}
+Départ : ${item.pickup || "Non renseigné"}
+Arrivée : ${item.destination || "Non renseigné"}
+Passagers : ${item.passengers || "Non précisé"}
+Tarif communiqué : ${item.estimatedPrice || "Non renseigné"}
+Paiement : ${item.paymentMethod || "Non précisé"}${item.customerMessage ? `
+Informations : ${item.customerMessage}` : ""}
+ 
+Merci de me confirmer la prise en charge.
+ 
+Ouassini – OuassVTC`;
+    }
+ 
+    function openTransferBooking(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item) return;
+      $("detailTitle").textContent = "Transférer à un chauffeur";
+      $("detailBody").innerHTML = `
+        <div class="booking-main">
+          <div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div>
+          <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
+          <div class="booking-meta"><span class="price-chip">💶 ${escapeHtml(item.estimatedPrice || "Tarif non renseigné")}</span></div>
+        </div>
+        <form class="transfer-form" id="transferBookingForm">
+          <div><label for="transferDriverName">Nom du chauffeur</label><input id="transferDriverName" required autocomplete="name" placeholder="Exemple : Karim"></div>
+          <button class="primary" type="submit">Enregistrer le transfert et ouvrir le SMS</button>
+          <button class="primary" id="cancelTransferBooking" type="button" style="background:#fff;color:#000;border:1px solid #000">Annuler</button>
+        </form>`;
+      $("detailOverlay").classList.remove("hidden");
+      $("cancelTransferBooking").addEventListener("click", () => openBooking(id));
+      $("transferBookingForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const driverName = $("transferDriverName").value.trim();
+        if (!driverName) return;
+        const button = event.submitter;
+        button.disabled = true;
+        button.textContent = "Enregistrement…";
+        try {
+          await updateDoc(doc(db, "bookings", id), {
+            status: "transferred",
+            transferredDriverName: driverName,
+            transferredAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+          const sms = transferSmsText(item, driverName);
+          closeBooking();
+          window.location.href = `sms:?body=${encodeURIComponent(sms)}`;
+        } catch (error) {
+          console.error(error);
+          alert("Le transfert n’a pas pu être enregistré.");
+          button.disabled = false;
+          button.textContent = "Enregistrer le transfert et ouvrir le SMS";
+        }
+      });
+    }
+ 
+    function renderTransfers() {
+      const transfers = state.bookings
+        .filter(item => item.status === "transferred")
+        .sort((a, b) => transferArchiveDate(b) - transferArchiveDate(a));
+      const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
+      const label = items => items.length === 1 ? "1 course transférée" : `${items.length} courses transférées`;
+      const now = new Date();
+      const today = transfers.filter(item => isSameDay(transferArchiveDate(item)));
+      const month = transfers.filter(item => {
+        const d = transferArchiveDate(item);
+        return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      });
+      const year = transfers.filter(item => transferArchiveDate(item).getFullYear() === now.getFullYear());
+      $("transferDayRevenue").textContent = `${total(today).toFixed(0)} €`;
+      $("transferDayTrips").textContent = label(today);
+      $("transferMonthRevenue").textContent = `${total(month).toFixed(0)} €`;
+      $("transferMonthTrips").textContent = `${label(month)} · Voir les mois ›`;
+      $("transferYearRevenue").textContent = `${total(year).toFixed(0)} €`;
+      $("transferYearTrips").textContent = `${label(year)} · Voir les années ›`;
+      $("transferEmpty").classList.toggle("hidden", transfers.length !== 0);
+ 
+      const courseRow = item => {
+        const d = transferArchiveDate(item);
+        return `<button class="history-week-course" type="button" data-open-transfer-course="${item.id}"><span><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${escapeHtml(d.toLocaleDateString("fr-FR"))} · ${escapeHtml(item.pickup || "Départ")} → ${escapeHtml(item.destination || "Arrivée")}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
+      };
+ 
+      const drivers = new Map();
+      transfers.forEach(item => {
+        const name = String(item.transferredDriverName || "Chauffeur non renseigné").trim();
+        const key = normalizeSearch(name) || "chauffeur";
+        if (!drivers.has(key)) drivers.set(key, { name, items: [] });
+        drivers.get(key).items.push(item);
+      });
+      $("transferDriverList").innerHTML = [...drivers.values()]
+        .sort((a,b) => a.name.localeCompare(b.name, "fr"))
+        .map((driver, idx) => `<section class="history-month"><button class="history-month-button" type="button" data-transfer-driver="${idx}"><span>${escapeHtml(driver.name)}<br><small>${label(driver.items)}</small></span><span>${total(driver.items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="transfer-driver-${idx}">${driver.items.map(courseRow).join("")}</div></section>`).join("");
+ 
+      const months = new Map();
+      transfers.forEach(item => {
+        const d = transferArchiveDate(item);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+        if (!months.has(key)) months.set(key, { date:new Date(d.getFullYear(), d.getMonth(), 1), items:[] });
+        months.get(key).items.push(item);
+      });
+      $("transferMonthsList").innerHTML = [...months.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([key, group], idx) => {
+        const title = group.date.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+        return `<section class="history-month"><button class="history-month-button" type="button" data-transfer-month="${idx}"><span>${escapeHtml(title.charAt(0).toUpperCase()+title.slice(1))}<br><small>${label(group.items)}</small></span><span>${total(group.items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="transfer-month-${idx}">${group.items.map(courseRow).join("")}</div></section>`;
+      }).join("") || `<div class="empty">Aucun mois archivé.</div>`;
+ 
+      const years = new Map();
+      transfers.forEach(item => {
+        const y = transferArchiveDate(item).getFullYear();
+        if (!years.has(y)) years.set(y, []);
+        years.get(y).push(item);
+      });
+      $("transferYearsList").innerHTML = [...years.entries()].sort((a,b)=>b[0]-a[0]).map(([yearKey, items], idx) => {
+        const yearMonths = new Map();
+        items.forEach(item => {
+          const d = transferArchiveDate(item);
+          const key = d.getMonth();
+          if (!yearMonths.has(key)) yearMonths.set(key, []);
+          yearMonths.get(key).push(item);
+        });
+        const monthRows = [...yearMonths.entries()].sort((a,b)=>b[0]-a[0]).map(([monthNo, monthItems], midx) => {
+          const title = new Date(Number(yearKey), monthNo, 1).toLocaleDateString("fr-FR", { month:"long" });
+          return `<section class="history-week"><button class="history-week-button" type="button" data-transfer-year-month="${idx}-${midx}"><span><strong>${escapeHtml(title.charAt(0).toUpperCase()+title.slice(1))}</strong><br>${label(monthItems)}</span><strong>${total(monthItems).toFixed(0)} € ›</strong></button><div class="history-week-courses hidden" id="transfer-year-month-${idx}-${midx}">${monthItems.map(courseRow).join("")}</div></section>`;
+        }).join("");
+        return `<section class="history-month"><button class="history-month-button" type="button" data-transfer-year="${idx}"><span>${yearKey}<br><small>${label(items)}</small></span><span>${total(items).toFixed(0)} € ›</span></button><div class="history-weeks hidden" id="transfer-year-${idx}">${monthRows}</div></section>`;
+      }).join("") || `<div class="empty">Aucune année archivée.</div>`;
+ 
+      document.querySelectorAll("[data-transfer-driver]").forEach(b => b.addEventListener("click",()=> $(`transfer-driver-${b.dataset.transferDriver}`).classList.toggle("hidden")));
+      document.querySelectorAll("[data-transfer-month]").forEach(b => b.addEventListener("click",()=> $(`transfer-month-${b.dataset.transferMonth}`).classList.toggle("hidden")));
+      document.querySelectorAll("[data-transfer-year]").forEach(b => b.addEventListener("click",()=> $(`transfer-year-${b.dataset.transferYear}`).classList.toggle("hidden")));
+      document.querySelectorAll("[data-transfer-year-month]").forEach(b => b.addEventListener("click",()=> $(`transfer-year-month-${b.dataset.transferYearMonth}`).classList.toggle("hidden")));
+      document.querySelectorAll("[data-open-transfer-course]").forEach(b => b.addEventListener("click",()=> openBooking(b.dataset.openTransferCourse)));
+    }
+ 
     function actionButtons(item) {
       if (item.status === "new") {
         return `
           <button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button>
+          <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
           <button class="action reject" data-delete="${item.id}">Refuser</button>`;
       }
       if (item.status === "accepted") {
         return `
           <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
+          <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
           <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
+      }
+      if (item.status === "transferred") {
+        return `<button class="action" data-status="accepted" data-id="${item.id}">Reprendre la course</button>`;
       }
       return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
@@ -1099,18 +1285,22 @@
       document.querySelectorAll("[data-delete]").forEach(button => {
         button.addEventListener("click", () => refuseAndDelete(button.dataset.delete));
       });
+      document.querySelectorAll("[data-transfer-booking]").forEach(button => {
+        button.addEventListener("click", () => openTransferBooking(button.dataset.transferBooking));
+      });
       document.querySelectorAll("[data-open-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
       });
       renderAgenda();
       renderTodayAgenda();
       renderReport();
+      renderTransfers();
     }
  
     function openBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
-      $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : "Détail de la réservation";
+      $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : item.status === "transferred" ? "Course transférée" : "Détail de la réservation";
       const phone = phoneHref(item.customerPhone);
       $("detailBody").innerHTML = `
         <div class="booking-main">
@@ -1118,6 +1308,7 @@
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
           <div class="booking-meta"><span class="price-chip">💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
+          ${item.status === "transferred" ? `<div class="transfer-driver-badge">Transférée à ${escapeHtml(item.transferredDriverName || "Chauffeur")}</div>` : ""}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
@@ -1126,6 +1317,7 @@
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
+      $("detailBody").querySelector("[data-transfer-booking]")?.addEventListener("click", () => openTransferBooking(item.id));
       $("detailBody").querySelector("[data-toggle-sms-menu]")?.addEventListener("click", () => {
         $("detailBody").querySelector("[data-sms-menu]")?.classList.toggle("hidden");
       });
@@ -1210,6 +1402,15 @@
         }
       });
     }
+ 
+    $("toggleTransferMonths").addEventListener("click", () => {
+      $("transferMonthsList").classList.toggle("hidden");
+      $("transferYearsList").classList.add("hidden");
+    });
+    $("toggleTransferYears").addEventListener("click", () => {
+      $("transferYearsList").classList.toggle("hidden");
+      $("transferMonthsList").classList.add("hidden");
+    });
  
     function closeBooking() {
       $("detailOverlay").classList.add("hidden");
@@ -1463,6 +1664,11 @@
       if (button) button.disabled = true;
       try {
         const changes = { status, updatedAt: serverTimestamp() };
+        const current = state.bookings.find(item => item.id === id);
+        if (current?.status === "transferred" && status !== "transferred") {
+          changes.transferredDriverName = null;
+          changes.transferredAt = null;
+        }
         if (status === "completed") {
           changes.completedAt = serverTimestamp();
         }
