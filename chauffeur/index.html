@@ -472,7 +472,7 @@
       .toolbar{grid-template-columns:1fr}
     }
  
-    /* V23 — OuassVTC Rush */
+    /* V24 — OuassVTC Rush */
     .game-shell{background:#fff;border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 10px 30px #0000000a}
     .game-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
     .game-score{display:flex;gap:8px;flex-wrap:wrap}
@@ -489,7 +489,27 @@
     .game-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:min(100%,430px);margin:10px auto 0}
     .game-tool{min-height:45px;border:1px solid var(--border);border-radius:12px;background:#fff;font-weight:900;cursor:pointer}
     .game-help{width:min(100%,430px);margin:12px auto 0;color:var(--muted);font-size:12px;line-height:1.45;text-align:center}
-  </style>
+  
+/* V24 — Salle de jeux OuassVTC */
+.arcade-hero{background:linear-gradient(145deg,#090909,#1c1c1c);color:#fff;border-radius:24px;padding:24px 18px;margin:8px 0 16px;box-shadow:0 12px 32px rgba(0,0,0,.18)}
+.arcade-hero h2{margin:8px 0 4px;font-size:27px}.arcade-hero p{margin:0;color:#cfcfcf}.arcade-mark{font-weight:1000;letter-spacing:2px;font-size:13px}.arcade-mark span{color:#d4af37}
+.arcade-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.arcade-card{min-height:122px;border:1px solid #e5e5e5;border-radius:20px;background:#fff;text-align:left;padding:17px 14px;box-shadow:0 7px 20px rgba(0,0,0,.07);display:flex;flex-direction:column;gap:8px}
+.arcade-card b{font-size:16px;color:#111}.arcade-card span{font-size:12px;line-height:1.35;color:#666}.arcade-card:active{transform:scale(.98);background:#faf7ee}
+.arcade-back{border:0;background:#111;color:#fff;border-radius:14px;padding:11px 14px;font-weight:800;margin:4px 0 12px}
+.mini-game-card{background:#fff;border:1px solid #e8e8e8;border-radius:22px;padding:17px;box-shadow:0 8px 25px rgba(0,0,0,.08)}
+.mini-game-card h2{margin:0 0 12px}.gold-btn,.dark-btn{border:0;border-radius:13px;padding:12px 15px;font-weight:900}.gold-btn{background:#d4af37;color:#111}.dark-btn{background:#111;color:#fff}.mini-score,.mini-status{margin:8px 0 14px;font-weight:800}
+.logic-q{font-size:21px;font-weight:900;margin:18px 0}.logic-answers{display:grid;gap:9px}.logic-answers button{padding:13px;border-radius:13px;border:1px solid #ddd;background:#f7f7f7;font-weight:800}
+.board2048{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:#171717;padding:8px;border-radius:16px}.tile2048{aspect-ratio:1;border-radius:10px;background:#333;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:1000}.tile2048[data-v="0"]{color:transparent;background:#292929}.tile2048[data-v="2"],.tile2048[data-v="4"]{background:#f2ead0;color:#111}.tile2048[data-v="8"],.tile2048[data-v="16"]{background:#d4af37;color:#111}
+.pad2048,.snake-pad{text-align:center;margin:12px 0}.pad2048 button,.snake-pad button{width:58px;height:45px;margin:2px;border:0;border-radius:11px;background:#111;color:#fff;font-size:20px}
+.mm-history{display:grid;gap:7px;margin:12px 0}.mm-row{background:#f5f5f5;border-radius:10px;padding:9px;font-weight:800}.mm-input{display:flex;gap:8px;margin:12px 0}.mm-input input{min-width:0;flex:1;border:1px solid #ccc;border-radius:12px;padding:12px;font-size:18px;letter-spacing:5px}
+.ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:330px;margin:12px auto}.ttt-cell{aspect-ratio:1;border:0;border-radius:14px;background:#111;color:#d4af37;font-size:38px;font-weight:1000}
+.memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.memory-card{aspect-ratio:1;border:0;border-radius:13px;background:#111;color:#111;font-size:25px}.memory-card.show,.memory-card.done{background:#f1e4b8;color:#111}.memory-card.done{opacity:.55}
+.word-mask{text-align:center;font-size:25px;font-weight:1000;letter-spacing:7px;margin:18px 0}.word-letters{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}.word-letters button{width:34px;height:34px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:900}.word-letters button:disabled{opacity:.25}
+#snakeCanvas{display:block;width:100%;max-width:360px;height:auto;margin:auto;background:#151515;border-radius:16px;border:3px solid #d4af37}
+@media(max-width:380px){.arcade-grid{grid-template-columns:1fr}.arcade-card{min-height:94px}}
+ 
+</style>
 </head>
  
 <body>
@@ -517,7 +537,7 @@
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
-      <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 OuassVTC Rush</button>
+      <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link" id="enableNotifications" type="button">Notifications activités</button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
@@ -667,7 +687,33 @@
       </section>
  
   
-    <section class="tab-panel hidden" id="gamePanel">
+    
+<section class="tab-panel hidden" id="gamePanel">
+  <div class="panel-head">
+    <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
+  </div>
+ 
+  <div id="arcadeHome">
+    <div class="arcade-hero">
+      <div class="arcade-mark">OUASS<span>VTC</span></div>
+      <h2>🎮 Jeux OuassVTC</h2>
+      <p>Une pause, un jeu. Choisis ton défi.</p>
+    </div>
+    <div class="arcade-grid">
+      <button class="arcade-card" data-arcade-open="rushGame"><b>🚘 Rush</b><span>Évite le trafic et récupère les clients.</span></button>
+      <button class="arcade-card" data-arcade-open="logicGame"><b>🧠 Défi logique</b><span>5 questions rapides. Score sur 100.</span></button>
+      <button class="arcade-card" data-arcade-open="game2048"><b>🔢 2048</b><span>Fusionne les nombres et bats ton record.</span></button>
+      <button class="arcade-card" data-arcade-open="mastermindGame"><b>🧩 Mastermind</b><span>Retrouve le code secret en 8 essais.</span></button>
+      <button class="arcade-card" data-arcade-open="tttGame"><b>❌⭕ Morpion</b><span>Affronte l'application.</span></button>
+      <button class="arcade-card" data-arcade-open="memoryGame"><b>🧠 Memory</b><span>Retrouve toutes les paires.</span></button>
+      <button class="arcade-card" data-arcade-open="wordGame"><b>🔤 Mot mystère</b><span>Trouve le mot avant 7 erreurs.</span></button>
+      <button class="arcade-card" data-arcade-open="snakeGame"><b>🐍 Snake</b><span>Le grand classique en version OuassVTC.</span></button>
+    </div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="rushGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+ 
       <div class="panel-home-row">
         <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg>
@@ -685,7 +731,54 @@
         <div class="game-tools"><button class="game-tool" id="rushPause" type="button">⏸ Pause</button><button class="game-tool" id="rushResetBest" type="button">↻ Effacer record</button></div>
         <p class="game-help">Commandes : boutons gauche/droite ou glisse ton doigt sur la route. +10 points par client récupéré. Le jeu se met en pause si tu quittes cette page.</p>
       </div>
-    </section>
+    
+  </div>
+ 
+  <div class="arcade-game hidden" id="logicGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🧠 Défi logique</h2><div id="logicBody"></div></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="game2048">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🔢 2048</h2><div class="mini-score">Score <b id="s2048">0</b> · Record <b id="b2048">0</b></div>
+    <div id="board2048" class="board2048"></div><div class="pad2048"><button data-move="up">▲</button><div><button data-move="left">◀</button><button data-move="down">▼</button><button data-move="right">▶</button></div></div>
+    <button class="gold-btn" id="new2048">Nouvelle partie</button></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="mastermindGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🧩 Mastermind</h2><p>Trouve les 4 chiffres secrets (1 à 6).</p><div id="mmHistory" class="mm-history"></div>
+    <div class="mm-input"><input id="mmGuess" inputmode="numeric" maxlength="4" placeholder="Ex : 1234"><button class="gold-btn" id="mmTry">Tester</button></div>
+    <button class="dark-btn" id="mmNew">Nouveau code</button></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="tttGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>❌⭕ Morpion</h2><div id="tttStatus" class="mini-status">À toi : X</div><div id="tttBoard" class="ttt-board"></div>
+    <button class="gold-btn" id="tttNew">Rejouer</button></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="memoryGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🧠 Memory OuassVTC</h2><div id="memoryStatus" class="mini-status"></div><div id="memoryBoard" class="memory-board"></div>
+    <button class="gold-btn" id="memoryNew">Nouvelle partie</button></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="wordGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🔤 Mot mystère</h2><div id="wordMask" class="word-mask"></div><div id="wordStatus" class="mini-status"></div>
+    <div id="wordLetters" class="word-letters"></div><button class="gold-btn" id="wordNew">Nouveau mot</button></div>
+  </div>
+ 
+  <div class="arcade-game hidden" id="snakeGame">
+    <button class="arcade-back" type="button">← Tous les jeux</button>
+    <div class="mini-game-card"><h2>🐍 Snake OuassVTC</h2><div class="mini-score">Score <b id="snakeScore">0</b> · Record <b id="snakeBest">0</b></div>
+    <canvas id="snakeCanvas" width="320" height="320"></canvas><div class="snake-pad"><button data-snake="up">▲</button><div><button data-snake="left">◀</button><button data-snake="down">▼</button><button data-snake="right">▶</button></div></div>
+    <button class="gold-btn" id="snakeStart">Jouer / Rejouer</button></div>
+  </div>
+</section>
+ 
  
     <section class="tab-panel hidden" id="estimatePanel">
         <div class="panel-home-row">
@@ -2092,7 +2185,7 @@ Ouassini – OuassVTC`;
  
  
  
-    // V23 — OuassVTC Rush : mini-jeu local, sans dépendance externe.
+    // V24 — OuassVTC Rush : mini-jeu local, sans dépendance externe.
     const rushCanvas = $("rushCanvas");
     const rushCtx = rushCanvas?.getContext("2d");
     const rush = { running:false, paused:false, score:0, best:Number(localStorage.getItem("ouassvtcRushBest") || 0), x:180, targetX:180, obstacles:[], clients:[], roadOffset:0, last:0, spawn:0, clientSpawn:0, raf:0 };
@@ -2673,5 +2766,86 @@ Ouassini – OuassVTC`;
       if (event.touches.length > 1) event.preventDefault();
     }, { passive:false });
   </script>
+ 
+// V24 — Salle de jeux OuassVTC : jeux locaux, sans serveur ni dépendance.
+(()=>{
+  const $a=id=>document.getElementById(id);
+  const home=$a("arcadeHome"), games=[...document.querySelectorAll(".arcade-game")];
+  function arcadeHome(){ games.forEach(g=>g.classList.add("hidden")); home?.classList.remove("hidden"); }
+  document.querySelectorAll("[data-arcade-open]").forEach(b=>b.addEventListener("click",()=>{
+    home.classList.add("hidden"); games.forEach(g=>g.classList.add("hidden")); $a(b.dataset.arcadeOpen)?.classList.remove("hidden");
+    if(b.dataset.arcadeOpen==="logicGame") logicStart();
+    if(b.dataset.arcadeOpen==="game2048") render2048();
+    if(b.dataset.arcadeOpen==="mastermindGame" && !mmCode.length) mmNew();
+    if(b.dataset.arcadeOpen==="tttGame") tttRender();
+    if(b.dataset.arcadeOpen==="memoryGame" && !memDeck.length) memoryNew();
+    if(b.dataset.arcadeOpen==="wordGame" && !wordSecret) wordNew();
+    if(b.dataset.arcadeOpen==="snakeGame") snakeDraw();
+  }));
+  document.querySelectorAll(".arcade-back").forEach(b=>b.addEventListener("click",()=>{arcadeHome(); if(typeof rushPauseGame==="function"&&rush?.running&&!rush.paused)rushPauseGame(false); snakeStop();}));
+ 
+  // Défi logique
+  const logicBank=[
+    ["Quel nombre complète : 2, 4, 8, 16, ?",["24","30","32","36"],2],
+    ["Si 3 chauffeurs font 3 courses en 3 minutes, combien de courses font 6 chauffeurs en 3 minutes ?",["3","6","9","12"],1],
+    ["Quel est l'intrus ?",["Carré","Triangle","Cercle","Cube"],3],
+    ["Quel nombre complète : 1, 1, 2, 3, 5, ?",["6","7","8","10"],2],
+    ["Un trajet coûte 20 € + 9 €. Total ?",["27 €","28 €","29 €","30 €"],2],
+    ["Quel nombre manque : 100, 90, 81, 73, ?",["64","65","66","67"],2],
+    ["Tous les VTC sont des véhicules. Certains véhicules sont hybrides. Peut-on conclure que tous les VTC sont hybrides ?",["Oui","Non","Toujours","Seulement la nuit"],1],
+    ["5 + 5 × 2 =",["15","20","25","30"],0]
+  ];
+  let logicQs=[],logicI=0,logicScore=0;
+  function logicStart(){logicQs=[...logicBank].sort(()=>Math.random()-.5).slice(0,5);logicI=0;logicScore=0;logicRender();}
+  function logicRender(){const b=$a("logicBody");if(!b)return;if(logicI>=logicQs.length){b.innerHTML=`<div class="logic-q">Score d'intelligence : ${logicScore}/100</div><p>${logicScore>=80?"Excellent !":logicScore>=60?"Très bon score.":"Encore une série ?"}</p><button class="gold-btn" id="logicAgain">Rejouer</button>`;$a("logicAgain").onclick=logicStart;return;}let q=logicQs[logicI];b.innerHTML=`<div class="mini-score">Question ${logicI+1}/5 · Score ${logicScore}</div><div class="logic-q">${q[0]}</div><div class="logic-answers">${q[1].map((x,i)=>`<button data-la="${i}">${x}</button>`).join("")}</div>`;b.querySelectorAll("[data-la]").forEach(x=>x.onclick=()=>{if(+x.dataset.la===q[2])logicScore+=20;logicI++;logicRender();});}
+ 
+  // 2048
+  let g2048=JSON.parse(localStorage.getItem("ouass2048board")||"null")||Array(16).fill(0), score2048=+(localStorage.getItem("ouass2048score")||0);
+  if(!g2048.some(Boolean)){add2048();add2048();}
+  function add2048(){let e=g2048.map((v,i)=>v?null:i).filter(v=>v!==null);if(e.length)g2048[e[Math.floor(Math.random()*e.length)]]=Math.random()<.9?2:4;}
+  function render2048(){let b=$a("board2048");if(!b)return;b.innerHTML=g2048.map(v=>`<div class="tile2048" data-v="${v}">${v||""}</div>`).join("");$a("s2048").textContent=score2048;$a("b2048").textContent=localStorage.getItem("ouass2048best")||0;}
+  function line2048(a){let x=a.filter(Boolean),r=[];for(let i=0;i<x.length;i++){if(x[i]===x[i+1]){let v=x[i]*2;r.push(v);score2048+=v;i++;}else r.push(x[i]);}while(r.length<4)r.push(0);return r;}
+  function move2048(dir){let old=g2048.join(),n=Array(16).fill(0);for(let k=0;k<4;k++){let idx=dir==="left"?[4*k,4*k+1,4*k+2,4*k+3]:dir==="right"?[4*k+3,4*k+2,4*k+1,4*k]:dir==="up"?[k,k+4,k+8,k+12]:[k+12,k+8,k+4,k];let l=line2048(idx.map(i=>g2048[i]));idx.forEach((i,j)=>n[i]=l[j]);}g2048=n;if(old!==g2048.join())add2048();localStorage.setItem("ouass2048board",JSON.stringify(g2048));localStorage.setItem("ouass2048score",score2048);let best=Math.max(score2048,+(localStorage.getItem("ouass2048best")||0));localStorage.setItem("ouass2048best",best);render2048();}
+  document.querySelectorAll("[data-move]").forEach(b=>b.onclick=()=>move2048(b.dataset.move));$a("new2048").onclick=()=>{g2048=Array(16).fill(0);score2048=0;add2048();add2048();render2048();};
+ 
+  // Mastermind
+  let mmCode=[],mmN=0; function mmNew(){mmCode=Array.from({length:4},()=>1+Math.floor(Math.random()*6));mmN=0;$a("mmHistory").innerHTML="";$a("mmGuess").value="";}
+  function mmTry(){let s=$a("mmGuess").value.trim();if(!/^[1-6]{4}$/.test(s)){alert("Entre 4 chiffres de 1 à 6.");return;}mmN++;let a=s.split("").map(Number),usedC=[0,0,0,0],usedG=[0,0,0,0],exact=0,near=0;a.forEach((v,i)=>{if(v===mmCode[i]){exact++;usedC[i]=usedG[i]=1;}});a.forEach((v,i)=>{if(usedG[i])return;let j=mmCode.findIndex((c,j)=>!usedC[j]&&c===v);if(j>=0){near++;usedC[j]=1;}});$a("mmHistory").insertAdjacentHTML("afterbegin",`<div class="mm-row">${s} — 🟡 ${exact} bien placé(s), ⚪ ${near} mal placé(s)</div>`);$a("mmGuess").value="";if(exact===4){alert("Bravo ! Code trouvé en "+mmN+" essais.");mmNew();}else if(mmN>=8){alert("Perdu. Le code était "+mmCode.join(""));mmNew();}}
+  $a("mmTry").onclick=mmTry;$a("mmNew").onclick=mmNew;
+ 
+  // Morpion
+  let ttt=Array(9).fill(""),tttOver=false;const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  function winner(a){for(const w of wins)if(a[w[0]]&&a[w[0]]===a[w[1]]&&a[w[1]]===a[w[2]])return a[w[0]];return a.every(Boolean)?"D":"";}
+  function tttRender(){let b=$a("tttBoard");if(!b)return;b.innerHTML=ttt.map((v,i)=>`<button class="ttt-cell" data-ti="${i}">${v}</button>`).join("");b.querySelectorAll("[data-ti]").forEach(x=>x.onclick=()=>tttPlay(+x.dataset.ti));}
+  function tttPlay(i){if(tttOver||ttt[i])return;ttt[i]="X";let w=winner(ttt);if(w)return tttEnd(w);let empty=ttt.map((v,i)=>v?null:i).filter(v=>v!==null),best=empty.find(i=>{let a=[...ttt];a[i]="O";return winner(a)==="O";});if(best===undefined)best=empty.find(i=>{let a=[...ttt];a[i]="X";return winner(a)==="X";});if(best===undefined)best=empty.includes(4)?4:empty[Math.floor(Math.random()*empty.length)];if(best!==undefined)ttt[best]="O";w=winner(ttt);if(w)return tttEnd(w);tttRender();}
+  function tttEnd(w){tttOver=true;tttRender();$a("tttStatus").textContent=w==="X"?"🏆 Tu as gagné !":w==="O"?"L'application gagne.":"Match nul.";}
+  $a("tttNew").onclick=()=>{ttt=Array(9).fill("");tttOver=false;$a("tttStatus").textContent="À toi : X";tttRender();};
+ 
+  // Memory
+  let memDeck=[],memOpen=[],memMoves=0,memLock=false;const memIcons=["🚘","👤","✈️","🚉","📍","💳","⭐","🛣️"];
+  function memoryNew(){memDeck=[...memIcons,...memIcons].sort(()=>Math.random()-.5).map((v,i)=>({v,done:false,id:i}));memOpen=[];memMoves=0;memLock=false;memoryRender();}
+  function memoryRender(){let b=$a("memoryBoard");if(!b)return;$a("memoryStatus").textContent=`Coups : ${memMoves}`;b.innerHTML=memDeck.map((c,i)=>`<button class="memory-card ${c.done?"done":memOpen.includes(i)?"show":""}" data-mi="${i}">${c.done||memOpen.includes(i)?c.v:"?"}</button>`).join("");b.querySelectorAll("[data-mi]").forEach(x=>x.onclick=()=>memoryFlip(+x.dataset.mi));}
+  function memoryFlip(i){if(memLock||memDeck[i].done||memOpen.includes(i))return;memOpen.push(i);memoryRender();if(memOpen.length===2){memMoves++;let[a,b]=memOpen;if(memDeck[a].v===memDeck[b].v){memDeck[a].done=memDeck[b].done=true;memOpen=[];memoryRender();if(memDeck.every(c=>c.done))$a("memoryStatus").textContent=`🏆 Terminé en ${memMoves} coups !`;}else{memLock=true;setTimeout(()=>{memOpen=[];memLock=false;memoryRender();},650);}}}
+  $a("memoryNew").onclick=memoryNew;
+ 
+  // Mot mystère
+  const words=["CHAUFFEUR","PERPIGNAN","HYBRIDE","AEROPORT","CLIENT","COURSE","VOYAGE","ROUSSILLON","RESERVATION","TARIF","BAGAGE","GARE"];
+  let wordSecret="",wordUsed=new Set(),wordErr=0;
+  function wordNew(){wordSecret=words[Math.floor(Math.random()*words.length)];wordUsed=new Set();wordErr=0;wordRender();}
+  function wordRender(){let mask=[...wordSecret].map(c=>wordUsed.has(c)?c:"_").join(" ");$a("wordMask").textContent=mask;$a("wordStatus").textContent=`Erreurs : ${wordErr}/7`;let letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ";$a("wordLetters").innerHTML=[...letters].map(c=>`<button data-wl="${c}" ${wordUsed.has(c)?"disabled":""}>${c}</button>`).join("");$a("wordLetters").querySelectorAll("[data-wl]").forEach(b=>b.onclick=()=>{let c=b.dataset.wl;wordUsed.add(c);if(!wordSecret.includes(c))wordErr++;wordRender();if([...wordSecret].every(c=>wordUsed.has(c)))$a("wordStatus").textContent="🏆 Bravo ! Mot trouvé.";else if(wordErr>=7){$a("wordStatus").textContent="Perdu : "+wordSecret;$a("wordLetters").querySelectorAll("button").forEach(x=>x.disabled=true);}});}
+  $a("wordNew").onclick=wordNew;
+ 
+  // Snake
+  const sc=$a("snakeCanvas"),sx=sc?.getContext("2d");let snake=[],food={x:5,y:5},sd={x:1,y:0},snakeTimer=null,snakeScore=0;
+  function snakeFood(){food={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*16)};}
+  function snakeDraw(){if(!sx)return;sx.fillStyle="#151515";sx.fillRect(0,0,320,320);sx.fillStyle="#d4af37";sx.fillRect(food.x*20+3,food.y*20+3,14,14);sx.fillStyle="#fff";snake.forEach((p,i)=>sx.fillRect(p.x*20+2,p.y*20+2,16,16));}
+  function snakeStart(){snake=[{x:7,y:8},{x:6,y:8},{x:5,y:8}];sd={x:1,y:0};snakeScore=0;snakeFood();snakeStop();snakeTimer=setInterval(snakeTick,150);snakeDraw();}
+  function snakeStop(){if(snakeTimer){clearInterval(snakeTimer);snakeTimer=null;}}
+  function snakeTick(){let h={x:snake[0].x+sd.x,y:snake[0].y+sd.y};if(h.x<0||h.x>=16||h.y<0||h.y>=16||snake.some(p=>p.x===h.x&&p.y===h.y)){snakeStop();let best=Math.max(snakeScore,+(localStorage.getItem("ouassSnakeBest")||0));localStorage.setItem("ouassSnakeBest",best);$a("snakeBest").textContent=best;return;}snake.unshift(h);if(h.x===food.x&&h.y===food.y){snakeScore++;snakeFood();$a("snakeScore").textContent=snakeScore;}else snake.pop();snakeDraw();}
+  function snakeDir(x,y){if(!snake.length)return;if(sd.x===-x&&sd.y===-y)return;sd={x,y};}
+  document.querySelectorAll("[data-snake]").forEach(b=>b.onclick=()=>({up:()=>snakeDir(0,-1),down:()=>snakeDir(0,1),left:()=>snakeDir(-1,0),right:()=>snakeDir(1,0)})[b.dataset.snake]());
+  $a("snakeStart").onclick=snakeStart;if($a("snakeBest"))$a("snakeBest").textContent=localStorage.getItem("ouassSnakeBest")||0;
+})();
+ 
 </body>
 </html>
