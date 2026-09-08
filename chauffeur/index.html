@@ -351,48 +351,7 @@
       .detail-body .simulator{border:0;border-radius:0;padding:0;box-shadow:none}
       .detail-body .simulator-grid{grid-template-columns:1fr}
       .detail-body .sim-field.full{grid-column:auto}
-    .detail-body input,.detail-body select,.detail-body textarea{font-size:16px}
-    }
-
-    .driving-overlay{position:fixed;inset:0;z-index:140;background:#f4f4f4;color:#111;overflow:auto;overscroll-behavior:contain}
-    .driving-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#000;color:#fff;padding:max(13px,env(safe-area-inset-top)) 16px 13px}
-    .driving-brand{display:flex;align-items:center;gap:11px;min-width:0}
-    .driving-brand img{width:50px;height:50px;border-radius:12px;object-fit:cover}
-    .driving-brand strong{font-size:17px;letter-spacing:.12em;white-space:nowrap}
-    .driving-home{width:46px;height:46px;display:grid;place-items:center;flex:0 0 auto;border:1px solid #3a3a3a;border-radius:13px;background:#171717;color:#fff;cursor:pointer}
-    .driving-home svg{width:23px;height:23px}
-    .driving-content{width:min(620px,100%);margin:auto;padding:22px 16px max(26px,env(safe-area-inset-bottom));display:grid;gap:16px}
-    .speed-card{position:relative;display:grid;place-items:center;background:#fff;border:1px solid #e1e1e1;border-radius:26px;padding:23px 16px 20px;text-align:center;box-shadow:0 10px 30px #0000000a}
-    .live-speed{font-size:102px;line-height:.9;font-weight:950;letter-spacing:-.07em}
-    .speed-unit{margin-top:8px;color:#666;font-size:24px}
-    .speed-status{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;color:var(--green);font-size:20px;font-weight:950}
-    .speed-status.over{color:var(--red)}
-    .speed-limit-box{position:absolute;right:18px;top:18px;width:70px;height:70px;display:grid;place-items:center;border:7px solid #e01919;border-radius:50%;background:#fff;font-size:29px;font-weight:950;box-shadow:0 4px 12px #0002}
-    .limit-controls{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px}
-    .limit-controls span{font-size:12px;color:#666;font-weight:850;margin-right:4px}
-    .limit-controls button{width:42px;height:38px;border:1px solid #d5d5d5;border-radius:10px;background:#f5f5f5;font-weight:950;cursor:pointer}
-    .danger-card{display:flex;align-items:center;gap:14px;border:1px solid #dfb12c;border-radius:20px;background:#ffe39a;padding:17px}
-    .danger-card .danger-icon{font-size:34px}
-    .danger-card strong{display:block;font-size:17px}
-    .danger-card small{display:block;margin-top:4px;color:#594800;line-height:1.35}
-    .driving-trip{background:#fff;border:1px solid #dedede;border-radius:22px;padding:20px}
-    .driving-trip h2{font-size:26px;margin-bottom:14px}
-    .driving-trip p{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;margin-top:10px;line-height:1.4}
-    .driving-trip p span:last-child{overflow-wrap:anywhere}
-    .driving-waze{min-height:62px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:18px;background:#000;color:#fff;text-decoration:none;font-weight:950;letter-spacing:.04em}
-    .driving-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .driving-stage{min-height:78px;border:1px solid #d8d8d8;border-radius:17px;background:#fff;padding:8px 5px;font-size:12px;font-weight:950;cursor:pointer}
-    .driving-stage.active{background:#000;color:#fff;border-color:#000}
-    .driving-stage:disabled{opacity:.42;cursor:not-allowed}
-    .driving-exit{min-height:54px;border:0;border-radius:15px;background:#e2e2e2;color:#333;font-weight:900;cursor:pointer}
-    .driving-note{font-size:12px;line-height:1.45;color:#666;text-align:center}
-
-    @media(max-width:390px){
-      .driving-brand strong{font-size:14px;letter-spacing:.08em}
-      .live-speed{font-size:86px}
-      .speed-limit-box{width:61px;height:61px;border-width:6px;font-size:25px}
-      .driving-stages{grid-template-columns:1fr}
-      .driving-stage{min-height:54px}
+      .detail-body input,.detail-body select,.detail-body textarea{font-size:16px}
     }
  
     .booking{
@@ -512,6 +471,24 @@
       .hello-row{align-items:flex-start;flex-direction:column}
       .toolbar{grid-template-columns:1fr}
     }
+ 
+    /* V23 — OuassVTC Rush */
+    .game-shell{background:#fff;border:1px solid var(--border);border-radius:22px;padding:16px;box-shadow:0 10px 30px #0000000a}
+    .game-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .game-score{display:flex;gap:8px;flex-wrap:wrap}
+    .game-chip{background:#000;color:#fff;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900}
+    .game-stage{position:relative;width:min(100%,430px);margin:auto;border-radius:20px;overflow:hidden;background:#242424;box-shadow:inset 0 0 0 2px #111}
+    #rushCanvas{display:block;width:100%;height:auto;aspect-ratio:3/5;touch-action:none;background:#242424}
+    .game-overlay{position:absolute;inset:0;display:grid;place-items:center;background:#000b;color:#fff;text-align:center;padding:25px}
+    .game-overlay-card{width:min(290px,100%)}
+    .game-overlay h3{font-size:27px;margin-bottom:9px}.game-overlay p{color:#ddd;line-height:1.4;margin-bottom:17px}
+    .game-start{width:100%;min-height:52px;border:0;border-radius:14px;background:#fff;color:#000;font-weight:950;cursor:pointer}
+    .game-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(100%,430px);margin:14px auto 0}
+    .game-control{min-height:62px;border:0;border-radius:16px;background:#000;color:#fff;font-size:25px;font-weight:950;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none}
+    .game-control:active{transform:scale(.97);background:#222}
+    .game-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:min(100%,430px);margin:10px auto 0}
+    .game-tool{min-height:45px;border:1px solid var(--border);border-radius:12px;background:#fff;font-weight:900;cursor:pointer}
+    .game-help{width:min(100%,430px);margin:12px auto 0;color:var(--muted);font-size:12px;line-height:1.45;text-align:center}
   </style>
 </head>
  
@@ -540,6 +517,7 @@
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
+      <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 OuassVTC Rush</button>
       <button class="menu-link" id="enableNotifications" type="button">Notifications activités</button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
@@ -688,7 +666,28 @@
         </div>
       </section>
  
-      <section class="tab-panel hidden" id="estimatePanel">
+  
+    <section class="tab-panel hidden" id="gamePanel">
+      <div class="panel-home-row">
+        <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg>
+        </button>
+      </div>
+      <div class="eyebrow">Pause entre deux clients</div>
+      <h2 class="section-title">🎮 OuassVTC Rush</h2>
+      <div class="game-shell">
+        <div class="game-head"><strong>Évite le trafic, récupère les clients !</strong><div class="game-score"><span class="game-chip">Score <b id="rushScore">0</b></span><span class="game-chip">Record <b id="rushBest">0</b></span></div></div>
+        <div class="game-stage">
+          <canvas id="rushCanvas" width="360" height="600" aria-label="Jeu OuassVTC Rush"></canvas>
+          <div class="game-overlay" id="rushOverlay"><div class="game-overlay-card"><h3 id="rushOverlayTitle">OuassVTC Rush</h3><p id="rushOverlayText">Conduis ta VTC, évite les véhicules et récupère les clients. La circulation accélère progressivement.</p><button class="game-start" id="rushStart" type="button">JOUER</button></div></div>
+        </div>
+        <div class="game-controls"><button class="game-control" id="rushLeft" type="button" aria-label="Aller à gauche">←</button><button class="game-control" id="rushRight" type="button" aria-label="Aller à droite">→</button></div>
+        <div class="game-tools"><button class="game-tool" id="rushPause" type="button">⏸ Pause</button><button class="game-tool" id="rushResetBest" type="button">↻ Effacer record</button></div>
+        <p class="game-help">Commandes : boutons gauche/droite ou glisse ton doigt sur la route. +10 points par client récupéré. Le jeu se met en pause si tu quittes cette page.</p>
+      </div>
+    </section>
+ 
+    <section class="tab-panel hidden" id="estimatePanel">
         <div class="panel-home-row">
           <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -751,39 +750,6 @@
       <div class="detail-body" id="detailBody"></div>
     </article>
   </div>
-
-  <section class="driving-overlay hidden" id="drivingOverlay" role="dialog" aria-modal="true" aria-labelledby="drivingTitle">
-    <header class="driving-head">
-      <div class="driving-brand"><img src="/ouassvtc-app.png" alt="OuassVTC"><strong id="drivingTitle">MODE CONDUITE</strong></div>
-      <button class="driving-home" id="drivingHome" type="button" aria-label="Retour au tableau de bord" title="Tableau de bord">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg>
-      </button>
-    </header>
-    <div class="driving-content">
-      <section class="speed-card">
-        <div class="speed-limit-box" id="drivingSpeedLimit">50</div>
-        <strong class="live-speed" id="drivingSpeed">—</strong>
-        <span class="speed-unit">km/h</span>
-        <div class="speed-status" id="drivingSpeedStatus">● Recherche du signal GPS…</div>
-        <div class="limit-controls"><span>Limitation</span><button id="decreaseSpeedLimit" type="button" aria-label="Diminuer la limitation">−</button><button id="increaseSpeedLimit" type="button" aria-label="Augmenter la limitation">+</button></div>
-      </section>
-      <section class="danger-card"><span class="danger-icon">⚠️</span><div><strong>Zones de danger</strong><small>Aucune source de données légale n’est encore connectée. Les alertes de Waze restent actives dans Waze.</small></div></section>
-      <section class="driving-trip">
-        <h2 id="drivingCourseNumber">Course</h2>
-        <p><span>👤</span><span id="drivingCustomer">Client</span></p>
-        <p><span>📍</span><span id="drivingRoute">Trajet</span></p>
-        <p><span>🕒</span><span id="drivingSchedule">Horaire</span></p>
-      </section>
-      <a class="driving-waze" id="drivingWaze" href="#" target="_blank" rel="noopener">➤ OUVRIR DANS WAZE</a>
-      <div class="driving-stages">
-        <button class="driving-stage" id="drivingArrived" type="button">📍<br>SUR PLACE</button>
-        <button class="driving-stage" id="drivingAboard" type="button">👤<br>CLIENT À BORD</button>
-        <button class="driving-stage" id="drivingComplete" type="button">✓<br>TERMINER</button>
-      </div>
-      <button class="driving-exit" id="drivingExit" type="button">QUITTER LE MODE CONDUITE</button>
-      <p class="driving-note">La vitesse GPS fonctionne lorsque cet écran reste ouvert. Respectez toujours la signalisation routière affichée sur la route.</p>
-    </div>
-  </section>
  
   <div class="trip-alert hidden" id="tripAlert" role="alertdialog" aria-modal="true" aria-labelledby="tripAlertTitle">
     <div class="trip-alert-card">
@@ -839,12 +805,6 @@
     let numberingRequested = false;
     let lastDriverConfirmation = null;
     let messaging = null;
-    let drivingBookingId = null;
-    let drivingWatchId = null;
-    let drivingWakeLock = null;
-    let drivingLastSpeedAlert = 0;
-    let drivingCurrentSpeed = null;
-    let drivingSpeedLimit = Number(localStorage.getItem("ouassvtcDrivingSpeedLimit")) || 50;
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
@@ -880,13 +840,13 @@
     function phoneHref(value) {
       return String(value ?? "").replace(/[^+\d]/g, "");
     }
-
+ 
     function normalizedCustomerPhone(value) {
       let digits = String(value || "").replace(/\D/g, "");
       if (digits.startsWith("33") && digits.length === 11) digits = `0${digits.slice(2)}`;
       return digits;
     }
-
+ 
     function findKnownCustomer(phone) {
       const normalized = normalizedCustomerPhone(phone);
       if (normalized.length < 10) return null;
@@ -930,120 +890,6 @@
  
     function wazeHref(address) {
       return `https://www.waze.com/ul?q=${encodeURIComponent(address || "")}&navigate=yes`;
-    }
-
-    function drivingStageRank(stage) {
-      return { on_the_way:0, arrived:1, aboard:2 }[stage] ?? 0;
-    }
-
-    function renderDrivingStages(item) {
-      const rank = drivingStageRank(item?.tripStage);
-      $("drivingArrived").classList.toggle("active", rank >= 1);
-      $("drivingAboard").classList.toggle("active", rank >= 2);
-      $("drivingAboard").disabled = rank < 1;
-      $("drivingComplete").disabled = rank < 2;
-      const drivingToDestination = rank >= 2;
-      $("drivingWaze").href = wazeHref(drivingToDestination ? item?.destination : item?.pickup);
-      $("drivingWaze").textContent = drivingToDestination ? "➤ OUVRIR WAZE VERS L’ARRIVÉE" : "➤ OUVRIR WAZE VERS LE CLIENT";
-    }
-
-    function updateDrivingSpeedDisplay(speed) {
-      drivingCurrentSpeed = speed;
-      const hasSpeed = Number.isFinite(speed) && speed >= 0;
-      const roundedSpeed = hasSpeed ? Math.round(speed) : null;
-      $("drivingSpeed").textContent = hasSpeed ? roundedSpeed : "—";
-      $("drivingSpeedLimit").textContent = drivingSpeedLimit;
-      const overLimit = hasSpeed && roundedSpeed > drivingSpeedLimit;
-      $("drivingSpeedStatus").classList.toggle("over", overLimit);
-      $("drivingSpeedStatus").textContent = !hasSpeed
-        ? "● Signal GPS disponible, vitesse en attente"
-        : overLimit
-          ? `⚠ Ralentissez : ${roundedSpeed - drivingSpeedLimit} km/h au-dessus`
-          : "✓ Vitesse respectée";
-      if (overLimit && Date.now() - drivingLastSpeedAlert > 15000) {
-        drivingLastSpeedAlert = Date.now();
-        prepareAlertSound();
-        soundAlertPulse();
-        navigator.vibrate?.([180, 100, 180]);
-      }
-    }
-
-    async function requestDrivingWakeLock() {
-      if (!navigator.wakeLock || document.visibilityState !== "visible") return;
-      try {
-        drivingWakeLock = await navigator.wakeLock.request("screen");
-      } catch (error) {
-        console.warn("Maintien de l’écran indisponible", error);
-      }
-    }
-
-    function stopDrivingTracking() {
-      if (drivingWatchId !== null) navigator.geolocation?.clearWatch(drivingWatchId);
-      drivingWatchId = null;
-      drivingWakeLock?.release().catch(() => {});
-      drivingWakeLock = null;
-    }
-
-    function startDrivingTracking() {
-      stopDrivingTracking();
-      drivingCurrentSpeed = null;
-      updateDrivingSpeedDisplay(null);
-      if (!navigator.geolocation) {
-        $("drivingSpeedStatus").textContent = "GPS indisponible sur cet appareil";
-        return;
-      }
-      drivingWatchId = navigator.geolocation.watchPosition(position => {
-        const metresPerSecond = position.coords.speed;
-        updateDrivingSpeedDisplay(Number.isFinite(metresPerSecond) ? metresPerSecond * 3.6 : null);
-      }, error => {
-        console.warn("Suivi GPS indisponible", error);
-        $("drivingSpeedStatus").textContent = error.code === 1 ? "Autorisez la localisation pour afficher la vitesse" : "Recherche du signal GPS…";
-      }, { enableHighAccuracy:true, maximumAge:1000, timeout:12000 });
-      requestDrivingWakeLock();
-    }
-
-    function openDrivingMode(id) {
-      const item = state.bookings.find(booking => booking.id === id);
-      if (!item || item.status !== "accepted") return;
-      drivingBookingId = id;
-      closeBooking();
-      $("drivingCourseNumber").textContent = courseNumberLabel(item);
-      $("drivingCustomer").textContent = item.customerName || "Client non renseigné";
-      $("drivingRoute").textContent = `${item.pickup || "Départ non renseigné"} → ${item.destination || "Arrivée non renseignée"}`;
-      const date = bookingDate(item);
-      $("drivingSchedule").textContent = date
-        ? `Course prévue à ${date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`
-        : "Horaire non renseigné";
-      $("drivingSpeedLimit").textContent = drivingSpeedLimit;
-      renderDrivingStages(item);
-      $("drivingOverlay").classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-      prepareAlertSound();
-      startDrivingTracking();
-    }
-
-    function closeDrivingMode(goHome = false) {
-      stopDrivingTracking();
-      $("drivingOverlay").classList.add("hidden");
-      document.body.style.overflow = "";
-      drivingBookingId = null;
-      if (goHome) openPanel("dashboardHome");
-    }
-
-    async function setDrivingStage(stage) {
-      const item = state.bookings.find(booking => booking.id === drivingBookingId);
-      if (!item || !db) return;
-      const changes = { tripStage:stage, updatedAt:serverTimestamp() };
-      if (stage === "arrived") changes.arrivedAt = serverTimestamp();
-      if (stage === "aboard") changes.clientAboardAt = serverTimestamp();
-      try {
-        await updateDoc(doc(db, "bookings", item.id), changes);
-        item.tripStage = stage;
-        renderDrivingStages(item);
-      } catch (error) {
-        console.error(error);
-        alert("L’étape de la course n’a pas pu être enregistrée.");
-      }
     }
  
     function sendPlannedTripSms(item, type) {
@@ -1448,7 +1294,6 @@ Ouassini – OuassVTC`;
       }
       if (item.status === "accepted") {
         return `
-          <button class="action" data-driving-mode="${item.id}">Mode conduite</button>
           <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
           <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
           <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
@@ -1600,7 +1445,6 @@ Ouassini – OuassVTC`;
       });
       $("detailBody").querySelector("[data-duplicate-booking]")?.addEventListener("click", () => duplicateBooking(item.id));
       $("detailBody").querySelector("[data-return-booking]")?.addEventListener("click", () => openReturnBooking(item.id));
-      $("detailBody").querySelector("[data-driving-mode]")?.addEventListener("click", () => openDrivingMode(item.id));
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
         button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
       });
@@ -1613,7 +1457,7 @@ Ouassini – OuassVTC`;
         if (deleted) closeBooking();
       }));
     }
-
+ 
     function duplicateBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
@@ -1633,7 +1477,7 @@ Ouassini – OuassVTC`;
       $("driverBookingSuccess").classList.add("hidden");
       setTimeout(() => $("driverDateTime").focus(), 150);
     }
-
+ 
     function openReturnBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
@@ -2028,7 +1872,7 @@ Ouassini – OuassVTC`;
     }
  
     async function updateStatus(id, status) {
-      if (!db) return false;
+      if (!db) return;
       const button = document.querySelector(`[data-id="${id}"][data-status="${status}"]`);
       if (button) button.disabled = true;
       try {
@@ -2042,12 +1886,10 @@ Ouassini – OuassVTC`;
           changes.completedAt = serverTimestamp();
         }
         await updateDoc(doc(db, "bookings", id), changes);
-        return true;
       } catch (error) {
         console.error(error);
         alert("La modification n’a pas pu être enregistrée.");
         if (button) button.disabled = false;
-        return false;
       }
     }
  
@@ -2248,12 +2090,68 @@ Ouassini – OuassVTC`;
       });
     }
  
+ 
+ 
+    // V23 — OuassVTC Rush : mini-jeu local, sans dépendance externe.
+    const rushCanvas = $("rushCanvas");
+    const rushCtx = rushCanvas?.getContext("2d");
+    const rush = { running:false, paused:false, score:0, best:Number(localStorage.getItem("ouassvtcRushBest") || 0), x:180, targetX:180, obstacles:[], clients:[], roadOffset:0, last:0, spawn:0, clientSpawn:0, raf:0 };
+    if ($("rushBest")) $("rushBest").textContent = rush.best;
+ 
+    function rushShowOverlay(title, text, button="REJOUER") {
+      $("rushOverlayTitle").textContent = title; $("rushOverlayText").textContent = text; $("rushStart").textContent = button; $("rushOverlay").classList.remove("hidden");
+    }
+    function rushHideOverlay(){ $("rushOverlay").classList.add("hidden"); }
+    function rushReset(){
+      rush.running=true; rush.paused=false; rush.score=0; rush.x=180; rush.targetX=180; rush.obstacles=[]; rush.clients=[]; rush.roadOffset=0; rush.last=performance.now(); rush.spawn=0; rush.clientSpawn=0;
+      $("rushScore").textContent="0"; $("rushPause").textContent="⏸ Pause"; rushHideOverlay(); cancelAnimationFrame(rush.raf); rush.raf=requestAnimationFrame(rushLoop);
+    }
+    function rushEnd(){
+      rush.running=false; cancelAnimationFrame(rush.raf);
+      if(rush.score>rush.best){rush.best=rush.score; localStorage.setItem("ouassvtcRushBest",String(rush.best)); $("rushBest").textContent=rush.best;}
+      rushShowOverlay("Course terminée !",`Score : ${rush.score} · Record : ${rush.best}`);
+    }
+    function rushPauseGame(show=true){
+      if(!rush.running) return; rush.paused=true; cancelAnimationFrame(rush.raf); $("rushPause").textContent="▶ Reprendre";
+      if(show) rushShowOverlay("Pause",`Score actuel : ${rush.score}`,"REPRENDRE");
+    }
+    function rushResume(){ if(!rush.running || !rush.paused) return; rush.paused=false; rush.last=performance.now(); $("rushPause").textContent="⏸ Pause"; rushHideOverlay(); rush.raf=requestAnimationFrame(rushLoop); }
+    function rushRectHit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+    function rushDrawCar(x,y,w,h,player=false){
+      const c=rushCtx; c.save(); c.fillStyle=player?"#050505":"#d8d8d8"; c.fillRect(x,y,w,h); c.fillStyle=player?"#d7aa43":"#555"; c.fillRect(x+6,y+9,w-12,13); c.fillStyle="#111"; c.fillRect(x-3,y+12,4,13); c.fillRect(x+w-1,y+12,4,13); c.fillRect(x-3,y+h-25,4,13); c.fillRect(x+w-1,y+h-25,4,13); if(player){c.fillStyle="#fff";c.font="bold 10px Arial";c.textAlign="center";c.fillText("VTC",x+w/2,y+h-8)} c.restore();
+    }
+    function rushDraw(){
+      const c=rushCtx,W=360,H=600; c.clearRect(0,0,W,H); c.fillStyle="#1f1f1f";c.fillRect(0,0,W,H); c.fillStyle="#4a4a4a";c.fillRect(34,0,292,H); c.fillStyle="#eee";c.fillRect(31,0,3,H);c.fillRect(326,0,3,H);
+      c.fillStyle="#ddd"; for(let y=-50+(rush.roadOffset%100);y<H;y+=100){c.fillRect(130,y,4,48);c.fillRect(226,y,4,48)}
+      rush.clients.forEach(o=>{c.fillStyle="#d7aa43";c.beginPath();c.arc(o.x+12,o.y+12,12,0,Math.PI*2);c.fill();c.fillStyle="#000";c.font="bold 14px Arial";c.textAlign="center";c.fillText("P",o.x+12,o.y+17)});
+      rush.obstacles.forEach(o=>rushDrawCar(o.x,o.y,o.w,o.h,false)); rushDrawCar(rush.x-19,510,38,68,true);
+    }
+    function rushLoop(now){
+      if(!rush.running||rush.paused)return; const dt=Math.min(32,now-rush.last);rush.last=now; const speed=0.20+Math.min(.24,rush.score/1800);rush.roadOffset+=dt*speed;rush.x+=(rush.targetX-rush.x)*Math.min(1,dt*.015);rush.x=Math.max(60,Math.min(300,rush.x));
+      rush.spawn+=dt; rush.clientSpawn+=dt; const obstacleEvery=Math.max(520,1050-rush.score*2.2);
+      if(rush.spawn>obstacleEvery){rush.spawn=0;const lanes=[84,180,276];const x=lanes[Math.floor(Math.random()*3)]-18;rush.obstacles.push({x,y:-75,w:36,h:64});}
+      if(rush.clientSpawn>2100){rush.clientSpawn=0;const lanes=[84,180,276];rush.clients.push({x:lanes[Math.floor(Math.random()*3)]-12,y:-30,w:24,h:24});}
+      const dy=dt*speed; rush.obstacles.forEach(o=>o.y+=dy);rush.clients.forEach(o=>o.y+=dy);const car={x:rush.x-19,y:510,w:38,h:68};
+      if(rush.obstacles.some(o=>rushRectHit(car,o))){rushDraw();rushEnd();return;}
+      rush.clients=rush.clients.filter(o=>{if(rushRectHit(car,o)){rush.score+=10;$("rushScore").textContent=rush.score;return false}return o.y<630}); rush.obstacles=rush.obstacles.filter(o=>{if(o.y>630){rush.score+=1;$("rushScore").textContent=rush.score;return false}return true});
+      rushDraw();rush.raf=requestAnimationFrame(rushLoop);
+    }
+    function rushMove(dir){rush.targetX=Math.max(60,Math.min(300,rush.targetX+dir*96));}
+    $("rushStart").addEventListener("click",()=>rush.running&&rush.paused?rushResume():rushReset());
+    $("rushPause").addEventListener("click",()=>{if(!rush.running)return;if(rush.paused)rushResume();else rushPauseGame(true)});
+    $("rushLeft").addEventListener("pointerdown",e=>{e.preventDefault();rushMove(-1)}); $("rushRight").addEventListener("pointerdown",e=>{e.preventDefault();rushMove(1)});
+    rushCanvas.addEventListener("pointerdown",e=>{if(!rush.running||rush.paused)return;const r=rushCanvas.getBoundingClientRect();rush.targetX=(e.clientX-r.left)*360/r.width;});
+    rushCanvas.addEventListener("pointermove",e=>{if(!rush.running||rush.paused||!(e.buttons&1))return;const r=rushCanvas.getBoundingClientRect();rush.targetX=(e.clientX-r.left)*360/r.width;});
+    $("rushResetBest").addEventListener("click",()=>{if(confirm("Effacer le record OuassVTC Rush ?")){rush.best=0;localStorage.removeItem("ouassvtcRushBest");$("rushBest").textContent="0";}});
+    rushDraw();
+ 
     function closeMenu() {
       $("sideMenu").classList.add("hidden");
       $("menuOverlay").classList.add("hidden");
     }
  
     function openPanel(panelId) {
+      if (panelId !== "gamePanel" && rush.running && !rush.paused) rushPauseGame(false);
       document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== panelId));
       document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
       closeMenu();
@@ -2324,32 +2222,6 @@ Ouassini – OuassVTC`;
     $("detailClose").addEventListener("click", closeBooking);
     $("detailOverlay").addEventListener("click", event => {
       if (event.target === $("detailOverlay")) closeBooking();
-    });
-
-    $("drivingExit").addEventListener("click", () => closeDrivingMode(false));
-    $("drivingHome").addEventListener("click", () => closeDrivingMode(true));
-    $("decreaseSpeedLimit").addEventListener("click", () => {
-      drivingSpeedLimit = Math.max(20, drivingSpeedLimit - 10);
-      localStorage.setItem("ouassvtcDrivingSpeedLimit", drivingSpeedLimit);
-      updateDrivingSpeedDisplay(drivingCurrentSpeed);
-    });
-    $("increaseSpeedLimit").addEventListener("click", () => {
-      drivingSpeedLimit = Math.min(130, drivingSpeedLimit + 10);
-      localStorage.setItem("ouassvtcDrivingSpeedLimit", drivingSpeedLimit);
-      updateDrivingSpeedDisplay(drivingCurrentSpeed);
-    });
-    $("drivingArrived").addEventListener("click", () => setDrivingStage("arrived"));
-    $("drivingAboard").addEventListener("click", () => setDrivingStage("aboard"));
-    $("drivingComplete").addEventListener("click", async () => {
-      if (!drivingBookingId || !confirm("Confirmer que la course est terminée ?")) return;
-      const bookingId = drivingBookingId;
-      const saved = await updateStatus(bookingId, "completed");
-      if (saved) closeDrivingMode(true);
-    });
-    document.addEventListener("visibilitychange", () => {
-      if (!$("drivingOverlay").classList.contains("hidden") && document.visibilityState === "visible" && !drivingWakeLock) {
-        requestDrivingWakeLock();
-      }
     });
  
     const now = new Date();
@@ -2520,7 +2392,7 @@ Ouassini – OuassVTC`;
         ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif du dimanche" : "Tarif de soirée / nuit" }
         : { base: 20, extraKm: 1.80, label: "Tarif de jour" };
     }
-
+ 
     let customerLookupTimer = null;
     $("driverPhone").addEventListener("input", () => {
       clearTimeout(customerLookupTimer);
@@ -2622,9 +2494,9 @@ Ouassini – OuassVTC`;
         button.textContent = "Estimer cette course";
       }
     }
-
+ 
     $("estimateDriverBooking").addEventListener("click", () => estimateFullBookingFare(true));
-
+ 
     let automaticFareTimer = null;
     function scheduleAutomaticFare() {
       clearTimeout(automaticFareTimer);
@@ -2803,4 +2675,3 @@ Ouassini – OuassVTC`;
   </script>
 </body>
 </html>
-
