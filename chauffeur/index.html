@@ -351,7 +351,48 @@
       .detail-body .simulator{border:0;border-radius:0;padding:0;box-shadow:none}
       .detail-body .simulator-grid{grid-template-columns:1fr}
       .detail-body .sim-field.full{grid-column:auto}
-      .detail-body input,.detail-body select,.detail-body textarea{font-size:16px}
+    .detail-body input,.detail-body select,.detail-body textarea{font-size:16px}
+    }
+
+    .driving-overlay{position:fixed;inset:0;z-index:140;background:#f4f4f4;color:#111;overflow:auto;overscroll-behavior:contain}
+    .driving-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#000;color:#fff;padding:max(13px,env(safe-area-inset-top)) 16px 13px}
+    .driving-brand{display:flex;align-items:center;gap:11px;min-width:0}
+    .driving-brand img{width:50px;height:50px;border-radius:12px;object-fit:cover}
+    .driving-brand strong{font-size:17px;letter-spacing:.12em;white-space:nowrap}
+    .driving-home{width:46px;height:46px;display:grid;place-items:center;flex:0 0 auto;border:1px solid #3a3a3a;border-radius:13px;background:#171717;color:#fff;cursor:pointer}
+    .driving-home svg{width:23px;height:23px}
+    .driving-content{width:min(620px,100%);margin:auto;padding:22px 16px max(26px,env(safe-area-inset-bottom));display:grid;gap:16px}
+    .speed-card{position:relative;display:grid;place-items:center;background:#fff;border:1px solid #e1e1e1;border-radius:26px;padding:23px 16px 20px;text-align:center;box-shadow:0 10px 30px #0000000a}
+    .live-speed{font-size:102px;line-height:.9;font-weight:950;letter-spacing:-.07em}
+    .speed-unit{margin-top:8px;color:#666;font-size:24px}
+    .speed-status{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;color:var(--green);font-size:20px;font-weight:950}
+    .speed-status.over{color:var(--red)}
+    .speed-limit-box{position:absolute;right:18px;top:18px;width:70px;height:70px;display:grid;place-items:center;border:7px solid #e01919;border-radius:50%;background:#fff;font-size:29px;font-weight:950;box-shadow:0 4px 12px #0002}
+    .limit-controls{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px}
+    .limit-controls span{font-size:12px;color:#666;font-weight:850;margin-right:4px}
+    .limit-controls button{width:42px;height:38px;border:1px solid #d5d5d5;border-radius:10px;background:#f5f5f5;font-weight:950;cursor:pointer}
+    .danger-card{display:flex;align-items:center;gap:14px;border:1px solid #dfb12c;border-radius:20px;background:#ffe39a;padding:17px}
+    .danger-card .danger-icon{font-size:34px}
+    .danger-card strong{display:block;font-size:17px}
+    .danger-card small{display:block;margin-top:4px;color:#594800;line-height:1.35}
+    .driving-trip{background:#fff;border:1px solid #dedede;border-radius:22px;padding:20px}
+    .driving-trip h2{font-size:26px;margin-bottom:14px}
+    .driving-trip p{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;margin-top:10px;line-height:1.4}
+    .driving-trip p span:last-child{overflow-wrap:anywhere}
+    .driving-waze{min-height:62px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:18px;background:#000;color:#fff;text-decoration:none;font-weight:950;letter-spacing:.04em}
+    .driving-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .driving-stage{min-height:78px;border:1px solid #d8d8d8;border-radius:17px;background:#fff;padding:8px 5px;font-size:12px;font-weight:950;cursor:pointer}
+    .driving-stage.active{background:#000;color:#fff;border-color:#000}
+    .driving-stage:disabled{opacity:.42;cursor:not-allowed}
+    .driving-exit{min-height:54px;border:0;border-radius:15px;background:#e2e2e2;color:#333;font-weight:900;cursor:pointer}
+    .driving-note{font-size:12px;line-height:1.45;color:#666;text-align:center}
+
+    @media(max-width:390px){
+      .driving-brand strong{font-size:14px;letter-spacing:.08em}
+      .live-speed{font-size:86px}
+      .speed-limit-box{width:61px;height:61px;border-width:6px;font-size:25px}
+      .driving-stages{grid-template-columns:1fr}
+      .driving-stage{min-height:54px}
     }
  
     .booking{
@@ -710,6 +751,39 @@
       <div class="detail-body" id="detailBody"></div>
     </article>
   </div>
+
+  <section class="driving-overlay hidden" id="drivingOverlay" role="dialog" aria-modal="true" aria-labelledby="drivingTitle">
+    <header class="driving-head">
+      <div class="driving-brand"><img src="/ouassvtc-app.png" alt="OuassVTC"><strong id="drivingTitle">MODE CONDUITE</strong></div>
+      <button class="driving-home" id="drivingHome" type="button" aria-label="Retour au tableau de bord" title="Tableau de bord">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg>
+      </button>
+    </header>
+    <div class="driving-content">
+      <section class="speed-card">
+        <div class="speed-limit-box" id="drivingSpeedLimit">50</div>
+        <strong class="live-speed" id="drivingSpeed">—</strong>
+        <span class="speed-unit">km/h</span>
+        <div class="speed-status" id="drivingSpeedStatus">● Recherche du signal GPS…</div>
+        <div class="limit-controls"><span>Limitation</span><button id="decreaseSpeedLimit" type="button" aria-label="Diminuer la limitation">−</button><button id="increaseSpeedLimit" type="button" aria-label="Augmenter la limitation">+</button></div>
+      </section>
+      <section class="danger-card"><span class="danger-icon">⚠️</span><div><strong>Zones de danger</strong><small>Aucune source de données légale n’est encore connectée. Les alertes de Waze restent actives dans Waze.</small></div></section>
+      <section class="driving-trip">
+        <h2 id="drivingCourseNumber">Course</h2>
+        <p><span>👤</span><span id="drivingCustomer">Client</span></p>
+        <p><span>📍</span><span id="drivingRoute">Trajet</span></p>
+        <p><span>🕒</span><span id="drivingSchedule">Horaire</span></p>
+      </section>
+      <a class="driving-waze" id="drivingWaze" href="#" target="_blank" rel="noopener">➤ OUVRIR DANS WAZE</a>
+      <div class="driving-stages">
+        <button class="driving-stage" id="drivingArrived" type="button">📍<br>SUR PLACE</button>
+        <button class="driving-stage" id="drivingAboard" type="button">👤<br>CLIENT À BORD</button>
+        <button class="driving-stage" id="drivingComplete" type="button">✓<br>TERMINER</button>
+      </div>
+      <button class="driving-exit" id="drivingExit" type="button">QUITTER LE MODE CONDUITE</button>
+      <p class="driving-note">La vitesse GPS fonctionne lorsque cet écran reste ouvert. Respectez toujours la signalisation routière affichée sur la route.</p>
+    </div>
+  </section>
  
   <div class="trip-alert hidden" id="tripAlert" role="alertdialog" aria-modal="true" aria-labelledby="tripAlertTitle">
     <div class="trip-alert-card">
@@ -765,6 +839,12 @@
     let numberingRequested = false;
     let lastDriverConfirmation = null;
     let messaging = null;
+    let drivingBookingId = null;
+    let drivingWatchId = null;
+    let drivingWakeLock = null;
+    let drivingLastSpeedAlert = 0;
+    let drivingCurrentSpeed = null;
+    let drivingSpeedLimit = Number(localStorage.getItem("ouassvtcDrivingSpeedLimit")) || 50;
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
@@ -850,6 +930,120 @@
  
     function wazeHref(address) {
       return `https://www.waze.com/ul?q=${encodeURIComponent(address || "")}&navigate=yes`;
+    }
+
+    function drivingStageRank(stage) {
+      return { on_the_way:0, arrived:1, aboard:2 }[stage] ?? 0;
+    }
+
+    function renderDrivingStages(item) {
+      const rank = drivingStageRank(item?.tripStage);
+      $("drivingArrived").classList.toggle("active", rank >= 1);
+      $("drivingAboard").classList.toggle("active", rank >= 2);
+      $("drivingAboard").disabled = rank < 1;
+      $("drivingComplete").disabled = rank < 2;
+      const drivingToDestination = rank >= 2;
+      $("drivingWaze").href = wazeHref(drivingToDestination ? item?.destination : item?.pickup);
+      $("drivingWaze").textContent = drivingToDestination ? "➤ OUVRIR WAZE VERS L’ARRIVÉE" : "➤ OUVRIR WAZE VERS LE CLIENT";
+    }
+
+    function updateDrivingSpeedDisplay(speed) {
+      drivingCurrentSpeed = speed;
+      const hasSpeed = Number.isFinite(speed) && speed >= 0;
+      const roundedSpeed = hasSpeed ? Math.round(speed) : null;
+      $("drivingSpeed").textContent = hasSpeed ? roundedSpeed : "—";
+      $("drivingSpeedLimit").textContent = drivingSpeedLimit;
+      const overLimit = hasSpeed && roundedSpeed > drivingSpeedLimit;
+      $("drivingSpeedStatus").classList.toggle("over", overLimit);
+      $("drivingSpeedStatus").textContent = !hasSpeed
+        ? "● Signal GPS disponible, vitesse en attente"
+        : overLimit
+          ? `⚠ Ralentissez : ${roundedSpeed - drivingSpeedLimit} km/h au-dessus`
+          : "✓ Vitesse respectée";
+      if (overLimit && Date.now() - drivingLastSpeedAlert > 15000) {
+        drivingLastSpeedAlert = Date.now();
+        prepareAlertSound();
+        soundAlertPulse();
+        navigator.vibrate?.([180, 100, 180]);
+      }
+    }
+
+    async function requestDrivingWakeLock() {
+      if (!navigator.wakeLock || document.visibilityState !== "visible") return;
+      try {
+        drivingWakeLock = await navigator.wakeLock.request("screen");
+      } catch (error) {
+        console.warn("Maintien de l’écran indisponible", error);
+      }
+    }
+
+    function stopDrivingTracking() {
+      if (drivingWatchId !== null) navigator.geolocation?.clearWatch(drivingWatchId);
+      drivingWatchId = null;
+      drivingWakeLock?.release().catch(() => {});
+      drivingWakeLock = null;
+    }
+
+    function startDrivingTracking() {
+      stopDrivingTracking();
+      drivingCurrentSpeed = null;
+      updateDrivingSpeedDisplay(null);
+      if (!navigator.geolocation) {
+        $("drivingSpeedStatus").textContent = "GPS indisponible sur cet appareil";
+        return;
+      }
+      drivingWatchId = navigator.geolocation.watchPosition(position => {
+        const metresPerSecond = position.coords.speed;
+        updateDrivingSpeedDisplay(Number.isFinite(metresPerSecond) ? metresPerSecond * 3.6 : null);
+      }, error => {
+        console.warn("Suivi GPS indisponible", error);
+        $("drivingSpeedStatus").textContent = error.code === 1 ? "Autorisez la localisation pour afficher la vitesse" : "Recherche du signal GPS…";
+      }, { enableHighAccuracy:true, maximumAge:1000, timeout:12000 });
+      requestDrivingWakeLock();
+    }
+
+    function openDrivingMode(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item || item.status !== "accepted") return;
+      drivingBookingId = id;
+      closeBooking();
+      $("drivingCourseNumber").textContent = courseNumberLabel(item);
+      $("drivingCustomer").textContent = item.customerName || "Client non renseigné";
+      $("drivingRoute").textContent = `${item.pickup || "Départ non renseigné"} → ${item.destination || "Arrivée non renseignée"}`;
+      const date = bookingDate(item);
+      $("drivingSchedule").textContent = date
+        ? `Course prévue à ${date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}`
+        : "Horaire non renseigné";
+      $("drivingSpeedLimit").textContent = drivingSpeedLimit;
+      renderDrivingStages(item);
+      $("drivingOverlay").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      prepareAlertSound();
+      startDrivingTracking();
+    }
+
+    function closeDrivingMode(goHome = false) {
+      stopDrivingTracking();
+      $("drivingOverlay").classList.add("hidden");
+      document.body.style.overflow = "";
+      drivingBookingId = null;
+      if (goHome) openPanel("dashboardHome");
+    }
+
+    async function setDrivingStage(stage) {
+      const item = state.bookings.find(booking => booking.id === drivingBookingId);
+      if (!item || !db) return;
+      const changes = { tripStage:stage, updatedAt:serverTimestamp() };
+      if (stage === "arrived") changes.arrivedAt = serverTimestamp();
+      if (stage === "aboard") changes.clientAboardAt = serverTimestamp();
+      try {
+        await updateDoc(doc(db, "bookings", item.id), changes);
+        item.tripStage = stage;
+        renderDrivingStages(item);
+      } catch (error) {
+        console.error(error);
+        alert("L’étape de la course n’a pas pu être enregistrée.");
+      }
     }
  
     function sendPlannedTripSms(item, type) {
@@ -1254,6 +1448,7 @@ Ouassini – OuassVTC`;
       }
       if (item.status === "accepted") {
         return `
+          <button class="action" data-driving-mode="${item.id}">Mode conduite</button>
           <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
           <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
           <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
@@ -1405,6 +1600,7 @@ Ouassini – OuassVTC`;
       });
       $("detailBody").querySelector("[data-duplicate-booking]")?.addEventListener("click", () => duplicateBooking(item.id));
       $("detailBody").querySelector("[data-return-booking]")?.addEventListener("click", () => openReturnBooking(item.id));
+      $("detailBody").querySelector("[data-driving-mode]")?.addEventListener("click", () => openDrivingMode(item.id));
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
         button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
       });
@@ -1832,7 +2028,7 @@ Ouassini – OuassVTC`;
     }
  
     async function updateStatus(id, status) {
-      if (!db) return;
+      if (!db) return false;
       const button = document.querySelector(`[data-id="${id}"][data-status="${status}"]`);
       if (button) button.disabled = true;
       try {
@@ -1846,10 +2042,12 @@ Ouassini – OuassVTC`;
           changes.completedAt = serverTimestamp();
         }
         await updateDoc(doc(db, "bookings", id), changes);
+        return true;
       } catch (error) {
         console.error(error);
         alert("La modification n’a pas pu être enregistrée.");
         if (button) button.disabled = false;
+        return false;
       }
     }
  
@@ -2126,6 +2324,32 @@ Ouassini – OuassVTC`;
     $("detailClose").addEventListener("click", closeBooking);
     $("detailOverlay").addEventListener("click", event => {
       if (event.target === $("detailOverlay")) closeBooking();
+    });
+
+    $("drivingExit").addEventListener("click", () => closeDrivingMode(false));
+    $("drivingHome").addEventListener("click", () => closeDrivingMode(true));
+    $("decreaseSpeedLimit").addEventListener("click", () => {
+      drivingSpeedLimit = Math.max(20, drivingSpeedLimit - 10);
+      localStorage.setItem("ouassvtcDrivingSpeedLimit", drivingSpeedLimit);
+      updateDrivingSpeedDisplay(drivingCurrentSpeed);
+    });
+    $("increaseSpeedLimit").addEventListener("click", () => {
+      drivingSpeedLimit = Math.min(130, drivingSpeedLimit + 10);
+      localStorage.setItem("ouassvtcDrivingSpeedLimit", drivingSpeedLimit);
+      updateDrivingSpeedDisplay(drivingCurrentSpeed);
+    });
+    $("drivingArrived").addEventListener("click", () => setDrivingStage("arrived"));
+    $("drivingAboard").addEventListener("click", () => setDrivingStage("aboard"));
+    $("drivingComplete").addEventListener("click", async () => {
+      if (!drivingBookingId || !confirm("Confirmer que la course est terminée ?")) return;
+      const bookingId = drivingBookingId;
+      const saved = await updateStatus(bookingId, "completed");
+      if (saved) closeDrivingMode(true);
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!$("drivingOverlay").classList.contains("hidden") && document.visibilityState === "visible" && !drivingWakeLock) {
+        requestDrivingWakeLock();
+      }
     });
  
     const now = new Date();
