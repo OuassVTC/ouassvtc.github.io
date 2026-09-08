@@ -418,6 +418,10 @@
     .sms-choice-panel strong{display:block;margin-bottom:10px;font-size:14px}
     .sms-choice-grid{display:grid;gap:8px}
     .sms-choice-grid button{min-height:48px;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;text-align:left;font-weight:850;cursor:pointer}
+    .more-actions-panel{margin:12px 0 0;padding:12px;border:1px solid var(--border);border-radius:14px;background:#f7f7f7;display:grid;gap:8px}
+    .more-actions-panel button{min-height:48px;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;text-align:left;font-weight:850;cursor:pointer}
+    .customer-match{grid-column:1/-1;padding:11px 13px;border-radius:12px;background:#edf8f0;color:#0d6b31;font-size:13px;font-weight:850;line-height:1.4}
+    .return-summary{margin-bottom:14px;padding:14px;border-radius:14px;background:#f5f5f5;line-height:1.5;font-size:14px}
  
     .status-actions{
       display:grid;
@@ -674,6 +678,7 @@
           <div class="simulator-grid single-column-form">
             <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
             <div class="sim-field"><label for="driverPhone">Téléphone</label><input id="driverPhone" required type="tel" autocomplete="tel"></div>
+            <div class="customer-match hidden" id="driverCustomerMatch" role="status"></div>
             <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
             <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
             <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
@@ -794,6 +799,38 @@
  
     function phoneHref(value) {
       return String(value ?? "").replace(/[^+\d]/g, "");
+    }
+
+    function normalizedCustomerPhone(value) {
+      let digits = String(value || "").replace(/\D/g, "");
+      if (digits.startsWith("33") && digits.length === 11) digits = `0${digits.slice(2)}`;
+      return digits;
+    }
+
+    function findKnownCustomer(phone) {
+      const normalized = normalizedCustomerPhone(phone);
+      if (normalized.length < 10) return null;
+      const matches = state.bookings.filter(item => normalizedCustomerPhone(item.customerPhone) === normalized);
+      if (!matches.length) return null;
+      const datedMatches = [...matches].sort((a, b) => {
+        const dateA = completedDate(a) || bookingDate(a) || createdDate(a) || new Date(0);
+        const dateB = completedDate(b) || bookingDate(b) || createdDate(b) || new Date(0);
+        return dateB - dateA;
+      });
+      const latest = datedMatches[0];
+      const pickupCounts = new Map();
+      datedMatches.forEach((item, index) => {
+        const pickup = String(item.pickup || "").trim();
+        if (!pickup || pickup === "Ajout manuel") return;
+        const entry = pickupCounts.get(pickup) || { count:0, firstIndex:index };
+        entry.count += 1;
+        pickupCounts.set(pickup, entry);
+      });
+      const usualPickup = [...pickupCounts.entries()].sort((a, b) => b[1].count - a[1].count || a[1].firstIndex - b[1].firstIndex)[0]?.[0] || "";
+      return {
+        name: latest.customerName && latest.customerName !== "Course manuelle" ? latest.customerName : "",
+        pickup: usualPickup
+      };
     }
  
     function dateLabel(item) {
@@ -1354,7 +1391,8 @@ Ouassini – OuassVTC`;
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
-        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}</div>`;
+        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
+        <div class="more-actions-panel hidden" data-more-actions><button type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button><button type="button" data-return-booking="${item.id}">Programmer le retour</button></div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
@@ -1362,6 +1400,11 @@ Ouassini – OuassVTC`;
       $("detailBody").querySelector("[data-toggle-sms-menu]")?.addEventListener("click", () => {
         $("detailBody").querySelector("[data-sms-menu]")?.classList.toggle("hidden");
       });
+      $("detailBody").querySelector("[data-toggle-more-actions]")?.addEventListener("click", () => {
+        $("detailBody").querySelector("[data-more-actions]")?.classList.toggle("hidden");
+      });
+      $("detailBody").querySelector("[data-duplicate-booking]")?.addEventListener("click", () => duplicateBooking(item.id));
+      $("detailBody").querySelector("[data-return-booking]")?.addEventListener("click", () => openReturnBooking(item.id));
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
         button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
       });
@@ -1373,6 +1416,95 @@ Ouassini – OuassVTC`;
         const deleted = await refuseAndDelete(button.dataset.delete);
         if (deleted) closeBooking();
       }));
+    }
+
+    function duplicateBooking(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item) return;
+      closeBooking();
+      openPanel("estimatePanel");
+      $("driverName").value = item.customerName || "";
+      $("driverPhone").value = item.customerPhone || "";
+      $("driverPickup").value = item.pickup || "";
+      $("driverDestination").value = item.destination || "";
+      $("driverDateTime").value = "";
+      $("driverPassengers").value = [...$("driverPassengers").options].some(option => option.value === item.passengers) ? item.passengers : "Non précisé";
+      $("driverPayment").value = [...$("driverPayment").options].some(option => option.value === item.paymentMethod) ? item.paymentMethod : "Non précisé";
+      $("driverMessage").value = item.customerMessage || "";
+      $("driverPrice").value = "";
+      $("driverCustomerMatch").textContent = `Fiche de ${item.customerName || "ce client"} reprise. Modifiez la date, l’heure ou les adresses si nécessaire.`;
+      $("driverCustomerMatch").classList.remove("hidden");
+      $("driverBookingSuccess").classList.add("hidden");
+      setTimeout(() => $("driverDateTime").focus(), 150);
+    }
+
+    function openReturnBooking(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item) return;
+      $("detailTitle").textContent = "Programmer le retour";
+      $("detailBody").innerHTML = `
+        <div class="return-summary"><strong>${escapeHtml(item.customerName || "Client")}</strong><br>${escapeHtml(item.destination || "Arrivée non renseignée")}<br>→ ${escapeHtml(item.pickup || "Départ non renseigné")}</div>
+        <form class="simulator" id="returnBookingForm">
+          <div class="simulator-grid single-column-form">
+            <div class="sim-field"><label for="returnDateTime">Date et heure du retour</label><input id="returnDateTime" required type="datetime-local"></div>
+            <div class="sim-field"><label for="returnPrice">Tarif du retour</label><input id="returnPrice" inputmode="decimal" placeholder="Calcul automatique"></div>
+          </div>
+          <button class="primary" id="saveReturnBooking" type="submit" style="margin-top:14px">Enregistrer le retour dans l’agenda</button>
+          <button class="primary" id="cancelReturnBooking" type="button" style="margin-top:10px;background:#fff;color:#000;border:1px solid #000">Annuler</button>
+        </form>`;
+      $("cancelReturnBooking").addEventListener("click", () => openBooking(id));
+      $("returnDateTime").addEventListener("change", async () => {
+        const tripDate = new Date($("returnDateTime").value);
+        if (Number.isNaN(tripDate.getTime())) return;
+        try {
+          const fare = await calculateAutomaticFare(item.destination, item.pickup, tripDate);
+          $("returnPrice").value = `${fare.price} €`;
+        } catch (error) {
+          console.error(error);
+          $("returnPrice").value = "";
+          alert("Le tarif du retour n’a pas pu être calculé automatiquement. Vous pouvez le saisir manuellement.");
+        }
+      });
+      $("returnBookingForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        const scheduledAtText = $("returnDateTime").value;
+        const priceAmount = moneyValue($("returnPrice").value);
+        if (!scheduledAtText || priceAmount <= 0) {
+          alert("Indiquez la date, l’heure et le tarif du retour.");
+          return;
+        }
+        const button = $("saveReturnBooking");
+        button.disabled = true;
+        button.textContent = "Enregistrement en cours…";
+        try {
+          localSaveInProgress = true;
+          const createdReturn = await addDoc(collection(db, "bookings"), {
+            customerName: item.customerName || "Client",
+            customerPhone: item.customerPhone || "",
+            pickup: item.destination || "",
+            destination: item.pickup || "",
+            scheduledAtText,
+            passengers: item.passengers || "Non précisé",
+            paymentMethod: item.paymentMethod || "Non précisé",
+            customerMessage: item.customerMessage || "",
+            estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`,
+            status: "new",
+            source: "website",
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+          await updateDoc(createdReturn, { status:"accepted", updatedAt:serverTimestamp() });
+          localSaveInProgress = false;
+          closeBooking();
+          openPanel("agendaPanel");
+        } catch (error) {
+          localSaveInProgress = false;
+          console.error(error);
+          alert("Le retour n’a pas pu être enregistré. Réessayez.");
+          button.disabled = false;
+          button.textContent = "Enregistrer le retour dans l’agenda";
+        }
+      });
     }
  
     function openEditBooking(id) {
@@ -2034,6 +2166,7 @@ Ouassini – OuassVTC`;
         strictBounds:false
       });
       applyAddressBias(autocomplete);
+      autocomplete.addListener("place_changed", () => input.dispatchEvent(new Event("change", { bubbles:true })));
       return autocomplete;
     }
  
@@ -2163,6 +2296,37 @@ Ouassini – OuassVTC`;
         ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif du dimanche" : "Tarif de soirée / nuit" }
         : { base: 20, extraKm: 1.80, label: "Tarif de jour" };
     }
+
+    let customerLookupTimer = null;
+    $("driverPhone").addEventListener("input", () => {
+      clearTimeout(customerLookupTimer);
+      customerLookupTimer = setTimeout(() => {
+        const customer = findKnownCustomer($("driverPhone").value);
+        const message = $("driverCustomerMatch");
+        if (!customer) {
+          message.classList.add("hidden");
+          if ($("driverName").dataset.customerAutofill === "true") $("driverName").value = "";
+          if ($("driverPickup").dataset.customerAutofill === "true") $("driverPickup").value = "";
+          delete $("driverName").dataset.customerAutofill;
+          delete $("driverPickup").dataset.customerAutofill;
+          return;
+        }
+        if (!$("driverName").value.trim() || $("driverName").dataset.customerAutofill === "true") {
+          $("driverName").value = customer.name;
+          $("driverName").dataset.customerAutofill = "true";
+        }
+        if (!$("driverPickup").value.trim() || $("driverPickup").dataset.customerAutofill === "true") {
+          $("driverPickup").value = customer.pickup;
+          $("driverPickup").dataset.customerAutofill = "true";
+        }
+        message.textContent = customer.pickup
+          ? `Client reconnu : ${customer.name || "nom à compléter"}. Son adresse de départ habituelle a été ajoutée.`
+          : `Client reconnu : ${customer.name || "nom à compléter"}.`;
+        message.classList.remove("hidden");
+      }, 250);
+    });
+    $("driverName").addEventListener("input", () => delete $("driverName").dataset.customerAutofill);
+    $("driverPickup").addEventListener("input", () => delete $("driverPickup").dataset.customerAutofill);
  
     $("quickBookingKm").addEventListener("input", () => {
       $("quickBookingPrice").value = "";
@@ -2204,36 +2368,47 @@ Ouassini – OuassVTC`;
       });
     }
  
-    $("estimateDriverBooking").addEventListener("click", () => {
+    async function estimateFullBookingFare(showResult = true) {
       const origin = $("driverPickup").value.trim();
       const destination = $("driverDestination").value.trim();
       const tripDate = new Date($("driverDateTime").value);
       if (!origin || !destination || Number.isNaN(tripDate.getTime())) {
-        alert("Renseignez le départ, l’arrivée, la date et l’heure.");
-        return;
+        if (showResult) alert("Renseignez le départ, l’arrivée, la date et l’heure.");
+        return null;
       }
       if (!driverDirectionsService) {
-        alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
-        return;
+        if (showResult) alert("Le calcul d’itinéraire n’est pas encore disponible. Réessayez dans quelques secondes.");
+        return null;
       }
       const button = $("estimateDriverBooking");
       button.disabled = true;
       button.textContent = "Calcul en cours…";
-      driverDirectionsService.route({ origin, destination, travelMode: google.maps.TravelMode.DRIVING }, (result, status) => {
+      try {
+        const fare = await calculateAutomaticFare(origin, destination, tripDate);
+        $("driverPrice").value = `${fare.price} €`;
+        delete $("driverPrice").dataset.manualPrice;
+        if (showResult) alert(`Tarif estimé : ${fare.price} €\n${fare.distance.toFixed(1)} km · ${fare.duration} · ${fare.rate.label}`);
+        return fare;
+      } catch (error) {
+        console.error(error);
+        if (showResult) alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
+        return null;
+      } finally {
         button.disabled = false;
         button.textContent = "Estimer cette course";
-        if (status !== "OK") {
-          alert("L’itinéraire n’a pas pu être calculé. Vérifiez les deux adresses.");
-          return;
-        }
-        const leg = result.routes[0].legs[0];
-        const distance = leg.distance.value / 1000;
-        const rate = driverRate(tripDate);
-        const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-        const price = Math.round(rawPrice / 5) * 5;
-        $("driverPrice").value = `${price} €`;
-        alert(`Tarif estimé : ${price} €\n${distance.toFixed(1)} km · ${leg.duration.text} · ${rate.label}`);
-      });
+      }
+    }
+
+    $("estimateDriverBooking").addEventListener("click", () => estimateFullBookingFare(true));
+
+    let automaticFareTimer = null;
+    function scheduleAutomaticFare() {
+      clearTimeout(automaticFareTimer);
+      automaticFareTimer = setTimeout(() => estimateFullBookingFare(false), 450);
+    }
+    ["driverPickup", "driverDestination", "driverDateTime"].forEach(id => $(id).addEventListener("change", scheduleAutomaticFare));
+    $("driverPrice").addEventListener("input", () => {
+      $("driverPrice").dataset.manualPrice = "true";
     });
  
     $("quickBookingForm").addEventListener("submit", async event => {
@@ -2306,17 +2481,20 @@ Ouassini – OuassVTC`;
       const arrival = $("driverDestination").value.trim();
       const tripDate = new Date($("driverDateTime").value);
       button.disabled = true;
-      button.textContent = "Calcul automatique du tarif…";
-      let fare;
-      try {
-        fare = await calculateAutomaticFare(departure, arrival, tripDate);
-        $("driverPrice").value = `${fare.price} €`;
-      } catch (fareError) {
-        console.error(fareError);
-        alert("Le tarif n’a pas pu être calculé. Vérifiez les deux adresses et votre connexion Google Maps.");
-        button.disabled = false;
-        button.textContent = "Enregistrer et envoyer sur Zoho";
-        return;
+      let priceAmount = moneyValue($("driverPrice").value);
+      if (priceAmount <= 0) {
+        button.textContent = "Calcul automatique du tarif…";
+        try {
+          const fare = await calculateAutomaticFare(departure, arrival, tripDate);
+          priceAmount = fare.price;
+          $("driverPrice").value = `${priceAmount} €`;
+        } catch (fareError) {
+          console.error(fareError);
+          alert("Le tarif n’a pas pu être calculé. Vérifiez les deux adresses et votre connexion Google Maps.");
+          button.disabled = false;
+          button.textContent = "Enregistrer et envoyer sur Zoho";
+          return;
+        }
       }
       const params = {
         nom: $("driverName").value.trim(),
@@ -2327,7 +2505,7 @@ Ouassini – OuassVTC`;
         passagers: $("driverPassengers").value,
         paiement: $("driverPayment").value,
         message: $("driverMessage").value.trim(),
-        prix: `${fare.price} €`
+        prix: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
       };
       lastDriverConfirmation = { ...params };
       localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
@@ -2401,3 +2579,4 @@ Ouassini – OuassVTC`;
   </script>
 </body>
 </html>
+
