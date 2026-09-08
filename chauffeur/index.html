@@ -2767,6 +2767,7 @@ Ouassini – OuassVTC`;
     }, { passive:false });
   </script>
  
+<script>
 // V24 — Salle de jeux OuassVTC : jeux locaux, sans serveur ni dépendance.
 (()=>{
   const $a=id=>document.getElementById(id);
@@ -2846,6 +2847,6 @@ Ouassini – OuassVTC`;
   document.querySelectorAll("[data-snake]").forEach(b=>b.onclick=()=>({up:()=>snakeDir(0,-1),down:()=>snakeDir(0,1),left:()=>snakeDir(-1,0),right:()=>snakeDir(1,0)})[b.dataset.snake]());
   $a("snakeStart").onclick=snakeStart;if($a("snakeBest"))$a("snakeBest").textContent=localStorage.getItem("ouassSnakeBest")||0;
 })();
- 
+</script>
 </body>
 </html>
