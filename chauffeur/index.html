@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="theme-color" content="#000000">
-  <title>OuassVTC Chauffeur</title>
+  <meta name="theme-color" content="#07090d">
+  <title>OuassVTC Chauffeur — Mission Control</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -508,6 +508,84 @@
 .word-mask{text-align:center;font-size:25px;font-weight:1000;letter-spacing:7px;margin:18px 0}.word-letters{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}.word-letters button{width:34px;height:34px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:900}.word-letters button:disabled{opacity:.25}
 #snakeCanvas{display:block;width:100%;max-width:360px;height:auto;margin:auto;background:#151515;border-radius:16px;border:3px solid #d4af37}
 @media(max-width:380px){.arcade-grid{grid-template-columns:1fr}.arcade-card{min-height:94px}}
+
+/* ===== OUASSVTC V25 — MOBILITY COMMAND DESIGN ===== */
+:root{
+  --black:#07090d;
+  --text:#0b0d12;
+  --muted:#69717d;
+  --soft:#f4f6f8;
+  --border:#e2e6eb;
+  --blue:#1769ff;
+  --blue-soft:#eaf1ff;
+  --green:#16a05d;
+  --red:#d73535;
+  --shadow:0 18px 55px rgba(10,18,35,.09);
+}
+body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-.01em}
+.topbar{background:rgba(7,9,13,.98);padding:max(12px,env(safe-area-inset-top)) 16px 12px;box-shadow:none;border-bottom:1px solid #ffffff12}
+.topbar-inner{max-width:760px}
+.brand img{width:50px;height:50px;border-radius:13px}
+.brand small{font-size:12px;color:#f5f7fa;letter-spacing:.16em}
+.icon-button{border-color:#ffffff1f;background:#131720;border-radius:14px}
+.service-pill{display:flex;align-items:center;gap:7px;border:1px solid #2d3543;background:#12161e;color:#fff;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:900;letter-spacing:.1em}
+.service-pill::before{content:"";width:8px;height:8px;border-radius:50%;background:#20d879;box-shadow:0 0 0 4px #20d87922}
+.container{width:min(760px,100%);padding:0 14px}
+.dashboard{padding:26px 0 45px}
+.hello-row{align-items:flex-start;margin-bottom:22px}
+.hello-row .eyebrow{color:var(--blue);font-size:11px;letter-spacing:.18em;font-weight:950}
+.hello-row h1{font-size:clamp(32px,8vw,46px);line-height:1;letter-spacing:-.055em;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 16px}
+.stat,.report-card{border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:0 8px 28px #0c193208}
+.stat{min-height:132px;padding:18px 14px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer}
+.stat.full-width{grid-column:auto}
+.stat strong{font-size:32px;line-height:1;letter-spacing:-.045em}
+.stat span{font-size:12px;color:var(--muted);line-height:1.25;font-weight:700}
+.stat:nth-child(3){background:var(--black);color:#fff;border-color:var(--black)}
+.stat:nth-child(3) span{color:#aeb6c3}
+.dashboard-mission{position:relative;overflow:hidden;background:linear-gradient(145deg,#07090d,#151b27);color:#fff;border-radius:27px;padding:22px;margin:15px 0;box-shadow:0 22px 50px #07112826}
+.dashboard-mission::after{content:"";position:absolute;width:170px;height:170px;right:-85px;top:-90px;border-radius:50%;background:var(--blue);filter:blur(2px);opacity:.48}
+.dashboard-mission-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:17px}
+.dashboard-mission .eyebrow{color:#8fb4ff}
+.dashboard-mission h2{font-size:24px;margin-top:5px;letter-spacing:-.035em}
+.mission-arrow{width:46px;height:46px;border:0;border-radius:15px;background:var(--blue);color:#fff;font-size:24px;font-weight:900;cursor:pointer}
+.dashboard-mission #todayAgendaList{position:relative;z-index:1;display:grid;gap:10px}
+.dashboard-mission .empty{position:relative;z-index:1;color:#b9c0cb;border:1px dashed #ffffff36;background:#ffffff08;border-radius:17px;padding:20px;text-align:center}
+.dashboard-mission .accepted-row,.dashboard-mission .agenda-row{background:#fff;color:var(--text);border:0;border-radius:18px}
+.home-actions{gap:10px;margin:15px 0 21px}
+.home-action{min-height:67px;border-radius:19px;background:var(--blue);box-shadow:0 12px 28px #1769ff2e}
+.home-action.secondary{border-color:var(--border);box-shadow:none}
+.section-kicker{display:flex;align-items:center;justify-content:space-between;margin:24px 1px 12px}
+.section-kicker h2{font-size:21px;letter-spacing:-.035em}
+.section-kicker span{font-size:12px;color:var(--muted)}
+.today-card{border-radius:24px;box-shadow:var(--shadow);padding:19px}
+.today-card .section-title{font-size:22px}
+.side-menu{background:linear-gradient(180deg,#07090d,#0f1420);padding-left:17px;padding-right:17px}
+.menu-head{border-bottom:1px solid #ffffff14;padding-bottom:19px;margin-bottom:18px}
+.menu-link{border:0;background:transparent;color:#cbd1db;border-radius:14px;min-height:52px}
+.menu-link.active{background:var(--blue);color:#fff}
+.tab-panel:not(#dashboardHome){background:#fff;border:1px solid var(--border);border-radius:27px;padding:18px;box-shadow:var(--shadow)}
+.panel-home-button{border:0;background:var(--blue-soft);color:var(--blue);box-shadow:none}
+.section-title{letter-spacing:-.04em}
+.primary,.search-button{background:var(--blue)!important;color:#fff!important;border-color:var(--blue)!important}
+.booking-main,.booking-card,.accepted-row,.agenda-day,.history-month,.history-week{border-color:var(--border)!important;box-shadow:0 8px 25px #101b300b}
+.price-chip,.status{background:var(--blue-soft)!important;color:var(--blue)!important}
+.quick-actions a,.quick-actions button,.waze-actions a{border-color:#dfe5ef!important;background:#fff!important;color:var(--text)!important}
+.quick-actions button[data-toggle-sms-menu],.waze-actions a:first-child{background:var(--blue)!important;color:#fff!important;border-color:var(--blue)!important}
+.detail-head{background:var(--black);border-bottom:1px solid #ffffff15}
+.detail-card{border-radius:28px}
+.detail-body .booking-main{border-radius:22px}
+.detail-body .route{background:#f3f6fa}
+.action{border-radius:15px!important}
+.sms-choice-panel,.more-actions-panel{background:var(--blue-soft)!important;border-color:#cbdcff!important}
+.agenda-forecast{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,var(--black),#192233);color:#fff;border-radius:22px;padding:18px 19px;margin:4px 0 20px}
+.agenda-forecast small{display:block;color:#aeb8c8;font-weight:700;margin-bottom:5px}
+.agenda-forecast strong{font-size:29px;letter-spacing:-.045em}
+.agenda-forecast span{width:40px;height:40px;border-radius:13px;background:var(--blue);display:grid;place-items:center;font-weight:950}
+@media(max-width:520px){
+  .container{padding:0 13px}.dashboard{padding-top:22px}.stats{gap:8px}.stat{min-height:121px;padding:15px 11px;border-radius:18px}.stat strong{font-size:27px}.stat span{font-size:11px}.service-pill{padding:8px 10px;font-size:9px}.brand small{font-size:10px}.dashboard-mission{padding:18px;border-radius:23px}.tab-panel:not(#dashboardHome){padding:15px;border-radius:23px}
+}
+@media(max-width:370px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){grid-column:1/-1}.service-pill{display:none}}
  
 </style>
 </head>
@@ -524,6 +602,7 @@
           </div>
         </button>
       </div>
+      <div class="service-pill" aria-label="Application disponible">EN SERVICE</div>
     </div>
   </header>
  
@@ -580,17 +659,21 @@
           <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
           <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
-          <button class="stat full-width" type="button" data-open-tab="agendaPanel"><strong id="forecastRevenue">0 €</strong><span>Chiffre d’affaires prévisionnel des courses à venir</span></button>
+        </div>
+        <div class="dashboard-mission">
+          <div class="dashboard-mission-head">
+            <div><div class="eyebrow">Prochaine mission</div><h2>Votre journée en mouvement</h2></div>
+            <button class="mission-arrow" type="button" data-open-tab="agendaPanel" aria-label="Ouvrir l’agenda">›</button>
+          </div>
+          <div class="agenda-items" id="todayAgendaList"></div>
+          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
         </div>
         <div class="home-actions">
           <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
           <button class="home-action secondary" type="button" data-open-tab="agendaPanel">Agenda</button>
         </div>
-        <div class="today-card">
-          <h2 class="section-title">Agenda du jour</h2>
-          <div class="agenda-items" id="todayAgendaList"></div>
-          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
-        </div>
+        <div class="section-kicker"><h2>Pilotage rapide</h2><span>Accès directs</span></div>
+        <div class="today-card"><h2 class="section-title">Centre de contrôle</h2><p class="muted">Retrouvez vos courses, vos clients et votre activité depuis le menu sécurisé.</p></div>
       </section>
  
       <section class="tab-panel hidden" id="bookingsPanel">
@@ -660,6 +743,7 @@
           </button>
         </div>
         <h2 class="section-title">Agenda des courses</h2>
+        <div class="agenda-forecast"><div><small>Prévisionnel des courses à venir</small><strong id="forecastRevenue">0 €</strong></div><span>↗</span></div>
         <div id="agendaList"></div>
         <div class="empty hidden" id="agendaEmpty">Aucune course planifiée.</div>
       </section>
@@ -2850,3 +2934,4 @@ Ouassini – OuassVTC`;
 </script>
 </body>
 </html>
+
