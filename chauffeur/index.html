@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control</title>
+  <title>OuassVTC Chauffeur — Mission Control V26</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -586,6 +586,51 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   .container{padding:0 13px}.dashboard{padding-top:22px}.stats{gap:8px}.stat{min-height:121px;padding:15px 11px;border-radius:18px}.stat strong{font-size:27px}.stat span{font-size:11px}.service-pill{padding:8px 10px;font-size:9px}.brand small{font-size:10px}.dashboard-mission{padding:18px;border-radius:23px}.tab-panel:not(#dashboardHome){padding:15px;border-radius:23px}
 }
 @media(max-width:370px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){grid-column:1/-1}.service-pill{display:none}}
+
+/* ===== V26 — CORRECTION FIDÈLE DES ÉCRANS ===== */
+.topbar{padding:max(9px,env(safe-area-inset-top)) 14px 9px}
+.brand img{width:44px;height:44px;border-radius:12px}
+.brand small{font-size:10px;line-height:1.25;max-width:128px}
+.icon-button{width:48px;height:48px}
+.service-pill{padding:8px 11px}
+.dashboard{padding:22px 0 42px}
+.tab-panel:not(#dashboardHome){background:transparent;border:0;border-radius:0;padding:0;box-shadow:none}
+.tab-panel:not(#dashboardHome)>.panel-home-row{position:absolute;right:14px;margin-top:0}
+.tab-panel:not(#dashboardHome)>.eyebrow{padding-top:7px;padding-right:58px}
+.tab-panel:not(#dashboardHome)>.section-title:first-of-type{padding-right:58px;margin-top:10px;font-size:30px}
+#agendaPanel>.section-title:first-of-type,#reportPanel>.section-title:first-of-type{padding-top:4px}
+.panel-home-button{width:46px;height:46px;border-radius:15px}
+.report-grid{grid-template-columns:1fr 1fr;gap:10px}
+.report-card{color:var(--text);min-height:142px;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.report-card small{color:var(--muted);margin:0}
+.report-card strong{color:var(--text);font-size:31px}
+.report-card span{color:var(--muted);margin:0}
+.report-card:first-child{background:var(--black);border-color:var(--black);color:#fff}
+.report-card:first-child small,.report-card:first-child strong{color:#fff}
+.report-card:first-child span{color:#aeb6c3}
+.report-card.annual-card{grid-column:1/-1;min-height:125px}
+.history-toggle{border-radius:18px!important;min-height:60px}
+#bookingsPanel .toolbar{background:#fff;border:1px solid var(--border);border-radius:22px;padding:12px;box-shadow:0 10px 30px #101b3009}
+#bookingsPanel .search-form{gap:8px}
+#bookingsPanel .search{border-radius:15px;min-width:0}
+#bookingsPanel .search-button{border-radius:15px}
+#transferPanel .transfer-stats{margin-top:18px}
+#transferPanel .transfer-stat-button{color:var(--text)}
+#transferPanel .transfer-stat-button:first-child{color:#fff}
+#agendaPanel .agenda-forecast{margin-top:18px}
+#agendaPanel .agenda-day{background:#fff;border:1px solid var(--border);border-radius:22px;padding:15px;box-shadow:0 9px 28px #101b3009}
+#agendaPanel .agenda-day h3{font-size:18px;margin:0 0 11px}
+#estimatePanel>.simulator,#estimatePanel>.approach-card,#estimatePanel>.sms-card{box-shadow:0 10px 32px #101b300b}
+.simulator{border-radius:23px;padding:18px}
+.simulator input,.simulator select,.simulator textarea{background:#f7f8fa;border-color:#dfe3e8;border-radius:15px}
+.simulator button{border-radius:16px!important}
+@media(max-width:520px){
+  .topbar-inner{gap:7px}.header-left{gap:7px}.brand{gap:8px}.service-pill{font-size:9px}.dashboard{padding-top:18px}
+  .hello-row{margin-bottom:19px}.hello-row h1{font-size:39px}
+  .tab-panel:not(#dashboardHome)>.section-title:first-of-type{font-size:27px}
+  .report-grid{grid-template-columns:1fr 1fr}.report-card{min-height:132px;padding:16px}.report-card strong{font-size:28px}
+}
+@media(max-width:390px){.brand small{display:none}.service-pill{display:flex}.report-grid{grid-template-columns:1fr}.report-card.annual-card{grid-column:auto}}
  
 </style>
 </head>
@@ -642,19 +687,18 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     </section>
  
     <section class="dashboard hidden" id="dashboardView">
-      <div class="hello-row">
-        <div>
-          <div class="eyebrow">Tableau de bord privé</div>
-          <h1>Bonjour Ouassini.</h1>
-        </div>
-        <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
-      </div>
- 
       <div class="setup-warning hidden" id="setupWarning">
         Firebase n’est pas encore configuré. L’application est prête, mais elle recevra les demandes après la connexion de la base de données.
       </div>
  
       <section class="tab-panel" id="dashboardHome">
+        <div class="hello-row">
+          <div>
+            <div class="eyebrow">Tableau de bord privé</div>
+            <h1>Bonjour Ouassini.</h1>
+          </div>
+          <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
+        </div>
         <div class="stats">
           <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
