@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V26</title>
+  <title>OuassVTC Chauffeur — Mission Control V27</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -631,6 +631,16 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   .report-grid{grid-template-columns:1fr 1fr}.report-card{min-height:132px;padding:16px}.report-card strong{font-size:28px}
 }
 @media(max-width:390px){.brand small{display:none}.service-pill{display:flex}.report-grid{grid-template-columns:1fr}.report-card.annual-card{grid-column:auto}}
+
+/* ===== V27 — ALERTE NOUVELLE DEMANDE ===== */
+.stat.new-request-stat{position:relative;overflow:hidden}
+.stat.new-request-stat::after{content:"";position:absolute;top:14px;right:14px;width:10px;height:10px;border-radius:50%;background:#c9ced6;transition:background .2s,box-shadow .2s}
+.stat.new-request-stat.request-alert{border-color:var(--blue);background:linear-gradient(145deg,#fff 35%,var(--blue-soft));animation:requestAlertPulse 1.35s ease-in-out infinite}
+.stat.new-request-stat.request-alert::after{background:var(--blue);box-shadow:0 0 0 0 rgba(23,105,255,.48);animation:requestAlertDot 1.35s ease-out infinite}
+.stat.new-request-stat.request-alert strong{color:var(--blue)}
+@keyframes requestAlertPulse{0%,100%{box-shadow:0 8px 28px #0c193208,0 0 0 0 rgba(23,105,255,0)}50%{box-shadow:0 12px 34px #1769ff28,0 0 0 4px rgba(23,105,255,.15)}}
+@keyframes requestAlertDot{0%{box-shadow:0 0 0 0 rgba(23,105,255,.55)}70%,100%{box-shadow:0 0 0 9px rgba(23,105,255,0)}}
+@media(prefers-reduced-motion:reduce){.stat.new-request-stat.request-alert,.stat.new-request-stat.request-alert::after{animation:none}}
  
 </style>
 </head>
@@ -700,7 +710,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
         </div>
         <div class="stats">
-          <button class="stat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
+          <button class="stat new-request-stat" id="newRequestStat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
           <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
         </div>
@@ -716,8 +726,6 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
           <button class="home-action secondary" type="button" data-open-tab="agendaPanel">Agenda</button>
         </div>
-        <div class="section-kicker"><h2>Pilotage rapide</h2><span>Accès directs</span></div>
-        <div class="today-card"><h2 class="section-title">Centre de contrôle</h2><p class="muted">Retrouvez vos courses, vos clients et votre activité depuis le menu sécurisé.</p></div>
       </section>
  
       <section class="tab-panel hidden" id="bookingsPanel">
@@ -1560,7 +1568,9 @@ Ouassini – OuassVTC`;
         ? state.bookings.filter(item => item.status === "completed" && matchesSearch(item))
         : [];
  
-      $("newCount").textContent = dailyItemsForStatus("new").length;
+      const newTodayCount = dailyItemsForStatus("new").length;
+      $("newCount").textContent = newTodayCount;
+      $("newRequestStat").classList.toggle("request-alert", newTodayCount > 0);
       const todayCompleted = dailyItemsForStatus("completed");
       $("completedCount").textContent = todayCompleted.length;
       $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
