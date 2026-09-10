@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V29</title>
+  <title>OuassVTC Chauffeur — Mission Control V30</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -685,6 +685,20 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .mission-profit-row.total{background:#0b0e14;color:#fff;border-color:#0b0e14}
 .mission-profit-row.margin{background:var(--blue);color:#fff;border-color:var(--blue)}
 @media(max-width:430px){.cost-result-grid{grid-template-columns:1fr}.cost-result-item.total{grid-column:auto}}
+
+/* ===== V30 — ACTIONS DE COURSE COMPACTES ===== */
+.detail-body .waze-actions a{font-size:0}
+.detail-body .waze-actions a:first-child::after{content:"Adresse de départ";font-size:14px}
+.detail-body .waze-actions a:last-child::after{content:"Adresse d’arrivée";font-size:14px}
+.detail-body .status-actions{grid-template-columns:1fr;padding-top:14px}
+.detail-body .more-actions-panel{grid-template-columns:1fr 1fr;gap:8px;background:#f7f9fc!important;border-color:#dfe5ee!important;padding:10px}
+.detail-body .more-actions-panel>button{min-height:48px;border-radius:13px;background:#fff;text-align:left;font-size:13px;padding:10px 12px}
+.detail-body .more-actions-panel>button::after{content:"›";float:right;color:var(--blue);font-size:18px;line-height:1}
+.detail-body .more-actions-panel .mission-profit-toggle{margin:0;width:100%;display:block;color:var(--text)}
+.detail-body .more-actions-panel .mission-profit-toggle span:last-child{display:none}
+.detail-body .more-actions-panel .mission-profit-panel{grid-column:1/-1;margin:0;background:#fff}
+.detail-body .more-actions-panel [data-purchase-order]{font-weight:900}
+@media(max-width:390px){.detail-body .more-actions-panel{grid-template-columns:1fr}}
  
 </style>
 </head>
@@ -1139,7 +1153,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
  
     function courseNumberLabel(item) {
       const number = Number(item?.purchaseOrderNumber);
-      if (Number.isInteger(number) && number > 0 && item?.status === "completed") return `Course n°${number}`;
+      if (Number.isInteger(number) && number > 0 && ["new", "accepted", "completed"].includes(item?.status)) return `Course n°${number}`;
       if (item?.status === "new") return "Nouvelle demande";
       if (item?.status === "accepted") return "Course planifiée";
       if (item?.status === "transferred") return "Course transférée";
@@ -1733,14 +1747,12 @@ Ouassini – OuassVTC`;
       if (item.status === "new") {
         return `
           <button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button>
-          <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
-          <button class="action reject" data-delete="${item.id}">Refuser</button>`;
+          <button class="action reject" data-delete="${item.id}">Refuser la demande</button>`;
       }
       if (item.status === "accepted") {
         return `
           <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
-          <button class="action" data-transfer-booking="${item.id}">Transférer chauffeur</button>
-          <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler</button>`;
+          <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler le trajet</button>`;
       }
       if (item.status === "transferred") {
         return `<button class="action" data-status="accepted" data-id="${item.id}">Reprendre la course</button>`;
@@ -1876,16 +1888,22 @@ Ouassini – OuassVTC`;
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
-        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
-        <button class="mission-profit-toggle" type="button" data-toggle-mission-profit><span>Rentabilité de la mission</span><span>＋</span></button>
-        <div class="mission-profit-panel hidden" data-mission-profit-panel>
-          <div class="mission-profit-intro">Calcul privé : domicile → client → destination → domicile. Cette information n’apparaît pas sur le bon de commande.</div>
-          <div class="sim-field"><label>Péages de cette mission</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.missionTolls || 0)}" data-mission-tolls></div>
-          <button class="mission-profit-action" type="button" data-calculate-mission-cost>Calculer et enregistrer le coût réel</button>
-          <div class="mission-profit-results" data-mission-profit-results>${missionCostResultsMarkup(item)}</div>
-        </div>
-        <div class="status-actions">${item.status === "completed" ? `<button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button>` : ""}<button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
-        <div class="more-actions-panel hidden" data-more-actions><button type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button><button type="button" data-return-booking="${item.id}">Programmer le retour</button></div>`;
+        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Adresse de départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Adresse d’arrivée</a></div>
+        <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
+        <div class="more-actions-panel hidden" data-more-actions>
+          <button type="button" data-edit-booking="${item.id}">Modifier</button>
+          <button type="button" data-transfer-booking="${item.id}">Transfert chauffeur</button>
+          <button type="button" data-purchase-order="${item.id}">Bon de commande PDF</button>
+          <button class="mission-profit-toggle" type="button" data-toggle-mission-profit><span>Bilan de course</span><span>＋</span></button>
+          <button type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button>
+          <button type="button" data-return-booking="${item.id}">Programmer le retour</button>
+          <div class="mission-profit-panel hidden" data-mission-profit-panel>
+            <div class="mission-profit-intro">Calcul privé : domicile → client → destination → domicile. Cette information n’apparaît pas sur le bon de commande.</div>
+            <div class="sim-field"><label>Péages de cette mission</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.missionTolls || 0)}" data-mission-tolls></div>
+            <button class="mission-profit-action" type="button" data-calculate-mission-cost>Calculer et enregistrer le coût réel</button>
+            <div class="mission-profit-results" data-mission-profit-results>${missionCostResultsMarkup(item)}</div>
+          </div>
+        </div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
@@ -2107,6 +2125,16 @@ Ouassini – OuassVTC`;
         });
     }
 
+    function provisionallyNumberedCourses() {
+      return state.bookings
+        .filter(item => ["new", "accepted"].includes(item.status) && Number(item.purchaseOrderNumber) > 0)
+        .sort((first, second) => {
+          const numberDifference = Number(first.purchaseOrderNumber) - Number(second.purchaseOrderNumber);
+          if (numberDifference) return numberDifference;
+          return (createdDate(first) || new Date(0)) - (createdDate(second) || new Date(0));
+        });
+    }
+
     async function reconcileCompletedCourseNumbers() {
       numberingRequested = true;
       if (numberingBatchRunning) return;
@@ -2115,9 +2143,10 @@ Ouassini – OuassVTC`;
         while (numberingRequested) {
           numberingRequested = false;
           const completed = completedCoursesInNumberOrder();
-          const completedIds = new Set(completed.map(item => item.id));
-          for (let index = 0; index < completed.length; index += 1) {
-            const item = completed[index];
+          const numbered = [...completed, ...provisionallyNumberedCourses()];
+          const numberedIds = new Set(numbered.map(item => item.id));
+          for (let index = 0; index < numbered.length; index += 1) {
+            const item = numbered[index];
             const correctNumber = index + 1;
             if (Number(item.purchaseOrderNumber) === correctNumber) continue;
             try {
@@ -2127,19 +2156,19 @@ Ouassini – OuassVTC`;
             }
           }
           for (const item of state.bookings) {
-            if (completedIds.has(item.id) || !Number(item.purchaseOrderNumber)) continue;
+            if (numberedIds.has(item.id) || !Number(item.purchaseOrderNumber)) continue;
             try {
               await updateDoc(doc(db, "bookings", item.id), { purchaseOrderNumber:null });
             } catch (error) {
               console.error(`L’ancien numéro de la course ${item.id} n’a pas pu être retiré`, error);
             }
           }
-          if (lastReconciledCompletedCount !== completed.length) {
+          if (lastReconciledCompletedCount !== numbered.length) {
             await setDoc(doc(db, "counters", "purchaseOrders"), {
-              lastNumber:completed.length,
+              lastNumber:numbered.length,
               updatedAt:serverTimestamp()
             }, { merge:true });
-            lastReconciledCompletedCount = completed.length;
+            lastReconciledCompletedCount = numbered.length;
           }
         }
       } finally {
@@ -2147,18 +2176,17 @@ Ouassini – OuassVTC`;
       }
     }
 
-    async function getCompletedPurchaseOrderNumber(bookingId) {
+    async function getPurchaseOrderNumber(bookingId) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item) throw new Error("Course introuvable");
-      if (item.status !== "completed") throw new Error("COURSE_NOT_COMPLETED");
-      const completed = completedCoursesInNumberOrder();
-      const index = completed.findIndex(booking => booking.id === bookingId);
-      if (index < 0) throw new Error("Course terminée introuvable");
-      const correctNumber = index + 1;
-      if (Number(item.purchaseOrderNumber) !== correctNumber) {
-        await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:correctNumber });
-      }
-      return correctNumber;
+      if (!["new", "accepted", "completed"].includes(item.status)) throw new Error("COURSE_NOT_ELIGIBLE");
+      const existingNumber = Number(item.purchaseOrderNumber);
+      if (Number.isInteger(existingNumber) && existingNumber > 0) return existingNumber;
+      const nextNumber = completedCoursesInNumberOrder().length + provisionallyNumberedCourses().length + 1;
+      await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:nextNumber });
+      await setDoc(doc(db, "counters", "purchaseOrders"), { lastNumber:nextNumber, updatedAt:serverTimestamp() }, { merge:true });
+      lastReconciledCompletedCount = nextNumber;
+      return nextNumber;
     }
  
     function loadPdfImage(url) {
@@ -2252,7 +2280,7 @@ Ouassini – OuassVTC`;
       button.disabled = true;
       button.textContent = sharePdf ? "Préparation du partage…" : "Création du PDF…";
       try {
-        const orderNumber = await getCompletedPurchaseOrderNumber(bookingId);
+        const orderNumber = await getPurchaseOrderNumber(bookingId);
         const canvas = document.createElement("canvas");
         canvas.width = 1240;
         canvas.height = 1754;
@@ -2342,8 +2370,8 @@ Ouassini – OuassVTC`;
         console.error(error);
         if (pdfWindow) pdfWindow.close();
         if (error?.name === "AbortError") return;
-        if (error?.message === "COURSE_NOT_COMPLETED") {
-          alert("Le numéro définitif et le bon de commande sont disponibles lorsque la course est terminée.");
+        if (error?.message === "COURSE_NOT_ELIGIBLE") {
+          alert("Le bon de commande n’est pas disponible pour une course annulée ou transférée.");
           return;
         }
         alert("Le bon de commande n’a pas pu être créé. Vérifiez votre connexion et réessayez.");
