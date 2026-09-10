@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V31</title>
+  <title>OuassVTC Chauffeur — Mission Control V32</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -703,6 +703,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 /* ===== V31 — PILOTAGE FINANCIER ===== */
 .finance-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:6px;margin:14px 0 20px;background:#e9edf3;border-radius:17px}.finance-tab{min-height:46px;border:0;border-radius:12px;background:transparent;color:#626b78;font-size:14px;font-weight:900;cursor:pointer}.finance-tab.active{background:#fff;color:var(--text);box-shadow:0 5px 16px #11182712}.finance-view{animation:financeFade .2s ease}@keyframes financeFade{from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:none}}.finance-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 0 17px}.finance-summary-card{min-height:108px;padding:16px;border:1px solid var(--border);border-radius:18px;background:#fff;display:flex;flex-direction:column;justify-content:space-between}.finance-summary-card small{color:var(--muted);font-size:13px;font-weight:800;line-height:1.25}.finance-summary-card strong{font-size:25px;letter-spacing:-.04em}.finance-summary-card.dark{background:#0a0d13;color:#fff;border-color:#0a0d13}.finance-summary-card.dark small{color:#aeb7c6}.finance-section{margin:14px 0;padding:18px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 30px #101b3009}.finance-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.finance-section-head h3{font-size:21px;letter-spacing:-.03em}.finance-section-head p{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.4}.finance-compact-button{border:0;border-radius:13px;background:var(--blue);color:#fff;padding:11px 13px;font-weight:900;white-space:nowrap;cursor:pointer}.finance-progress{padding:11px 13px;margin-bottom:12px;border-radius:13px;background:var(--blue-soft);color:#1758bc;font-size:13px;font-weight:800}.expense-list{display:grid;gap:8px}.expense-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 13px;border:1px solid #e5e9ef;border-radius:14px;background:#f9fafb}.expense-row strong,.expense-row small{display:block}.expense-row small{margin-top:3px;color:var(--muted);font-size:12px}.expense-row-amount{font-size:17px;font-weight:950;white-space:nowrap}.expense-delete{border:0;background:transparent;color:#c63d3d;font-weight:900;padding:7px;cursor:pointer}.ads-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ads-form .full{grid-column:1/-1}.ads-form label,.rates-grid label{display:block;margin:0 0 6px;color:#535b67;font-size:13px;font-weight:850}.ads-form input,.rates-grid input{width:100%;min-height:48px;border:1px solid #dce1e8;border-radius:13px;background:#f8f9fb;padding:11px 12px;font:inherit}.ads-form button,.rates-form button{grid-column:1/-1;min-height:48px;border:0;border-radius:14px;background:#0a0d13;color:#fff;font-weight:900;cursor:pointer}.rates-form{padding:17px;margin-bottom:15px;border-radius:19px;background:#101722;color:#fff}.rates-form h3{font-size:20px;margin-bottom:5px}.rates-form>p{color:#aeb8c8;font-size:13px;line-height:1.4;margin:0 0 14px}.rates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}.rates-grid label{color:#c9d1dd}.rates-grid input{background:#fff;color:#111}.net-periods{display:grid;gap:12px}.net-period-card{overflow:hidden;border:1px solid var(--border);border-radius:21px;background:#fff}.net-period-head{display:flex;align-items:center;justify-content:space-between;padding:16px 17px;background:#f4f6f9}.net-period-head span{font-weight:900}.net-period-head strong{font-size:25px;color:var(--blue)}.net-breakdown{display:grid;gap:8px;padding:14px 17px}.net-line{display:flex;justify-content:space-between;gap:12px;color:#636c78;font-size:14px}.net-line strong{color:var(--text);white-space:nowrap}.net-line.total{padding-top:9px;border-top:1px solid #e5e8ed;color:var(--text);font-weight:900}.finance-note{margin:13px 3px;color:var(--muted);font-size:12px;line-height:1.45}@media(max-width:500px){.finance-summary-grid{grid-template-columns:1fr}.finance-summary-card{min-height:88px}.finance-section-head{display:block}.finance-compact-button{margin-top:10px;width:100%}.ads-form,.rates-grid{grid-template-columns:1fr}.ads-form .full{grid-column:auto}.finance-tabs{gap:4px;padding:5px}.finance-tab{font-size:12px}}
  
+/* ===== V32 — ÉCRAN AUTRES ACTIONS ET ÉCRAN ACTIF ===== */
+.detail-body .more-actions-panel.actions-screen{position:fixed;inset:0;z-index:1200;margin:0;padding:0 20px 28px;display:block;overflow-y:auto;background:#f4f6f9!important;border:0!important;border-radius:0}.actions-screen-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:13px;margin:0 -20px 20px;padding:18px 20px;background:#080b10;color:#fff;border-bottom:1px solid #242a34}.actions-back{width:48px;height:48px;border:1px solid #3a414d!important;border-radius:15px!important;background:#131820!important;color:#fff;font-size:25px!important;text-align:center!important;padding:0!important}.actions-back::after{display:none!important}.actions-screen-head div{min-width:0}.actions-screen-head small{display:block;color:#99a4b5;font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.09em}.actions-screen-head strong{display:block;margin-top:2px;font-size:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.detail-body .actions-screen>.actions-command{width:100%;min-height:58px;margin:0 0 9px;padding:13px 15px!important;border:1px solid #dde2e9!important;border-radius:16px!important;background:#fff!important;font-size:15px!important;text-align:left!important;box-shadow:0 5px 18px #101b3008}.detail-body .actions-screen>.actions-command::after{content:"›";float:right;color:var(--blue);font-size:20px;line-height:1}.detail-body .actions-screen>.mission-profit-panel{margin:4px 0 12px!important}.wake-lock-link{display:flex!important;align-items:center;justify-content:space-between;gap:12px}.wake-lock-state{flex:0 0 auto;padding:5px 9px;border-radius:999px;background:#e8ebef;color:#68717e;font-size:11px;font-weight:900}.wake-lock-link.active .wake-lock-state{background:#dff8e9;color:#087843}
 </style>
 </head>
  
@@ -735,6 +737,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link" id="enableNotifications" type="button">Notifications activités</button>
+      <button class="menu-link wake-lock-link" id="toggleWakeLock" type="button"><span>Maintenir l’écran allumé</span><span class="wake-lock-state" id="wakeLockState">Désactivé</span></button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
   </aside>
@@ -1137,6 +1140,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let db = null;
     let firstBookingsSnapshot = true;
     const knownNewBookingIds = new Set();
+    const automaticCostAttemptIds = new Set();
     let alertTimeout = null;
     let ringInterval = null;
     let audioContext = null;
@@ -1146,6 +1150,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let lastReconciledCompletedCount = null;
     let lastDriverConfirmation = null;
     let messaging = null;
+    let wakeLock = null;
+    let keepScreenAwake = localStorage.getItem("ouassvtcKeepScreenAwake") === "true";
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
@@ -1414,6 +1420,33 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           });
         });
       });
+    }
+
+    async function automaticallyCalculateMissionCost(reference, booking) {
+      if (reference?.id) automaticCostAttemptIds.add(reference.id);
+      const pickup = String(booking.pickup || "").trim();
+      const destination = String(booking.destination || "").trim();
+      if (!pickup || !destination || pickup === "Ajout manuel" || destination === "Trajet non renseigné") return false;
+      const settings = readMissionCostSettings();
+      try {
+        const route = await calculateMissionRoute(settings.homeAddress, pickup, destination);
+        const totalKm = route.approachKm + route.clientKm + route.returnKm;
+        const clientFuelCost = route.clientKm / 100 * settings.consumption * settings.fuelPrice;
+        const fuelCost = totalKm / 100 * settings.consumption * settings.fuelPrice;
+        const tolls = Math.max(0, moneyValue(booking.missionTolls));
+        const totalCost = fuelCost + tolls;
+        await updateDoc(reference, {
+          missionHomeAddress:settings.homeAddress, missionFuelPrice:settings.fuelPrice, missionConsumption:settings.consumption,
+          missionApproachKm:route.approachKm, missionClientKm:route.clientKm, missionReturnKm:route.returnKm, missionTotalKm:totalKm,
+          missionClientFuelCost:clientFuelCost, missionFuelCost:fuelCost, missionTolls:tolls, missionTotalCost:totalCost,
+          missionMargin:moneyValue(booking.estimatedPrice) - totalCost, missionCostStatus:"calculated", missionCostUpdatedAt:serverTimestamp()
+        });
+        return true;
+      } catch (error) {
+        console.error("Calcul automatique du coût reporté", error);
+        try { await updateDoc(reference, { missionCostStatus:"pending", missionCostUpdatedAt:serverTimestamp() }); } catch (updateError) { console.error(updateError); }
+        return false;
+      }
     }
 
     async function calculateAndSaveMissionCost(item, button) {
@@ -1995,13 +2028,14 @@ Ouassini – OuassVTC`;
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Adresse de départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Adresse d’arrivée</a></div>
         <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
-        <div class="more-actions-panel hidden" data-more-actions>
-          <button type="button" data-edit-booking="${item.id}">Modifier</button>
-          <button type="button" data-transfer-booking="${item.id}">Transfert chauffeur</button>
-          <button type="button" data-purchase-order="${item.id}">Bon de commande PDF</button>
-          <button class="mission-profit-toggle" type="button" data-toggle-mission-profit><span>Bilan de course</span><span>＋</span></button>
-          <button type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button>
-          <button type="button" data-return-booking="${item.id}">Programmer le retour</button>
+        <div class="more-actions-panel hidden actions-screen" data-more-actions>
+          <div class="actions-screen-head"><button class="actions-back" type="button" data-close-more-actions aria-label="Retour au détail de la course">←</button><div><small>Gestion de la course</small><strong>Autres actions</strong></div></div>
+          <button class="actions-command" type="button" data-edit-booking="${item.id}">Modifier la course</button>
+          <button class="actions-command" type="button" data-transfer-booking="${item.id}">Transfert chauffeur</button>
+          <button class="actions-command" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button>
+          <button class="mission-profit-toggle actions-command" type="button" data-toggle-mission-profit><span>Bilan de course</span><span>＋</span></button>
+          <button class="actions-command" type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button>
+          <button class="actions-command" type="button" data-return-booking="${item.id}">Programmer le retour</button>
           <div class="mission-profit-panel hidden" data-mission-profit-panel>
             <div class="mission-profit-intro">Calcul privé : domicile → client → destination → domicile. Cette information n’apparaît pas sur le bon de commande.</div>
             <div class="sim-field"><label>Péages de cette mission</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.missionTolls || 0)}" data-mission-tolls></div>
@@ -2017,8 +2051,11 @@ Ouassini – OuassVTC`;
         $("detailBody").querySelector("[data-sms-menu]")?.classList.toggle("hidden");
       });
       $("detailBody").querySelector("[data-toggle-more-actions]")?.addEventListener("click", () => {
-        $("detailBody").querySelector("[data-more-actions]")?.classList.toggle("hidden");
+        const screen = $("detailBody").querySelector("[data-more-actions]");
+        screen?.classList.remove("hidden");
+        if (screen) screen.scrollTop = 0;
       });
+      $("detailBody").querySelector("[data-close-more-actions]")?.addEventListener("click", () => $("detailBody").querySelector("[data-more-actions]")?.classList.add("hidden"));
       $("detailBody").querySelector("[data-toggle-mission-profit]")?.addEventListener("click", event => {
         const panel = $("detailBody").querySelector("[data-mission-profit-panel]");
         const isOpening = panel.classList.contains("hidden");
@@ -2119,6 +2156,8 @@ Ouassini – OuassVTC`;
             updatedAt: serverTimestamp()
           });
           await updateDoc(createdReturn, { status:"accepted", updatedAt:serverTimestamp() });
+          button.textContent = "Calcul automatique du coût…";
+          await automaticallyCalculateMissionCost(createdReturn, { ...item, pickup:item.destination || "", destination:item.pickup || "", estimatedPrice:`${priceAmount} €`, missionTolls:0 });
           localSaveInProgress = false;
           closeBooking();
           openPanel("agendaPanel");
@@ -2179,7 +2218,7 @@ Ouassini – OuassVTC`;
         button.disabled = true;
         button.textContent = "Enregistrement…";
         try {
-          await updateDoc(doc(db, "bookings", id), {
+          const updatedBooking = {
             customerName: $("editName").value.trim(),
             customerPhone: $("editPhone").value.trim(),
             pickup: $("editPickup").value.trim(),
@@ -2190,7 +2229,11 @@ Ouassini – OuassVTC`;
             estimatedPrice: $("editPrice").value.trim() || "Estimation non renseignée",
             customerMessage: $("editMessage").value.trim(),
             updatedAt: serverTimestamp()
-          });
+          };
+          const bookingReference = doc(db, "bookings", id);
+          await updateDoc(bookingReference, updatedBooking);
+          button.textContent = "Calcul automatique du coût…";
+          await automaticallyCalculateMissionCost(bookingReference, { ...item, ...updatedBooking });
           closeBooking();
         } catch (error) {
           console.error(error);
@@ -2642,6 +2685,10 @@ Ouassini – OuassVTC`;
           return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
+        state.bookings.filter(item => ["new", "accepted"].includes(item.status) && !Number(item.missionTotalKm) && !automaticCostAttemptIds.has(item.id)).forEach(item => {
+          automaticCostAttemptIds.add(item.id);
+          void automaticallyCalculateMissionCost(doc(db, "bookings", item.id), item);
+        });
         void reconcileCompletedCourseNumbers();
         state.bookings.filter(item => item.status === "new").forEach(item => knownNewBookingIds.add(item.id));
         firstBookingsSnapshot = false;
@@ -2777,6 +2824,37 @@ Ouassini – OuassVTC`;
     $("rushResetBest").addEventListener("click",()=>{if(confirm("Effacer le record OuassVTC Rush ?")){rush.best=0;localStorage.removeItem("ouassvtcRushBest");$("rushBest").textContent="0";}});
     rushDraw();
  
+    function updateWakeLockButton(message = "") {
+      const button = $("toggleWakeLock");
+      if (!button) return;
+      button.classList.toggle("active", keepScreenAwake);
+      $("wakeLockState").textContent = message || (keepScreenAwake ? "Activé" : "Désactivé");
+    }
+
+    async function requestScreenWakeLock() {
+      if (!keepScreenAwake || document.visibilityState !== "visible") return;
+      if (!("wakeLock" in navigator)) { updateWakeLockButton("Non disponible"); return; }
+      try {
+        wakeLock = await navigator.wakeLock.request("screen");
+        updateWakeLockButton("Activé");
+        wakeLock.addEventListener("release", () => { wakeLock = null; if (keepScreenAwake && document.visibilityState === "visible") setTimeout(requestScreenWakeLock, 500); });
+      } catch (error) {
+        console.error("Maintien de l’écran indisponible", error);
+        updateWakeLockButton("En pause");
+      }
+    }
+
+    async function toggleScreenWakeLock() {
+      keepScreenAwake = !keepScreenAwake;
+      localStorage.setItem("ouassvtcKeepScreenAwake", String(keepScreenAwake));
+      if (keepScreenAwake) await requestScreenWakeLock();
+      else { if (wakeLock) await wakeLock.release(); wakeLock = null; updateWakeLockButton(); }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && keepScreenAwake) void requestScreenWakeLock();
+    });
+
     function closeMenu() {
       $("sideMenu").classList.add("hidden");
       $("menuOverlay").classList.add("hidden");
@@ -2809,6 +2887,9 @@ Ouassini – OuassVTC`;
     $("closeMenu").addEventListener("click", closeMenu);
     $("menuOverlay").addEventListener("click", closeMenu);
     $("enableNotifications").addEventListener("click", enableNotifications);
+    $("toggleWakeLock").addEventListener("click", toggleScreenWakeLock);
+    updateWakeLockButton();
+    if (keepScreenAwake) void requestScreenWakeLock();
     updateNotificationButton();
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
@@ -3224,6 +3305,7 @@ Ouassini – OuassVTC`;
       }
       const phone = $("quickBookingPhone").value.trim();
       const priceAmount = Number($("quickBookingPrice").dataset.amount || 0);
+      const distance = $("quickBookingKm").valueAsNumber;
       const comment = $("quickBookingComment").value.trim();
       if (priceAmount <= 0) {
         alert("Estimez d’abord le tarif à partir du kilométrage.");
@@ -3238,6 +3320,9 @@ Ouassini – OuassVTC`;
       button.textContent = "Enregistrement en cours…";
       try {
         localSaveInProgress = true;
+        const missionSettings = readMissionCostSettings();
+        const safeDistance = Number.isFinite(distance) ? distance : 0;
+        const quickFuelCost = safeDistance / 100 * missionSettings.consumption * missionSettings.fuelPrice;
         const current = new Date();
         const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
         const quickBooking = await addDoc(collection(db, "bookings"), {
@@ -3250,6 +3335,18 @@ Ouassini – OuassVTC`;
           paymentMethod: "Non précisé",
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
+          missionHomeAddress: missionSettings.homeAddress,
+          missionFuelPrice: missionSettings.fuelPrice,
+          missionConsumption: missionSettings.consumption,
+          missionClientKm: safeDistance,
+          missionTotalKm: safeDistance,
+          missionClientFuelCost: quickFuelCost,
+          missionFuelCost: quickFuelCost,
+          missionTolls: 0,
+          missionTotalCost: quickFuelCost,
+          missionMargin: priceAmount - quickFuelCost,
+          missionCostStatus: "calculated-manually",
+          missionCostUpdatedAt: serverTimestamp(),
           status: "new",
           source: "website",
           createdAt: serverTimestamp(),
@@ -3335,6 +3432,8 @@ Ouassini – OuassVTC`;
         });
         savedInApp = true;
         await updateDoc(createdBooking, { status: "accepted", updatedAt: serverTimestamp() });
+        button.textContent = "Calcul automatique du coût…";
+        await automaticallyCalculateMissionCost(createdBooking, { pickup:params.depart, destination:params.arrivee, estimatedPrice:params.prix, missionTolls:0 });
         localSaveInProgress = false;
         $("driverPrice").value = params.prix;
         $("driverBookingSuccess").classList.remove("hidden");
