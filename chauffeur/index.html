@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V27</title>
+  <title>OuassVTC Chauffeur — Mission Control V29</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -641,6 +641,50 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 @keyframes requestAlertPulse{0%,100%{box-shadow:0 8px 28px #0c193208,0 0 0 0 rgba(23,105,255,0)}50%{box-shadow:0 12px 34px #1769ff28,0 0 0 4px rgba(23,105,255,.15)}}
 @keyframes requestAlertDot{0%{box-shadow:0 0 0 0 rgba(23,105,255,.55)}70%,100%{box-shadow:0 0 0 9px rgba(23,105,255,0)}}
 @media(prefers-reduced-motion:reduce){.stat.new-request-stat.request-alert,.stat.new-request-stat.request-alert::after{animation:none}}
+
+/* ===== V28 — DÉTAIL HEBDOMADAIRE DU CHIFFRE D’AFFAIRES ===== */
+.week-card-button{width:100%;border:1px solid var(--black);text-align:left;cursor:pointer;position:relative}
+.week-card-button::after{content:"⌄";position:absolute;right:17px;top:14px;font-size:22px;color:#fff;transition:transform .2s ease}
+.week-card-button[aria-expanded="true"]::after{transform:rotate(180deg)}
+.week-breakdown{display:grid;gap:8px;margin:-5px 0 20px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:0 12px 35px #101b300d}
+.week-breakdown-head{display:flex;justify-content:space-between;gap:12px;padding:1px 3px 9px;color:var(--muted);font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.09em}
+.week-day-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;min-height:62px;padding:11px 13px;border:1px solid #e7eaf0;border-radius:15px;background:#f8f9fb}
+.week-day-row.is-today{border-color:#bfd2ff;background:var(--blue-soft)}
+.week-day-row strong{display:block;font-size:15px;text-transform:capitalize}
+.week-day-row small{display:block;color:var(--muted);margin-top:3px}
+.week-day-amount{font-size:19px;font-weight:950;white-space:nowrap;color:var(--text)}
+.week-day-row.is-today .week-day-amount{color:var(--blue)}
+
+/* ===== V29 — COÛT ET RENTABILITÉ DE MISSION ===== */
+.cost-settings-card,.cost-calculator-card{background:#fff;border:1px solid var(--border);border-radius:23px;padding:18px;margin:16px 0;box-shadow:0 10px 32px #101b300b}
+.cost-card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:17px}
+.cost-card-head small{display:block;color:var(--blue);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.cost-card-head h3{font-size:23px;letter-spacing:-.035em}
+.cost-icon{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:#111722;color:#fff;font-size:19px;font-weight:950}
+.cost-icon.blue{background:var(--blue)}
+.cost-settings-card .primary,.cost-calculator-card .primary{margin-top:14px;width:100%;border-radius:16px}
+.cost-save-status{margin-top:12px;padding:11px 13px;border-radius:13px;background:#e8f8ef;color:#087642;font-weight:800;font-size:13px}
+.cost-result{margin-top:14px;background:linear-gradient(145deg,#080b11,#182236);color:#fff;border-radius:18px;padding:17px}
+.cost-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cost-result-item{padding:12px;border:1px solid #ffffff17;border-radius:14px;background:#ffffff08}
+.cost-result-item small{display:block;color:#aeb8c8;font-size:12px;margin-bottom:5px}
+.cost-result-item strong{font-size:21px}
+.cost-result-item.total{grid-column:1/-1;background:var(--blue);border-color:var(--blue)}
+.cost-result-item.total small{color:#dce8ff}
+.cost-formula-note{color:var(--muted);font-size:13px;line-height:1.45;padding:2px 4px 20px}
+.mission-profit-toggle{width:100%;min-height:55px;margin-top:12px;border:1px solid #dce3ee;border-radius:16px;background:#f7f9fc;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;font-weight:900;cursor:pointer}
+.mission-profit-toggle span:last-child{color:var(--blue);font-size:20px}
+.mission-profit-panel{margin-top:10px;padding:15px;border:1px solid #dce4f2;border-radius:18px;background:#f7f9fc}
+.mission-profit-intro{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:12px}
+.mission-profit-panel .sim-field{margin-bottom:12px}
+.mission-profit-panel input{background:#fff!important}
+.mission-profit-action{width:100%;border:0;border-radius:15px;background:var(--blue);color:#fff;min-height:51px;font-weight:900;cursor:pointer}
+.mission-profit-results{display:grid;gap:8px;margin-top:13px}
+.mission-profit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #e4e8ee;font-size:13px}
+.mission-profit-row strong{font-size:15px;white-space:nowrap}
+.mission-profit-row.total{background:#0b0e14;color:#fff;border-color:#0b0e14}
+.mission-profit-row.margin{background:var(--blue);color:#fff;border-color:var(--blue)}
+@media(max-width:430px){.cost-result-grid{grid-template-columns:1fr}.cost-result-item.total{grid-column:auto}}
  
 </style>
 </head>
@@ -670,6 +714,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="agendaPanel">Trajets planifiés</button>
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
+      <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link" id="enableNotifications" type="button">Notifications activités</button>
@@ -812,14 +857,47 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </div>
         <h2 class="section-title">Activité chauffeur</h2>
         <div class="report-grid">
-          <article class="report-card"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée</span></article>
+          <button class="report-card week-card-button" id="toggleWeekBreakdown" type="button" aria-expanded="false" aria-controls="weekBreakdown"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée · Voir le détail</span></button>
           <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
           <article class="report-card annual-card"><small>Cette année</small><strong id="yearRevenue">0 €</strong><span id="yearTrips">0 course terminée</span></article>
         </div>
+        <div class="week-breakdown hidden" id="weekBreakdown"></div>
         <div class="history-wrap">
           <button class="history-toggle" id="toggleMonthHistory" type="button">Historique des mois</button>
           <div class="history-months hidden" id="monthHistoryList"></div>
         </div>
+      </section>
+
+      <section class="tab-panel hidden" id="costPanel">
+        <div class="panel-home-row">
+          <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="eyebrow">Pilotage des dépenses</div>
+        <h2 class="section-title">Coût de mission</h2>
+        <form class="cost-settings-card" id="missionCostSettingsForm">
+          <div class="cost-card-head"><div><small>Réglages mémorisés</small><h3>Votre véhicule</h3></div><span class="cost-icon">⚙</span></div>
+          <div class="simulator-grid single-column-form">
+            <div class="sim-field full"><label for="costHomeAddress">Adresse de référence</label><input id="costHomeAddress" autocomplete="off" value="10 rue Claude Monet, 66000 Perpignan"></div>
+            <div class="sim-field"><label for="costFuelPrice">Prix du carburant au litre</label><input id="costFuelPrice" type="number" min="0" step="0.001" inputmode="decimal" placeholder="Exemple : 1,800"></div>
+            <div class="sim-field"><label for="costConsumption">Consommation moyenne (L/100 km)</label><input id="costConsumption" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 6,0"></div>
+          </div>
+          <button class="primary" type="submit">Enregistrer mes réglages</button>
+          <div class="cost-save-status hidden" id="costSettingsSaved">Réglages enregistrés sur cet appareil.</div>
+        </form>
+        <form class="cost-calculator-card" id="missionCostCalculatorForm">
+          <div class="cost-card-head"><div><small>Calcul rapide</small><h3>Estimer une dépense</h3></div><span class="cost-icon blue">€</span></div>
+          <div class="simulator-grid">
+            <div class="sim-field"><label for="costManualKm">Kilométrage total</label><input id="costManualKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 50 km"></div>
+            <div class="sim-field"><label for="costManualTolls">Péages</label><input id="costManualTolls" type="number" min="0" step="0.01" inputmode="decimal" value="0"></div>
+          </div>
+          <button class="primary" type="submit">Calculer le coût</button>
+          <div class="cost-result hidden" id="missionCostCalculatorResult"></div>
+        </form>
+        <div class="cost-formula-note">Calcul : kilomètres ÷ 100 × consommation × prix du litre, puis ajout des péages.</div>
       </section>
  
   
@@ -1021,6 +1099,12 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
  
     const $ = id => document.getElementById(id);
     const state = { bookings: [], filter: "active", search: "", unsubscribe: null };
+    const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV1";
+    const DEFAULT_MISSION_COST_SETTINGS = {
+      homeAddress: "10 rue Claude Monet, 66000 Perpignan",
+      fuelPrice: 1.8,
+      consumption: 6
+    };
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
@@ -1032,6 +1116,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let localSaveInProgress = false;
     let numberingBatchRunning = false;
     let numberingRequested = false;
+    let lastReconciledCompletedCount = null;
     let lastDriverConfirmation = null;
     let messaging = null;
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
@@ -1054,7 +1139,12 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
  
     function courseNumberLabel(item) {
       const number = Number(item?.purchaseOrderNumber);
-      return Number.isInteger(number) && number > 0 ? `Course n°${number}` : "Numérotation en cours…";
+      if (Number.isInteger(number) && number > 0 && item?.status === "completed") return `Course n°${number}`;
+      if (item?.status === "new") return "Nouvelle demande";
+      if (item?.status === "accepted") return "Course planifiée";
+      if (item?.status === "transferred") return "Course transférée";
+      if (item?.status === "cancelled") return "Course annulée";
+      return "Numérotation en cours…";
     }
  
     function escapeHtml(value) {
@@ -1234,6 +1324,110 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const number = Number.parseFloat(String(value || "0").replace(",", ".").replace(/[^0-9.]/g, ""));
       return Number.isFinite(number) ? number : 0;
     }
+
+    function readMissionCostSettings() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(MISSION_COST_SETTINGS_KEY) || "null");
+        return {
+          homeAddress: String(stored?.homeAddress || DEFAULT_MISSION_COST_SETTINGS.homeAddress),
+          fuelPrice: Number(stored?.fuelPrice) > 0 ? Number(stored.fuelPrice) : DEFAULT_MISSION_COST_SETTINGS.fuelPrice,
+          consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : DEFAULT_MISSION_COST_SETTINGS.consumption
+        };
+      } catch (error) {
+        return { ...DEFAULT_MISSION_COST_SETTINGS };
+      }
+    }
+
+    function saveMissionCostSettings(settings) {
+      localStorage.setItem(MISSION_COST_SETTINGS_KEY, JSON.stringify(settings));
+    }
+
+    function euroAmount(value) {
+      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} €`;
+    }
+
+    function missionCostResultsMarkup(values) {
+      if (!Number.isFinite(Number(values?.missionTotalKm))) {
+        return `<div class="mission-profit-intro">Le coût n’a pas encore été calculé pour cette course.</div>`;
+      }
+      return `
+        <div class="mission-profit-row"><span>Approche domicile → client</span><strong>${Number(values.missionApproachKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
+        <div class="mission-profit-row"><span>Trajet avec le client</span><strong>${Number(values.missionClientKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
+        <div class="mission-profit-row"><span>Retour au domicile</span><strong>${Number(values.missionReturnKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
+        <div class="mission-profit-row"><span>Kilométrage total</span><strong>${Number(values.missionTotalKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
+        <div class="mission-profit-row"><span>Carburant du trajet client</span><strong>${euroAmount(values.missionClientFuelCost)}</strong></div>
+        <div class="mission-profit-row"><span>Carburant de la mission réelle</span><strong>${euroAmount(values.missionFuelCost)}</strong></div>
+        <div class="mission-profit-row"><span>Péages</span><strong>${euroAmount(values.missionTolls)}</strong></div>
+        <div class="mission-profit-row total"><span>Coût réel de la mission</span><strong>${euroAmount(values.missionTotalCost)}</strong></div>
+        <div class="mission-profit-row margin"><span>Marge estimée</span><strong>${euroAmount(values.missionMargin)}</strong></div>`;
+    }
+
+    function calculateMissionRoute(homeAddress, pickup, destination) {
+      return new Promise((resolve, reject) => {
+        if (!driverDirectionsService) {
+          reject(new Error("Google Maps indisponible"));
+          return;
+        }
+        driverDirectionsService.route({
+          origin: homeAddress,
+          destination: homeAddress,
+          waypoints: [{ location:pickup, stopover:true }, { location:destination, stopover:true }],
+          optimizeWaypoints: false,
+          travelMode: google.maps.TravelMode.DRIVING
+        }, (result, status) => {
+          if (status !== "OK" || result.routes[0].legs.length < 3) {
+            reject(new Error(`Mission impossible : ${status}`));
+            return;
+          }
+          const legs = result.routes[0].legs;
+          resolve({
+            approachKm: legs[0].distance.value / 1000,
+            clientKm: legs[1].distance.value / 1000,
+            returnKm: legs[2].distance.value / 1000
+          });
+        });
+      });
+    }
+
+    async function calculateAndSaveMissionCost(item, button) {
+      const settings = readMissionCostSettings();
+      const panel = button.closest("[data-mission-profit-panel]");
+      const tollInput = panel.querySelector("[data-mission-tolls]");
+      const tolls = Math.max(0, Number(tollInput.value) || 0);
+      button.disabled = true;
+      button.textContent = "Calcul des trois trajets…";
+      try {
+        const route = await calculateMissionRoute(settings.homeAddress, item.pickup, item.destination);
+        const totalKm = route.approachKm + route.clientKm + route.returnKm;
+        const clientFuelCost = route.clientKm / 100 * settings.consumption * settings.fuelPrice;
+        const fuelCost = totalKm / 100 * settings.consumption * settings.fuelPrice;
+        const totalCost = fuelCost + tolls;
+        const margin = moneyValue(item.estimatedPrice) - totalCost;
+        const values = {
+          missionHomeAddress: settings.homeAddress,
+          missionFuelPrice: settings.fuelPrice,
+          missionConsumption: settings.consumption,
+          missionApproachKm: route.approachKm,
+          missionClientKm: route.clientKm,
+          missionReturnKm: route.returnKm,
+          missionTotalKm: totalKm,
+          missionClientFuelCost: clientFuelCost,
+          missionFuelCost: fuelCost,
+          missionTolls: tolls,
+          missionTotalCost: totalCost,
+          missionMargin: margin,
+          missionCostUpdatedAt: serverTimestamp()
+        };
+        await updateDoc(doc(db, "bookings", item.id), values);
+        panel.querySelector("[data-mission-profit-results]").innerHTML = missionCostResultsMarkup(values);
+      } catch (error) {
+        console.error(error);
+        alert("Le coût de la mission n’a pas pu être calculé. Vérifiez les adresses et la connexion Google Maps.");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Calculer et enregistrer le coût réel";
+      }
+    }
  
     function completedDate(item) {
       if (item.completedAt?.toDate) return item.completedAt.toDate();
@@ -1264,7 +1458,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     function customerCompletedCount(item) {
       const key = customerPhoneKey(item.customerPhone);
       if (!key) return 0;
-      return state.bookings.filter(booking => ["completed", "transferred"].includes(booking.status) && customerPhoneKey(booking.customerPhone) === key).length;
+      return state.bookings.filter(booking => booking.status === "completed" && customerPhoneKey(booking.customerPhone) === key).length;
     }
  
     function loyaltyLabel(item) {
@@ -1346,10 +1540,15 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const day = (weekStart.getDay() + 6) % 7;
       weekStart.setDate(weekStart.getDate() - day);
       weekStart.setHours(0, 0, 0, 0);
+      const nextWeekStart = new Date(weekStart);
+      nextWeekStart.setDate(nextWeekStart.getDate() + 7);
       const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
       const yearStart = new Date(today.getFullYear(), 0, 1);
       const nextYearStart = new Date(today.getFullYear() + 1, 0, 1);
-      const weekItems = allCompleted.filter(item => completedDate(item) >= weekStart);
+      const weekItems = allCompleted.filter(item => {
+        const date = completedDate(item);
+        return date >= weekStart && date < nextWeekStart;
+      });
       const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
       const yearItems = allCompleted.filter(item => {
         const date = completedDate(item);
@@ -1358,11 +1557,27 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
       const tripLabel = items => items.length === 1 ? "1 course terminée" : `${items.length} courses terminées`;
       $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
-      $("weekTrips").textContent = tripLabel(weekItems);
+      const weekIsOpen = $("toggleWeekBreakdown").getAttribute("aria-expanded") === "true";
+      $("weekTrips").textContent = `${tripLabel(weekItems)} · ${weekIsOpen ? "Masquer le détail" : "Voir le détail"}`;
       $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
       $("monthTrips").textContent = tripLabel(monthItems);
       $("yearRevenue").textContent = `${total(yearItems).toFixed(0)} €`;
       $("yearTrips").textContent = tripLabel(yearItems);
+      const dayNames = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+      const dayRows = dayNames.map((name, index) => {
+        const start = new Date(weekStart);
+        start.setDate(start.getDate() + index);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 1);
+        const items = weekItems.filter(item => {
+          const date = completedDate(item);
+          return date >= start && date < end;
+        });
+        const isToday = start.toDateString() === today.toDateString();
+        const count = items.length;
+        return `<div class="week-day-row${isToday ? " is-today" : ""}"><div><strong>${name}${isToday ? " · Aujourd’hui" : ""}</strong><small>${start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} · ${count} course${count > 1 ? "s" : ""}</small></div><span class="week-day-amount">${total(items).toFixed(0)} €</span></div>`;
+      }).join("");
+      $("weekBreakdown").innerHTML = `<div class="week-breakdown-head"><span>Détail de la semaine</span><span>Chiffre d’affaires</span></div>${dayRows}`;
       renderMonthHistory(allCompleted, total);
     }
  
@@ -1662,7 +1877,14 @@ Ouassini – OuassVTC`;
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a></div>
-        <div class="status-actions"><button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button><button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
+        <button class="mission-profit-toggle" type="button" data-toggle-mission-profit><span>Rentabilité de la mission</span><span>＋</span></button>
+        <div class="mission-profit-panel hidden" data-mission-profit-panel>
+          <div class="mission-profit-intro">Calcul privé : domicile → client → destination → domicile. Cette information n’apparaît pas sur le bon de commande.</div>
+          <div class="sim-field"><label>Péages de cette mission</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.missionTolls || 0)}" data-mission-tolls></div>
+          <button class="mission-profit-action" type="button" data-calculate-mission-cost>Calculer et enregistrer le coût réel</button>
+          <div class="mission-profit-results" data-mission-profit-results>${missionCostResultsMarkup(item)}</div>
+        </div>
+        <div class="status-actions">${item.status === "completed" ? `<button class="action" type="button" data-purchase-order="${item.id}">Bon de commande PDF</button>` : ""}<button class="action" type="button" data-edit-booking="${item.id}">Modifier</button>${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden" data-more-actions><button type="button" data-duplicate-booking="${item.id}">Dupliquer la course</button><button type="button" data-return-booking="${item.id}">Programmer le retour</button></div>`;
       $("detailOverlay").classList.remove("hidden");
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
@@ -1673,6 +1895,15 @@ Ouassini – OuassVTC`;
       });
       $("detailBody").querySelector("[data-toggle-more-actions]")?.addEventListener("click", () => {
         $("detailBody").querySelector("[data-more-actions]")?.classList.toggle("hidden");
+      });
+      $("detailBody").querySelector("[data-toggle-mission-profit]")?.addEventListener("click", event => {
+        const panel = $("detailBody").querySelector("[data-mission-profit-panel]");
+        const isOpening = panel.classList.contains("hidden");
+        panel.classList.toggle("hidden", !isOpening);
+        event.currentTarget.querySelector("span:last-child").textContent = isOpening ? "−" : "＋";
+      });
+      $("detailBody").querySelector("[data-calculate-mission-cost]")?.addEventListener("click", event => {
+        calculateAndSaveMissionCost(item, event.currentTarget);
       });
       $("detailBody").querySelector("[data-duplicate-booking]")?.addEventListener("click", () => duplicateBooking(item.id));
       $("detailBody").querySelector("[data-return-booking]")?.addEventListener("click", () => openReturnBooking(item.id));
@@ -1862,44 +2093,72 @@ Ouassini – OuassVTC`;
       $("detailBody").innerHTML = "";
     }
  
-    async function getOrCreatePurchaseOrderNumber(bookingId) {
-      const bookingRef = doc(db, "bookings", bookingId);
-      const counterRef = doc(db, "counters", "purchaseOrders");
-      return runTransaction(db, async transaction => {
-        const bookingSnapshot = await transaction.get(bookingRef);
-        if (!bookingSnapshot.exists()) throw new Error("Course introuvable");
-        const existingNumber = Number(bookingSnapshot.data().purchaseOrderNumber);
-        if (Number.isInteger(existingNumber) && existingNumber > 0) return existingNumber;
-        const counterSnapshot = await transaction.get(counterRef);
-        const lastNumber = counterSnapshot.exists() ? Number(counterSnapshot.data().lastNumber) || 0 : 0;
-        const nextNumber = lastNumber + 1;
-        transaction.set(counterRef, { lastNumber:nextNumber, updatedAt:serverTimestamp() }, { merge:true });
-        transaction.update(bookingRef, { purchaseOrderNumber:nextNumber, updatedAt:serverTimestamp() });
-        return nextNumber;
-      });
+    function completedNumberingDate(item) {
+      if (item.completedAt?.toDate) return item.completedAt.toDate();
+      return bookingDate(item) || (item.updatedAt?.toDate ? item.updatedAt.toDate() : createdDate(item)) || new Date(0);
     }
- 
-    async function numberIncomingCourses() {
+
+    function completedCoursesInNumberOrder() {
+      return state.bookings
+        .filter(item => item.status === "completed")
+        .sort((first, second) => {
+          const difference = completedNumberingDate(first) - completedNumberingDate(second);
+          return difference || String(first.id).localeCompare(String(second.id));
+        });
+    }
+
+    async function reconcileCompletedCourseNumbers() {
       numberingRequested = true;
       if (numberingBatchRunning) return;
       numberingBatchRunning = true;
       try {
         while (numberingRequested) {
           numberingRequested = false;
-          const unnumbered = state.bookings
-            .filter(item => !(Number.isInteger(Number(item.purchaseOrderNumber)) && Number(item.purchaseOrderNumber) > 0))
-            .sort((first, second) => (createdDate(first) || new Date(0)) - (createdDate(second) || new Date(0)));
-          for (const item of unnumbered) {
+          const completed = completedCoursesInNumberOrder();
+          const completedIds = new Set(completed.map(item => item.id));
+          for (let index = 0; index < completed.length; index += 1) {
+            const item = completed[index];
+            const correctNumber = index + 1;
+            if (Number(item.purchaseOrderNumber) === correctNumber) continue;
             try {
-              await getOrCreatePurchaseOrderNumber(item.id);
+              await updateDoc(doc(db, "bookings", item.id), { purchaseOrderNumber:correctNumber });
             } catch (error) {
-              console.error(`La course ${item.id} n’a pas pu être numérotée automatiquement`, error);
+              console.error(`La course terminée ${item.id} n’a pas pu être renumérotée`, error);
             }
+          }
+          for (const item of state.bookings) {
+            if (completedIds.has(item.id) || !Number(item.purchaseOrderNumber)) continue;
+            try {
+              await updateDoc(doc(db, "bookings", item.id), { purchaseOrderNumber:null });
+            } catch (error) {
+              console.error(`L’ancien numéro de la course ${item.id} n’a pas pu être retiré`, error);
+            }
+          }
+          if (lastReconciledCompletedCount !== completed.length) {
+            await setDoc(doc(db, "counters", "purchaseOrders"), {
+              lastNumber:completed.length,
+              updatedAt:serverTimestamp()
+            }, { merge:true });
+            lastReconciledCompletedCount = completed.length;
           }
         }
       } finally {
         numberingBatchRunning = false;
       }
+    }
+
+    async function getCompletedPurchaseOrderNumber(bookingId) {
+      const item = state.bookings.find(booking => booking.id === bookingId);
+      if (!item) throw new Error("Course introuvable");
+      if (item.status !== "completed") throw new Error("COURSE_NOT_COMPLETED");
+      const completed = completedCoursesInNumberOrder();
+      const index = completed.findIndex(booking => booking.id === bookingId);
+      if (index < 0) throw new Error("Course terminée introuvable");
+      const correctNumber = index + 1;
+      if (Number(item.purchaseOrderNumber) !== correctNumber) {
+        await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:correctNumber });
+      }
+      return correctNumber;
     }
  
     function loadPdfImage(url) {
@@ -1993,7 +2252,7 @@ Ouassini – OuassVTC`;
       button.disabled = true;
       button.textContent = sharePdf ? "Préparation du partage…" : "Création du PDF…";
       try {
-        const orderNumber = await getOrCreatePurchaseOrderNumber(bookingId);
+        const orderNumber = await getCompletedPurchaseOrderNumber(bookingId);
         const canvas = document.createElement("canvas");
         canvas.width = 1240;
         canvas.height = 1754;
@@ -2083,6 +2342,10 @@ Ouassini – OuassVTC`;
         console.error(error);
         if (pdfWindow) pdfWindow.close();
         if (error?.name === "AbortError") return;
+        if (error?.message === "COURSE_NOT_COMPLETED") {
+          alert("Le numéro définitif et le bon de commande sont disponibles lorsque la course est terminée.");
+          return;
+        }
         alert("Le bon de commande n’a pas pu être créé. Vérifiez votre connexion et réessayez.");
       } finally {
         button.disabled = false;
@@ -2246,7 +2509,7 @@ Ouassini – OuassVTC`;
           return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
         state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
-        void numberIncomingCourses();
+        void reconcileCompletedCourseNumbers();
         state.bookings.filter(item => item.status === "new").forEach(item => knownNewBookingIds.add(item.id));
         firstBookingsSnapshot = false;
         render();
@@ -2443,6 +2706,13 @@ Ouassini – OuassVTC`;
       }
     });
  
+    $("toggleWeekBreakdown").addEventListener("click", () => {
+      const isOpening = $("weekBreakdown").classList.contains("hidden");
+      $("weekBreakdown").classList.toggle("hidden", !isOpening);
+      $("toggleWeekBreakdown").setAttribute("aria-expanded", String(isOpening));
+      $("weekTrips").textContent = $("weekTrips").textContent.replace(isOpening ? "Voir le détail" : "Masquer le détail", isOpening ? "Masquer le détail" : "Voir le détail");
+    });
+
     $("toggleMonthHistory").addEventListener("click", () => {
       $("monthHistoryList").classList.toggle("hidden");
       $("toggleMonthHistory").textContent = $("monthHistoryList").classList.contains("hidden")
@@ -2468,6 +2738,42 @@ Ouassini – OuassVTC`;
       }
     }, 60000);
     $("driverDateTime").value = localDate.toISOString().slice(0, 16);
+
+    const initialMissionCostSettings = readMissionCostSettings();
+    $("costHomeAddress").value = initialMissionCostSettings.homeAddress;
+    $("costFuelPrice").value = String(initialMissionCostSettings.fuelPrice);
+    $("costConsumption").value = String(initialMissionCostSettings.consumption);
+
+    $("missionCostSettingsForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const settings = {
+        homeAddress: $("costHomeAddress").value.trim(),
+        fuelPrice: $("costFuelPrice").valueAsNumber,
+        consumption: $("costConsumption").valueAsNumber
+      };
+      if (!settings.homeAddress || !Number.isFinite(settings.fuelPrice) || settings.fuelPrice <= 0 || !Number.isFinite(settings.consumption) || settings.consumption <= 0) {
+        alert("Renseignez une adresse, un prix au litre et une consommation valides.");
+        return;
+      }
+      saveMissionCostSettings(settings);
+      $("costSettingsSaved").classList.remove("hidden");
+      setTimeout(() => $("costSettingsSaved").classList.add("hidden"), 2500);
+    });
+
+    $("missionCostCalculatorForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const settings = readMissionCostSettings();
+      const kilometers = $("costManualKm").valueAsNumber;
+      const tolls = Math.max(0, $("costManualTolls").valueAsNumber || 0);
+      if (!Number.isFinite(kilometers) || kilometers < 0) {
+        alert("Indiquez un kilométrage valide.");
+        return;
+      }
+      const fuel = kilometers / 100 * settings.consumption * settings.fuelPrice;
+      const total = fuel + tolls;
+      $("missionCostCalculatorResult").innerHTML = `<div class="cost-result-grid"><div class="cost-result-item"><small>Carburant estimé</small><strong>${euroAmount(fuel)}</strong></div><div class="cost-result-item"><small>Péages</small><strong>${euroAmount(tolls)}</strong></div><div class="cost-result-item total"><small>Coût total estimé</small><strong>${euroAmount(total)}</strong></div></div>`;
+      $("missionCostCalculatorResult").classList.remove("hidden");
+    });
  
     let driverDirectionsService = null;
     let driverLiveMap = null;
@@ -2516,6 +2822,7 @@ Ouassini – OuassVTC`;
       driverDirectionsService = new google.maps.DirectionsService();
       const driverPickupAutocomplete = createAddressAutocomplete($("driverPickup"));
       createAddressAutocomplete($("driverDestination"));
+      createAddressAutocomplete($("costHomeAddress"));
       driverPickupAutocomplete.addListener("place_changed", () => {
         if (driverCurrentPosition) calculateDriverRouteToPickup();
       });
