@@ -1430,6 +1430,64 @@
     }
 
     /* =========================
+       ENVOI EN COURS
+    ========================= */
+
+    .sending-modal{
+      background:rgba(0,0,0,.72);
+      cursor:wait;
+    }
+
+    .sending-card{
+      padding:34px 24px 30px;
+    }
+
+    .sending-spinner{
+      width:62px;
+      height:62px;
+      margin:0 auto 20px;
+      border:5px solid #e8e8e8;
+      border-top-color:#000;
+      border-radius:50%;
+      animation:sendingSpin .8s linear infinite;
+    }
+
+    .sending-progress{
+      width:100%;
+      height:5px;
+      margin-top:20px;
+      overflow:hidden;
+      border-radius:999px;
+      background:#ededed;
+    }
+
+    .sending-progress::after{
+      content:"";
+      display:block;
+      width:45%;
+      height:100%;
+      border-radius:inherit;
+      background:#000;
+      animation:sendingProgress 1.25s ease-in-out infinite;
+    }
+
+    @keyframes sendingSpin{
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes sendingProgress{
+      0%{transform:translateX(-110%)}
+      100%{transform:translateX(245%)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .sending-spinner,
+      .sending-progress::after{
+        animation-duration:2.5s;
+      }
+    }
+
+    /* =========================
        FOOTER
     ========================= */
 
@@ -2658,6 +2716,37 @@
       </button>
 
     </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     MODAL ENVOI EN COURS
+========================= -->
+
+<div
+  id="sendingModal"
+  class="modal sending-modal"
+  aria-hidden="true"
+  aria-live="polite"
+  aria-busy="true"
+>
+
+  <div class="modal-content sending-card" role="status">
+
+    <div class="sending-spinner" aria-hidden="true"></div>
+
+    <div class="modal-title">
+      Envoi de votre demande…
+    </div>
+
+    <div class="modal-text" style="margin-bottom:0;">
+      Merci de patienter quelques secondes et de ne pas fermer cette page.
+    </div>
+
+    <div class="sending-progress" aria-hidden="true"></div>
 
   </div>
 
@@ -4266,8 +4355,42 @@ async function sendEmail(
   }
 
 
-  const calc =
-    await calculerEstimation();
+  const btn =
+    document.getElementById(
+      "btnSubmit"
+    );
+
+
+  btn.disabled =
+    true;
+
+
+  btn.textContent =
+    "Envoi en cours…";
+
+
+  showSendingModal();
+
+
+  let calc =
+    null;
+
+
+  try{
+
+    calc =
+      await calculerEstimation();
+
+  }
+
+  catch(calculError){
+
+    console.warn(
+      "Estimation indisponible :",
+      calculError
+    );
+
+  }
 
 
   await envoyerFormulaire(
@@ -4468,6 +4591,9 @@ async function envoyerFormulaire(
       false;
 
 
+    hideSendingModal();
+
+
     showSuccessModal();
 
   }
@@ -4489,6 +4615,9 @@ async function envoyerFormulaire(
       false;
 
 
+    hideSendingModal();
+
+
     btn.disabled =
       false;
 
@@ -4497,6 +4626,56 @@ async function envoyerFormulaire(
       texteOriginal;
 
   }
+
+}
+
+
+/* =========================
+   MODAL ENVOI EN COURS
+========================= */
+
+function showSendingModal(){
+
+  const modal =
+    document.getElementById(
+      "sendingModal"
+    );
+
+
+  modal.classList.add(
+    "show"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function hideSendingModal(){
+
+  const modal =
+    document.getElementById(
+      "sendingModal"
+    );
+
+
+  modal.classList.remove(
+    "show"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
 }
 
