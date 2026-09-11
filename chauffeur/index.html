@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V35</title>
+  <title>OuassVTC Chauffeur — Mission Control V36</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -1134,7 +1134,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <div class="voice-response" id="voiceResponse">Je peux ouvrir une page, lire votre activité ou préparer une nouvelle course.</div>
       <button class="voice-mic" id="voiceMic" type="button" aria-label="Commencer l’écoute">🎙</button><div class="voice-mic-label" id="voiceMicLabel">Appuyer pour parler</div>
       <button class="voice-cancel-flow hidden" id="cancelVoiceFlow" type="button">Annuler la saisie de la course</button>
-      <div class="voice-help"><strong>Exemples de commandes</strong><span>« Ouvre mon chiffre d’affaires »</span><span>« Quelles sont mes courses de demain ? »</span><span>« Combien ai-je encaissé aujourd’hui ? »</span><span>« Je veux créer une nouvelle course »</span></div>
+      <div class="voice-help"><strong>Exemples de commandes</strong><span>« Quelle est ma prochaine course ? »</span><span>« Lance Waze vers le prochain client »</span><span>« Envoie au client que je suis arrivé »</span><span>« Termine la prochaine course »</span><span>« Compare cette semaine à la précédente »</span><span>« Je veux créer une nouvelle course »</span><span>« Dis-moi tout ce que tu sais faire »</span></div>
     </div>
   </section>
  
@@ -1200,6 +1200,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let voiceRecognition = null;
     let voiceFlow = null;
     let voiceShouldRestart = false;
+    let lastVoiceResponse = "";
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
@@ -1766,6 +1767,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     }
 
     function voiceSpeak(text, listenAfter = false) {
+      lastVoiceResponse = text;
       $("voiceResponse").textContent = text;
       voiceShouldRestart = listenAfter;
       if (!("speechSynthesis" in window)) {
@@ -1899,15 +1901,25 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     }
 
     function cancelVoiceCourse() {
+      const wasCourse = voiceFlow?.type === "course";
       voiceFlow = null;
       $("cancelVoiceFlow").classList.add("hidden");
-      voiceSpeak("La saisie de la course est annulée.");
+      voiceSpeak(wasCourse ? "La saisie de la course est annulée." : "L’action est annulée.");
     }
 
     async function processVoiceCourse(text) {
       const step = voiceCourseSteps[voiceFlow.step];
       const normalized = normalizeSearch(text);
       if (normalized.includes("annule")) { cancelVoiceCourse(); return; }
+      if (normalized.startsWith("corrige ") || normalized.startsWith("modifier ") || normalized.startsWith("change ")) {
+        const targets = [
+          ["nom",0,"Quel est le nouveau nom du client ?"], ["date",1,"Quelle est la nouvelle date et la nouvelle heure ?"], ["heure",1,"Quelle est la nouvelle date et la nouvelle heure ?"],
+          ["depart",2,"Quelle est la nouvelle adresse de départ ?"], ["arrivee",3,"Quelle est la nouvelle adresse d’arrivée ?"], ["telephone",4,"Quel est le nouveau numéro de téléphone ?"],
+          ["passager",5,"Quel est le nouveau nombre de passagers ?"], ["paiement",6,"Quel est le nouveau mode de paiement ?"]
+        ];
+        const target = targets.find(([word]) => normalized.includes(word));
+        if (target) { voiceFlow.step = target[1]; voiceSpeak(target[2], true); return; }
+      }
       if (step === "name") { $("driverName").value = text.replace(/^(monsieur|madame|mme|mr)\s+/i, "").trim(); voiceFlow.step++; voiceSpeak("À quelle date et à quelle heure ?", true); return; }
       if (step === "date") {
         const date = parseVoiceDateTime(text);
@@ -1936,19 +1948,170 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       }
     }
 
+    function nextVoiceMission() {
+      const now = new Date();
+      return state.bookings.filter(item => item.status === "accepted" && bookingDate(item) && bookingDate(item) >= new Date(now.getTime() - 45 * 60000)).sort((a,b) => bookingDate(a) - bookingDate(b))[0] || null;
+    }
+
+    function latestNewRequest() {
+      return state.bookings.filter(item => item.status === "new").sort((a,b) => (createdDate(b) || new Date(0)) - (createdDate(a) || new Date(0)))[0] || null;
+    }
+
+    function missionVoiceDescription(item) {
+      if (!item) return "Vous n’avez aucune prochaine course acceptée.";
+      const date = bookingDate(item);
+      const when = date ? `${date.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" })} à ${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}` : "à un horaire non renseigné";
+      return `Votre prochaine course est avec ${item.customerName || "le client"}, ${when}, de ${item.pickup || "départ non renseigné"} vers ${item.destination || "arrivée non renseignée"}, pour ${item.estimatedPrice || "un tarif non renseigné"}.`;
+    }
+
+    function findVoiceCustomer(command) {
+      const candidates = state.bookings.filter(item => item.customerName && item.customerPhone).sort((a,b) => (createdDate(b) || new Date(0)) - (createdDate(a) || new Date(0)));
+      return candidates.find(item => {
+        const full = normalizeSearch(item.customerName);
+        const simplified = full.replace(/\b(madame|monsieur|mme|mr|m)\b/g, " ").replace(/\s+/g, " ").trim();
+        const meaningful = simplified.split(" ").filter(word => word.length >= 3);
+        return command.includes(full) || (meaningful.length && meaningful.every(word => command.includes(word)));
+      }) || null;
+    }
+
+    function startVoiceConfirmation(prompt, action) {
+      voiceFlow = { type:"action", action };
+      $("cancelVoiceFlow").classList.remove("hidden");
+      voiceSpeak(`${prompt} Dites oui pour confirmer, ou non pour annuler.`, true);
+    }
+
+    async function processVoiceAction(text) {
+      const command = normalizeSearch(text);
+      if (/\b(non|annule|annuler)\b/.test(command)) { cancelVoiceCourse(); return; }
+      if (!/\b(oui|confirme|valide|d accord)\b/.test(command)) { voiceSpeak("Je n’ai pas compris. Dites oui pour confirmer, ou non pour annuler.", true); return; }
+      const action = voiceFlow.action;
+      voiceFlow = null;
+      $("cancelVoiceFlow").classList.add("hidden");
+      try { await action(); } catch (error) { console.error(error); voiceSpeak("L’action n’a pas pu être enregistrée. Vérifiez votre connexion puis réessayez."); }
+    }
+
+    function startVoiceFinish(item) {
+      if (!item) { voiceSpeak("Je ne trouve aucune course acceptée à terminer."); return; }
+      voiceFlow = { type:"finish", itemId:item.id, step:"payment" };
+      $("cancelVoiceFlow").classList.remove("hidden");
+      voiceSpeak(`Je vais terminer la course de ${item.customerName || "ce client"}. Le règlement a-t-il été effectué par carte bancaire ou en espèces ?`, true);
+    }
+
+    async function processVoiceFinish(text) {
+      const command = normalizeSearch(text);
+      if (/\b(non|annule|annuler)\b/.test(command)) { cancelVoiceCourse(); return; }
+      if (voiceFlow.step === "payment") {
+        if (command.includes("espece")) voiceFlow.paymentMethod = "Paiement en espèces à bord";
+        else if (command.includes("carte") || command.includes("cb")) voiceFlow.paymentMethod = "Paiement par carte bancaire à bord";
+        else { voiceSpeak("Dites carte bancaire ou espèces.", true); return; }
+        voiceFlow.step = "confirm";
+        const item = state.bookings.find(booking => booking.id === voiceFlow.itemId);
+        voiceSpeak(`Confirmez-vous la fin de la course de ${item?.customerName || "ce client"}, réglée ${voiceFlow.paymentMethod.includes("espèces") ? "en espèces" : "par carte bancaire"} ? Dites oui ou non.`, true);
+        return;
+      }
+      if (!/\b(oui|confirme|valide)\b/.test(command)) { voiceSpeak("Dites oui pour terminer la course, ou non pour annuler.", true); return; }
+      const { itemId, paymentMethod } = voiceFlow;
+      voiceFlow = null; $("cancelVoiceFlow").classList.add("hidden");
+      const saved = await updateStatus(itemId, "completed", { paymentMethod });
+      voiceSpeak(saved ? "La course est terminée et le règlement est enregistré." : "La course n’a pas pu être terminée. Réessayez lorsque la connexion sera disponible.");
+    }
+
+    function voiceComparison(period) {
+      const now = new Date();
+      let currentStart, currentEnd, previousStart, previousEnd, label;
+      if (period === "month") {
+        currentStart = new Date(now.getFullYear(),now.getMonth(),1); currentEnd = new Date(now.getFullYear(),now.getMonth()+1,1);
+        previousStart = new Date(now.getFullYear(),now.getMonth()-1,1); previousEnd = currentStart; label = "mois";
+      } else {
+        currentStart = mondayOf(now); currentEnd = new Date(currentStart); currentEnd.setDate(currentEnd.getDate()+7);
+        previousStart = new Date(currentStart); previousStart.setDate(previousStart.getDate()-7); previousEnd = currentStart; label = "semaine";
+      }
+      const current = financeTotals(currentStart,currentEnd).revenue;
+      const previous = financeTotals(previousStart,previousEnd).revenue;
+      const difference = current - previous;
+      if (!previous) return `Le chiffre d’affaires de cette ${label} est de ${euroAmount(current)}. Il n’y a pas de chiffre d’affaires sur la période précédente pour comparer.`;
+      const percent = Math.abs(difference / previous * 100).toFixed(0);
+      return `Cette ${label}, vous avez réalisé ${euroAmount(current)}, contre ${euroAmount(previous)} précédemment. C’est ${difference >= 0 ? "une hausse" : "une baisse"} de ${percent} pour cent.`;
+    }
+
+    function voiceNetSummary(period) {
+      const dates = paymentPeriodDates(period === "month" ? "month" : period === "year" ? "year" : "week");
+      const result = financeTotals(dates.start, dates.end);
+      return `${dates.label}, le chiffre d’affaires est de ${euroAmount(result.revenue)}, les dépenses de trajet de ${euroAmount(result.trips)}, Google Ads de ${euroAmount(result.ads)}, et le revenu net estimé de ${euroAmount(result.net)}.`;
+    }
+
+    function voiceCapabilities() {
+      return "Je peux créer une course, retrouver un client connu, lire les courses du jour ou de demain, annoncer la prochaine mission, lancer Waze, appeler le client, préparer un SMS, accepter une nouvelle demande, terminer une course avec son règlement, ouvrir chaque page, lire le chiffre d’affaires, le revenu net, les dépenses, la répartition carte et espèces, et comparer deux périodes.";
+    }
+
     function processVoiceInput(text) {
       if (voiceFlow?.type === "course") { processVoiceCourse(text); return; }
+      if (voiceFlow?.type === "action") { processVoiceAction(text); return; }
+      if (voiceFlow?.type === "finish") { processVoiceFinish(text); return; }
       const command = normalizeSearch(text);
-      if (command.includes("nouvelle course") || command.includes("creer une course") || command.includes("ajouter une course")) { startVoiceCourse(); return; }
+      if (command === "repete" || command.includes("repete la reponse")) { voiceSpeak(lastVoiceResponse || "Je n’ai encore rien annoncé."); return; }
+      if (command.includes("que sais tu faire") || command.includes("tout ce que tu") || command === "aide" || command.includes("commande disponible")) { voiceSpeak(voiceCapabilities()); return; }
+      if (command.includes("nouvelle course") || command.includes("creer une course") || command.includes("ajouter une course")) {
+        const known = findVoiceCustomer(command);
+        if (known) {
+          $("driverName").value = known.customerName || ""; $("driverPhone").value = known.customerPhone || ""; $("driverPickup").value = known.pickup || "";
+          voiceFlow = { type:"course", step:1 }; $("cancelVoiceFlow").classList.remove("hidden");
+          voiceSpeak(`J’ai reconnu ${known.customerName} et retrouvé son téléphone et son départ habituel. À quelle date et à quelle heure aura lieu la course ?`, true);
+        } else startVoiceCourse();
+        return;
+      }
       if (command.includes("fin de journee") || command.includes("suivi de la journee") || command.includes("point de la journee")) { voiceSpeak(voiceEndOfDaySummary()); return; }
+      if ((command.includes("prochaine") || command.includes("prochain")) && (command.includes("course") || command.includes("mission") || command.includes("client")) && !["termine","waze","appelle","telephone","sms","message","ouvre","affiche","duplique","retour"].some(word => command.includes(word))) { voiceSpeak(missionVoiceDescription(nextVoiceMission())); return; }
       if (command.includes("course") && command.includes("demain")) { voiceSpeak(voiceCoursesSummary(1)); return; }
       if (command.includes("course") && (command.includes("aujourd") || command.includes("journee"))) { voiceSpeak(voiceCoursesSummary(0)); return; }
+      if ((command.includes("lance") || command.includes("ouvre") || command.includes("demarre")) && command.includes("waze")) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune prochaine course acceptée."); return; }
+        const address = command.includes("arrivee") || command.includes("destination") ? item.destination : item.pickup;
+        voiceSpeak(`J’ouvre Waze vers ${address}.`); setTimeout(() => { window.location.href = wazeHref(address); }, 650); return;
+      }
+      if ((command.includes("appelle") || command.includes("telephon")) && (command.includes("client") || command.includes("prochain"))) {
+        const item = nextVoiceMission(); const phone = phoneHref(item?.customerPhone); if (!phone) { voiceSpeak("Aucun numéro n’est disponible pour le prochain client."); return; }
+        voiceSpeak(`J’appelle ${item.customerName || "le prochain client"}.`); setTimeout(() => { window.location.href = `tel:${phone}`; }, 600); return;
+      }
+      if (command.includes("sms") || command.includes("message") || command.includes("je suis arrive")) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune prochaine course."); return; }
+        const type = command.includes("avis") ? "review" : command.includes("rappel") ? "reminder" : command.includes("confirme") ? "confirmation" : "arrived";
+        voiceSpeak(`Je prépare le message pour ${item.customerName || "le client"}.`); setTimeout(() => sendPlannedTripSms(item,type),600); return;
+      }
+      if (command.includes("accepte") && (command.includes("demande") || command.includes("course"))) {
+        const item = latestNewRequest(); if (!item) { voiceSpeak("Il n’y a aucune nouvelle demande à accepter."); return; }
+        startVoiceConfirmation(`Voulez-vous accepter la demande de ${item.customerName || "ce client"}, prévue ${dateLabel(item)} ?`, async () => { const saved = await updateStatus(item.id,"accepted"); voiceSpeak(saved ? "La demande est acceptée et ajoutée à l’agenda." : "La demande n’a pas pu être acceptée."); }); return;
+      }
+      if (command.includes("termine") && (command.includes("course") || command.includes("mission") || command.includes("prochaine"))) { startVoiceFinish(nextVoiceMission()); return; }
+      if (command.includes("annule") && (command.includes("course") || command.includes("mission"))) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune course acceptée à annuler."); return; }
+        startVoiceConfirmation(`Voulez-vous vraiment annuler le trajet de ${item.customerName || "ce client"} ?`, async () => { const saved = await updateStatus(item.id,"cancelled"); voiceSpeak(saved ? "Le trajet est annulé." : "L’annulation n’a pas pu être enregistrée."); }); return;
+      }
+      if (command.includes("duplique") || command.includes("copie la course")) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune prochaine course à dupliquer."); return; }
+        startVoiceConfirmation(`Voulez-vous dupliquer la course de ${item.customerName || "ce client"} ?`, async () => { closeVoiceAssistant(); duplicateBooking(item.id); setTimeout(() => voiceSpeak("La copie est prête. Modifiez la date ou les adresses avant de l’enregistrer."),350); }); return;
+      }
+      if (command.includes("programme") && command.includes("retour") || command.includes("course retour")) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune prochaine course pour préparer le retour."); return; }
+        closeVoiceAssistant(); openReturnBooking(item.id); setTimeout(() => voiceSpeak("Le retour est préparé avec les adresses inversées. Indiquez sa date et son heure."),350); return;
+      }
+      if ((command.includes("ouvre") || command.includes("affiche")) && (command.includes("prochaine course") || command.includes("prochaine mission"))) {
+        const item = nextVoiceMission(); if (!item) { voiceSpeak("Je ne trouve aucune prochaine course."); return; }
+        closeVoiceAssistant(); openBooking(item.id); return;
+      }
+      if (command.includes("ecran") && (command.includes("allume") || command.includes("veille"))) { if (!keepScreenAwake) toggleScreenWakeLock(); voiceSpeak("Le maintien de l’écran est activé."); return; }
+      if (command.includes("desactive") && command.includes("ecran")) { if (keepScreenAwake) toggleScreenWakeLock(); voiceSpeak("Le maintien de l’écran est désactivé."); return; }
+      if (command.includes("compare") || command.includes("comparaison")) { voiceSpeak(voiceComparison(command.includes("mois") ? "month" : "week")); return; }
+      if (command.includes("net") || (command.includes("reste") && command.includes("charge"))) { voiceSpeak(voiceNetSummary(command.includes("mois") ? "month" : command.includes("annee") ? "year" : "week")); return; }
       if (command.includes("carte") && command.includes("espece") || command.includes("repartition") || command.includes("reglement")) { closeVoiceAssistant(); openPanel("reportPanel"); setTimeout(() => $("openPaymentReport").click(), 150); return; }
       if (command.includes("chiffre") || command.includes("encaisse") || command.includes("recette")) {
         const period = command.includes("semaine") ? "week" : command.includes("mois") ? "month" : "day"; voiceSpeak(voiceRevenue(period)); return;
       }
+      const customer = findVoiceCustomer(command);
+      if (customer && (command.includes("adresse") || command.includes("telephone") || command.includes("client"))) { voiceSpeak(`${customer.customerName}. Téléphone ${customer.customerPhone}. Adresse habituelle : ${customer.pickup || "non renseignée"}.`); return; }
       if (command.includes("agenda")) { closeVoiceAssistant(); openPanel("agendaPanel"); return; }
       if (command.includes("historique") || command.includes("archive")) { closeVoiceAssistant(); openPanel("bookingsPanel"); return; }
+      if (command.includes("transfert") || command.includes("chauffeur")) { closeVoiceAssistant(); openPanel("transferPanel"); return; }
       if (command.includes("depense") || command.includes("cout")) { closeVoiceAssistant(); openPanel("costPanel"); return; }
       if (command.includes("revenu") || command.includes("affaire") || command.includes("bilan")) { closeVoiceAssistant(); openPanel("reportPanel"); return; }
       if (command.includes("tableau de bord") || command.includes("accueil")) { closeVoiceAssistant(); openPanel("dashboardHome"); return; }
