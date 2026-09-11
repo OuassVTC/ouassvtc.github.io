@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V34</title>
+  <title>OuassVTC Chauffeur — Mission Control V35</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -710,6 +710,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 /* ===== V34 — RÈGLEMENTS ET RÉPARTITION DU CA ===== */
 .payment-overlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:end center;padding:18px;background:#05070bd9;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
 .payment-overlay.hidden{display:none}.payment-sheet{width:min(100%,480px);padding:22px;border:1px solid #ffffff18;border-radius:27px;background:#fff;box-shadow:0 30px 90px #0008;animation:paymentSheetIn .22s ease-out}.payment-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}.payment-sheet-head small{display:block;color:#1d70e8;font-size:12px;font-weight:950;letter-spacing:.13em;text-transform:uppercase}.payment-sheet-head h2{margin:3px 0 0;font-size:25px;letter-spacing:-.04em}.payment-close{width:43px;height:43px;border:1px solid #dfe4eb;border-radius:14px;background:#f5f7fa;color:#111;font-size:22px}.payment-copy{margin:0 0 18px;color:#687281;font-size:14px;line-height:1.45}.payment-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.payment-choice{min-height:108px;border:1px solid #dfe4eb;border-radius:20px;background:#f8fafc;color:#111;font-weight:950;font-size:16px}.payment-choice span{display:block;margin-bottom:8px;font-size:25px}.payment-choice.card{background:#176ef4;color:#fff;border-color:#176ef4}.payment-cancel{width:100%;min-height:48px;margin-top:10px;border:0;background:transparent;color:#6a7380;font-weight:850}.payment-split-button{width:100%;min-height:56px;margin-top:14px;border:1px solid #dce2ea;border-radius:17px;background:#fff;color:#111;font-weight:950;display:flex;align-items:center;justify-content:space-between;padding:0 17px}.payment-split-button span:last-child{color:#176ef4;font-size:20px}.payment-report{position:fixed;inset:0;z-index:1150;overflow-y:auto;padding:0 16px 28px;background:#eef2f7}.payment-report.hidden{display:none}.payment-report-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:13px;margin:0 -16px 20px;padding:16px;background:#080b10;color:#fff}.payment-report-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.payment-report-head small{display:block;color:#93a0b3;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.payment-report-head strong{font-size:21px}.payment-period-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:5px;margin-bottom:15px;border-radius:15px;background:#dfe5ed}.payment-period-tab{min-height:43px;border:0;border-radius:11px;background:transparent;color:#667180;font-weight:900}.payment-period-tab.active{background:#fff;color:#0a0d13;box-shadow:0 4px 14px #10182812}.payment-total-card{padding:22px;border-radius:23px;background:linear-gradient(145deg,#080b11,#162035);color:#fff}.payment-total-card small{color:#aeb8c8;font-weight:800}.payment-total-card strong{display:block;margin-top:8px;font-size:38px;letter-spacing:-.05em}.payment-breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.payment-breakdown-card{min-height:128px;padding:18px;border:1px solid #dfe4eb;border-radius:20px;background:#fff}.payment-breakdown-card small{display:block;color:#6b7481;font-weight:850}.payment-breakdown-card strong{display:block;margin-top:22px;font-size:27px}.payment-breakdown-card.card strong{color:#176ef4}.payment-unassigned{display:flex;justify-content:space-between;gap:12px;margin-top:10px;padding:15px 17px;border:1px dashed #cbd2dc;border-radius:16px;background:#f8fafc;color:#6c7582}.payment-unassigned strong{color:#111}.payment-report-note{margin:13px 3px;color:#727b88;font-size:12px;line-height:1.45}@keyframes paymentSheetIn{from{opacity:.3;transform:translateY(24px)}to{opacity:1;transform:none}}@media(min-width:700px){.payment-overlay{place-items:center}.payment-sheet{padding:27px}.payment-report{left:50%;right:auto;width:min(560px,100%);transform:translateX(-50%);box-shadow:0 0 80px #0b152333}}
+/* ===== V35 — ASSISTANT VOCAL ===== */
+.voice-home-action{display:flex;align-items:center;justify-content:center;gap:9px}.voice-home-icon{position:relative;width:13px;height:13px;border-radius:50%;background:#176ef4;box-shadow:0 0 0 7px #176ef41c}.voice-home-icon::after{content:"";position:absolute;inset:-7px;border:1px solid #176ef45c;border-radius:50%;animation:voiceButtonPulse 1.8s ease-out infinite}.voice-assistant{position:fixed;inset:0;z-index:1300;overflow-y:auto;padding:0 16px 28px;background:linear-gradient(180deg,#080b11 0 245px,#eef2f7 245px)}.voice-assistant.hidden{display:none}.voice-assistant-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 -16px;padding:17px 16px;background:#080b10;color:#fff}.voice-assistant-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.voice-assistant-head small{display:block;color:#8ea8d5;font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.voice-assistant-head strong{font-size:21px}.voice-hero{padding:24px 4px 27px;color:#fff}.voice-state{display:inline-flex;align-items:center;gap:8px;color:#aeb8c8;font-size:13px;font-weight:850}.voice-state-dot{width:9px;height:9px;border-radius:50%;background:#697386}.voice-assistant.listening .voice-state-dot{background:#20d68a;box-shadow:0 0 0 7px #20d68a20;animation:voiceDotPulse 1s infinite}.voice-assistant.listening .voice-state{color:#fff}.voice-hero h2{margin:14px 0 6px;font-size:31px;letter-spacing:-.05em}.voice-hero p{margin:0;color:#aeb8c8;line-height:1.45}.voice-card{padding:20px;border:1px solid #dfe4eb;border-radius:24px;background:#fff;box-shadow:0 16px 45px #0d1b3210}.voice-transcript-label{color:#6c7683;font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.voice-transcript{min-height:64px;margin-top:8px;font-size:18px;font-weight:800;line-height:1.4}.voice-response{margin-top:14px;padding:14px 15px;border-radius:15px;background:#eef4ff;color:#175cbf;line-height:1.45}.voice-mic{position:relative;display:grid;place-items:center;width:92px;height:92px;margin:22px auto 12px;border:0;border-radius:50%;background:#176ef4;color:#fff;font-size:34px;box-shadow:0 18px 40px #176ef449}.voice-assistant.listening .voice-mic{background:#0b1018}.voice-assistant.listening .voice-mic::before,.voice-assistant.listening .voice-mic::after{content:"";position:absolute;inset:-10px;border:2px solid #176ef4;border-radius:50%;animation:voiceRipple 1.5s ease-out infinite}.voice-assistant.listening .voice-mic::after{animation-delay:.6s}.voice-mic-label{text-align:center;color:#6c7582;font-size:13px;font-weight:850}.voice-help{margin-top:15px;padding:17px;border:1px solid #dfe4eb;border-radius:19px;background:#f8fafc}.voice-help strong{display:block;margin-bottom:8px}.voice-help span{display:block;margin-top:6px;color:#697381;font-size:13px;line-height:1.4}.voice-cancel-flow{width:100%;min-height:48px;margin-top:12px;border:1px solid #dfe4eb;border-radius:14px;background:#fff;color:#111;font-weight:900}.voice-cancel-flow.hidden{display:none}@keyframes voiceButtonPulse{to{transform:scale(1.7);opacity:0}}@keyframes voiceDotPulse{50%{opacity:.45}}@keyframes voiceRipple{from{transform:scale(.9);opacity:.8}to{transform:scale(1.4);opacity:0}}@media(min-width:700px){.voice-assistant{left:50%;right:auto;width:min(560px,100%);transform:translateX(-50%);box-shadow:0 0 90px #07101d55}}
 </style>
 </head>
  
@@ -794,7 +796,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </div>
         <div class="home-actions">
           <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
-          <button class="home-action secondary" type="button" data-open-tab="agendaPanel">Agenda</button>
+          <button class="home-action secondary voice-home-action" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Assistant vocal</span></button>
         </div>
       </section>
  
@@ -1123,6 +1125,18 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     <div class="payment-unassigned"><span>Mode à préciser</span><strong id="paymentUnknownTotal">0 €</strong></div>
     <p class="payment-report-note">Cette répartition détaille uniquement le chiffre d’affaires brut. Elle ne modifie ni les dépenses, ni les charges, ni le revenu net.</p>
   </section>
+
+  <section class="voice-assistant hidden" id="voiceAssistant" aria-labelledby="voiceAssistantTitle">
+    <div class="voice-assistant-head"><button id="closeVoiceAssistant" type="button" aria-label="Fermer l’assistant vocal">←</button><div><small>Commande mains libres</small><strong id="voiceAssistantTitle">Assistant OuassVTC</strong></div><span aria-hidden="true">🎙</span></div>
+    <div class="voice-hero"><div class="voice-state"><span class="voice-state-dot"></span><span id="voiceStateText">Prêt à vous écouter</span></div><h2>Que souhaitez-vous faire ?</h2><p>Appuyez sur le micro, puis parlez naturellement.</p></div>
+    <div class="voice-card">
+      <div class="voice-transcript-label">Votre demande</div><div class="voice-transcript" id="voiceTranscript">Dites par exemple : « Quelles sont mes courses de demain ? »</div>
+      <div class="voice-response" id="voiceResponse">Je peux ouvrir une page, lire votre activité ou préparer une nouvelle course.</div>
+      <button class="voice-mic" id="voiceMic" type="button" aria-label="Commencer l’écoute">🎙</button><div class="voice-mic-label" id="voiceMicLabel">Appuyer pour parler</div>
+      <button class="voice-cancel-flow hidden" id="cancelVoiceFlow" type="button">Annuler la saisie de la course</button>
+      <div class="voice-help"><strong>Exemples de commandes</strong><span>« Ouvre mon chiffre d’affaires »</span><span>« Quelles sont mes courses de demain ? »</span><span>« Combien ai-je encaissé aujourd’hui ? »</span><span>« Je veux créer une nouvelle course »</span></div>
+    </div>
+  </section>
  
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script type="module">
@@ -1183,6 +1197,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let selectedTransferStatus = "transferred";
     let selectedPaymentPeriod = "week";
     let paymentChoiceResolver = null;
+    let voiceRecognition = null;
+    let voiceFlow = null;
+    let voiceShouldRestart = false;
     const WEB_PUSH_KEY = "BNj8DnblUy6_DqN5dBTJBErnLoVEFSZZabb4f2gMle_ZfdVsAT1hVleoEO6B2_WamSKi0yw_0otv7MuoKs6qQNE";
     try {
       lastDriverConfirmation = JSON.parse(localStorage.getItem("ouassvtcLastDriverConfirmation") || "null");
@@ -1746,6 +1763,196 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const resolve = paymentChoiceResolver;
       paymentChoiceResolver = null;
       if (resolve) resolve(value);
+    }
+
+    function voiceSpeak(text, listenAfter = false) {
+      $("voiceResponse").textContent = text;
+      voiceShouldRestart = listenAfter;
+      if (!("speechSynthesis" in window)) {
+        if (listenAfter) setTimeout(startVoiceListening, 350);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "fr-FR";
+      utterance.rate = 1.02;
+      utterance.onend = () => {
+        if (voiceShouldRestart) {
+          voiceShouldRestart = false;
+          startVoiceListening();
+        }
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function openVoiceAssistant() {
+      $("voiceAssistant").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      $("voiceTranscript").textContent = "Dites par exemple : « Quelles sont mes courses de demain ? »";
+      voiceSpeak("Bonjour Ouassini. Appuyez sur le micro et dites-moi ce que vous souhaitez faire.");
+    }
+
+    function closeVoiceAssistant() {
+      voiceShouldRestart = false;
+      voiceRecognition?.abort();
+      window.speechSynthesis?.cancel();
+      $("voiceAssistant").classList.add("hidden");
+      $("voiceAssistant").classList.remove("listening");
+      document.body.style.overflow = "";
+    }
+
+    function startVoiceListening() {
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Recognition) {
+        voiceSpeak("La reconnaissance vocale n’est pas disponible dans ce navigateur. Ouvrez l’application avec Google Chrome sur Android.");
+        return;
+      }
+      if (voiceRecognition) voiceRecognition.abort();
+      voiceRecognition = new Recognition();
+      voiceRecognition.lang = "fr-FR";
+      voiceRecognition.interimResults = false;
+      voiceRecognition.continuous = false;
+      voiceRecognition.maxAlternatives = 1;
+      voiceRecognition.onstart = () => {
+        $("voiceAssistant").classList.add("listening");
+        $("voiceStateText").textContent = "Je vous écoute…";
+        $("voiceMicLabel").textContent = "Parlez maintenant";
+      };
+      voiceRecognition.onresult = event => {
+        const text = event.results[0][0].transcript.trim();
+        $("voiceTranscript").textContent = text;
+        processVoiceInput(text);
+      };
+      voiceRecognition.onerror = event => {
+        if (event.error === "aborted") return;
+        const message = event.error === "not-allowed" ? "Autorisez le microphone dans les réglages du site, puis réessayez." : "Je n’ai pas bien entendu. Appuyez sur le micro pour recommencer.";
+        voiceSpeak(message);
+      };
+      voiceRecognition.onend = () => {
+        $("voiceAssistant").classList.remove("listening");
+        $("voiceStateText").textContent = "Prêt à vous écouter";
+        $("voiceMicLabel").textContent = "Appuyer pour parler";
+      };
+      try { voiceRecognition.start(); } catch (error) { console.warn("Écoute vocale déjà active", error); }
+    }
+
+    function voiceDayItems(dayOffset) {
+      const target = new Date();
+      target.setDate(target.getDate() + dayOffset);
+      return state.bookings.filter(item => ["new", "accepted"].includes(item.status) && isSameDay(bookingDate(item), target)).sort((a,b) => bookingDate(a) - bookingDate(b));
+    }
+
+    function voiceCoursesSummary(dayOffset) {
+      const items = voiceDayItems(dayOffset);
+      const dayLabel = dayOffset === 0 ? "aujourd’hui" : "demain";
+      if (!items.length) return `Vous n’avez aucune course prévue ${dayLabel}.`;
+      const details = items.slice(0, 5).map(item => `${bookingDate(item).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}, ${item.customerName || "client"}`).join(" ; ");
+      return `Vous avez ${items.length} course${items.length > 1 ? "s" : ""} prévue${items.length > 1 ? "s" : ""} ${dayLabel}. ${details}.`;
+    }
+
+    function voiceRevenue(period) {
+      const now = new Date();
+      let start, end, label;
+      if (period === "week") { start = mondayOf(now); end = new Date(start); end.setDate(end.getDate() + 7); label = "cette semaine"; }
+      else if (period === "month") { start = new Date(now.getFullYear(), now.getMonth(), 1); end = new Date(now.getFullYear(), now.getMonth() + 1, 1); label = "ce mois-ci"; }
+      else { start = new Date(now); start.setHours(0,0,0,0); end = new Date(start); end.setDate(end.getDate() + 1); label = "aujourd’hui"; }
+      const items = financePeriodItems(start, end);
+      const total = items.reduce((sum,item) => sum + moneyValue(item.estimatedPrice), 0);
+      return `Votre chiffre d’affaires ${label} est de ${total.toLocaleString("fr-FR", { maximumFractionDigits:2 })} euros pour ${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}.`;
+    }
+
+    function voiceEndOfDaySummary() {
+      const completed = dailyItemsForStatus("completed");
+      const remaining = voiceDayItems(0);
+      const revenue = completed.reduce((sum,item) => sum + moneyValue(item.estimatedPrice), 0);
+      return `Point de la journée : ${completed.length} course${completed.length > 1 ? "s" : ""} terminée${completed.length > 1 ? "s" : ""}, ${revenue.toLocaleString("fr-FR", { maximumFractionDigits:2 })} euros de chiffre d’affaires, et ${remaining.length} course${remaining.length > 1 ? "s" : ""} encore prévue${remaining.length > 1 ? "s" : ""}.`;
+    }
+
+    function parseVoiceDateTime(text) {
+      const normalized = normalizeSearch(text);
+      const date = new Date();
+      date.setSeconds(0,0);
+      if (normalized.includes("apres demain")) date.setDate(date.getDate() + 2);
+      else if (normalized.includes("demain")) date.setDate(date.getDate() + 1);
+      const numeric = normalized.match(/\b(\d{1,2})[\/-](\d{1,2})(?:[\/-](\d{2,4}))?/);
+      const months = { janvier:0, fevrier:1, mars:2, avril:3, mai:4, juin:5, juillet:6, aout:7, septembre:8, octobre:9, novembre:10, decembre:11 };
+      const written = normalized.match(/\b(\d{1,2})\s+(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)(?:\s+(\d{4}))?/);
+      if (numeric) date.setFullYear(numeric[3] ? Number(numeric[3].length === 2 ? `20${numeric[3]}` : numeric[3]) : date.getFullYear(), Number(numeric[2]) - 1, Number(numeric[1]));
+      else if (written) date.setFullYear(written[3] ? Number(written[3]) : date.getFullYear(), months[written[2]], Number(written[1]));
+      const time = normalized.match(/(?:a|vers)\s*(\d{1,2})(?:\s*(?:h|heure|heures)\s*(\d{1,2})?)?/);
+      if (!time) return null;
+      date.setHours(Number(time[1]), Number(time[2] || 0), 0, 0);
+      return date;
+    }
+
+    function voicePhone(text) {
+      const words = { zero:"0", un:"1", une:"1", deux:"2", trois:"3", quatre:"4", cinq:"5", six:"6", sept:"7", huit:"8", neuf:"9" };
+      const normalized = normalizeSearch(text).split(/\s+/).map(word => words[word] ?? word).join("");
+      return normalized.replace(/\D/g, "");
+    }
+
+    const voiceCourseSteps = ["name", "date", "pickup", "destination", "phone", "passengers", "payment", "confirm"];
+    function startVoiceCourse() {
+      voiceFlow = { type:"course", step:0 };
+      $("cancelVoiceFlow").classList.remove("hidden");
+      voiceSpeak("Très bien. Quel est le nom du client ?", true);
+    }
+
+    function cancelVoiceCourse() {
+      voiceFlow = null;
+      $("cancelVoiceFlow").classList.add("hidden");
+      voiceSpeak("La saisie de la course est annulée.");
+    }
+
+    async function processVoiceCourse(text) {
+      const step = voiceCourseSteps[voiceFlow.step];
+      const normalized = normalizeSearch(text);
+      if (normalized.includes("annule")) { cancelVoiceCourse(); return; }
+      if (step === "name") { $("driverName").value = text.replace(/^(monsieur|madame|mme|mr)\s+/i, "").trim(); voiceFlow.step++; voiceSpeak("À quelle date et à quelle heure ?", true); return; }
+      if (step === "date") {
+        const date = parseVoiceDateTime(text);
+        if (!date || date <= new Date()) { voiceSpeak("Je n’ai pas compris la date et l’heure. Dites par exemple demain à 8 heures 30.", true); return; }
+        const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000); $("driverDateTime").value = local.toISOString().slice(0,16); voiceFlow.step++; voiceSpeak("Quelle est l’adresse de départ ?", true); return;
+      }
+      if (step === "pickup") { $("driverPickup").value = text; voiceFlow.step++; voiceSpeak("Quelle est l’adresse d’arrivée ?", true); return; }
+      if (step === "destination") { $("driverDestination").value = text; voiceFlow.step++; voiceSpeak("Quel est le numéro de téléphone du client ?", true); return; }
+      if (step === "phone") {
+        const phone = voicePhone(text); if (phone.length < 10) { voiceSpeak("Le numéro semble incomplet. Répétez les dix chiffres lentement.", true); return; }
+        $("driverPhone").value = phone; voiceFlow.step++; voiceSpeak("Combien y a-t-il de passagers ?", true); return;
+      }
+      if (step === "passengers") {
+        const match = normalized.match(/\d+/); const count = match ? match[0] : ({ un:"1", une:"1", deux:"2", trois:"3", quatre:"4" }[normalized] || "Non précisé");
+        $("driverPassengers").value = [...$("driverPassengers").options].some(option => option.value === count) ? count : "Non précisé"; voiceFlow.step++; voiceSpeak("Quel sera le mode de paiement : carte bancaire ou espèces ?", true); return;
+      }
+      if (step === "payment") {
+        if (normalized.includes("espece")) $("driverPayment").value = "Paiement en espèces à bord";
+        else if (normalized.includes("carte") || normalized.includes("cb")) $("driverPayment").value = "Paiement par carte bancaire à bord";
+        else { voiceSpeak("Dites simplement carte bancaire ou espèces.", true); return; }
+        voiceFlow.step++; const date = new Date($("driverDateTime").value); voiceSpeak(`J’ai préparé la course de ${$("driverName").value}, le ${date.toLocaleDateString("fr-FR")} à ${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}, de ${$("driverPickup").value} vers ${$("driverDestination").value}. Dites oui pour ouvrir et vérifier le formulaire, ou annuler.`, true); return;
+      }
+      if (step === "confirm") {
+        if (!/\b(oui|confirme|valide)\b/.test(normalized)) { voiceSpeak("La course n’est pas encore validée. Dites oui pour afficher le formulaire, ou annuler.", true); return; }
+        voiceFlow = null; $("cancelVoiceFlow").classList.add("hidden"); closeVoiceAssistant(); openPanel("estimatePanel"); setTimeout(() => { voiceSpeak("Confirmation reçue. Je calcule le tarif et j’enregistre la course."); $("driverBookingForm").requestSubmit(); }, 450);
+      }
+    }
+
+    function processVoiceInput(text) {
+      if (voiceFlow?.type === "course") { processVoiceCourse(text); return; }
+      const command = normalizeSearch(text);
+      if (command.includes("nouvelle course") || command.includes("creer une course") || command.includes("ajouter une course")) { startVoiceCourse(); return; }
+      if (command.includes("fin de journee") || command.includes("suivi de la journee") || command.includes("point de la journee")) { voiceSpeak(voiceEndOfDaySummary()); return; }
+      if (command.includes("course") && command.includes("demain")) { voiceSpeak(voiceCoursesSummary(1)); return; }
+      if (command.includes("course") && (command.includes("aujourd") || command.includes("journee"))) { voiceSpeak(voiceCoursesSummary(0)); return; }
+      if (command.includes("carte") && command.includes("espece") || command.includes("repartition") || command.includes("reglement")) { closeVoiceAssistant(); openPanel("reportPanel"); setTimeout(() => $("openPaymentReport").click(), 150); return; }
+      if (command.includes("chiffre") || command.includes("encaisse") || command.includes("recette")) {
+        const period = command.includes("semaine") ? "week" : command.includes("mois") ? "month" : "day"; voiceSpeak(voiceRevenue(period)); return;
+      }
+      if (command.includes("agenda")) { closeVoiceAssistant(); openPanel("agendaPanel"); return; }
+      if (command.includes("historique") || command.includes("archive")) { closeVoiceAssistant(); openPanel("bookingsPanel"); return; }
+      if (command.includes("depense") || command.includes("cout")) { closeVoiceAssistant(); openPanel("costPanel"); return; }
+      if (command.includes("revenu") || command.includes("affaire") || command.includes("bilan")) { closeVoiceAssistant(); openPanel("reportPanel"); return; }
+      if (command.includes("tableau de bord") || command.includes("accueil")) { closeVoiceAssistant(); openPanel("dashboardHome"); return; }
+      voiceSpeak("Je n’ai pas reconnu cette commande. Vous pouvez demander vos courses, votre chiffre d’affaires, ouvrir une page ou créer une nouvelle course.");
     }
 
     function renderFinanceReports() {
@@ -3071,6 +3278,14 @@ Ouassini – OuassVTC`;
       selectedPaymentPeriod = button.dataset.paymentPeriod;
       renderPaymentReport();
     }));
+    $("openVoiceAssistant").addEventListener("click", openVoiceAssistant);
+    $("closeVoiceAssistant").addEventListener("click", closeVoiceAssistant);
+    $("voiceMic").addEventListener("click", () => {
+      window.speechSynthesis?.cancel();
+      voiceShouldRestart = false;
+      startVoiceListening();
+    });
+    $("cancelVoiceFlow").addEventListener("click", cancelVoiceCourse);
 
     document.querySelectorAll("[data-net-period]").forEach(button => button.addEventListener("click", () => {
       selectedNetPeriod = button.dataset.netPeriod;
