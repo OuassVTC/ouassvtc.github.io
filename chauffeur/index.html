@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V36</title>
+  <title>OuassVTC Chauffeur — Mission Control V37</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -642,6 +642,17 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 @keyframes requestAlertDot{0%{box-shadow:0 0 0 0 rgba(23,105,255,.55)}70%,100%{box-shadow:0 0 0 9px rgba(23,105,255,0)}}
 @media(prefers-reduced-motion:reduce){.stat.new-request-stat.request-alert,.stat.new-request-stat.request-alert::after{animation:none}}
 
+/* ===== V37 — ASSISTANCE CONDUITE Camsam Plus ===== */
+.completed-driving-stat{cursor:default;gap:8px;padding-bottom:10px!important}
+.completed-driving-stat:active{transform:none;background:#fff}
+.completed-stat-summary{display:flex;flex:1;width:100%;min-height:0;flex-direction:column;justify-content:space-between;text-align:left;border:0;background:transparent;color:inherit;padding:0;cursor:pointer}
+.completed-stat-summary strong,.completed-stat-summary span{pointer-events:none}
+.driving-assistance-button{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:30px;padding:5px 7px;border:1px solid #d7e3fb;border-radius:10px;background:#edf4ff;color:#1769ff;font-size:9px;font-weight:900;line-height:1.1;letter-spacing:.01em;cursor:pointer;white-space:nowrap}
+.driving-assistance-button:active{transform:scale(.975);background:#dfeaff}
+.driving-assistance-icon{display:grid!important;place-items:center;width:16px;height:16px;margin:0!important;border-radius:6px;background:#1769ff;color:#fff!important;font-size:10px!important;line-height:1!important}
+.driving-assistance-button>span:last-child{display:block;margin:0;color:#1769ff;font-size:9px;line-height:1.1;font-weight:900}
+@media(max-width:520px){.completed-driving-stat{padding-bottom:9px!important}.driving-assistance-button{font-size:8.5px;padding-inline:5px;gap:4px}}
+
 /* ===== V28 — DÉTAIL HEBDOMADAIRE DU CHIFFRE D’AFFAIRES ===== */
 .week-card-button{width:100%;border:1px solid var(--black);text-align:left;cursor:pointer;position:relative}
 .week-card-button::after{content:"⌄";position:absolute;right:17px;top:14px;font-size:22px;color:#fff;transition:transform .2s ease}
@@ -783,7 +794,16 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </div>
         <div class="stats">
           <button class="stat new-request-stat" id="newRequestStat" type="button" data-daily-status="new"><strong id="newCount">0</strong><span>Nouvelles demandes du jour</span></button>
-          <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
+          <div class="stat completed-driving-stat">
+            <button class="completed-stat-summary" type="button" data-daily-status="completed" aria-label="Afficher les courses terminées du jour">
+              <strong id="completedCount">0</strong>
+              <span>Courses terminées du jour</span>
+            </button>
+            <button class="driving-assistance-button" id="openCamsamPlus" type="button" aria-label="Ouvrir CamSam Plus">
+              <span class="driving-assistance-icon" aria-hidden="true">◈</span>
+              <span>Assistance conduite</span>
+            </button>
+          </div>
           <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
         </div>
         <div class="dashboard-mission">
@@ -1379,6 +1399,13 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("detailBody").querySelectorAll("[data-open-daily-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openDailyBooking));
       });
+    }
+
+    function openCamsamPlus() {
+      const playStoreUrl = "https://play.google.com/store/apps/details?id=com.camsam.plus";
+      const fallback = encodeURIComponent(playStoreUrl);
+      const camsamIntent = `intent://#Intent;package=com.camsam.plus;S.browser_fallback_url=${fallback};end`;
+      window.location.href = camsamIntent;
     }
  
     function renderAgenda() {
@@ -3371,6 +3398,7 @@ Ouassini – OuassVTC`;
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
     document.querySelectorAll("[data-daily-status]").forEach(button => button.addEventListener("click", () => openDailyList(button.dataset.dailyStatus)));
+    $("openCamsamPlus").addEventListener("click", openCamsamPlus);
     document.addEventListener("pointerdown", prepareAlertSound, { once: true });
     $("manualSync").addEventListener("click", () => {
       prepareAlertSound();
