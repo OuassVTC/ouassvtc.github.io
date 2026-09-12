@@ -25,7 +25,7 @@ messaging.onBackgroundMessage(payload => {
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v36";
+const CACHE_NAME = "ouassvtc-chauffeur-v37";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
