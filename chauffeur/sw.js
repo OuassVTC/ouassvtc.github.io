@@ -13,6 +13,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 messaging.onBackgroundMessage(payload => {
   const title = payload.data?.title || "Nouvelle réservation OuassVTC";
+  const bookingId = payload.data?.bookingId || "";
   const options = {
     body: payload.data?.body || "Une nouvelle demande de trajet vient d’arriver.",
     icon: "/ouassvtc-app.png",
@@ -20,12 +21,15 @@ messaging.onBackgroundMessage(payload => {
     tag: payload.data?.tag || "ouassvtc-new-booking",
     renotify: true,
     vibrate: [500, 250, 500, 900, 500],
-    data: { url: "/chauffeur/" }
+    data: {
+      url: bookingId ? `/chauffeur/?booking=${encodeURIComponent(bookingId)}` : "/chauffeur/",
+      bookingId
+    }
   };
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v37";
+const CACHE_NAME = "ouassvtc-chauffeur-v39";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
