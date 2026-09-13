@@ -731,6 +731,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     .voice-ai-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 5px #3b82f622}
     .payment-choice.mixed{grid-column:1/-1;min-height:70px;background:#101722;color:#fff;border-color:#101722}.payment-choice.mixed span{display:inline;margin:0 8px 0 0}.mixed-payment-form{margin-top:12px;padding:16px;border-radius:18px;background:#f4f7fb}.mixed-payment-form.hidden{display:none}.mixed-payment-total{display:flex;justify-content:space-between;gap:12px;margin-bottom:13px;font-weight:850}.mixed-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mixed-payment-grid label{display:block;margin-bottom:6px;color:#616b79;font-size:12px;font-weight:850}.mixed-payment-grid input{width:100%;min-height:50px;border:1px solid #d6dce5;border-radius:13px;background:#fff;padding:10px;font-size:17px}.mixed-payment-error{margin:10px 0;color:#c43131;font-size:12px;font-weight:800}.mixed-payment-error.hidden{display:none}.mixed-payment-form .primary{margin-top:12px}
     .transfer-driver-months,.transfer-driver-weeks{display:grid;gap:8px;margin-top:8px}.transfer-level-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #e0e5ec;border-radius:15px;background:#f8fafc;color:#111;text-align:left;font-weight:850}.transfer-level-button small{display:block;margin-top:3px;color:#737d8a;font-weight:700}.transfer-driver-weeks{padding-left:9px;border-left:2px solid #dce7f8}.transfer-driver-courses{display:grid;gap:7px;padding:3px 0 3px 9px}
+    .expense-month-groups{display:grid;gap:10px}.expense-month-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:18px;background:#fff}.expense-month-button{width:100%;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:0;background:#fff;color:#111;text-align:left}.expense-month-button span,.expense-month-button strong{display:block}.expense-month-button>span>strong{font-size:16px}.expense-month-button small{display:block;margin-top:3px;color:#737d89;font-size:12px}.expense-month-total{text-align:right;color:#176ef4;font-size:17px}.expense-month-courses{border-top:1px solid #e6eaf0;background:#f8fafc}.expense-month-courses.hidden{display:none}.expense-month-courses .expense-row{margin:0;border:0;border-bottom:1px solid #e6eaf0;border-radius:0;background:transparent}.expense-month-courses .expense-row:last-child{border-bottom:0}
   </style>
 </head>
  
@@ -2377,8 +2378,25 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("tripExpenseMonth").textContent = euroAmount(month.trips);
       $("adsExpenseMonth").textContent = euroAmount(month.ads);
       $("totalExpenseMonth").textContent = euroAmount(month.trips + month.ads);
-      const costed = month.courses.filter(item => moneyValue(item.missionTotalCost) > 0).sort((a,b) => completedDate(b) - completedDate(a));
-      $("tripExpenseList").innerHTML = costed.map(item => `<div class="expense-row"><div><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${completedDate(item).toLocaleDateString("fr-FR")} · ${Number(item.missionTotalKm || 0).toFixed(1)} km · carburant ${euroAmount(item.missionFuelCost)} · péages ${euroAmount(item.missionTolls)}</small></div><span class="expense-row-amount">${euroAmount(item.missionTotalCost)}</span></div>`).join("") || `<div class="empty">Aucune dépense de trajet calculée ce mois-ci.</div>`;
+      const costed = state.bookings.filter(item => item.status === "completed" && moneyValue(item.missionTotalCost) > 0).sort((a,b) => completedDate(b) - completedDate(a));
+      const expenseMonths = new Map();
+      costed.forEach(item => {
+        const date = completedDate(item);
+        const key = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+        if (!expenseMonths.has(key)) expenseMonths.set(key,{ date:new Date(date.getFullYear(),date.getMonth(),1), items:[] });
+        expenseMonths.get(key).items.push(item);
+      });
+      $("tripExpenseList").innerHTML = expenseMonths.size ? `<div class="expense-month-groups">${[...expenseMonths.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([key,group],idx) => {
+        const title = group.date.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+        const monthTotal = group.items.reduce((sum,item)=>sum+moneyValue(item.missionTotalCost),0);
+        const rows = group.items.map(item => `<div class="expense-row"><div><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${completedDate(item).toLocaleDateString("fr-FR")} · ${Number(item.missionTotalKm || 0).toFixed(1).replace(".",",")} km · carburant ${euroAmount(item.missionFuelCost)} · péages ${euroAmount(item.missionTolls)}</small></div><span class="expense-row-amount">${euroAmount(item.missionTotalCost)}</span></div>`).join("");
+        return `<section class="expense-month-group"><button class="expense-month-button" type="button" data-expense-month="${idx}"><span><strong>${escapeHtml(title.charAt(0).toUpperCase()+title.slice(1))}</strong><small>${group.items.length} course${group.items.length>1?"s":""}</small></span><strong class="expense-month-total">${euroAmount(monthTotal)} ›</strong></button><div class="expense-month-courses hidden" id="expense-month-${idx}">${rows}</div></section>`;
+      }).join("")}</div>` : `<div class="empty">Aucune dépense de trajet calculée pour le moment.</div>`;
+      $("tripExpenseList").querySelectorAll("[data-expense-month]").forEach(button => button.addEventListener("click", () => {
+        const target = $(`expense-month-${button.dataset.expenseMonth}`);
+        $("tripExpenseList").querySelectorAll(".expense-month-courses").forEach(list => { if (list !== target) list.classList.add("hidden"); });
+        target.classList.toggle("hidden");
+      }));
       const ads = [...(state.financeSettings.adExpenses || [])].sort((a,b) => String(b.date).localeCompare(String(a.date)));
       $("googleAdsExpenseList").innerHTML = ads.map(expense => `<div class="expense-row"><div><strong>${escapeHtml(expense.note || "Google Ads")}</strong><small>${new Date(`${expense.date}T12:00:00`).toLocaleDateString("fr-FR")}</small></div><div><span class="expense-row-amount">${euroAmount(expense.amount)}</span><button class="expense-delete" type="button" data-delete-ad="${escapeHtml(expense.id)}" aria-label="Supprimer cette dépense">×</button></div></div>`).join("") || `<div class="empty">Aucune dépense Google Ads enregistrée.</div>`;
       $("googleAdsExpenseList").querySelectorAll("[data-delete-ad]").forEach(button => button.addEventListener("click", () => deleteAdExpense(button.dataset.deleteAd)));
