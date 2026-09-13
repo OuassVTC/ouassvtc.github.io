@@ -717,6 +717,16 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     .voice-assistant.conversation-active .voice-mic{background:#0f172a;box-shadow:0 0 0 9px #20d68a22,0 18px 40px #0f172a55}
     .voice-end-conversation{width:100%;min-height:50px;margin-top:14px;border:1px solid #d9dee7;border-radius:15px;background:#0f172a;color:#fff;font-size:14px;font-weight:900}
     .voice-end-conversation.hidden{display:none}
+    .dashboard-priority-actions{margin:16px 0 18px}
+    .dashboard-priority-actions .priority-voice{grid-column:1/-1;min-height:72px;background:linear-gradient(135deg,#0b1018,#172238);color:#fff;border:1px solid #28364d;box-shadow:0 14px 34px #0b16282a;font-size:16px}
+    .voice-mini-bar{display:none}
+    .voice-assistant.minimized{inset:auto 12px max(12px,env(safe-area-inset-bottom));padding:0;width:auto;max-height:none;overflow:visible;border:1px solid #2a3547;border-radius:21px;background:#0b1018;box-shadow:0 18px 55px #0007}
+    .voice-assistant.minimized .voice-assistant-head,.voice-assistant.minimized .voice-hero,.voice-assistant.minimized .voice-card{display:none}
+    .voice-assistant.minimized .voice-mini-bar{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:11px;padding:11px;color:#fff}
+    .voice-mini-pulse{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#176ef4;box-shadow:0 0 0 6px #176ef41f}
+    .voice-assistant.listening.minimized .voice-mini-pulse{background:#16b978;animation:voiceDotPulse 1s infinite}
+    .voice-mini-copy{min-width:0}.voice-mini-copy strong,.voice-mini-copy small{display:block}.voice-mini-copy strong{font-size:14px}.voice-mini-copy small{margin-top:2px;color:#aeb8c8;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .voice-mini-actions{display:flex;gap:6px}.voice-mini-actions button{width:39px;height:39px;border:1px solid #344054;border-radius:12px;background:#151c27;color:#fff;font-size:17px}
     .voice-ai-badge{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 10px;border:1px solid #2b3950;border-radius:999px;color:#b7cdf4;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
     .voice-ai-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 5px #3b82f622}
   </style>
@@ -748,7 +758,6 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
-      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link" id="enableNotifications" type="button">Notifications activités</button>
       <button class="menu-link wake-lock-link" id="toggleWakeLock" type="button"><span>Maintenir l’écran allumé</span><span class="wake-lock-state" id="wakeLockState">Désactivé</span></button>
@@ -793,6 +802,11 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           <button class="stat" type="button" data-daily-status="completed"><strong id="completedCount">0</strong><span>Courses terminées du jour</span></button>
           <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
         </div>
+        <div class="home-actions dashboard-priority-actions">
+          <button class="home-action voice-home-action priority-voice" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Copilote OuassVTC</span></button>
+          <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
+          <button class="home-action secondary" type="button" data-open-tab="bookingsPanel">Historique</button>
+        </div>
         <div class="dashboard-mission">
           <div class="dashboard-mission-head">
             <div><div class="eyebrow">Prochaine mission</div><h2>Votre journée en mouvement</h2></div>
@@ -800,10 +814,6 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           </div>
           <div class="agenda-items" id="todayAgendaList"></div>
           <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
-        </div>
-        <div class="home-actions">
-          <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
-          <button class="home-action secondary voice-home-action" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Assistant vocal</span></button>
         </div>
       </section>
  
@@ -1144,6 +1154,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="voice-cancel-flow hidden" id="cancelVoiceFlow" type="button">Annuler la saisie de la course</button>
       <div class="voice-help"><strong>Exemples de commandes</strong><span>« Quelle est ma prochaine course ? »</span><span>« Lance Waze vers le prochain client »</span><span>« Envoie au client que je suis arrivé »</span><span>« Termine la prochaine course »</span><span>« Compare cette semaine à la précédente »</span><span>« Je veux créer une nouvelle course »</span><span>« Dis-moi tout ce que tu sais faire »</span></div>
     </div>
+    <div class="voice-mini-bar"><span class="voice-mini-pulse">🎙</span><div class="voice-mini-copy"><strong>Copilote actif</strong><small id="voiceMiniStatus">Conversation en cours</small></div><div class="voice-mini-actions"><button id="expandVoiceAssistant" type="button" aria-label="Agrandir le copilote">↗</button><button id="closeVoiceMini" type="button" aria-label="Terminer le copilote">×</button></div></div>
   </section>
  
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -1804,6 +1815,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       voiceRecognition?.abort();
       $("voiceAssistant").classList.remove("listening");
       $("voiceStateText").textContent = "OuassVTC vous répond…";
+      $("voiceMiniStatus").textContent = "OuassVTC vous répond…";
       $("voiceMicLabel").textContent = voiceConversationActive ? "Le micro reprendra automatiquement" : "Appuyer une fois pour démarrer";
       if (!("speechSynthesis" in window)) {
         voiceSpeaking = false;
@@ -1850,10 +1862,23 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("voiceStateText").textContent = "Conversation arrêtée";
       $("voiceMicLabel").textContent = "Appuyer une fois pour redémarrer";
       $("voiceResponse").textContent = message;
+      $("voiceMiniStatus").textContent = "Conversation arrêtée";
+    }
+
+    function minimizeVoiceAssistant() {
+      if (!voiceConversationActive) return;
+      $("voiceAssistant").classList.add("minimized");
+      document.body.style.overflow = "";
+      $("voiceMiniStatus").textContent = voiceSpeaking ? "OuassVTC vous répond…" : aiRequestRunning ? "Analyse en cours…" : "Conversation en cours";
+    }
+
+    function expandVoiceAssistant() {
+      $("voiceAssistant").classList.remove("minimized");
+      document.body.style.overflow = "hidden";
     }
 
     function openVoiceAssistant() {
-      $("voiceAssistant").classList.remove("hidden");
+      $("voiceAssistant").classList.remove("hidden", "minimized");
       document.body.style.overflow = "hidden";
       $("voiceTranscript").textContent = "Dites par exemple : « Quelles sont mes courses de demain ? »";
       voiceSpeak("Bonjour Ouassini. Appuyez sur le micro et dites-moi ce que vous souhaitez faire.");
@@ -1862,6 +1887,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     function closeVoiceAssistant() {
       stopVoiceConversation("Conversation terminée.");
       $("voiceAssistant").classList.add("hidden");
+      $("voiceAssistant").classList.remove("minimized");
       document.body.style.overflow = "";
     }
 
@@ -1880,6 +1906,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       voiceRecognition.onstart = () => {
         $("voiceAssistant").classList.add("listening");
         $("voiceStateText").textContent = "Je vous écoute…";
+        $("voiceMiniStatus").textContent = "Je vous écoute…";
         $("voiceMicLabel").textContent = "Parlez maintenant";
       };
       voiceRecognition.onresult = event => {
@@ -1901,6 +1928,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         $("voiceAssistant").classList.remove("listening");
         if (!voiceSpeaking && !aiRequestRunning) {
           $("voiceStateText").textContent = voiceConversationActive ? "Conversation active" : "Prêt à vous écouter";
+          $("voiceMiniStatus").textContent = voiceConversationActive ? "Conversation en cours" : "Prêt";
           $("voiceMicLabel").textContent = voiceConversationActive ? "Je reprends l’écoute…" : "Appuyer une fois pour démarrer";
           scheduleVoiceListening(500);
         }
@@ -2160,13 +2188,13 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       if (result.action === "navigate") {
         const allowed = new Set(["dashboardHome","agendaPanel","bookingsPanel","transferPanel","costPanel","reportPanel","estimatePanel"]);
         if (!allowed.has(result.target)) { voiceSpeak("Je ne peux pas ouvrir cette page."); return; }
-        voiceSpeak(speech); setTimeout(() => { closeVoiceAssistant(); openPanel(result.target); }, 550); return;
+        voiceSpeak(speech); setTimeout(() => { openPanel(result.target); minimizeVoiceAssistant(); }, 550); return;
       }
       if (result.action === "create_booking") {
         if (result.missingFields?.length) { voiceSpeak(speech || `Il manque ${result.missingFields.join(", ")}.`); return; }
         startVoiceConfirmation(`${speech} Voulez-vous ouvrir le formulaire prérempli pour le vérifier ?`, async () => {
           fillAiBookingDraft(result.booking || {});
-          closeVoiceAssistant(); openPanel("estimatePanel");
+          openPanel("estimatePanel"); minimizeVoiceAssistant();
           setTimeout(() => voiceSpeak("Le formulaire est prérempli. Vérifiez-le puis appuyez sur enregistrer."), 350);
         });
         return;
@@ -2174,7 +2202,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 
       const item = aiBookingById(result.bookingId);
       if (!item) { voiceSpeak("Je ne retrouve pas cette course dans vos données actuelles."); return; }
-      if (result.action === "open_booking") { voiceSpeak(speech); setTimeout(() => { closeVoiceAssistant(); openBooking(item.id); }, 500); return; }
+      if (result.action === "open_booking") { voiceSpeak(speech); setTimeout(() => { openBooking(item.id); minimizeVoiceAssistant(); }, 500); return; }
       if (result.action === "call_customer") {
         const phone = phoneHref(item.customerPhone); if (!phone) { voiceSpeak("Aucun numéro n’est disponible pour ce client."); return; }
         voiceSpeak(speech); setTimeout(() => { window.location.href = `tel:${phone}`; }, 550); return;
@@ -2192,9 +2220,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         startVoiceConfirmation(speech, async () => { const saved = await updateStatus(item.id,"cancelled"); voiceSpeak(saved ? "Le trajet est annulé." : "L’annulation n’a pas pu être enregistrée."); }); return;
       }
       if (result.action === "duplicate_booking") {
-        startVoiceConfirmation(speech, async () => { closeVoiceAssistant(); duplicateBooking(item.id); setTimeout(() => voiceSpeak("La copie est prête. Vérifiez-la avant de l’enregistrer."),350); }); return;
+        startVoiceConfirmation(speech, async () => { duplicateBooking(item.id); minimizeVoiceAssistant(); setTimeout(() => voiceSpeak("La copie est prête. Vérifiez-la avant de l’enregistrer."),350); }); return;
       }
-      if (result.action === "schedule_return") { voiceSpeak(speech); setTimeout(() => { closeVoiceAssistant(); openReturnBooking(item.id); }, 450); return; }
+      if (result.action === "schedule_return") { voiceSpeak(speech); setTimeout(() => { openReturnBooking(item.id); minimizeVoiceAssistant(); }, 450); return; }
       voiceSpeak("Cette action n’est pas encore disponible.");
     }
 
@@ -2204,6 +2232,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       aiRequestRunning = true;
       $("voiceAssistant").classList.add("thinking");
       $("voiceStateText").textContent = "L’IA analyse votre demande…";
+      $("voiceMiniStatus").textContent = "Analyse en cours…";
       $("voiceMicLabel").textContent = "Analyse sécurisée en cours";
       try {
         const response = await aiCopilotCallable({
@@ -3674,6 +3703,11 @@ Ouassini – OuassVTC`;
       startVoiceConversation();
     });
     $("endVoiceConversation").addEventListener("click", () => stopVoiceConversation("Conversation terminée. Appuyez sur le micro pour recommencer."));
+    $("expandVoiceAssistant").addEventListener("click", expandVoiceAssistant);
+    $("closeVoiceMini").addEventListener("click", () => {
+      stopVoiceConversation("Conversation terminée.");
+      $("voiceAssistant").classList.add("hidden");
+    });
     $("cancelVoiceFlow").addEventListener("click", cancelVoiceCourse);
 
     document.querySelectorAll("[data-net-period]").forEach(button => button.addEventListener("click", () => {
