@@ -22,14 +22,14 @@ messaging.onBackgroundMessage(payload => {
     renotify: true,
     vibrate: [500, 250, 500, 900, 500],
     data: {
-      url: bookingId ? `/chauffeur/?booking=${encodeURIComponent(bookingId)}` : "/chauffeur/",
+      url: payload.data?.url || (bookingId ? `/chauffeur/?booking=${encodeURIComponent(bookingId)}` : "/chauffeur/"),
       bookingId
     }
   };
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v48";
+const CACHE_NAME = "ouassvtc-chauffeur-v49";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
