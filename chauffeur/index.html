@@ -732,6 +732,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     .payment-choice.mixed{grid-column:1/-1;min-height:70px;background:#101722;color:#fff;border-color:#101722}.payment-choice.mixed span{display:inline;margin:0 8px 0 0}.mixed-payment-form{margin-top:12px;padding:16px;border-radius:18px;background:#f4f7fb}.mixed-payment-form.hidden{display:none}.mixed-payment-total{display:flex;justify-content:space-between;gap:12px;margin-bottom:13px;font-weight:850}.mixed-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mixed-payment-grid label{display:block;margin-bottom:6px;color:#616b79;font-size:12px;font-weight:850}.mixed-payment-grid input{width:100%;min-height:50px;border:1px solid #d6dce5;border-radius:13px;background:#fff;padding:10px;font-size:17px}.mixed-payment-error{margin:10px 0;color:#c43131;font-size:12px;font-weight:800}.mixed-payment-error.hidden{display:none}.mixed-payment-form .primary{margin-top:12px}
     .transfer-driver-months,.transfer-driver-weeks{display:grid;gap:8px;margin-top:8px}.transfer-level-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #e0e5ec;border-radius:15px;background:#f8fafc;color:#111;text-align:left;font-weight:850}.transfer-level-button small{display:block;margin-top:3px;color:#737d8a;font-weight:700}.transfer-driver-weeks{padding-left:9px;border-left:2px solid #dce7f8}.transfer-driver-courses{display:grid;gap:7px;padding:3px 0 3px 9px}
     .expense-month-groups{display:grid;gap:10px}.expense-month-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:18px;background:#fff}.expense-month-button{width:100%;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:0;background:#fff;color:#111;text-align:left}.expense-month-button span,.expense-month-button strong{display:block}.expense-month-button>span>strong{font-size:16px}.expense-month-button small{display:block;margin-top:3px;color:#737d89;font-size:12px}.expense-month-total{text-align:right;color:#176ef4;font-size:17px}.expense-month-courses{border-top:1px solid #e6eaf0;background:#f8fafc}.expense-month-courses.hidden{display:none}.expense-month-courses .expense-row{margin:0;border:0;border-bottom:1px solid #e6eaf0;border-radius:0;background:transparent}.expense-month-courses .expense-row:last-child{border-bottom:0}
+/* ===== V46 — CORRECTIONS FINANCIÈRES ET HISTORIQUE NET ===== */
+.payment-unassigned{width:100%;align-items:center;text-align:left;cursor:pointer}.payment-unassigned:not(:disabled)::after{content:"›";color:#176ef4;font-size:22px;font-weight:950}.payment-unassigned:disabled{cursor:default;opacity:.7}.payment-unassigned-copy{flex:1}.payment-unassigned-copy span,.payment-unassigned-copy small{display:block}.payment-unassigned-copy small{margin-top:2px;color:#8a93a0;font-size:11px}.finance-correction{position:fixed;inset:0;z-index:1180;overflow-y:auto;padding:0 16px 30px;background:#eef2f7}.finance-correction.hidden{display:none}.finance-correction-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:13px;margin:0 -16px 18px;padding:16px;background:#080b10;color:#fff}.finance-correction-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.finance-correction-head small{display:block;color:#93a0b3;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.finance-correction-head strong{font-size:21px}.finance-correction-intro{margin:0 2px 15px;color:#687281;font-size:14px;line-height:1.5}.finance-correction-list{display:grid;gap:9px}.finance-correction-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:15px;border:1px solid #dfe4eb;border-radius:18px;background:#fff;text-align:left;box-shadow:0 7px 24px #10203a0a}.finance-correction-row strong,.finance-correction-row small{display:block}.finance-correction-row small{margin-top:4px;color:#707986;line-height:1.4}.finance-correction-action{color:#176ef4;font-size:13px;font-weight:950;white-space:nowrap}.finance-correction-empty{padding:25px;border:1px dashed #cbd3df;border-radius:18px;background:#f8fafc;color:#687281;text-align:center}.missing-cost-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:14px 15px;border:1px solid #cfe0fb;border-radius:15px;background:#edf4ff;color:#175ebf;text-align:left;font-weight:900;cursor:pointer}.missing-cost-button.hidden{display:none}.missing-cost-button small{font-weight:750}.missing-cost-button strong{font-size:20px;color:#176ef4}.net-history-wrap{margin-top:14px}.net-history-toggle{width:100%;min-height:52px;padding:0 16px;border:1px solid #dce2ea;border-radius:15px;background:#fff;color:#111;font-weight:950;display:flex;align-items:center;justify-content:space-between}.net-history-list{display:grid;gap:9px;margin-top:10px}.net-history-list.hidden{display:none}.net-history-month{overflow:hidden;border:1px solid #dfe4eb;border-radius:17px;background:#fff}.net-history-month-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px;border:0;background:#fff;text-align:left}.net-history-month-button span strong,.net-history-month-button span small{display:block}.net-history-month-button span small{margin-top:3px;color:#747d89}.net-history-month-button>strong{color:#176ef4;font-size:19px;white-space:nowrap}.net-history-detail{padding:0 15px 14px}.net-history-detail.hidden{display:none}.net-history-detail .net-breakdown{margin:0;padding:14px!important;background:#f5f7fa}
   </style>
 </head>
  
@@ -922,10 +924,10 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </div>
         <div class="finance-view hidden" id="financeExpensesView">
           <div class="finance-summary-grid"><article class="finance-summary-card"><small>Trajets · ce mois</small><strong id="tripExpenseMonth">0 €</strong></article><article class="finance-summary-card"><small>Google Ads · ce mois</small><strong id="adsExpenseMonth">0 €</strong></article><article class="finance-summary-card dark"><small>Total des dépenses</small><strong id="totalExpenseMonth">0 €</strong></article></div>
-          <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses sur les trajets</h3><p>Carburant et péages enregistrés dans chaque course terminée.</p></div><button class="finance-compact-button" id="estimateHistoricCosts" type="button">Compléter l’historique</button></div><div class="finance-progress hidden" id="historicCostsProgress"></div><div class="expense-list" id="tripExpenseList"></div></section>
+          <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses sur les trajets</h3><p>Carburant et péages enregistrés dans chaque course terminée.</p></div><button class="finance-compact-button" id="estimateHistoricCosts" type="button">Compléter l’historique</button></div><div class="finance-progress hidden" id="historicCostsProgress"></div><button class="missing-cost-button hidden" id="openMissingCosts" type="button"><span>Courses à compléter<br><small>Ouvrir la liste et corriger les données</small></span><strong id="missingCostsCount">0 ›</strong></button><div class="expense-list" id="tripExpenseList"></div></section>
           <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses Google Ads</h3><p>Ajoutez manuellement chaque dépense publicitaire.</p></div></div><form class="ads-form" id="googleAdsExpenseForm"><div><label for="adsExpenseDate">Date</label><input id="adsExpenseDate" type="date" required></div><div><label for="adsExpenseAmount">Montant</label><input id="adsExpenseAmount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Ex. 50 €" required></div><div class="full"><label for="adsExpenseNote">Commentaire</label><input id="adsExpenseNote" maxlength="120" placeholder="Ex. Campagne soir et week-end"></div><button type="submit">Enregistrer la dépense</button></form><div class="expense-list" id="googleAdsExpenseList" style="margin-top:14px"></div></section>
         </div>
-        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Estimation de pilotage : revenu net = chiffre d’affaires − dépenses des trajets − Google Ads − Urssaf − impôt.</p></div>
+        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique mensuel</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Estimation de pilotage : revenu net = chiffre d’affaires − dépenses des trajets − Google Ads − Urssaf − impôt.</p></div>
       </section>
 
       <section class="tab-panel hidden" id="costPanel">
@@ -1143,8 +1145,14 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     <div class="payment-period-tabs"><button class="payment-period-tab active" type="button" data-payment-period="week">Semaine</button><button class="payment-period-tab" type="button" data-payment-period="month">Mois</button><button class="payment-period-tab" type="button" data-payment-period="year">Année</button></div>
     <div class="payment-total-card"><small id="paymentPeriodLabel">Cette semaine</small><strong id="paymentGrossTotal">0 €</strong><span>Chiffre d’affaires brut encaissé</span></div>
     <div class="payment-breakdown-grid"><article class="payment-breakdown-card card"><small>Carte bancaire</small><strong id="paymentCardTotal">0 €</strong></article><article class="payment-breakdown-card"><small>Espèces</small><strong id="paymentCashTotal">0 €</strong></article></div>
-    <div class="payment-unassigned"><span>Mode à préciser</span><strong id="paymentUnknownTotal">0 €</strong></div>
+    <button class="payment-unassigned" id="openUnknownPayments" type="button"><span class="payment-unassigned-copy"><span>Mode à préciser</span><small id="paymentUnknownCount">Aucune course à corriger</small></span><strong id="paymentUnknownTotal">0 €</strong></button>
     <p class="payment-report-note">Cette répartition détaille uniquement le chiffre d’affaires brut. Elle ne modifie ni les dépenses, ni les charges, ni le revenu net.</p>
+  </section>
+
+  <section class="finance-correction hidden" id="financeCorrection" aria-labelledby="financeCorrectionTitle">
+    <div class="finance-correction-head"><button id="closeFinanceCorrection" type="button" aria-label="Retour">←</button><div><small id="financeCorrectionEyebrow">Mise à jour</small><strong id="financeCorrectionTitle">Courses à corriger</strong></div></div>
+    <p class="finance-correction-intro" id="financeCorrectionIntro"></p>
+    <div class="finance-correction-list" id="financeCorrectionList"></div>
   </section>
 
   <section class="voice-assistant hidden" id="voiceAssistant" aria-labelledby="voiceAssistantTitle">
@@ -1784,6 +1792,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("paymentCardTotal").textContent = euroAmount(amount("card"));
       $("paymentCashTotal").textContent = euroAmount(amount("cash"));
       $("paymentUnknownTotal").textContent = euroAmount(amount("unknown"));
+      const unknownCount = courses.filter(item => paymentCategory(item) === "unknown").length;
+      $("paymentUnknownCount").textContent = unknownCount ? `${unknownCount} course${unknownCount > 1 ? "s" : ""} à renseigner` : "Aucune course à corriger";
+      $("openUnknownPayments").disabled = !unknownCount;
       document.querySelectorAll("[data-payment-period]").forEach(button => button.classList.toggle("active", button.dataset.paymentPeriod === selectedPaymentPeriod));
     }
 
@@ -1808,6 +1819,53 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       paymentChoiceResolver = null;
       currentPaymentTotal = 0;
       if (resolve) resolve(value);
+    }
+
+    function missingCostCourses() {
+      return state.bookings.filter(item => item.status === "completed" && !Number(item.missionTotalKm)).sort((a,b) => completedDate(b) - completedDate(a));
+    }
+
+    function closeFinanceCorrection() {
+      $("financeCorrection").classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    function correctionCourseRow(item, type) {
+      const date = completedDate(item).toLocaleDateString("fr-FR");
+      const route = `${item.pickup || "Départ non renseigné"} → ${item.destination || "Arrivée non renseignée"}`;
+      const action = type === "payment" ? "Renseigner" : "Ouvrir";
+      return `<button class="finance-correction-row" type="button" data-finance-correction="${type}" data-correction-booking="${escapeHtml(item.id)}"><span><strong>${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName || "Client non renseigné")}</strong><small>${escapeHtml(date)} · ${euroAmount(item.estimatedPrice)}<br>${escapeHtml(route)}</small></span><span class="finance-correction-action">${action} ›</span></button>`;
+    }
+
+    function openFinanceCorrection(type) {
+      const period = paymentPeriodDates();
+      const items = type === "payment"
+        ? financePeriodItems(period.start, period.end).filter(item => paymentCategory(item) === "unknown")
+        : missingCostCourses();
+      $("financeCorrectionEyebrow").textContent = type === "payment" ? "Répartition des règlements" : "Dépenses des trajets";
+      $("financeCorrectionTitle").textContent = type === "payment" ? "Règlements à préciser" : "Courses à compléter";
+      $("financeCorrectionIntro").textContent = type === "payment"
+        ? `Sélectionnez une course pour enregistrer son règlement. Période affichée : ${period.label.toLowerCase()}.`
+        : "Ouvrez une course pour corriger ses adresses ou ses informations. Son coût sera recalculé avec les nouvelles données.";
+      $("financeCorrectionList").innerHTML = items.length ? items.map(item => correctionCourseRow(item, type)).join("") : `<div class="finance-correction-empty">Toutes les courses sont à jour.</div>`;
+      $("financeCorrectionList").querySelectorAll("[data-correction-booking]").forEach(button => button.addEventListener("click", async () => {
+        const item = state.bookings.find(booking => booking.id === button.dataset.correctionBooking);
+        if (!item) return;
+        if (button.dataset.financeCorrection === "payment") {
+          const payment = await askPaymentMethod(`Règlement · ${item.customerName || "Course"}`, moneyValue(item.estimatedPrice));
+          if (!payment) { document.body.style.overflow = "hidden"; return; }
+          button.disabled = true;
+          await updateDoc(doc(db, "bookings", item.id), { ...payment, updatedAt:serverTimestamp() });
+          Object.assign(item, payment);
+          renderPaymentReport();
+          openFinanceCorrection("payment");
+          return;
+        }
+        closeFinanceCorrection();
+        openBooking(item.id);
+      }));
+      $("financeCorrection").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
     }
 
     function scheduleVoiceListening(delay = 450) {
@@ -2378,6 +2436,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("tripExpenseMonth").textContent = euroAmount(month.trips);
       $("adsExpenseMonth").textContent = euroAmount(month.ads);
       $("totalExpenseMonth").textContent = euroAmount(month.trips + month.ads);
+      const missingCosts = missingCostCourses();
+      $("openMissingCosts").classList.toggle("hidden", !missingCosts.length);
+      $("missingCostsCount").textContent = `${missingCosts.length} ›`;
       const costed = state.bookings.filter(item => item.status === "completed" && moneyValue(item.missionTotalCost) > 0).sort((a,b) => completedDate(b) - completedDate(a));
       const expenseMonths = new Map();
       costed.forEach(item => {
@@ -2404,6 +2465,24 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       $("incomeTaxRate").value = String(state.financeSettings.incomeTaxRate ?? 1.7);
       const periods = [["week", "Cette semaine", financeTotals(weekStart, weekEnd)], ["month", "Ce mois-ci", month], ["year", "Cette année", financeTotals(yearStart, yearEnd)]];
       $("netSummaryCards").innerHTML = periods.map(([key, label, value]) => `<article class="net-period-card${key === selectedNetPeriod ? " active" : ""}"><div class="net-period-head"><span>${label}<br><small>Résultat net estimé</small></span><strong>${euroAmount(value.net)}</strong></div><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Dépenses trajets</span><strong>− ${euroAmount(value.trips)}</strong></div><div class="net-line"><span>Google Ads</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Urssaf (${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt (${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></article>`).join("");
+      const netMonthKeys = new Set();
+      state.bookings.filter(item => item.status === "completed").forEach(item => {
+        const date = completedDate(item);
+        if (!Number.isNaN(date.getTime())) netMonthKeys.add(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,"0")}`);
+      });
+      (state.financeSettings.adExpenses || []).forEach(item => { if (/^\d{4}-\d{2}/.test(String(item.date || ""))) netMonthKeys.add(String(item.date).slice(0,7)); });
+      $("netHistoryList").innerHTML = [...netMonthKeys].sort((a,b) => b.localeCompare(a)).map((key, index) => {
+        const [year, monthNumber] = key.split("-").map(Number);
+        const start = new Date(year, monthNumber - 1, 1), end = new Date(year, monthNumber, 1);
+        const value = financeTotals(start, end);
+        const label = start.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
+        return `<section class="net-history-month"><button class="net-history-month-button" type="button" data-net-history-month="${index}"><span><strong>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}</strong><small>Chiffre d’affaires ${euroAmount(value.revenue)}</small></span><strong>${euroAmount(value.net)} ›</strong></button><div class="net-history-detail hidden" id="net-history-${index}"><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Dépenses trajets</span><strong>− ${euroAmount(value.trips)}</strong></div><div class="net-line"><span>Google Ads</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Urssaf</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></div></section>`;
+      }).join("") || `<div class="finance-correction-empty">Aucun historique mensuel disponible.</div>`;
+      $("netHistoryList").querySelectorAll("[data-net-history-month]").forEach(button => button.addEventListener("click", () => {
+        const target = $(`net-history-${button.dataset.netHistoryMonth}`);
+        $("netHistoryList").querySelectorAll(".net-history-detail").forEach(detail => { if (detail !== target) detail.classList.add("hidden"); });
+        target.classList.toggle("hidden");
+      }));
       renderPaymentReport();
     }
 
@@ -3786,6 +3865,9 @@ Ouassini – OuassVTC`;
       $("paymentReport").classList.add("hidden");
       document.body.style.overflow = "";
     });
+    $("openUnknownPayments").addEventListener("click", () => openFinanceCorrection("payment"));
+    $("openMissingCosts").addEventListener("click", () => openFinanceCorrection("cost"));
+    $("closeFinanceCorrection").addEventListener("click", closeFinanceCorrection);
     document.querySelectorAll("[data-payment-period]").forEach(button => button.addEventListener("click", () => {
       selectedPaymentPeriod = button.dataset.paymentPeriod;
       renderPaymentReport();
@@ -3813,6 +3895,10 @@ Ouassini – OuassVTC`;
     $("toggleFinanceSettings").addEventListener("click", () => {
       $("financeRatesForm").classList.toggle("visible");
       $("toggleFinanceSettings").textContent = $("financeRatesForm").classList.contains("visible") ? "Fermer les réglages" : "⚙ Modifier les taux";
+    });
+    $("toggleNetHistory").addEventListener("click", () => {
+      $("netHistoryList").classList.toggle("hidden");
+      $("toggleNetHistory").lastElementChild.textContent = $("netHistoryList").classList.contains("hidden") ? "›" : "⌄";
     });
     document.querySelectorAll("[data-transfer-status]").forEach(button => button.addEventListener("click", () => {
       selectedTransferStatus = button.dataset.transferStatus;
