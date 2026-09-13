@@ -734,6 +734,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     .expense-month-groups{display:grid;gap:10px}.expense-month-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:18px;background:#fff}.expense-month-button{width:100%;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:0;background:#fff;color:#111;text-align:left}.expense-month-button span,.expense-month-button strong{display:block}.expense-month-button>span>strong{font-size:16px}.expense-month-button small{display:block;margin-top:3px;color:#737d89;font-size:12px}.expense-month-total{text-align:right;color:#176ef4;font-size:17px}.expense-month-courses{border-top:1px solid #e6eaf0;background:#f8fafc}.expense-month-courses.hidden{display:none}.expense-month-courses .expense-row{margin:0;border:0;border-bottom:1px solid #e6eaf0;border-radius:0;background:transparent}.expense-month-courses .expense-row:last-child{border-bottom:0}
 /* ===== V46 — CORRECTIONS FINANCIÈRES ET HISTORIQUE NET ===== */
 .payment-unassigned{width:100%;align-items:center;text-align:left;cursor:pointer}.payment-unassigned:not(:disabled)::after{content:"›";color:#176ef4;font-size:22px;font-weight:950}.payment-unassigned:disabled{cursor:default;opacity:.7}.payment-unassigned-copy{flex:1}.payment-unassigned-copy span,.payment-unassigned-copy small{display:block}.payment-unassigned-copy small{margin-top:2px;color:#8a93a0;font-size:11px}.finance-correction{position:fixed;inset:0;z-index:1180;overflow-y:auto;padding:0 16px 30px;background:#eef2f7}.finance-correction.hidden{display:none}.finance-correction-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:13px;margin:0 -16px 18px;padding:16px;background:#080b10;color:#fff}.finance-correction-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.finance-correction-head small{display:block;color:#93a0b3;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.finance-correction-head strong{font-size:21px}.finance-correction-intro{margin:0 2px 15px;color:#687281;font-size:14px;line-height:1.5}.finance-correction-list{display:grid;gap:9px}.finance-correction-row{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:15px;border:1px solid #dfe4eb;border-radius:18px;background:#fff;text-align:left;box-shadow:0 7px 24px #10203a0a}.finance-correction-row strong,.finance-correction-row small{display:block}.finance-correction-row small{margin-top:4px;color:#707986;line-height:1.4}.finance-correction-action{color:#176ef4;font-size:13px;font-weight:950;white-space:nowrap}.finance-correction-empty{padding:25px;border:1px dashed #cbd3df;border-radius:18px;background:#f8fafc;color:#687281;text-align:center}.missing-cost-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:14px 15px;border:1px solid #cfe0fb;border-radius:15px;background:#edf4ff;color:#175ebf;text-align:left;font-weight:900;cursor:pointer}.missing-cost-button.hidden{display:none}.missing-cost-button small{font-weight:750}.missing-cost-button strong{font-size:20px;color:#176ef4}.net-history-wrap{margin-top:14px}.net-history-toggle{width:100%;min-height:52px;padding:0 16px;border:1px solid #dce2ea;border-radius:15px;background:#fff;color:#111;font-weight:950;display:flex;align-items:center;justify-content:space-between}.net-history-list{display:grid;gap:9px;margin-top:10px}.net-history-list.hidden{display:none}.net-history-month{overflow:hidden;border:1px solid #dfe4eb;border-radius:17px;background:#fff}.net-history-month-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px;border:0;background:#fff;text-align:left}.net-history-month-button span strong,.net-history-month-button span small{display:block}.net-history-month-button span small{margin-top:3px;color:#747d89}.net-history-month-button>strong{color:#176ef4;font-size:19px;white-space:nowrap}.net-history-detail{padding:0 15px 14px}.net-history-detail.hidden{display:none}.net-history-detail .net-breakdown{margin:0;padding:14px!important;background:#f5f7fa}
+.net-pdf-export{width:100%;min-height:66px;margin-top:12px;padding:12px 15px;border:0;border-radius:17px;background:linear-gradient(135deg,#0a0e15,#182337);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;box-shadow:0 12px 30px #0b16251a}.net-pdf-export span{font-weight:950;line-height:1.25}.net-pdf-export small{display:block;margin-bottom:3px;color:#94a2b8;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.net-pdf-export strong{flex:0 0 auto;padding:9px 11px;border-radius:11px;background:#176ef4;font-size:12px}.net-pdf-export:disabled{opacity:.6}
   </style>
 </head>
  
@@ -758,8 +759,6 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">×</button></div>
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
-      <button class="menu-link" type="button" data-menu-tab="estimatePanel">Nouvelle course</button>
-      <button class="menu-link" type="button" data-menu-tab="agendaPanel">Trajets planifiés</button>
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
@@ -927,7 +926,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses sur les trajets</h3><p>Carburant et péages enregistrés dans chaque course terminée.</p></div><button class="finance-compact-button" id="estimateHistoricCosts" type="button">Compléter l’historique</button></div><div class="finance-progress hidden" id="historicCostsProgress"></div><button class="missing-cost-button hidden" id="openMissingCosts" type="button"><span>Courses à compléter<br><small>Ouvrir la liste et corriger les données</small></span><strong id="missingCostsCount">0 ›</strong></button><div class="expense-list" id="tripExpenseList"></div></section>
           <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses Google Ads</h3><p>Ajoutez manuellement chaque dépense publicitaire.</p></div></div><form class="ads-form" id="googleAdsExpenseForm"><div><label for="adsExpenseDate">Date</label><input id="adsExpenseDate" type="date" required></div><div><label for="adsExpenseAmount">Montant</label><input id="adsExpenseAmount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Ex. 50 €" required></div><div class="full"><label for="adsExpenseNote">Commentaire</label><input id="adsExpenseNote" maxlength="120" placeholder="Ex. Campagne soir et week-end"></div><button type="submit">Enregistrer la dépense</button></form><div class="expense-list" id="googleAdsExpenseList" style="margin-top:14px"></div></section>
         </div>
-        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique mensuel</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Estimation de pilotage : revenu net = chiffre d’affaires − dépenses des trajets − Google Ads − Urssaf − impôt.</p></div>
+        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique mensuel</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="net-pdf-export" id="exportNetPdf" type="button"><span><small>Rapport financier</small>Exporter l’analyse N / N−1 en PDF</span><strong>PDF ↓</strong></button><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Estimation de pilotage : revenu net = chiffre d’affaires − dépenses des trajets − Google Ads − Urssaf − impôt.</p></div>
       </section>
 
       <section class="tab-panel hidden" id="costPanel">
@@ -1170,6 +1169,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   </section>
  
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
@@ -1760,6 +1760,73 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const urssaf = revenue * Number(state.financeSettings.urssafRate || 0) / 100;
       const tax = revenue * Number(state.financeSettings.incomeTaxRate || 0) / 100;
       return { courses, revenue, trips, ads:adsTotal, urssaf, tax, net:revenue - trips - adsTotal - urssaf - tax };
+    }
+
+    function pdfMoney(value) {
+      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} EUR`;
+    }
+
+    function exportNetAnalysisPdf() {
+      const JsPdf = window.jspdf?.jsPDF;
+      if (!JsPdf) { alert("Le module PDF n’est pas encore chargé. Vérifiez votre connexion puis réessayez."); return; }
+      const button = $("exportNetPdf");
+      button.disabled = true;
+      try {
+        const now = new Date(), year = now.getFullYear(), previousYear = year - 1;
+        const monthCount = now.getMonth() + 1;
+        const rows = Array.from({ length:monthCount }, (_, index) => {
+          const current = financeTotals(new Date(year,index,1), new Date(year,index+1,1));
+          const previous = financeTotals(new Date(previousYear,index,1), new Date(previousYear,index+1,1));
+          const difference = current.net - previous.net;
+          const percent = previous.net !== 0 ? difference / Math.abs(previous.net) * 100 : null;
+          return { name:new Date(year,index,1).toLocaleDateString("fr-FR",{month:"long"}), current, previous, difference, percent };
+        });
+        const currentYear = financeTotals(new Date(year,0,1), new Date(year+1,0,1));
+        const previousComparable = financeTotals(new Date(previousYear,0,1), new Date(previousYear,monthCount,1));
+        const annualDifference = currentYear.net - previousComparable.net;
+        const annualPercent = previousComparable.net !== 0 ? annualDifference / Math.abs(previousComparable.net) * 100 : null;
+        const comparableRows = rows.filter(row => row.previous.revenue || row.previous.net);
+        const growthMonths = comparableRows.filter(row => row.difference > 0).length;
+        const best = [...rows].sort((a,b) => b.current.net - a.current.net)[0];
+        const doc = new JsPdf({ orientation:"landscape", unit:"mm", format:"a4" });
+        const width = doc.internal.pageSize.getWidth();
+        doc.setFillColor(8,11,16); doc.rect(0,0,width,42,"F");
+        doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(22); doc.text("OUASSVTC",16,17);
+        doc.setFontSize(15); doc.text(`Analyse du revenu net ${year} vs ${previousYear}`,16,29);
+        doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(175,185,201); doc.text(`Rapport genere le ${now.toLocaleDateString("fr-FR")} - donnees enregistrees dans l'application chauffeur`,width-16,29,{align:"right"});
+        const cards = [
+          ["Revenu net cumule",pdfMoney(currentYear.net)],
+          [`Net comparable ${previousYear}`,pdfMoney(previousComparable.net)],
+          ["Evolution",annualPercent === null ? "Non comparable" : `${annualPercent >= 0 ? "+" : ""}${annualPercent.toFixed(1)} %`],
+          ["Courses terminees",String(currentYear.courses.length)]
+        ];
+        cards.forEach((card,index) => { const x=16+index*67; doc.setFillColor(244,246,249); doc.roundedRect(x,49,61,25,3,3,"F"); doc.setTextColor(100,110,124); doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.text(card[0],x+5,58); doc.setTextColor(index===2&&annualDifference>=0?18:20,index===2&&annualDifference>=0?116:30,index===2&&annualDifference>=0?75:45); doc.setFont("helvetica","bold"); doc.setFontSize(13); doc.text(card[1],x+5,68); });
+        const columns = [16,49,82,115,148,181,214,247];
+        const headers = ["Mois","CA","Depenses","Charges","Net N","Net N-1","Ecart","Evolution"];
+        doc.setFillColor(23,110,244); doc.roundedRect(16,82,265,11,2,2,"F"); doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont("helvetica","bold");
+        headers.forEach((header,index) => doc.text(header,columns[index]+2,89));
+        let y=101;
+        rows.forEach((row,index) => {
+          if(index%2===0){doc.setFillColor(247,249,252);doc.rect(16,y-6,265,10,"F");}
+          const expenses=row.current.trips+row.current.ads, charges=row.current.urssaf+row.current.tax;
+          const values=[row.name.charAt(0).toUpperCase()+row.name.slice(1),pdfMoney(row.current.revenue),pdfMoney(expenses),pdfMoney(charges),pdfMoney(row.current.net),pdfMoney(row.previous.net),`${row.difference>=0?"+":""}${pdfMoney(row.difference)}`,row.percent===null?"N/A":`${row.percent>=0?"+":""}${row.percent.toFixed(1)} %`];
+          doc.setTextColor(35,42,52); doc.setFont("helvetica",index===rows.length-1?"bold":"normal"); doc.setFontSize(7.5); values.forEach((value,col) => doc.text(String(value),columns[col]+2,y)); y+=10;
+        });
+        y=Math.min(y+5,180); doc.setDrawColor(220,225,233); doc.line(16,y,281,y); y+=8;
+        doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,20,29); doc.text("Lecture automatique",16,y); y+=7;
+        doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(80,90,104);
+        const insights = [
+          `Meilleur mois ${year} : ${best.name} avec ${pdfMoney(best.current.net)} de revenu net estime.`,
+          comparableRows.length ? `${growthMonths} mois sur ${comparableRows.length} comparables progressent par rapport a N-1.` : "Aucune donnee N-1 suffisante pour mesurer une tendance fiable.",
+          `Les charges appliquees sont URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} % et impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %.`
+        ];
+        insights.forEach(line => { doc.text(`- ${line}`,18,y); y+=6; });
+        doc.setFontSize(7); doc.setTextColor(125,133,145); doc.text("Document de pilotage interne - estimations basees sur les courses et depenses enregistrees.",16,202); doc.text("OuassVTC",281,202,{align:"right"});
+        doc.save(`OuassVTC-analyse-revenu-net-${year}-vs-${previousYear}.pdf`);
+      } catch (error) {
+        console.error(error);
+        alert("Le rapport PDF n’a pas pu être généré. Réessayez dans quelques instants.");
+      } finally { button.disabled = false; }
     }
 
     function paymentPeriodDates(period = selectedPaymentPeriod) {
@@ -3900,6 +3967,7 @@ Ouassini – OuassVTC`;
       $("netHistoryList").classList.toggle("hidden");
       $("toggleNetHistory").lastElementChild.textContent = $("netHistoryList").classList.contains("hidden") ? "›" : "⌄";
     });
+    $("exportNetPdf").addEventListener("click", exportNetAnalysisPdf);
     document.querySelectorAll("[data-transfer-status]").forEach(button => button.addEventListener("click", () => {
       selectedTransferStatus = button.dataset.transferStatus;
       document.querySelectorAll("[data-transfer-status]").forEach(item => item.classList.toggle("active", item === button));
