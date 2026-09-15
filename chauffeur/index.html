@@ -741,6 +741,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .document-source-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.document-source{min-height:112px;padding:13px 9px;border:1px solid #dce2e9;border-radius:15px;background:#f8f9fb;color:#18202c;text-align:center}.document-source.camera{background:#176ef4;color:#fff;border-color:#176ef4}.document-source span,.document-source strong,.document-source small{display:block}.document-source span{font-size:23px;margin-bottom:5px}.document-source strong{font-size:13px}.document-source small{margin-top:4px;color:inherit;opacity:.75;font-size:10px}.document-hidden-input{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none}.document-selected-file{display:block;margin-top:9px;padding:10px 12px;border-radius:11px;background:#eaf1ff;color:#175ebf;font-size:12px;font-weight:850}.document-selected-file.hidden{display:none}
 /* ===== V51 — VALIDITÉ ET PROGRESSION ===== */
 .document-no-expiry{display:flex!important;align-items:center;gap:11px;padding:12px;border:1px solid #dce2e9;border-radius:14px;background:#f8f9fb}.document-no-expiry input{width:22px!important;min-height:22px!important;flex:0 0 22px}.document-no-expiry span strong,.document-no-expiry span small{display:block}.document-no-expiry span small{margin-top:3px;color:#77818d;font-size:10px}.document-upload-progress{position:relative;overflow:hidden;min-height:45px;margin-top:10px;border-radius:12px;background:#e9eef6;display:grid;place-items:center}.document-upload-progress.hidden,#documentExpiryWrap.hidden{display:none}.document-upload-progress span{position:absolute;inset:0 auto 0 0;width:0;background:#b9d2ff;transition:width .2s}.document-upload-progress strong{position:relative;z-index:1;color:#174f9d;font-size:12px}
+/* ===== V57 — KILOMÉTRAGE, PDF ANNUEL ET FORMULAIRE PROPRE ===== */
+.mileage-hero{margin:14px 0;padding:21px;border-radius:23px;background:linear-gradient(145deg,#080b11,#17243a);color:#fff}.mileage-hero small,.mileage-hero strong,.mileage-hero span{display:block}.mileage-hero small{color:#9ba9bc;font-weight:850}.mileage-hero strong{margin-top:7px;font-size:35px}.mileage-hero span{margin-top:5px;color:#c1cada;font-size:12px}.mileage-period-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}.mileage-period-button{min-height:47px;border:1px solid #dbe1e9;border-radius:14px;background:#fff;color:#626d7a;font-weight:900}.mileage-period-button.active{border-color:#176ef4;background:#176ef4;color:#fff}.mileage-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mileage-stat{padding:17px;border:1px solid #e0e5ec;border-radius:18px;background:#fff}.mileage-stat small,.mileage-stat strong{display:block}.mileage-stat small{color:#77818e;font-size:11px;font-weight:850}.mileage-stat strong{margin-top:7px;font-size:22px;color:#111}.mileage-history{display:grid;gap:9px;margin-top:15px}.mileage-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:17px;background:#fff}.mileage-group-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px;border:0;background:#fff;text-align:left}.mileage-group-button span,.mileage-group-button strong,.mileage-group-button small{display:block}.mileage-group-button small{margin-top:3px;color:#78828f}.mileage-group-button>strong{color:#176ef4;font-size:17px;white-space:nowrap}.mileage-detail{padding:0 15px 13px;background:#f8fafc;border-top:1px solid #e6eaf0}.mileage-detail.hidden{display:none}.mileage-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #e5e9ef}.mileage-row:last-child{border-bottom:0}.mileage-row small{display:block;margin-top:3px;color:#77818e}.mileage-empty{padding:24px;border:1px dashed #ccd4df;border-radius:17px;color:#717c89;text-align:center;background:#f8fafc}
   </style>
 </head>
  
@@ -768,6 +770,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
+      <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
       <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>📄 Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link settings-menu-link" type="button" data-menu-tab="settingsPanel"><span>⚙ Réglages</span><span>›</span></button>
@@ -987,6 +990,15 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
  
   
     
+      <section class="tab-panel hidden" id="mileagePanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
+        <div class="eyebrow">Suivi de votre activité</div><h2 class="section-title">Kilométrage parcouru</h2>
+        <div class="mileage-hero"><small id="mileageHeroLabel">Cette semaine</small><strong id="mileageHeroTotal">0 km</strong><span id="mileageHeroCourses">0 course comptabilisée</span></div>
+        <div class="mileage-period-selector"><button class="mileage-period-button active" type="button" data-mileage-period="week">Semaine</button><button class="mileage-period-button" type="button" data-mileage-period="month">Mois</button><button class="mileage-period-button" type="button" data-mileage-period="year">Année</button></div>
+        <div class="mileage-stats"><article class="mileage-stat"><small>Moyenne par course</small><strong id="mileageAverage">0 km</strong></article><article class="mileage-stat"><small>Coût carburant</small><strong id="mileageFuelCost">0 €</strong></article></div>
+        <div class="mileage-history" id="mileageHistory"></div>
+      </section>
+
 <section class="tab-panel hidden" id="gamePanel">
   <div class="panel-head">
     <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
@@ -1276,6 +1288,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     let wakeLock = null;
     let keepScreenAwake = localStorage.getItem("ouassvtcKeepScreenAwake") === "true";
     let selectedNetPeriod = "week";
+    let selectedMileagePeriod = "week";
     let selectedTransferStatus = "transferred";
     let selectedPaymentPeriod = "week";
     let paymentChoiceResolver = null;
@@ -1809,11 +1822,63 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const adsTotal = ads.reduce((sum, item) => sum + moneyValue(item.amount), 0);
       const urssaf = revenue * Number(state.financeSettings.urssafRate || 0) / 100;
       const tax = revenue * Number(state.financeSettings.incomeTaxRate || 0) / 100;
-      return { courses, revenue, trips, ads:adsTotal, urssaf, tax, net:revenue - trips - adsTotal - urssaf - tax };
+      const kilometers = courses.reduce((sum,item) => sum + mileageValue(item), 0);
+      return { courses, revenue, trips, ads:adsTotal, urssaf, tax, kilometers, net:revenue - trips - adsTotal - urssaf - tax };
     }
 
     function pdfMoney(value) {
       return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} EUR`;
+    }
+
+    function mileageValue(item) {
+      const value = Number(item?.missionTotalKm || 0);
+      return Number.isFinite(value) && value > 0 ? value : 0;
+    }
+
+    function mileageTotals(start, end) {
+      const courses = financePeriodItems(start, end).filter(item => mileageValue(item) > 0);
+      return {
+        courses,
+        kilometers:courses.reduce((sum,item) => sum + mileageValue(item), 0),
+        fuel:courses.reduce((sum,item) => sum + moneyValue(item.missionFuelCost), 0)
+      };
+    }
+
+    function formatKm(value) {
+      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:1, maximumFractionDigits:1 })} km`;
+    }
+
+    function renderMileageReports() {
+      if (!$('mileagePanel')) return;
+      const now = new Date();
+      let start, end, label;
+      if (selectedMileagePeriod === "year") { start=new Date(now.getFullYear(),0,1); end=new Date(now.getFullYear()+1,0,1); label="Cette année"; }
+      else if (selectedMileagePeriod === "month") { start=new Date(now.getFullYear(),now.getMonth(),1); end=new Date(now.getFullYear(),now.getMonth()+1,1); label="Ce mois-ci"; }
+      else { start=mondayOf(now); end=new Date(start); end.setDate(end.getDate()+7); label="Cette semaine"; }
+      const total=mileageTotals(start,end);
+      $("mileageHeroLabel").textContent=label;
+      $("mileageHeroTotal").textContent=formatKm(total.kilometers);
+      $("mileageHeroCourses").textContent=`${total.courses.length} course${total.courses.length>1?"s":""} comptabilisée${total.courses.length>1?"s":""}`;
+      $("mileageAverage").textContent=formatKm(total.courses.length ? total.kilometers/total.courses.length : 0);
+      $("mileageFuelCost").textContent=euroAmount(total.fuel);
+      const groups=new Map();
+      state.bookings.filter(item=>item.status==="completed"&&mileageValue(item)>0).forEach(item=>{
+        const date=completedDate(item); if(!date||Number.isNaN(date.getTime())) return;
+        const key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+        if(!groups.has(key)) groups.set(key,{date:new Date(date.getFullYear(),date.getMonth(),1),items:[]});
+        groups.get(key).items.push(item);
+      });
+      $("mileageHistory").innerHTML=groups.size?[...groups.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([key,group],index)=>{
+        const title=group.date.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+        const km=group.items.reduce((sum,item)=>sum+mileageValue(item),0);
+        const rows=[...group.items].sort((a,b)=>completedDate(b)-completedDate(a)).map(item=>`<div class="mileage-row"><div><strong>${escapeHtml(item.customerName||"Course")}</strong><small>${completedDate(item).toLocaleDateString("fr-FR")} · ${escapeHtml(item.pickup||"Départ")} → ${escapeHtml(item.destination||"Arrivée")}</small></div><strong>${formatKm(mileageValue(item))}</strong></div>`).join("");
+        return `<section class="mileage-group"><button class="mileage-group-button" type="button" data-mileage-group="${index}"><span><strong>${escapeHtml(title.charAt(0).toUpperCase()+title.slice(1))}</strong><small>${group.items.length} course${group.items.length>1?"s":""}</small></span><strong>${formatKm(km)} ›</strong></button><div class="mileage-detail hidden" id="mileage-group-${index}">${rows}</div></section>`;
+      }).join(""):`<div class="mileage-empty">Aucun kilométrage calculé pour le moment.</div>`;
+      $("mileageHistory").querySelectorAll("[data-mileage-group]").forEach(button=>button.addEventListener("click",()=>{
+        const target=$(`mileage-group-${button.dataset.mileageGroup}`);
+        $("mileageHistory").querySelectorAll(".mileage-detail").forEach(detail=>{if(detail!==target)detail.classList.add("hidden");});
+        target.classList.toggle("hidden");
+      }));
     }
 
     async function exportNetAnalysisPdf() {
@@ -1865,7 +1930,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           ["Revenu net cumule",pdfMoney(currentYear.net)],
           [`Net comparable ${previousYear}`,pdfMoney(previousComparable.net)],
           ["Evolution",annualPercent === null ? "Non comparable" : `${annualPercent >= 0 ? "+" : ""}${annualPercent.toFixed(1)} %`],
-          ["Courses terminees",String(currentYear.courses.length)]
+          ["Kilometres parcourus",formatKm(currentYear.kilometers)]
         ];
         cards.forEach((card,index) => { const x=16+index*67; doc.setFillColor(244,246,249); doc.roundedRect(x,45,61,24,3,3,"F"); doc.setTextColor(100,110,124); doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.text(card[0],x+5,54); doc.setTextColor(20,52,92); doc.setFont("helvetica","bold"); doc.setFontSize(12); doc.text(card[1],x+5,64); });
         const columns = [16,49,82,115,148,181,214,247];
@@ -1886,12 +1951,16 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         const insights = [
           `Meilleur mois ${year} : ${best.name} avec ${pdfMoney(best.current.net)} de revenu net estime.`,
           comparableRows.length ? `${growthMonths} mois sur ${comparableRows.length} comparables progressent par rapport a N-1.` : "Aucune donnee N-1 suffisante pour mesurer une tendance fiable.",
+          `${currentYear.courses.length} courses terminees et ${formatKm(currentYear.kilometers)} parcourus sur ${year}.`,
           `Les charges appliquees sont URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} % et impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %.`
         ];
         insights.forEach(line => { const lines=doc.splitTextToSize(`- ${line}`,255); doc.text(lines,18,y); y+=lines.length*5+2; });
-        y+=5; doc.setFillColor(244,246,249); doc.roundedRect(16,y,265,26,3,3,"F");
+        y+=3; doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,20,29); doc.text("Kilometrage par mois",16,y); y+=5;
+        doc.setFillColor(23,110,244); doc.roundedRect(16,y,265,9,2,2,"F"); doc.setTextColor(255,255,255); doc.setFontSize(8); doc.text("Mois",20,y+6); doc.text("Courses",118,y+6); doc.text("Kilometres",176,y+6); doc.text("Carburant",238,y+6); y+=15;
+        rows.forEach((row,index)=>{ if(index%2===0){doc.setFillColor(247,249,252);doc.rect(16,y-5,265,8,"F");} doc.setTextColor(35,42,52);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.text(row.name.charAt(0).toUpperCase()+row.name.slice(1),20,y);doc.text(String(row.current.courses.length),118,y);doc.text(formatKm(row.current.kilometers),176,y);doc.text(pdfMoney(row.current.courses.reduce((sum,item)=>sum+moneyValue(item.missionFuelCost),0)),238,y);y+=7; });
+        y+=4; doc.setFillColor(244,246,249); doc.roundedRect(16,y,265,22,3,3,"F");
         doc.setTextColor(80,90,104); doc.setFontSize(8); doc.text("Perimetre du calcul",22,y+8);
-        doc.setFont("helvetica","bold"); doc.setTextColor(25,34,47); doc.text(`URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %  |  Impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %  |  Depenses trajets et Google Ads incluses`,22,y+17);
+        doc.setFont("helvetica","bold"); doc.setTextColor(25,34,47); doc.text(`URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %  |  Impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %  |  Depenses trajets et Google Ads incluses`,22,y+16);
         addFooter();
         doc.save(`OuassVTC-analyse-revenu-net-${year}-vs-${previousYear}.pdf`);
       } catch (error) {
@@ -2622,6 +2691,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         target.classList.toggle("hidden");
       }));
       renderPaymentReport();
+      renderMileageReports();
     }
 
     async function saveFinanceSettings(values = {}) {
@@ -3721,6 +3791,22 @@ Ouassini – OuassVTC`;
         ? "✓ Notifications activées"
         : "Activer les notifications";
     }
+
+    async function keepNotificationsRegistered({confirmation=false}={}) {
+      if (!("Notification" in window) || Notification.permission !== "granted" || !messaging || !auth?.currentUser || !db || !("serviceWorker" in navigator)) return false;
+      const registration=await navigator.serviceWorker.ready;
+      const token=await getToken(messaging,{vapidKey:WEB_PUSH_KEY,serviceWorkerRegistration:registration});
+      if(!token) throw new Error("Aucun jeton de notification reçu");
+      await setDoc(doc(db,"notificationTokens",auth.currentUser.uid),{
+        token,email:auth.currentUser.email||"",platform:navigator.userAgent,enabled:true,updatedAt:serverTimestamp()
+      },{merge:true});
+      localStorage.setItem("ouassvtcNotificationRefresh",String(Date.now()));
+      updateNotificationButton();
+      if(confirmation) await registration.showNotification("Notifications OuassVTC activées",{
+        body:"Les alertes resteront actives, même lorsque l’application est fermée.",icon:"/ouassvtc-app.png",badge:"/ouassvtc-app.png",tag:"ouassvtc-notifications-enabled",vibrate:[200,100,200]
+      });
+      return true;
+    }
  
     async function enableNotifications() {
       if (!("Notification" in window)) {
@@ -3731,25 +3817,7 @@ Ouassini – OuassVTC`;
       updateNotificationButton();
       if (permission === "granted") {
         try {
-          const registration = await navigator.serviceWorker.ready;
-          if (!messaging) throw new Error("Firebase Messaging n’est pas initialisé");
-          const token = await getToken(messaging, { vapidKey: WEB_PUSH_KEY, serviceWorkerRegistration: registration });
-          if (!token) throw new Error("Aucun jeton de notification reçu");
-          if (!auth?.currentUser || !db) throw new Error("Connexion chauffeur requise");
-          await setDoc(doc(db, "notificationTokens", auth.currentUser.uid), {
-            token,
-            email: auth.currentUser.email || "",
-            platform: navigator.userAgent,
-            enabled: true,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-          await registration.showNotification("Notifications OuassVTC activées", {
-          body: "Vous serez averti dès qu’une nouvelle réservation arrivera.",
-          icon: "/ouassvtc-app.png",
-          badge: "/ouassvtc-app.png",
-          tag: "ouassvtc-notifications-enabled",
-          vibrate: [200, 100, 200]
-          });
+          await keepNotificationsRegistered({confirmation:true});
         } catch (error) {
           console.error(error);
           alert("L’enregistrement du téléphone a échoué. Vérifiez les règles Firebase puis réessayez.");
@@ -3905,6 +3973,7 @@ Ouassini – OuassVTC`;
           listenToBookings();
           listenFinanceSettings();
           listenDriverDocuments();
+          if("Notification" in window&&Notification.permission==="granted") keepNotificationsRegistered().catch(error=>console.error("Renouvellement silencieux des notifications impossible",error));
           if (new URLSearchParams(window.location.search).has("documents")) { openPanel("documentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
         } else {
           if (state.unsubscribe) state.unsubscribe();
@@ -3913,6 +3982,12 @@ Ouassini – OuassVTC`;
         }
       });
     }
+
+    document.addEventListener("visibilitychange",()=>{
+      if(document.visibilityState!=="visible"||!("Notification" in window)||Notification.permission!=="granted"||!auth?.currentUser)return;
+      const last=Number(localStorage.getItem("ouassvtcNotificationRefresh")||0);
+      if(Date.now()-last>24*60*60*1000) keepNotificationsRegistered().catch(error=>console.error("Actualisation des notifications impossible",error));
+    });
  
  
  
@@ -4006,6 +4081,8 @@ Ouassini – OuassVTC`;
     }
  
     function openPanel(panelId) {
+      const previousPanel = document.querySelector(".tab-panel:not(.hidden)");
+      if (panelId === "dashboardHome" && previousPanel?.id === "estimatePanel") clearNewBookingForms();
       if (panelId !== "gamePanel" && rush.running && !rush.paused) rushPauseGame(false);
       document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== panelId));
       document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
@@ -4023,6 +4100,25 @@ Ouassini – OuassVTC`;
           }
         }, 100);
       }
+      if (panelId === "mileagePanel") renderMileageReports();
+    }
+
+    function clearNewBookingForms() {
+      clearTimeout(automaticFareTimer);
+      $("driverBookingForm").reset();
+      $("quickBookingForm").reset();
+      ["driverName","driverPickup","driverPrice"].forEach(id=>{
+        delete $(id).dataset.customerAutofill;
+        delete $(id).dataset.manualPrice;
+        delete $(id).dataset.amount;
+      });
+      delete $("quickBookingPrice").dataset.amount;
+      $("driverCustomerMatch").classList.add("hidden");
+      $("driverBookingSuccess").classList.add("hidden");
+      $("quickBookingSuccess").classList.add("hidden");
+      $("driverRouteResult").classList.add("hidden");
+      lastDriverConfirmation=null;
+      localStorage.removeItem("ouassvtcLastDriverConfirmation");
     }
  
     $("openMenu").addEventListener("click", () => {
@@ -4167,6 +4263,11 @@ Ouassini – OuassVTC`;
       selectedNetPeriod = button.dataset.netPeriod;
       document.querySelectorAll("[data-net-period]").forEach(item => item.classList.toggle("active", item === button));
       renderFinanceReports();
+    }));
+    document.querySelectorAll("[data-mileage-period]").forEach(button => button.addEventListener("click", () => {
+      selectedMileagePeriod=button.dataset.mileagePeriod;
+      document.querySelectorAll("[data-mileage-period]").forEach(item=>item.classList.toggle("active",item===button));
+      renderMileageReports();
     }));
     $("toggleFinanceSettings").addEventListener("click", () => {
       $("financeRatesForm").classList.toggle("visible");
