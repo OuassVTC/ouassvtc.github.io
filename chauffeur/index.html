@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- OuassVTC Chauffeur V58 -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -932,11 +933,11 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </div>
         </div>
         <div class="finance-view hidden" id="financeExpensesView">
-          <div class="finance-summary-grid"><article class="finance-summary-card"><small>Trajets · ce mois</small><strong id="tripExpenseMonth">0 €</strong></article><article class="finance-summary-card"><small>Google Ads · ce mois</small><strong id="adsExpenseMonth">0 €</strong></article><article class="finance-summary-card dark"><small>Total des dépenses</small><strong id="totalExpenseMonth">0 €</strong></article></div>
-          <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses sur les trajets</h3><p>Carburant et péages enregistrés dans chaque course terminée.</p></div><button class="finance-compact-button" id="estimateHistoricCosts" type="button">Compléter l’historique</button></div><div class="finance-progress hidden" id="historicCostsProgress"></div><button class="missing-cost-button hidden" id="openMissingCosts" type="button"><span>Courses à compléter<br><small>Ouvrir la liste et corriger les données</small></span><strong id="missingCostsCount">0 ›</strong></button><div class="expense-list" id="tripExpenseList"></div></section>
-          <section class="finance-section"><div class="finance-section-head"><div><h3>Dépenses Google Ads</h3><p>Ajoutez manuellement chaque dépense publicitaire.</p></div></div><form class="ads-form" id="googleAdsExpenseForm"><div><label for="adsExpenseDate">Date</label><input id="adsExpenseDate" type="date" required></div><div><label for="adsExpenseAmount">Montant</label><input id="adsExpenseAmount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Ex. 50 €" required></div><div class="full"><label for="adsExpenseNote">Commentaire</label><input id="adsExpenseNote" maxlength="120" placeholder="Ex. Campagne soir et week-end"></div><button type="submit">Enregistrer la dépense</button></form><div class="expense-list" id="googleAdsExpenseList" style="margin-top:14px"></div></section>
+          <div class="finance-summary-grid"><article class="finance-summary-card"><small>Carburant · ce mois</small><strong id="tripExpenseMonth">0 €</strong></article><article class="finance-summary-card"><small>Autres frais · ce mois</small><strong id="adsExpenseMonth">0 €</strong></article><article class="finance-summary-card dark"><small>Total des frais</small><strong id="totalExpenseMonth">0 €</strong></article></div>
+          <section class="finance-section"><div class="finance-section-head"><div><h3>Carburant</h3><p>Calcul automatique à partir des kilomètres de vos courses.</p></div><button class="finance-compact-button" id="estimateHistoricCosts" type="button">Compléter l’historique</button></div><div class="finance-progress hidden" id="historicCostsProgress"></div><button class="missing-cost-button hidden" id="openMissingCosts" type="button"><span>Courses à compléter<br><small>Ouvrir la liste et corriger les données</small></span><strong id="missingCostsCount">0 ›</strong></button><div class="expense-list" id="tripExpenseList"></div></section>
+          <section class="finance-section"><div class="finance-section-head"><div><h3>Saisie mensuelle</h3><p>Enregistrez les totaux du mois. Chaque mois reste conservé dans l’historique.</p></div></div><form class="ads-form" id="monthlyExpenseForm"><div><label for="monthlyExpenseMonth">Mois concerné</label><input id="monthlyExpenseMonth" type="month" required></div><div><label for="monthlyAdvertising">Publicité</label><input id="monthlyAdvertising" type="number" min="0" step="0.01" inputmode="decimal" value="0" required></div><div><label for="monthlyTolls">Péages</label><input id="monthlyTolls" type="number" min="0" step="0.01" inputmode="decimal" value="0" required></div><div><label for="monthlyWear">Usure véhicule</label><input id="monthlyWear" type="number" min="0" step="0.01" inputmode="decimal" value="0" required></div><div class="full"><label for="monthlyExpenseNote">Commentaire</label><input id="monthlyExpenseNote" maxlength="120" placeholder="Ex. Entretien, pneus ou campagne publicitaire"></div><button type="submit">Enregistrer le mois</button></form><div class="expense-list" id="monthlyExpenseHistory" style="margin-top:14px"></div></section>
         </div>
-        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique mensuel</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="net-pdf-export" id="exportNetPdf" type="button"><span><small>Rapport financier</small>Exporter l’analyse N / N−1 en PDF</span><strong>PDF ↓</strong></button><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Estimation de pilotage : revenu net = chiffre d’affaires − dépenses des trajets − Google Ads − Urssaf − impôt.</p></div>
+        <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique mensuel</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="net-pdf-export" id="exportNetPdf" type="button"><span><small>Bilan annuel professionnel</small>Exporter l’analyse complète en PDF</span><strong>PDF ↓</strong></button><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Revenu net estimé = chiffre d’affaires − carburant − péages − publicité − usure véhicule − Urssaf − impôt.</p></div>
       </section>
 
       <section class="tab-panel hidden" id="documentsPanel">
@@ -1262,7 +1263,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
  
     const $ = id => document.getElementById(id);
-    const state = { bookings: [], documents:[], filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[] } };
+    const state = { bookings: [], documents:[], filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
     const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV1";
     const DEFAULT_MISSION_COST_SETTINGS = {
       homeAddress: "10 rue Claude Monet, 66000 Perpignan",
@@ -1814,16 +1815,31 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       });
     }
 
+    function monthlyEntryForKey(key) {
+      return (state.financeSettings.monthlyEntries || []).find(entry => entry.month === key) || null;
+    }
+
+    function monthlyEntriesInPeriod(start,end) {
+      return (state.financeSettings.monthlyEntries || []).filter(entry=>{
+        const date=new Date(`${entry.month}-01T12:00:00`);
+        return date < end && new Date(date.getFullYear(),date.getMonth()+1,1) > start;
+      });
+    }
+
     function financeTotals(start, end) {
       const courses = financePeriodItems(start, end);
-      const ads = adExpensesInPeriod(start, end);
       const revenue = courses.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
-      const trips = courses.reduce((sum, item) => sum + moneyValue(item.missionTotalCost), 0);
-      const adsTotal = ads.reduce((sum, item) => sum + moneyValue(item.amount), 0);
+      const fuel = courses.reduce((sum,item)=>sum+moneyValue(item.missionFuelCost),0);
+      const entryMonths=new Set(monthlyEntriesInPeriod(start,end).map(entry=>entry.month));
+      const courseTolls=courses.reduce((sum,item)=>{const date=completedDate(item),key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;return sum+(entryMonths.has(key)?0:moneyValue(item.missionTolls));},0);
+      const monthly=monthlyEntriesInPeriod(start,end).reduce((totals,entry)=>{const monthStart=new Date(`${entry.month}-01T00:00:00`),monthEnd=new Date(monthStart.getFullYear(),monthStart.getMonth()+1,1),overlap=Math.max(0,Math.min(end,monthEnd)-Math.max(start,monthStart)),factor=overlap/(monthEnd-monthStart);return {advertising:totals.advertising+moneyValue(entry.advertising)*factor,tolls:totals.tolls+moneyValue(entry.tolls)*factor,wear:totals.wear+moneyValue(entry.wear)*factor};},{advertising:0,tolls:0,wear:0});
+      const legacyAds=adExpensesInPeriod(start,end).filter(item=>!entryMonths.has(String(item.date||"").slice(0,7))).reduce((sum,item)=>sum+moneyValue(item.amount),0);
+      const adsTotal=monthly.advertising+legacyAds, tolls=monthly.tolls+courseTolls, wear=monthly.wear;
+      const trips=fuel+tolls+wear;
       const urssaf = revenue * Number(state.financeSettings.urssafRate || 0) / 100;
       const tax = revenue * Number(state.financeSettings.incomeTaxRate || 0) / 100;
       const kilometers = courses.reduce((sum,item) => sum + mileageValue(item), 0);
-      return { courses, revenue, trips, ads:adsTotal, urssaf, tax, kilometers, net:revenue - trips - adsTotal - urssaf - tax };
+      return { courses, revenue, fuel, tolls, wear, trips, ads:adsTotal, urssaf, tax, kilometers, net:revenue - trips - adsTotal - urssaf - tax };
     }
 
     function pdfMoney(value) {
@@ -1895,7 +1911,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           const difference = current.net - previous.net;
           const percent = previous.net !== 0 ? difference / Math.abs(previous.net) * 100 : null;
           return { name:new Date(year,index,1).toLocaleDateString("fr-FR",{month:"long"}), current, previous, difference, percent };
-        }).filter(row => row.current.courses.length || row.current.ads || row.previous.courses.length || row.previous.ads);
+        }).filter(row => row.current.courses.length || row.current.ads || row.current.tolls || row.current.wear || row.previous.courses.length || row.previous.ads || row.previous.tolls || row.previous.wear);
         const currentYear = financeTotals(new Date(year,0,1), new Date(year+1,0,1));
         const previousComparable = financeTotals(new Date(previousYear,0,1), new Date(previousYear,monthCount,1));
         const annualDifference = currentYear.net - previousComparable.net;
@@ -1927,40 +1943,40 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         };
         addHeader(`Analyse du revenu net ${year} vs ${previousYear}`);
         const cards = [
-          ["Revenu net cumule",pdfMoney(currentYear.net)],
-          [`Net comparable ${previousYear}`,pdfMoney(previousComparable.net)],
-          ["Evolution",annualPercent === null ? "Non comparable" : `${annualPercent >= 0 ? "+" : ""}${annualPercent.toFixed(1)} %`],
-          ["Kilometres parcourus",formatKm(currentYear.kilometers)]
+          ["Chiffre d'affaires",pdfMoney(currentYear.revenue)],
+          ["Revenu net estime",pdfMoney(currentYear.net)],
+          ["Kilometres parcourus",formatKm(currentYear.kilometers)],
+          ["Courses realisees",String(currentYear.courses.length)]
         ];
         cards.forEach((card,index) => { const x=16+index*67; doc.setFillColor(244,246,249); doc.roundedRect(x,45,61,24,3,3,"F"); doc.setTextColor(100,110,124); doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.text(card[0],x+5,54); doc.setTextColor(20,52,92); doc.setFont("helvetica","bold"); doc.setFontSize(12); doc.text(card[1],x+5,64); });
-        const columns = [16,49,82,115,148,181,214,247];
-        const headers = ["Mois","CA","Depenses","Charges","Net N","Net N-1","Ecart","Evolution"];
+        const columns = [16,45,74,103,132,161,190,219,248];
+        const headers = ["Mois","CA","Carburant","Publicite","Peages","Usure","Net N","Net N-1","Evolution"];
         doc.setFillColor(23,110,244); doc.roundedRect(16,77,265,11,2,2,"F"); doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont("helvetica","bold");
         headers.forEach((header,index) => doc.text(header,columns[index]+2,84));
         let y=96;
         rows.forEach((row,index) => {
           if(index%2===0){doc.setFillColor(247,249,252);doc.rect(16,y-6,265,9,"F");}
-          const expenses=row.current.trips+row.current.ads, charges=row.current.urssaf+row.current.tax;
-          const values=[row.name.charAt(0).toUpperCase()+row.name.slice(1),pdfMoney(row.current.revenue),pdfMoney(expenses),pdfMoney(charges),pdfMoney(row.current.net),pdfMoney(row.previous.net),`${row.difference>=0?"+":""}${pdfMoney(row.difference)}`,row.percent===null?"N/A":`${row.percent>=0?"+":""}${row.percent.toFixed(1)} %`];
-          doc.setTextColor(35,42,52); doc.setFont("helvetica","normal"); doc.setFontSize(7.3); values.forEach((value,col) => doc.text(String(value),columns[col]+2,y)); y+=8;
+          const values=[row.name.charAt(0).toUpperCase()+row.name.slice(1),pdfMoney(row.current.revenue),pdfMoney(row.current.fuel),pdfMoney(row.current.ads),pdfMoney(row.current.tolls),pdfMoney(row.current.wear),pdfMoney(row.current.net),pdfMoney(row.previous.net),row.percent===null?"N/A":`${row.percent>=0?"+":""}${row.percent.toFixed(1)} %`];
+          doc.setTextColor(35,42,52); doc.setFont("helvetica","normal"); doc.setFontSize(6.5); values.forEach((value,col) => doc.text(String(value),columns[col]+1,y)); y+=8;
         });
         addFooter();
-        doc.addPage("a4","landscape"); addHeader("Synthese et lecture automatique"); y=52;
-        doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,20,29); doc.text("Lecture automatique",16,y); y+=7;
-        doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(80,90,104);
+        doc.addPage("a4","landscape"); addHeader("Analyse de l'activite");
         const insights = [
           `Meilleur mois ${year} : ${best.name} avec ${pdfMoney(best.current.net)} de revenu net estime.`,
           comparableRows.length ? `${growthMonths} mois sur ${comparableRows.length} comparables progressent par rapport a N-1.` : "Aucune donnee N-1 suffisante pour mesurer une tendance fiable.",
           `${currentYear.courses.length} courses terminees et ${formatKm(currentYear.kilometers)} parcourus sur ${year}.`,
           `Les charges appliquees sont URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} % et impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %.`
         ];
-        insights.forEach(line => { const lines=doc.splitTextToSize(`- ${line}`,255); doc.text(lines,18,y); y+=lines.length*5+2; });
-        y+=3; doc.setFont("helvetica","bold"); doc.setFontSize(11); doc.setTextColor(15,20,29); doc.text("Kilometrage par mois",16,y); y+=5;
-        doc.setFillColor(23,110,244); doc.roundedRect(16,y,265,9,2,2,"F"); doc.setTextColor(255,255,255); doc.setFontSize(8); doc.text("Mois",20,y+6); doc.text("Courses",118,y+6); doc.text("Kilometres",176,y+6); doc.text("Carburant",238,y+6); y+=15;
-        rows.forEach((row,index)=>{ if(index%2===0){doc.setFillColor(247,249,252);doc.rect(16,y-5,265,8,"F");} doc.setTextColor(35,42,52);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.text(row.name.charAt(0).toUpperCase()+row.name.slice(1),20,y);doc.text(String(row.current.courses.length),118,y);doc.text(formatKm(row.current.kilometers),176,y);doc.text(pdfMoney(row.current.courses.reduce((sum,item)=>sum+moneyValue(item.missionFuelCost),0)),238,y);y+=7; });
-        y+=4; doc.setFillColor(244,246,249); doc.roundedRect(16,y,265,22,3,3,"F");
-        doc.setTextColor(80,90,104); doc.setFontSize(8); doc.text("Perimetre du calcul",22,y+8);
-        doc.setFont("helvetica","bold"); doc.setTextColor(25,34,47); doc.text(`URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %  |  Impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %  |  Depenses trajets et Google Ads incluses`,22,y+16);
+        const chart=(x,top,w,h,title,values,line=false)=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,top,w,h,3,3);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(18,36,64);doc.text(title,x+6,top+9);const max=Math.max(...values.map(v=>v.value),1),base=top+h-11,graphTop=top+16,step=(w-16)/Math.max(values.length,1);doc.setDrawColor(231,235,240);doc.line(x+7,base,x+w-7,base);let previous=null;values.forEach((value,index)=>{const px=x+9+index*step,barH=(base-graphTop)*value.value/max,py=base-barH;if(line){doc.setFillColor(18,52,98);doc.circle(px,py,1.3,"F");if(previous){doc.setDrawColor(18,52,98);doc.setLineWidth(.8);doc.line(previous.x,previous.y,px,py);}previous={x:px,y:py};}else{doc.setFillColor(23,110,244);doc.roundedRect(px-3,py,6,barH,1,1,"F");}doc.setFont("helvetica","normal");doc.setFontSize(5.5);doc.setTextColor(105,115,128);doc.text(value.label.slice(0,3),px,base+5,{align:"center"});});};
+        const chartRows=rows.map(row=>({label:row.name,value:row.current.revenue}));
+        chart(16,45,128,60,"Chiffre d'affaires mensuel",chartRows,false);
+        chart(153,45,128,60,"Kilometrage parcouru par mois",rows.map(row=>({label:row.name,value:row.current.kilometers})),true);
+        const box=(x,title)=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,112,82,73,3,3);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(18,36,64);doc.text(title,x+6,122);};
+        box(16,"Repartition des frais"); box(107,"Kilometrage par mois"); box(198,"Points cles");
+        const expenseLines=[["Carburant",currentYear.fuel],["Peages",currentYear.tolls],["Publicite",currentYear.ads],["Usure vehicule",currentYear.wear],["URSSAF",currentYear.urssaf],["Impot",currentYear.tax]];
+        y=132;expenseLines.forEach(([label,value])=>{doc.setFont("helvetica","normal");doc.setFontSize(7.2);doc.setTextColor(75,85,99);doc.text(label,22,y);doc.setFont("helvetica","bold");doc.setTextColor(23,110,244);doc.text(pdfMoney(value),92,y,{align:"right"});y+=8;});
+        y=132;rows.slice(0,7).forEach(row=>{doc.setFont("helvetica","normal");doc.setFontSize(6.8);doc.setTextColor(75,85,99);doc.text(row.name.charAt(0).toUpperCase()+row.name.slice(1),113,y);doc.setFont("helvetica","bold");doc.text(formatKm(row.current.kilometers),183,y,{align:"right"});y+=7;});
+        y=132;insights.slice(0,3).forEach((line,index)=>{doc.setFillColor(23,110,244);doc.circle(205,y-2,3,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(6);doc.text(String(index+1),205,y,{align:"center"});doc.setTextColor(65,75,89);doc.setFont("helvetica","normal");doc.setFontSize(6.5);const lines=doc.splitTextToSize(line,62);doc.text(lines,211,y);y+=Math.max(15,lines.length*3.5+5);});
         addFooter();
         doc.save(`OuassVTC-analyse-revenu-net-${year}-vs-${previousYear}.pdf`);
       } catch (error) {
@@ -2417,7 +2433,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     function voiceNetSummary(period) {
       const dates = paymentPeriodDates(period === "month" ? "month" : period === "year" ? "year" : "week");
       const result = financeTotals(dates.start, dates.end);
-      return `${dates.label}, le chiffre d’affaires est de ${euroAmount(result.revenue)}, les dépenses de trajet de ${euroAmount(result.trips)}, Google Ads de ${euroAmount(result.ads)}, et le revenu net estimé de ${euroAmount(result.net)}.`;
+      return `${dates.label}, le chiffre d’affaires est de ${euroAmount(result.revenue)}, le carburant de ${euroAmount(result.fuel)}, les péages de ${euroAmount(result.tolls)}, la publicité de ${euroAmount(result.ads)}, l’usure véhicule de ${euroAmount(result.wear)}, et le revenu net estimé de ${euroAmount(result.net)}.`;
     }
 
     function voiceCapabilities() {
@@ -2640,8 +2656,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1), monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       const yearStart = new Date(now.getFullYear(), 0, 1), yearEnd = new Date(now.getFullYear() + 1, 0, 1);
       const month = financeTotals(monthStart, monthEnd);
-      $("tripExpenseMonth").textContent = euroAmount(month.trips);
-      $("adsExpenseMonth").textContent = euroAmount(month.ads);
+      $("tripExpenseMonth").textContent = euroAmount(month.fuel);
+      $("adsExpenseMonth").textContent = euroAmount(month.tolls + month.wear + month.ads);
       $("totalExpenseMonth").textContent = euroAmount(month.trips + month.ads);
       const missingCosts = missingCostCourses();
       $("openMissingCosts").classList.toggle("hidden", !missingCosts.length);
@@ -2656,34 +2672,35 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       });
       $("tripExpenseList").innerHTML = expenseMonths.size ? `<div class="expense-month-groups">${[...expenseMonths.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([key,group],idx) => {
         const title = group.date.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-        const monthTotal = group.items.reduce((sum,item)=>sum+moneyValue(item.missionTotalCost),0);
-        const rows = group.items.map(item => `<div class="expense-row"><div><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${completedDate(item).toLocaleDateString("fr-FR")} · ${Number(item.missionTotalKm || 0).toFixed(1).replace(".",",")} km · carburant ${euroAmount(item.missionFuelCost)} · péages ${euroAmount(item.missionTolls)}</small></div><span class="expense-row-amount">${euroAmount(item.missionTotalCost)}</span></div>`).join("");
+        const monthTotal = group.items.reduce((sum,item)=>sum+moneyValue(item.missionFuelCost),0);
+        const rows = group.items.map(item => `<div class="expense-row"><div><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${completedDate(item).toLocaleDateString("fr-FR")} · ${Number(item.missionTotalKm || 0).toFixed(1).replace(".",",")} km</small></div><span class="expense-row-amount">${euroAmount(item.missionFuelCost)}</span></div>`).join("");
         return `<section class="expense-month-group"><button class="expense-month-button" type="button" data-expense-month="${idx}"><span><strong>${escapeHtml(title.charAt(0).toUpperCase()+title.slice(1))}</strong><small>${group.items.length} course${group.items.length>1?"s":""}</small></span><strong class="expense-month-total">${euroAmount(monthTotal)} ›</strong></button><div class="expense-month-courses hidden" id="expense-month-${idx}">${rows}</div></section>`;
-      }).join("")}</div>` : `<div class="empty">Aucune dépense de trajet calculée pour le moment.</div>`;
+      }).join("")}</div>` : `<div class="empty">Aucun frais de carburant calculé pour le moment.</div>`;
       $("tripExpenseList").querySelectorAll("[data-expense-month]").forEach(button => button.addEventListener("click", () => {
         const target = $(`expense-month-${button.dataset.expenseMonth}`);
         $("tripExpenseList").querySelectorAll(".expense-month-courses").forEach(list => { if (list !== target) list.classList.add("hidden"); });
         target.classList.toggle("hidden");
       }));
-      const ads = [...(state.financeSettings.adExpenses || [])].sort((a,b) => String(b.date).localeCompare(String(a.date)));
-      $("googleAdsExpenseList").innerHTML = ads.map(expense => `<div class="expense-row"><div><strong>${escapeHtml(expense.note || "Google Ads")}</strong><small>${new Date(`${expense.date}T12:00:00`).toLocaleDateString("fr-FR")}</small></div><div><span class="expense-row-amount">${euroAmount(expense.amount)}</span><button class="expense-delete" type="button" data-delete-ad="${escapeHtml(expense.id)}" aria-label="Supprimer cette dépense">×</button></div></div>`).join("") || `<div class="empty">Aucune dépense Google Ads enregistrée.</div>`;
-      $("googleAdsExpenseList").querySelectorAll("[data-delete-ad]").forEach(button => button.addEventListener("click", () => deleteAdExpense(button.dataset.deleteAd)));
+      const entries=[...(state.financeSettings.monthlyEntries||[])].sort((a,b)=>String(b.month).localeCompare(String(a.month)));
+      $("monthlyExpenseHistory").innerHTML=entries.map(entry=>{const date=new Date(`${entry.month}-01T12:00:00`),label=date.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});return `<div class="expense-row"><div><strong>${escapeHtml(label.charAt(0).toUpperCase()+label.slice(1))}</strong><small>Publicité ${euroAmount(entry.advertising)} · Péages ${euroAmount(entry.tolls)} · Usure véhicule ${euroAmount(entry.wear)}${entry.note?` · ${escapeHtml(entry.note)}`:""}</small></div><button class="finance-compact-button" type="button" data-edit-month="${escapeHtml(entry.month)}">Modifier</button></div>`;}).join("")||`<div class="empty">Aucune saisie mensuelle enregistrée.</div>`;
+      $("monthlyExpenseHistory").querySelectorAll("[data-edit-month]").forEach(button=>button.addEventListener("click",()=>loadMonthlyEntry(button.dataset.editMonth)));
       $("urssafRate").value = String(state.financeSettings.urssafRate ?? 21.2);
       $("incomeTaxRate").value = String(state.financeSettings.incomeTaxRate ?? 1.7);
       const periods = [["week", "Cette semaine", financeTotals(weekStart, weekEnd)], ["month", "Ce mois-ci", month], ["year", "Cette année", financeTotals(yearStart, yearEnd)]];
-      $("netSummaryCards").innerHTML = periods.map(([key, label, value]) => `<article class="net-period-card${key === selectedNetPeriod ? " active" : ""}"><div class="net-period-head"><span>${label}<br><small>Résultat net estimé</small></span><strong>${euroAmount(value.net)}</strong></div><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Dépenses trajets</span><strong>− ${euroAmount(value.trips)}</strong></div><div class="net-line"><span>Google Ads</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Urssaf (${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt (${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></article>`).join("");
+      $("netSummaryCards").innerHTML = periods.map(([key, label, value]) => `<article class="net-period-card${key === selectedNetPeriod ? " active" : ""}"><div class="net-period-head"><span>${label}<br><small>Résultat net estimé</small></span><strong>${euroAmount(value.net)}</strong></div><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Carburant</span><strong>− ${euroAmount(value.fuel)}</strong></div><div class="net-line"><span>Péages</span><strong>− ${euroAmount(value.tolls)}</strong></div><div class="net-line"><span>Publicité</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Usure véhicule</span><strong>− ${euroAmount(value.wear)}</strong></div><div class="net-line"><span>Urssaf (${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt (${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %)</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></article>`).join("");
       const netMonthKeys = new Set();
       state.bookings.filter(item => item.status === "completed").forEach(item => {
         const date = completedDate(item);
         if (!Number.isNaN(date.getTime())) netMonthKeys.add(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,"0")}`);
       });
       (state.financeSettings.adExpenses || []).forEach(item => { if (/^\d{4}-\d{2}/.test(String(item.date || ""))) netMonthKeys.add(String(item.date).slice(0,7)); });
+      (state.financeSettings.monthlyEntries || []).forEach(item=>{if(/^\d{4}-\d{2}$/.test(String(item.month||"")))netMonthKeys.add(item.month);});
       $("netHistoryList").innerHTML = [...netMonthKeys].sort((a,b) => b.localeCompare(a)).map((key, index) => {
         const [year, monthNumber] = key.split("-").map(Number);
         const start = new Date(year, monthNumber - 1, 1), end = new Date(year, monthNumber, 1);
         const value = financeTotals(start, end);
         const label = start.toLocaleDateString("fr-FR", { month:"long", year:"numeric" });
-        return `<section class="net-history-month"><button class="net-history-month-button" type="button" data-net-history-month="${index}"><span><strong>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}</strong><small>Chiffre d’affaires ${euroAmount(value.revenue)}</small></span><strong>${euroAmount(value.net)} ›</strong></button><div class="net-history-detail hidden" id="net-history-${index}"><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Dépenses trajets</span><strong>− ${euroAmount(value.trips)}</strong></div><div class="net-line"><span>Google Ads</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Urssaf</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></div></section>`;
+        return `<section class="net-history-month"><button class="net-history-month-button" type="button" data-net-history-month="${index}"><span><strong>${escapeHtml(label.charAt(0).toUpperCase() + label.slice(1))}</strong><small>Chiffre d’affaires ${euroAmount(value.revenue)}</small></span><strong>${euroAmount(value.net)} ›</strong></button><div class="net-history-detail hidden" id="net-history-${index}"><div class="net-breakdown"><div class="net-line"><span>Chiffre d’affaires</span><strong>${euroAmount(value.revenue)}</strong></div><div class="net-line"><span>Carburant</span><strong>− ${euroAmount(value.fuel)}</strong></div><div class="net-line"><span>Péages</span><strong>− ${euroAmount(value.tolls)}</strong></div><div class="net-line"><span>Publicité</span><strong>− ${euroAmount(value.ads)}</strong></div><div class="net-line"><span>Usure véhicule</span><strong>− ${euroAmount(value.wear)}</strong></div><div class="net-line"><span>Urssaf</span><strong>− ${euroAmount(value.urssaf)}</strong></div><div class="net-line"><span>Impôt</span><strong>− ${euroAmount(value.tax)}</strong></div><div class="net-line total"><span>Résultat disponible</span><strong>${euroAmount(value.net)}</strong></div></div></div></section>`;
       }).join("") || `<div class="finance-correction-empty">Aucun historique mensuel disponible.</div>`;
       $("netHistoryList").querySelectorAll("[data-net-history-month]").forEach(button => button.addEventListener("click", () => {
         const target = $(`net-history-${button.dataset.netHistoryMonth}`);
@@ -2703,15 +2720,10 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       if (state.financeUnsubscribe) state.financeUnsubscribe();
       const reference = doc(db, "counters", "financeSettings");
       state.financeUnsubscribe = onSnapshot(reference, snapshot => {
-        if (snapshot.exists()) state.financeSettings = { ...state.financeSettings, ...snapshot.data(), adExpenses:Array.isArray(snapshot.data().adExpenses) ? snapshot.data().adExpenses : [] };
-        else void setDoc(reference, { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], updatedAt:serverTimestamp() });
+        if (snapshot.exists()) state.financeSettings = { ...state.financeSettings, ...snapshot.data(), adExpenses:Array.isArray(snapshot.data().adExpenses) ? snapshot.data().adExpenses : [], monthlyEntries:Array.isArray(snapshot.data().monthlyEntries)?snapshot.data().monthlyEntries:[] };
+        else void setDoc(reference, { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[], updatedAt:serverTimestamp() });
         renderFinanceReports();
       }, error => console.error("Réglages financiers indisponibles", error));
-    }
-
-    async function deleteAdExpense(id) {
-      if (!confirm("Supprimer cette dépense Google Ads ?")) return;
-      await saveFinanceSettings({ adExpenses:(state.financeSettings.adExpenses || []).filter(item => item.id !== id) });
     }
 
     async function completeHistoricCosts() {
@@ -4293,16 +4305,28 @@ Ouassini – OuassVTC`;
       alert("Les taux ont été enregistrés.");
     });
 
-    $("googleAdsExpenseForm").addEventListener("submit", async event => {
+    function loadMonthlyEntry(month) {
+      const entry=monthlyEntryForKey(month); if(!entry)return;
+      $("monthlyExpenseMonth").value=entry.month;
+      $("monthlyAdvertising").value=String(entry.advertising||0);
+      $("monthlyTolls").value=String(entry.tolls||0);
+      $("monthlyWear").value=String(entry.wear||0);
+      $("monthlyExpenseNote").value=entry.note||"";
+      $("monthlyExpenseForm").scrollIntoView({behavior:"smooth",block:"center"});
+    }
+
+    $("monthlyExpenseForm").addEventListener("submit", async event => {
       event.preventDefault();
-      const date = $("adsExpenseDate").value;
-      const amount = $("adsExpenseAmount").valueAsNumber;
-      const note = $("adsExpenseNote").value.trim();
-      if (!date || !Number.isFinite(amount) || amount <= 0) { alert("Indiquez une date et un montant Google Ads valides."); return; }
-      const id = globalThis.crypto?.randomUUID?.() || `ads-${Date.now()}`;
-      await saveFinanceSettings({ adExpenses:[{ id, date, amount, note }, ...(state.financeSettings.adExpenses || [])] });
-      event.currentTarget.reset();
-      $("adsExpenseDate").value = localDateKey(new Date());
+      const month=$("monthlyExpenseMonth").value;
+      const advertising=$("monthlyAdvertising").valueAsNumber,tolls=$("monthlyTolls").valueAsNumber,wear=$("monthlyWear").valueAsNumber;
+      const note=$("monthlyExpenseNote").value.trim();
+      if(!/^\d{4}-\d{2}$/.test(month)||![advertising,tolls,wear].every(value=>Number.isFinite(value)&&value>=0)){alert("Indiquez le mois et des montants valides.");return;}
+      const existing=monthlyEntryForKey(month);
+      if(existing&&!confirm("Ce mois est déjà enregistré. Voulez-vous remplacer ses montants ?"))return;
+      const entry={month,advertising,tolls,wear,note,updatedAtText:new Date().toISOString()};
+      const monthlyEntries=[entry,...(state.financeSettings.monthlyEntries||[]).filter(item=>item.month!==month)].sort((a,b)=>b.month.localeCompare(a.month));
+      await saveFinanceSettings({monthlyEntries});
+      alert(existing?"Le mois a été mis à jour et reste dans l’historique.":"Le mois a été enregistré dans l’historique.");
     });
 
     $("estimateHistoricCosts").addEventListener("click", completeHistoricCosts);
@@ -4314,7 +4338,7 @@ Ouassini – OuassVTC`;
  
     const now = new Date();
     const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
-    $("adsExpenseDate").value = localDateKey(localDate);
+    $("monthlyExpenseMonth").value = localDate.toISOString().slice(0,7);
     let dashboardDayKey = localDate.toISOString().slice(0, 10);
     setInterval(() => {
       const current = new Date();
