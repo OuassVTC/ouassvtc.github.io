@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V58 -->
+<!-- OuassVTC Chauffeur V59 -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -1934,14 +1934,17 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           else { doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(16); doc.text("OUASSVTC",16,20); }
           doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(15); doc.text(subtitle,48,17);
           doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(175,185,201); doc.text(`Edite le ${now.toLocaleDateString("fr-FR")}`,48,25);
+          const firstMonth=rows[0]?.name||"",lastMonth=rows.at(-1)?.name||firstMonth,period=rows.length===1?`${firstMonth} ${year}`:`${firstMonth} a ${lastMonth} ${year}`;
+          doc.setFontSize(7);doc.text(`Periode : ${period}`,width-16,18,{align:"right"});
         };
-        const addFooter = () => {
+        const addFooter = totalPages => {
           doc.setDrawColor(224,228,234); doc.line(16,height-12,width-16,height-12);
           doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(125,133,145);
-          doc.text("Document de pilotage interne - estimations basees sur les donnees enregistrees.",16,height-7);
-          doc.text(`Page ${doc.getNumberOfPages()}`,width-16,height-7,{align:"right"});
+          doc.text("Document de pilotage OuassVTC - donnees enregistrees dans l'application.",16,height-7);
+          doc.text(`Page ${doc.getNumberOfPages()} sur ${totalPages}`,width-16,height-7,{align:"right"});
         };
-        addHeader(`Analyse du revenu net ${year} vs ${previousYear}`);
+        const drawChart=(x,top,w,h,title,values,line=false)=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,top,w,h,3,3);doc.setFont("helvetica","bold");doc.setFontSize(8.5);doc.setTextColor(18,36,64);doc.text(title,x+6,top+8);const max=Math.max(...values.map(v=>v.value),1),base=top+h-8,graphTop=top+14,step=(w-16)/Math.max(values.length,1);doc.setDrawColor(231,235,240);doc.line(x+7,base,x+w-7,base);let previous=null;values.forEach((value,index)=>{const px=x+9+index*step,barH=Math.max(1,(base-graphTop)*value.value/max),py=base-barH;if(line){doc.setFillColor(18,52,98);doc.circle(px,py,1.2,"F");if(previous){doc.setDrawColor(18,52,98);doc.setLineWidth(.7);doc.line(previous.x,previous.y,px,py);}previous={x:px,y:py};}else{doc.setFillColor(23,110,244);doc.roundedRect(px-3,py,6,barH,1,1,"F");}if(values.length<=3){doc.setTextColor(18,52,98);doc.setFont("helvetica","bold");doc.setFontSize(5.8);const amount=title.toLowerCase().includes("kilometr")?formatKm(value.value):pdfMoney(value.value);doc.text(amount,px,Math.max(top+13,py-2),{align:"center"});}doc.setFont("helvetica","normal");doc.setFontSize(5.2);doc.setTextColor(105,115,128);doc.text(value.label.slice(0,3),px,base+4,{align:"center"});});};
+        addHeader(`Bilan annuel OuassVTC ${year}`);
         const cards = [
           ["Chiffre d'affaires",pdfMoney(currentYear.revenue)],
           ["Revenu net estime",pdfMoney(currentYear.net)],
@@ -1959,7 +1962,22 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           const values=[row.name.charAt(0).toUpperCase()+row.name.slice(1),pdfMoney(row.current.revenue),pdfMoney(row.current.fuel),pdfMoney(row.current.ads),pdfMoney(row.current.tolls),pdfMoney(row.current.wear),pdfMoney(row.current.net),pdfMoney(row.previous.net),row.percent===null?"N/A":`${row.percent>=0?"+":""}${row.percent.toFixed(1)} %`];
           doc.setTextColor(35,42,52); doc.setFont("helvetica","normal"); doc.setFontSize(6.5); values.forEach((value,col) => doc.text(String(value),columns[col]+1,y)); y+=8;
         });
-        addFooter();
+        if(rows.length<=3){
+          const chartTop=y+3, chartHeight=34;
+          drawChart(16,chartTop,128,chartHeight,"Chiffre d'affaires mensuel",rows.map(row=>({label:row.name,value:row.current.revenue})),false);
+          drawChart(153,chartTop,128,chartHeight,"Kilometrage parcouru",rows.map(row=>({label:row.name,value:row.current.kilometers})),true);
+          const boxTop=chartTop+40,boxHeight=Math.max(28,height-14-boxTop-8);
+          [[16,"Repartition des frais"],[107,"Kilometrage"],[198,"Points cles"]].forEach(([x,title])=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,boxTop,82,boxHeight,3,3);doc.setFont("helvetica","bold");doc.setFontSize(8.2);doc.setTextColor(18,36,64);doc.text(title,x+6,boxTop+8);});
+          const expenseLines=[["Carburant",currentYear.fuel],["Peages",currentYear.tolls],["Publicite",currentYear.ads],["Usure vehicule",currentYear.wear]];
+          let cy=boxTop+15;expenseLines.forEach(([label,value])=>{doc.setFont("helvetica","normal");doc.setFontSize(6.5);doc.setTextColor(75,85,99);doc.text(label,22,cy);doc.setFont("helvetica","bold");doc.setTextColor(23,110,244);doc.text(pdfMoney(value),92,cy,{align:"right"});cy+=6;});
+          cy=boxTop+15;rows.forEach(row=>{doc.setFont("helvetica","normal");doc.setFontSize(6.5);doc.setTextColor(75,85,99);doc.text(row.name.charAt(0).toUpperCase()+row.name.slice(1),113,cy);doc.setFont("helvetica","bold");doc.text(formatKm(row.current.kilometers),183,cy,{align:"right"});cy+=7;});
+          const compactInsights=[`Meilleur mois : ${best.name} (${pdfMoney(best.current.net)} net).`,`${currentYear.courses.length} courses pour ${formatKm(currentYear.kilometers)}.`,annualPercent===null?"Comparaison N-1 indisponible.":`Evolution du net : ${annualPercent>=0?"+":""}${annualPercent.toFixed(1)} %.`];
+          cy=boxTop+15;compactInsights.forEach((line,index)=>{doc.setFillColor(23,110,244);doc.circle(205,cy-1.5,2.5,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(5.5);doc.text(String(index+1),205,cy,{align:"center"});doc.setTextColor(65,75,89);doc.setFont("helvetica","normal");doc.setFontSize(6);const wrapped=doc.splitTextToSize(line,62);doc.text(wrapped,211,cy);cy+=Math.max(9,wrapped.length*3.2+3);});
+          addFooter(1);
+          doc.save(`OuassVTC-bilan-annuel-${year}.pdf`);
+          return;
+        }
+        addFooter(2);
         doc.addPage("a4","landscape"); addHeader("Analyse de l'activite");
         const insights = [
           `Meilleur mois ${year} : ${best.name} avec ${pdfMoney(best.current.net)} de revenu net estime.`,
@@ -1967,18 +1985,17 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
           `${currentYear.courses.length} courses terminees et ${formatKm(currentYear.kilometers)} parcourus sur ${year}.`,
           `Les charges appliquees sont URSSAF ${Number(state.financeSettings.urssafRate).toLocaleString("fr-FR")} % et impot ${Number(state.financeSettings.incomeTaxRate).toLocaleString("fr-FR")} %.`
         ];
-        const chart=(x,top,w,h,title,values,line=false)=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,top,w,h,3,3);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(18,36,64);doc.text(title,x+6,top+9);const max=Math.max(...values.map(v=>v.value),1),base=top+h-11,graphTop=top+16,step=(w-16)/Math.max(values.length,1);doc.setDrawColor(231,235,240);doc.line(x+7,base,x+w-7,base);let previous=null;values.forEach((value,index)=>{const px=x+9+index*step,barH=(base-graphTop)*value.value/max,py=base-barH;if(line){doc.setFillColor(18,52,98);doc.circle(px,py,1.3,"F");if(previous){doc.setDrawColor(18,52,98);doc.setLineWidth(.8);doc.line(previous.x,previous.y,px,py);}previous={x:px,y:py};}else{doc.setFillColor(23,110,244);doc.roundedRect(px-3,py,6,barH,1,1,"F");}doc.setFont("helvetica","normal");doc.setFontSize(5.5);doc.setTextColor(105,115,128);doc.text(value.label.slice(0,3),px,base+5,{align:"center"});});};
         const chartRows=rows.map(row=>({label:row.name,value:row.current.revenue}));
-        chart(16,45,128,60,"Chiffre d'affaires mensuel",chartRows,false);
-        chart(153,45,128,60,"Kilometrage parcouru par mois",rows.map(row=>({label:row.name,value:row.current.kilometers})),true);
+        drawChart(16,45,128,60,"Chiffre d'affaires mensuel",chartRows,false);
+        drawChart(153,45,128,60,"Kilometrage parcouru par mois",rows.map(row=>({label:row.name,value:row.current.kilometers})),true);
         const box=(x,title)=>{doc.setDrawColor(222,227,234);doc.roundedRect(x,112,82,73,3,3);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(18,36,64);doc.text(title,x+6,122);};
         box(16,"Repartition des frais"); box(107,"Kilometrage par mois"); box(198,"Points cles");
         const expenseLines=[["Carburant",currentYear.fuel],["Peages",currentYear.tolls],["Publicite",currentYear.ads],["Usure vehicule",currentYear.wear],["URSSAF",currentYear.urssaf],["Impot",currentYear.tax]];
         y=132;expenseLines.forEach(([label,value])=>{doc.setFont("helvetica","normal");doc.setFontSize(7.2);doc.setTextColor(75,85,99);doc.text(label,22,y);doc.setFont("helvetica","bold");doc.setTextColor(23,110,244);doc.text(pdfMoney(value),92,y,{align:"right"});y+=8;});
         y=132;rows.slice(0,7).forEach(row=>{doc.setFont("helvetica","normal");doc.setFontSize(6.8);doc.setTextColor(75,85,99);doc.text(row.name.charAt(0).toUpperCase()+row.name.slice(1),113,y);doc.setFont("helvetica","bold");doc.text(formatKm(row.current.kilometers),183,y,{align:"right"});y+=7;});
         y=132;insights.slice(0,3).forEach((line,index)=>{doc.setFillColor(23,110,244);doc.circle(205,y-2,3,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(6);doc.text(String(index+1),205,y,{align:"center"});doc.setTextColor(65,75,89);doc.setFont("helvetica","normal");doc.setFontSize(6.5);const lines=doc.splitTextToSize(line,62);doc.text(lines,211,y);y+=Math.max(15,lines.length*3.5+5);});
-        addFooter();
-        doc.save(`OuassVTC-analyse-revenu-net-${year}-vs-${previousYear}.pdf`);
+        addFooter(2);
+        doc.save(`OuassVTC-bilan-annuel-${year}.pdf`);
       } catch (error) {
         console.error(error);
         alert("Le rapport PDF n’a pas pu être généré. Réessayez dans quelques instants.");
