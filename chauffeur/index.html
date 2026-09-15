@@ -3599,10 +3599,13 @@ Ouassini – OuassVTC`;
         ["paid_transport","Assurance transport à titre onéreux"],["registration","Carte grise"],
         ["technical_inspection","Contrôle technique"],
         ["vtc_sticker","Vignette / macaron VTC"],
+        ["vehicle_photo_front","Photo du véhicule · face"],
+        ["vehicle_photo_front_left","Photo du véhicule · 3/4 avant gauche"],
+        ["vehicle_photo_rear_left","Photo du véhicule · 3/4 arrière gauche"],
         ["rir","Relevé d’information restreint (RIR)"]
       ]
     };
-    const DOCUMENTS_WITHOUT_EXPIRY=new Set(["kbis","registration","rir"]);
+    const DOCUMENTS_WITHOUT_EXPIRY=new Set(["kbis","registration","rir","vehicle_photo_front","vehicle_photo_front_left","vehicle_photo_rear_left"]);
 
     function documentDefinition(key) {
       for (const [category,items] of Object.entries(DOCUMENT_TYPES)) {
