@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V62 -->
+<!-- OuassVTC Chauffeur V63 -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -751,6 +751,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .crm-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.crm-summary article{padding:13px;border:1px solid var(--border);border-radius:15px;background:#fff}.crm-summary strong,.crm-summary small{display:block}.crm-summary strong{font-size:21px;color:var(--blue)}.crm-summary small{margin-top:4px;color:var(--muted);font-size:10px}.crm-card{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;cursor:pointer}.crm-card-arrow{color:var(--blue);font-size:25px}.crm-detail{margin:0 0 15px;padding:17px;border-radius:21px;background:#0b111c;color:#fff}.crm-detail.hidden{display:none}.crm-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.crm-detail-head h3{font-size:23px}.crm-detail-head small{color:#aeb8c8}.crm-detail-close{width:40px;height:40px;border:1px solid #394353;border-radius:12px;background:#171f2c;color:#fff;font-size:21px}.crm-contact-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.crm-contact-actions a,.crm-contact-actions button{min-height:43px;border:0;border-radius:12px;background:#fff;color:#111;display:grid;place-items:center;text-decoration:none;font-weight:900;font-size:12px}.crm-contact-actions .primary-action{background:var(--blue);color:#fff}.crm-addresses{padding:13px;border-radius:14px;background:#ffffff0c}.crm-addresses small,.crm-addresses strong{display:block}.crm-addresses small{color:#98a5b8;margin-top:8px}.crm-addresses small:first-child{margin-top:0}.crm-course-title{margin:16px 0 8px;font-size:16px}.crm-course-list{display:grid;gap:7px}.crm-course{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:11px;border:1px solid #ffffff1c;border-radius:12px;background:#ffffff0a;color:#fff;text-align:left}.crm-course strong,.crm-course small{display:block}.crm-course small{color:#aeb8c8;margin-top:3px}.crm-course-price{white-space:nowrap;color:#8eb7ff;font-weight:900}@media(max-width:390px){.crm-summary{grid-template-columns:1fr 1fr}.crm-summary article:last-child{grid-column:1/-1}.crm-contact-actions{grid-template-columns:1fr 1fr}.crm-contact-actions .primary-action{grid-column:1/-1}}
 /* V62 — lisibilité, historique mensuel et gestion des fiches CRM */
 .crm-detail .v60-kpi{background:#eef4ff}.crm-detail .v60-kpi b{color:#176ef4}.crm-detail .v60-kpi small{color:#596579!important;opacity:1!important}.crm-history-toggle{width:100%;min-height:54px;margin-top:15px;padding:0 15px;border:1px solid #344052;border-radius:14px;background:#171f2c;color:#fff;display:flex;align-items:center;justify-content:space-between;font-weight:900}.crm-history-toggle span:last-child{color:#8eb7ff;font-size:21px}.crm-history-content{display:grid;gap:9px;margin-top:10px}.crm-history-content.hidden{display:none}.crm-month{overflow:hidden;border:1px solid #2d3748;border-radius:14px;background:#111927}.crm-month-button{width:100%;min-height:55px;padding:10px 13px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}.crm-month-button small{display:block;margin-top:3px;color:#9ca9ba}.crm-month-button>strong{color:#8eb7ff;white-space:nowrap}.crm-month-courses{display:grid;gap:7px;padding:8px;border-top:1px solid #2d3748}.crm-month-courses.hidden{display:none}.crm-course.cancelled{border:2px solid #e5484d;background:#2a151a;box-shadow:inset 4px 0 0 #e5484d}.crm-delete{width:100%;min-height:48px;margin-top:16px;border:1px solid #e5484d;border-radius:13px;background:transparent;color:#ff8588;font-weight:900}.crm-delete-note{display:block;margin-top:7px;color:#8f9aab!important;text-align:center;font-size:10px}.crm-hidden-feedback{margin:10px 0;padding:12px;border-radius:13px;background:#edf8f0;color:#0d6b31;font-weight:800}
+/* V63 — continuité d’affichage des courses actives */
+.active-trip-status{display:inline-flex!important;width:max-content;margin-top:7px;padding:5px 8px;border-radius:999px;font-size:10px!important;font-weight:950;letter-spacing:.03em}.active-trip-status.accepted{background:#e9f1ff;color:#155fc2}.active-trip-status.en_route{background:#fff0d8;color:#9a5600}.active-trip-status.on_board{background:#eee7ff;color:#6236b5}.agenda-item.en_route{border-left:5px solid #ff9f0a}.agenda-item.on_board{border-left:5px solid #7c4dff}
 </style>
 </head>
  
@@ -1473,15 +1475,20 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       if (item.createdAt?.toDate) return item.createdAt.toDate();
       return bookingDate(item);
     }
+
+    function activeTripStatus(item) {
+      const labels = { accepted:"Course acceptée", en_route:"En route vers le client", on_board:"Client à bord" };
+      return `<small class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(labels[item.status] || "Course active")}</small>`;
+    }
  
     function renderTodayAgenda() {
       const todayItems = state.bookings
-        .filter(item => item.status === "accepted" && isSameDay(bookingDate(item)))
+        .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && isSameDay(bookingDate(item)))
         .sort((a, b) => bookingDate(a) - bookingDate(b));
       $("todayAgendaEmpty").classList.toggle("hidden", todayItems.length !== 0);
       $("todayAgendaList").innerHTML = todayItems.map(item => {
         const date = bookingDate(item);
-        return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="agenda-item ${escapeHtml(item.status)}" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span>${activeTripStatus(item)}</span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
       $("todayAgendaList").querySelectorAll("[data-open-booking]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openBooking));
@@ -1522,7 +1529,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 
     function renderAgenda() {
       const planned = state.bookings
-        .filter(item => item.status === "accepted" && bookingDate(item))
+        .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && bookingDate(item))
         .sort((a, b) => bookingDate(a) - bookingDate(b));
       $("agendaEmpty").classList.toggle("hidden", planned.length !== 0);
       const groups = new Map();
@@ -1537,7 +1544,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         const title = firstDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
         return `<section class="agenda-day"><h3>${escapeHtml(title)}</h3><div class="agenda-items">${items.map(item => {
           const date = bookingDate(item);
-          return `<button class="agenda-item" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span></span><span class="accepted-row-arrow">›</span></button>`;
+          return `<button class="agenda-item ${escapeHtml(item.status)}" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span>${activeTripStatus(item)}</span><span class="accepted-row-arrow">›</span></button>`;
         }).join("")}</div></section>`;
       }).join("");
       $("agendaList").querySelectorAll("[data-open-booking]").forEach(button => {
