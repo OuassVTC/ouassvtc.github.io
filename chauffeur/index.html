@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V60 -->
+<!-- OuassVTC Chauffeur V61 -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -747,6 +747,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   
 /* ===== V60 — CRM / CONFLITS / STATUTS / ENTRETIEN ===== */
 .v60-grid{display:grid;gap:12px}.v60-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:0 8px 25px #101b300b}.v60-card strong{display:block;font-size:18px}.v60-card small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.v60-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.v60-kpi{background:var(--blue-soft);border-radius:14px;padding:12px}.v60-kpi b{display:block;font-size:20px;color:var(--blue)}.v60-search{width:100%;min-height:50px;border:1px solid var(--border);border-radius:14px;padding:0 14px;margin:10px 0 14px}.v60-warning{margin:10px 0;padding:13px;border-radius:14px;background:#fff2f2;border:1px solid #ffcaca;color:#a11;font-weight:800;line-height:1.4}.v60-status{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v60-pill{padding:7px 10px;border-radius:999px;background:#eef3ff;color:var(--blue);font-size:12px;font-weight:900}.v60-maint-form{display:grid;gap:10px}.v60-maint-form input,.v60-maint-form select{min-height:48px;border:1px solid var(--border);border-radius:13px;padding:0 12px}.v60-maint-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.v60-maint-row button{border:0;background:#fee;color:#b3261e;border-radius:11px;padding:10px;font-weight:900}.booking.en_route{border-left:5px solid #ff9f0a}.booking.on_board{border-left:5px solid #7c4dff}.conflict-ok{margin:10px 0;padding:11px;border-radius:13px;background:#edf8f0;color:#0d6b31;font-weight:800}.v60-source{margin-top:8px;font-size:12px;color:var(--muted)}
+/* V61 — fiches clients intégrées au moteur principal */
+.crm-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}.crm-summary article{padding:13px;border:1px solid var(--border);border-radius:15px;background:#fff}.crm-summary strong,.crm-summary small{display:block}.crm-summary strong{font-size:21px;color:var(--blue)}.crm-summary small{margin-top:4px;color:var(--muted);font-size:10px}.crm-card{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;cursor:pointer}.crm-card-arrow{color:var(--blue);font-size:25px}.crm-detail{margin:0 0 15px;padding:17px;border-radius:21px;background:#0b111c;color:#fff}.crm-detail.hidden{display:none}.crm-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.crm-detail-head h3{font-size:23px}.crm-detail-head small{color:#aeb8c8}.crm-detail-close{width:40px;height:40px;border:1px solid #394353;border-radius:12px;background:#171f2c;color:#fff;font-size:21px}.crm-contact-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.crm-contact-actions a,.crm-contact-actions button{min-height:43px;border:0;border-radius:12px;background:#fff;color:#111;display:grid;place-items:center;text-decoration:none;font-weight:900;font-size:12px}.crm-contact-actions .primary-action{background:var(--blue);color:#fff}.crm-addresses{padding:13px;border-radius:14px;background:#ffffff0c}.crm-addresses small,.crm-addresses strong{display:block}.crm-addresses small{color:#98a5b8;margin-top:8px}.crm-addresses small:first-child{margin-top:0}.crm-course-title{margin:16px 0 8px;font-size:16px}.crm-course-list{display:grid;gap:7px}.crm-course{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:11px;border:1px solid #ffffff1c;border-radius:12px;background:#ffffff0a;color:#fff;text-align:left}.crm-course strong,.crm-course small{display:block}.crm-course small{color:#aeb8c8;margin-top:3px}.crm-course-price{white-space:nowrap;color:#8eb7ff;font-weight:900}@media(max-width:390px){.crm-summary{grid-template-columns:1fr 1fr}.crm-summary article:last-child{grid-column:1/-1}.crm-contact-actions{grid-template-columns:1fr 1fr}.crm-contact-actions .primary-action{grid-column:1/-1}}
 </style>
 </head>
  
@@ -775,12 +777,12 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
-      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">🚘 Courses</button>
-      <button class="menu-link" type="button" data-menu-tab="customersPanel">👥 Clients / CRM</button>
-      <button class="menu-link" type="button" data-menu-tab="maintenancePanel">🔧 Entretien véhicule</button>
-      <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>📄 Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
-      <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
-      <button class="menu-link settings-menu-link" type="button" data-menu-tab="settingsPanel"><span>⚙ Réglages</span><span>›</span></button>
+      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
+      <button class="menu-link" type="button" data-menu-tab="customersPanel">Clients</button>
+      <button class="menu-link" type="button" data-menu-tab="maintenancePanel">Entretien véhicule</button>
+      <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
+      <button class="menu-link" type="button" data-menu-tab="gamePanel">Jeux OuassVTC</button>
+      <button class="menu-link settings-menu-link" type="button" data-menu-tab="settingsPanel"><span>Réglages</span><span>›</span></button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
   </aside>
@@ -1008,9 +1010,11 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 
       <section class="tab-panel hidden" id="customersPanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
-        <div class="eyebrow">Fichier clients automatique</div><h2 class="section-title">Clients / CRM</h2>
-        <p style="color:var(--muted);margin-bottom:10px">Les fiches sont créées automatiquement à partir de l’historique de vos courses.</p>
+        <div class="eyebrow">Fichier clients</div><h2 class="section-title">Clients</h2>
+        <p style="color:var(--muted);margin-bottom:10px">Chaque fiche regroupe automatiquement les coordonnées et les courses du client.</p>
+        <div class="crm-summary"><article><strong id="crmCustomerCount">0</strong><small>clients enregistrés</small></article><article><strong id="crmCompletedTrips">0</strong><small>courses terminées</small></article><article><strong id="crmRevenueTotal">0 €</strong><small>chiffre d’affaires</small></article></div>
         <input class="v60-search" id="v60CustomerSearch" type="search" placeholder="Rechercher un nom ou un téléphone…">
+        <section class="crm-detail hidden" id="crmCustomerDetail"></section>
         <div class="v60-grid" id="v60CustomerList"><div class="empty">Chargement des clients…</div></div>
       </section>
 
@@ -3011,6 +3015,101 @@ Ouassini – OuassVTC`;
       });
     }
  
+    function crmPhone(value) {
+      const digits = String(value || "").replace(/\D/g, "");
+      return digits.replace(/^33(?=\d{9}$)/, "0");
+    }
+
+    function crmSearchText(value) {
+      return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
+
+    function crmTopAddress(addresses) {
+      return [...addresses.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "Non renseignée";
+    }
+
+    function customerRecords() {
+      const records = new Map();
+      state.bookings.forEach(booking => {
+        const phone = crmPhone(booking.customerPhone);
+        const rawName = String(booking.customerName || "").trim();
+        const fallbackKey = rawName ? `name:${crmSearchText(rawName)}` : "";
+        const key = phone.length >= 9 ? `phone:${phone}` : fallbackKey;
+        if (!key) return;
+        if (!records.has(key)) records.set(key, {
+          key, phone, name:rawName || "Client", trips:[], completed:0, revenue:0,
+          cancelled:0, last:null, pickups:new Map(), destinations:new Map()
+        });
+        const customer = records.get(key);
+        customer.trips.push(booking);
+        if (rawName) customer.name = rawName;
+        if (!customer.phone && phone) customer.phone = phone;
+        if (booking.status === "completed") {
+          customer.completed += 1;
+          customer.revenue += moneyValue(booking.estimatedPrice);
+        }
+        if (["cancelled", "rejected"].includes(booking.status)) customer.cancelled += 1;
+        const activityDate = bookingDate(booking) || createdDate(booking);
+        if (activityDate && (!customer.last || activityDate > customer.last)) customer.last = activityDate;
+        if (booking.pickup) customer.pickups.set(booking.pickup, (customer.pickups.get(booking.pickup) || 0) + 1);
+        if (booking.destination) customer.destinations.set(booking.destination, (customer.destinations.get(booking.destination) || 0) + 1);
+      });
+      return [...records.values()].sort((a, b) => (b.last || 0) - (a.last || 0));
+    }
+
+    function openCustomerRecord(key) {
+      const customer = customerRecords().find(item => item.key === key);
+      const detail = $("crmCustomerDetail");
+      if (!customer || !detail) return;
+      const phoneLink = phoneHref(customer.phone);
+      const trips = [...customer.trips].sort((a, b) => (bookingDate(b) || createdDate(b) || 0) - (bookingDate(a) || createdDate(a) || 0));
+      detail.innerHTML = `
+        <div class="crm-detail-head"><div><h3>${escapeHtml(customer.name)}</h3><small>${escapeHtml(customer.phone || "Téléphone non renseigné")}</small></div><button class="crm-detail-close" id="closeCrmDetail" type="button" aria-label="Fermer">×</button></div>
+        <div class="crm-contact-actions">
+          ${phoneLink ? `<a href="tel:${phoneLink}">Appeler</a><a href="sms:${phoneLink}">SMS</a>` : ""}
+          <button class="primary-action" type="button" id="newCourseForCustomer">Nouvelle course</button>
+        </div>
+        <div class="v60-kpis"><div class="v60-kpi"><b>${customer.completed}</b><small>courses terminées</small></div><div class="v60-kpi"><b>${customer.revenue.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €</b><small>CA généré</small></div></div>
+        <div class="crm-addresses"><small>Départ habituel</small><strong>${escapeHtml(crmTopAddress(customer.pickups))}</strong><small>Destination habituelle</small><strong>${escapeHtml(crmTopAddress(customer.destinations))}</strong></div>
+        <h4 class="crm-course-title">Historique des courses (${trips.length})</h4>
+        <div class="crm-course-list">${trips.map(booking => {
+          const activityDate = bookingDate(booking) || createdDate(booking);
+          const dateText = activityDate ? activityDate.toLocaleDateString("fr-FR") : "Date non renseignée";
+          return `<button class="crm-course" type="button" data-crm-booking="${escapeHtml(booking.id)}"><span><strong>${escapeHtml(dateText)} · ${escapeHtml(statusLabels[booking.status] || booking.status || "Course")}</strong><small>${escapeHtml(booking.pickup || "Départ non renseigné")} → ${escapeHtml(booking.destination || "Arrivée non renseignée")}</small></span><span class="crm-course-price">${escapeHtml(booking.estimatedPrice || "—")} ›</span></button>`;
+        }).join("") || `<div class="empty">Aucune course enregistrée.</div>`}</div>`;
+      detail.classList.remove("hidden");
+      detail.scrollIntoView({ behavior:"smooth", block:"start" });
+      $("closeCrmDetail")?.addEventListener("click", () => detail.classList.add("hidden"));
+      $("newCourseForCustomer")?.addEventListener("click", () => {
+        openPanel("estimatePanel");
+        $("driverName").value = customer.name || "";
+        $("driverPhone").value = customer.phone || "";
+        $("driverPickup").value = crmTopAddress(customer.pickups) === "Non renseignée" ? "" : crmTopAddress(customer.pickups);
+        $("driverCustomerMatch").textContent = `Fiche de ${customer.name} reprise. Complétez la date, l’heure et l’arrivée.`;
+        $("driverCustomerMatch").classList.remove("hidden");
+      });
+      detail.querySelectorAll("[data-crm-booking]").forEach(button => button.addEventListener("click", () => openBooking(button.dataset.crmBooking)));
+    }
+
+    function renderCustomerCRM() {
+      const listBox = $("v60CustomerList");
+      if (!listBox) return;
+      const customers = customerRecords();
+      const completed = customers.reduce((sum, customer) => sum + customer.completed, 0);
+      const revenue = customers.reduce((sum, customer) => sum + customer.revenue, 0);
+      $("crmCustomerCount").textContent = customers.length;
+      $("crmCompletedTrips").textContent = completed;
+      $("crmRevenueTotal").textContent = `${revenue.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`;
+      const query = crmSearchText($("v60CustomerSearch")?.value);
+      const digits = crmPhone(query);
+      const filtered = customers.filter(customer => !query || crmSearchText(customer.name).includes(query) || (digits && customer.phone.includes(digits)));
+      listBox.innerHTML = filtered.length ? filtered.map(customer => `
+        <button class="v60-card crm-card" type="button" data-crm-customer="${escapeHtml(customer.key)}">
+          <span><strong>${escapeHtml(customer.name)}</strong><small>${escapeHtml(customer.phone || "Téléphone non renseigné")}</small><small>${customer.completed} course${customer.completed > 1 ? "s" : ""} terminée${customer.completed > 1 ? "s" : ""} · ${customer.revenue.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €</small><small>Dernière activité : ${customer.last ? customer.last.toLocaleDateString("fr-FR") : "—"}</small></span><span class="crm-card-arrow">›</span>
+        </button>`).join("") : `<div class="empty">Aucun client trouvé avec cette recherche.</div>`;
+      listBox.querySelectorAll("[data-crm-customer]").forEach(button => button.addEventListener("click", () => openCustomerRecord(button.dataset.crmCustomer)));
+    }
+
     function render() {
       const term = state.search.trim();
       const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
@@ -3027,6 +3126,7 @@ Ouassini – OuassVTC`;
       const todayCompleted = dailyItemsForStatus("completed");
       $("completedCount").textContent = todayCompleted.length;
       $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
+      renderCustomerCRM();
       $("forecastRevenue").textContent = `${accepted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
       $("emptyState").classList.toggle("hidden", accepted.length !== 0);
@@ -4134,6 +4234,7 @@ Ouassini – OuassVTC`;
       document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      if (panelId === "customersPanel") renderCustomerCRM();
       if (panelId === "estimatePanel") {
         setTimeout(() => {
           ensureDriverLiveMap();
@@ -4879,6 +4980,10 @@ Ouassini – OuassVTC`;
         registration.update();
       });
     }
+    $("v60CustomerSearch")?.addEventListener("input", () => {
+      $("crmCustomerDetail")?.classList.add("hidden");
+      renderCustomerCRM();
+    });
     document.addEventListener("gesturestart", event => event.preventDefault(), { passive:false });
     document.addEventListener("dblclick", event => event.preventDefault(), { passive:false });
     document.addEventListener("touchmove", event => {
@@ -4968,8 +5073,8 @@ Ouassini – OuassVTC`;
 })();
 </script>
 
-<script>
-// ===== V60 — CRM, conflits de planning, statuts de mission et entretien =====
+<script type="application/x-ouassvtc-obsolete">
+// Ancien ajout V60 désactivé : remplacé par l’intégration V61 dans le module principal.
 (()=>{
   const v60Money=v=>{const n=Number(String(v??"").replace(/[^0-9,.-]/g,"").replace(",","."));return Number.isFinite(n)?n:0};
   const v60Phone=v=>String(v||"").replace(/\D/g,"").replace(/^33(?=\d{9}$)/,"0");
@@ -4999,5 +5104,4 @@ Ouassini – OuassVTC`;
 
 </body>
 </html>
-
 
