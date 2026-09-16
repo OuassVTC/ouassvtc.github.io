@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V60</title>
+  <title>OuassVTC Chauffeur — Mission Control V60.1</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -772,11 +772,12 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
-      <button class="menu-link" type="button" data-menu-tab="customersPanel">👥 Clients / CRM</button>
-      <button class="menu-link" type="button" data-menu-tab="maintenancePanel">🔧 Entretien véhicule</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
+      <button class="menu-link" type="button" data-menu-tab="bookingsPanel">🚘 Courses</button>
+      <button class="menu-link" type="button" data-menu-tab="customersPanel">👥 Clients / CRM</button>
+      <button class="menu-link" type="button" data-menu-tab="maintenancePanel">🔧 Entretien véhicule</button>
       <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>📄 Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">🎮 Jeux OuassVTC</button>
       <button class="menu-link settings-menu-link" type="button" data-menu-tab="settingsPanel"><span>⚙ Réglages</span><span>›</span></button>
@@ -1003,6 +1004,26 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         <div class="mileage-period-selector"><button class="mileage-period-button active" type="button" data-mileage-period="week">Semaine</button><button class="mileage-period-button" type="button" data-mileage-period="month">Mois</button><button class="mileage-period-button" type="button" data-mileage-period="year">Année</button></div>
         <div class="mileage-stats"><article class="mileage-stat"><small>Moyenne par course</small><strong id="mileageAverage">0 km</strong></article><article class="mileage-stat"><small>Coût carburant</small><strong id="mileageFuelCost">0 €</strong></article></div>
         <div class="mileage-history" id="mileageHistory"></div>
+      </section>
+
+      <section class="tab-panel hidden" id="customersPanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
+        <div class="eyebrow">Fichier clients automatique</div><h2 class="section-title">Clients / CRM</h2>
+        <p style="color:var(--muted);margin-bottom:10px">Les fiches sont créées automatiquement à partir de l’historique de vos courses.</p>
+        <input class="v60-search" id="v60CustomerSearch" type="search" placeholder="Rechercher un nom ou un téléphone…">
+        <div class="v60-grid" id="v60CustomerList"><div class="empty">Chargement des clients…</div></div>
+      </section>
+
+      <section class="tab-panel hidden" id="maintenancePanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
+        <div class="eyebrow">Suivi du véhicule</div><h2 class="section-title">Entretien véhicule</h2>
+        <form class="v60-card v60-maint-form" id="v60MaintenanceForm">
+          <div class="sim-field"><label for="v60MaintLabel">Entretien</label><input id="v60MaintLabel" required placeholder="Ex. Vidange, pneus, contrôle technique…"></div>
+          <div class="sim-field"><label for="v60MaintKm">Échéance kilométrique</label><input id="v60MaintKm" type="number" min="0" step="1" inputmode="numeric" placeholder="Ex. 150000"></div>
+          <div class="sim-field"><label for="v60MaintDate">Échéance par date</label><input id="v60MaintDate" type="date"></div>
+          <button class="primary" type="submit">Ajouter l’entretien</button>
+        </form>
+        <div class="v60-grid" id="v60MaintenanceList" style="margin-top:14px"><div class="empty">Aucune échéance d’entretien enregistrée.</div></div>
       </section>
 
 <section class="tab-panel hidden" id="gamePanel">
@@ -4960,10 +4981,10 @@ Ouassini – OuassVTC`;
   function renderV60Customers(){const box=document.getElementById("v60CustomerList");if(!box)return; const q=(document.getElementById("v60CustomerSearch")?.value||"").toLowerCase(); const list=v60Customers().filter(c=>(c.name+" "+c.phone).toLowerCase().includes(q)); box.innerHTML=list.length?list.map(c=>`<button class="v60-card" type="button" data-v60-phone="${escapeHtml(c.phone)}" style="text-align:left"><strong>${escapeHtml(c.name)}</strong><small>☎ ${escapeHtml(c.phone)}</small><div class="v60-kpis"><div class="v60-kpi"><b>${c.completed}</b><small>courses terminées</small></div><div class="v60-kpi"><b>${c.revenue.toLocaleString("fr-FR",{maximumFractionDigits:2})} €</b><small>CA généré</small></div></div><small>📍 Départ habituel : ${escapeHtml(topAddr(c.pickups))}</small><small>🏁 Destination habituelle : ${escapeHtml(topAddr(c.destinations))}</small><small>Dernière activité : ${c.last?c.last.toLocaleDateString("fr-FR"):"—"} · Annulations/refus : ${c.cancelled}</small></button>`).join(""):`<div class="empty">Aucun client trouvé.</div>`; box.querySelectorAll("[data-v60-phone]").forEach(btn=>btn.onclick=()=>{const b=(state.bookings||[]).filter(x=>v60Phone(x.customerPhone)===btn.dataset.v60Phone).sort((a,b)=>(bookingDate(b)||createdDate(b)||0)-(bookingDate(a)||createdDate(a)||0))[0]; if(b)openBooking(b.id)});}
   document.getElementById("v60CustomerSearch")?.addEventListener("input",renderV60Customers);
 
-  function v60Conflict(date,excludeId=""){if(!date||Number.isNaN(date.getTime()))return[]; const windowMs=90*60000; return (state?.bookings||[]).filter(b=>b.id!==excludeId&&["accepted","en_route","on_board","new"].includes(b.status)).filter(b=>{const d=bookingDate(b);return d&&Math.abs(d-date)<windowMs}).sort((a,b)=>bookingDate(a)-bookingDate(b));}
-  function showV60Conflict(){const input=document.getElementById("driverDateTime"),box=document.getElementById("v60ConflictBox");if(!input||!box)return;const date=new Date(input.value),hits=v60Conflict(date);box.className=hits.length?"v60-warning":"conflict-ok";box.classList.toggle("hidden",!input.value);box.innerHTML=hits.length?`⚠️ Conflit possible : ${hits.map(x=>`${bookingDate(x).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · ${escapeHtml(x.customerName||"Client")}`).join("<br>")}<br><small>Marge de sécurité V60 : 90 min.</small>`:"✓ Aucun chevauchement détecté dans une marge de 90 min.";}
+  function v60Conflict(date,excludeId=""){if(!date||Number.isNaN(date.getTime()))return[]; const windowMs=30*60000; return (state?.bookings||[]).filter(b=>b.id!==excludeId&&["accepted","en_route","on_board","new"].includes(b.status)).filter(b=>{const d=bookingDate(b);return d&&Math.abs(d-date)<windowMs}).sort((a,b)=>bookingDate(a)-bookingDate(b));}
+  function showV60Conflict(){const input=document.getElementById("driverDateTime"),box=document.getElementById("v60ConflictBox");if(!input||!box)return;const date=new Date(input.value),hits=v60Conflict(date);box.className=hits.length?"v60-warning":"conflict-ok";box.classList.toggle("hidden",!input.value);box.innerHTML=hits.length?`⚠️ Conflit possible : ${hits.map(x=>`${bookingDate(x).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · ${escapeHtml(x.customerName||"Client")}`).join("<br>")}<br><small>Marge de sécurité : 30 min. Vous pouvez forcer l’enregistrement si nécessaire.</small>`:"✓ Aucun chevauchement détecté dans une marge de 30 min.";}
   document.getElementById("driverDateTime")?.addEventListener("change",showV60Conflict);
-  document.getElementById("driverBookingForm")?.addEventListener("submit",e=>{const d=new Date(document.getElementById("driverDateTime")?.value||"");const hits=v60Conflict(d);if(hits.length&&!confirm(`Attention : ${hits.length} course(s) sont prévues à moins de 90 minutes. Enregistrer quand même ?`)){e.preventDefault();e.stopImmediatePropagation();}},true);
+  document.getElementById("driverBookingForm")?.addEventListener("submit",e=>{const d=new Date(document.getElementById("driverDateTime")?.value||"");const hits=v60Conflict(d);if(hits.length&&!confirm(`Attention : ${hits.length} course(s) sont prévues à moins de 30 minutes.\n\nOK = FORCER ET ENREGISTRER\nAnnuler = revenir à la course`)){e.preventDefault();e.stopImmediatePropagation();}},true);
 
   const KEY="ouassvtcV60Maintenance"; const readMaint=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}; const saveMaint=x=>localStorage.setItem(KEY,JSON.stringify(x));
   function renderMaint(){const box=document.getElementById("v60MaintenanceList");if(!box)return;const items=readMaint().sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"));box.innerHTML=items.length?items.map((x,i)=>`<div class="v60-card v60-maint-row"><div><strong>${escapeHtml(x.label)}</strong><small>${x.km?`À ${Number(x.km).toLocaleString("fr-FR")} km · `:""}${x.date?`le ${new Date(x.date+"T12:00:00").toLocaleDateString("fr-FR")}`:"Échéance date non renseignée"}</small></div><button type="button" data-maint-del="${i}">Supprimer</button></div>`).join(""):`<div class="empty">Aucune échéance d’entretien enregistrée.</div>`;box.querySelectorAll("[data-maint-del]").forEach(b=>b.onclick=()=>{const a=readMaint();a.splice(+b.dataset.maintDel,1);saveMaint(a);renderMaint()})}
@@ -4978,3 +4999,5 @@ Ouassini – OuassVTC`;
 
 </body>
 </html>
+
+
