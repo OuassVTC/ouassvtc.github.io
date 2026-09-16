@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V59 -->
+<!-- OuassVTC Chauffeur V60 -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V40</title>
+  <title>OuassVTC Chauffeur — Mission Control V60</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -744,7 +744,10 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .document-no-expiry{display:flex!important;align-items:center;gap:11px;padding:12px;border:1px solid #dce2e9;border-radius:14px;background:#f8f9fb}.document-no-expiry input{width:22px!important;min-height:22px!important;flex:0 0 22px}.document-no-expiry span strong,.document-no-expiry span small{display:block}.document-no-expiry span small{margin-top:3px;color:#77818d;font-size:10px}.document-upload-progress{position:relative;overflow:hidden;min-height:45px;margin-top:10px;border-radius:12px;background:#e9eef6;display:grid;place-items:center}.document-upload-progress.hidden,#documentExpiryWrap.hidden{display:none}.document-upload-progress span{position:absolute;inset:0 auto 0 0;width:0;background:#b9d2ff;transition:width .2s}.document-upload-progress strong{position:relative;z-index:1;color:#174f9d;font-size:12px}
 /* ===== V57 — KILOMÉTRAGE, PDF ANNUEL ET FORMULAIRE PROPRE ===== */
 .mileage-hero{margin:14px 0;padding:21px;border-radius:23px;background:linear-gradient(145deg,#080b11,#17243a);color:#fff}.mileage-hero small,.mileage-hero strong,.mileage-hero span{display:block}.mileage-hero small{color:#9ba9bc;font-weight:850}.mileage-hero strong{margin-top:7px;font-size:35px}.mileage-hero span{margin-top:5px;color:#c1cada;font-size:12px}.mileage-period-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}.mileage-period-button{min-height:47px;border:1px solid #dbe1e9;border-radius:14px;background:#fff;color:#626d7a;font-weight:900}.mileage-period-button.active{border-color:#176ef4;background:#176ef4;color:#fff}.mileage-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mileage-stat{padding:17px;border:1px solid #e0e5ec;border-radius:18px;background:#fff}.mileage-stat small,.mileage-stat strong{display:block}.mileage-stat small{color:#77818e;font-size:11px;font-weight:850}.mileage-stat strong{margin-top:7px;font-size:22px;color:#111}.mileage-history{display:grid;gap:9px;margin-top:15px}.mileage-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:17px;background:#fff}.mileage-group-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px;border:0;background:#fff;text-align:left}.mileage-group-button span,.mileage-group-button strong,.mileage-group-button small{display:block}.mileage-group-button small{margin-top:3px;color:#78828f}.mileage-group-button>strong{color:#176ef4;font-size:17px;white-space:nowrap}.mileage-detail{padding:0 15px 13px;background:#f8fafc;border-top:1px solid #e6eaf0}.mileage-detail.hidden{display:none}.mileage-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #e5e9ef}.mileage-row:last-child{border-bottom:0}.mileage-row small{display:block;margin-top:3px;color:#77818e}.mileage-empty{padding:24px;border:1px dashed #ccd4df;border-radius:17px;color:#717c89;text-align:center;background:#f8fafc}
-  </style>
+  
+/* ===== V60 — CRM / CONFLITS / STATUTS / ENTRETIEN ===== */
+.v60-grid{display:grid;gap:12px}.v60-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:0 8px 25px #101b300b}.v60-card strong{display:block;font-size:18px}.v60-card small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.v60-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:12px 0}.v60-kpi{background:var(--blue-soft);border-radius:14px;padding:12px}.v60-kpi b{display:block;font-size:20px;color:var(--blue)}.v60-search{width:100%;min-height:50px;border:1px solid var(--border);border-radius:14px;padding:0 14px;margin:10px 0 14px}.v60-warning{margin:10px 0;padding:13px;border-radius:14px;background:#fff2f2;border:1px solid #ffcaca;color:#a11;font-weight:800;line-height:1.4}.v60-status{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v60-pill{padding:7px 10px;border-radius:999px;background:#eef3ff;color:var(--blue);font-size:12px;font-weight:900}.v60-maint-form{display:grid;gap:10px}.v60-maint-form input,.v60-maint-form select{min-height:48px;border:1px solid var(--border);border-radius:13px;padding:0 12px}.v60-maint-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.v60-maint-row button{border:0;background:#fee;color:#b3261e;border-radius:11px;padding:10px;font-weight:900}.booking.en_route{border-left:5px solid #ff9f0a}.booking.on_board{border-left:5px solid #7c4dff}.conflict-ok{margin:10px 0;padding:11px;border-radius:13px;background:#edf8f0;color:#0d6b31;font-weight:800}.v60-source{margin-top:8px;font-size:12px;color:var(--muted)}
+</style>
 </head>
  
 <body>
@@ -769,6 +772,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
       <button class="menu-link" type="button" data-menu-tab="transferPanel">Transfert chauffeur</button>
+      <button class="menu-link" type="button" data-menu-tab="customersPanel">👥 Clients / CRM</button>
+      <button class="menu-link" type="button" data-menu-tab="maintenancePanel">🔧 Entretien véhicule</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
@@ -1126,8 +1131,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
             <div class="customer-match hidden" id="driverCustomerMatch" role="status"></div>
             <div class="sim-field full"><label for="driverPickup">Adresse de départ</label><input id="driverPickup" required autocomplete="off"></div>
             <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
-            <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div>
+            <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div><div id="v60ConflictBox" class="hidden"></div>
             <div class="sim-field"><label for="driverPassengers">Nombre de passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
+            <div class="sim-field"><label for="driverSource">Origine client</label><select id="driverSource"><option value="direct">Appel direct</option><option value="website">Site web</option><option value="google_ads">Google Ads</option><option value="google_organic">Google naturel</option><option value="repeat">Ancien client</option><option value="referral">Recommandation</option><option value="other">Autre</option></select></div>
             <div class="sim-field"><label for="driverPayment">Mode de paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement par carte bancaire à bord">Carte bancaire à bord</option><option value="Paiement en espèces à bord">Espèces à bord</option></select></div>
             <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
             <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
@@ -1317,6 +1323,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     const statusLabels = {
       new: "Nouvelle",
       accepted: "Acceptée",
+      en_route: "En route vers client",
+      on_board: "Client à bord",
       completed: "Terminée",
       transferred: "Transférée",
       transfer_performed: "Effectuée",
@@ -1327,7 +1335,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
  
     function courseNumberLabel(item) {
       const number = Number(item?.purchaseOrderNumber);
-      if (Number.isInteger(number) && number > 0 && ["new", "accepted", "completed"].includes(item?.status)) return `Course n°${number}`;
+      if (Number.isInteger(number) && number > 0 && ["new", "accepted", "en_route", "on_board", "completed"].includes(item?.status)) return `Course n°${number}`;
       if (item?.status === "new") return "Nouvelle demande";
       if (item?.status === "accepted") return "Course planifiée";
       if (item?.status === "transferred") return "Course transférée";
@@ -2363,7 +2371,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 
     function nextVoiceMission() {
       const now = new Date();
-      return state.bookings.filter(item => item.status === "accepted" && bookingDate(item) && bookingDate(item) >= new Date(now.getTime() - 45 * 60000)).sort((a,b) => bookingDate(a) - bookingDate(b))[0] || null;
+      return state.bookings.filter(item => ["accepted","en_route","on_board"].includes(item.status) && bookingDate(item) && bookingDate(item) >= new Date(now.getTime() - 45 * 60000)).sort((a,b) => bookingDate(a) - bookingDate(b))[0] || null;
     }
 
     function latestNewRequest() {
@@ -2947,28 +2955,16 @@ Ouassini – OuassVTC`;
     }
  
     function actionButtons(item) {
-      if (item.status === "new") {
-        return `
-          <button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button>
-          <button class="action reject" data-delete="${item.id}">Refuser la demande</button>`;
-      }
-      if (item.status === "accepted") {
-        return `
-          <button class="action finish" data-status="completed" data-id="${item.id}">Course terminée</button>
-          <button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler le trajet</button>`;
-      }
-      if (item.status === "transferred") {
-        return `<button class="action finish" data-status="transfer_performed" data-id="${item.id}">Confirmer la course effectuée</button><button class="action" data-status="accepted" data-id="${item.id}">Reprendre la course</button>`;
-      }
-      if (item.status === "transfer_performed") {
-        return `<button class="action finish" data-status="transfer_closed" data-id="${item.id}">Clôturer la course</button><button class="action" data-status="transferred" data-id="${item.id}">Revenir en attente</button>`;
-      }
-      if (item.status === "transfer_closed") {
-        return `<button class="action" data-status="transfer_performed" data-id="${item.id}">Rouvrir la course</button>`;
-      }
+      if (item.status === "new") return `<button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button><button class="action reject" data-delete="${item.id}">Refuser la demande</button>`;
+      if (item.status === "accepted") return `<button class="action accept" data-status="en_route" data-id="${item.id}">🚗 En route vers client</button><button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler le trajet</button>`;
+      if (item.status === "en_route") return `<button class="action accept" data-status="on_board" data-id="${item.id}">👤 Client à bord</button><button class="action" data-status="accepted" data-id="${item.id}">Retour acceptée</button>`;
+      if (item.status === "on_board") return `<button class="action finish" data-status="completed" data-id="${item.id}">✓ Course terminée</button><button class="action" data-status="en_route" data-id="${item.id}">Retour en route</button>`;
+      if (item.status === "transferred") return `<button class="action finish" data-status="transfer_performed" data-id="${item.id}">Confirmer la course effectuée</button><button class="action" data-status="accepted" data-id="${item.id}">Reprendre la course</button>`;
+      if (item.status === "transfer_performed") return `<button class="action finish" data-status="transfer_closed" data-id="${item.id}">Clôturer la course</button><button class="action" data-status="transferred" data-id="${item.id}">Revenir en attente</button>`;
+      if (item.status === "transfer_closed") return `<button class="action" data-status="transfer_performed" data-id="${item.id}">Rouvrir la course</button>`;
       return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
- 
+
     function renderCourseHistory() {
       const term = state.search.trim();
       if (!term) {
@@ -2998,7 +2994,7 @@ Ouassini – OuassVTC`;
       const term = state.search.trim();
       const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
       const accepted = state.bookings
-        .filter(item => item.status === "accepted" && matchesSearch(item))
+        .filter(item => ["accepted","en_route","on_board"].includes(item.status) && matchesSearch(item))
         .sort((a, b) => (bookingDate(a) || new Date(0)) - (bookingDate(b) || new Date(0)));
       const archivedMatches = term
         ? state.bookings.filter(item => item.status === "completed" && matchesSearch(item))
@@ -3647,9 +3643,9 @@ Ouassini – OuassVTC`;
         }
         if (status === "transfer_performed") changes.transferPerformedAt = serverTimestamp();
         if (status === "transfer_closed") changes.transferClosedAt = serverTimestamp();
-        if (status === "completed") {
-          changes.completedAt = serverTimestamp();
-        }
+        if (status === "en_route") changes.enRouteAt = serverTimestamp();
+        if (status === "on_board") changes.onBoardAt = serverTimestamp();
+        if (status === "completed") { changes.completedAt = serverTimestamp(); }
         await updateDoc(doc(db, "bookings", id), changes);
         return true;
       } catch (error) {
@@ -4723,7 +4719,7 @@ Ouassini – OuassVTC`;
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
-          source: "website",
+          source: $("driverSource")?.value || "direct",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
@@ -4950,6 +4946,35 @@ Ouassini – OuassVTC`;
   $a("snakeStart").onclick=snakeStart;if($a("snakeBest"))$a("snakeBest").textContent=localStorage.getItem("ouassSnakeBest")||0;
 })();
 </script>
+
+<script>
+// ===== V60 — CRM, conflits de planning, statuts de mission et entretien =====
+(()=>{
+  const v60Money=v=>{const n=Number(String(v??"").replace(/[^0-9,.-]/g,"").replace(",","."));return Number.isFinite(n)?n:0};
+  const v60Phone=v=>String(v||"").replace(/\D/g,"").replace(/^33(?=\d{9}$)/,"0");
+  function v60Customers(){
+    const map=new Map();
+    (state?.bookings||[]).forEach(b=>{const phone=v60Phone(b.customerPhone); if(phone.length<9)return; let c=map.get(phone); if(!c)c={phone,name:b.customerName||"Client",trips:0,completed:0,revenue:0,last:null,pickups:new Map(),destinations:new Map(),cancelled:0}; c.trips++; if(b.status==="completed"){c.completed++;c.revenue+=v60Money(b.estimatedPrice)} if(["cancelled","rejected"].includes(b.status))c.cancelled++; const d=bookingDate(b)||createdDate(b); if(d&&(!c.last||d>c.last))c.last=d; if(b.pickup)c.pickups.set(b.pickup,(c.pickups.get(b.pickup)||0)+1); if(b.destination)c.destinations.set(b.destination,(c.destinations.get(b.destination)||0)+1); if(b.customerName)c.name=b.customerName; map.set(phone,c)}); return [...map.values()].sort((a,b)=>(b.last||0)-(a.last||0));
+  }
+  const topAddr=m=>[...m.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||"—";
+  function renderV60Customers(){const box=document.getElementById("v60CustomerList");if(!box)return; const q=(document.getElementById("v60CustomerSearch")?.value||"").toLowerCase(); const list=v60Customers().filter(c=>(c.name+" "+c.phone).toLowerCase().includes(q)); box.innerHTML=list.length?list.map(c=>`<button class="v60-card" type="button" data-v60-phone="${escapeHtml(c.phone)}" style="text-align:left"><strong>${escapeHtml(c.name)}</strong><small>☎ ${escapeHtml(c.phone)}</small><div class="v60-kpis"><div class="v60-kpi"><b>${c.completed}</b><small>courses terminées</small></div><div class="v60-kpi"><b>${c.revenue.toLocaleString("fr-FR",{maximumFractionDigits:2})} €</b><small>CA généré</small></div></div><small>📍 Départ habituel : ${escapeHtml(topAddr(c.pickups))}</small><small>🏁 Destination habituelle : ${escapeHtml(topAddr(c.destinations))}</small><small>Dernière activité : ${c.last?c.last.toLocaleDateString("fr-FR"):"—"} · Annulations/refus : ${c.cancelled}</small></button>`).join(""):`<div class="empty">Aucun client trouvé.</div>`; box.querySelectorAll("[data-v60-phone]").forEach(btn=>btn.onclick=()=>{const b=(state.bookings||[]).filter(x=>v60Phone(x.customerPhone)===btn.dataset.v60Phone).sort((a,b)=>(bookingDate(b)||createdDate(b)||0)-(bookingDate(a)||createdDate(a)||0))[0]; if(b)openBooking(b.id)});}
+  document.getElementById("v60CustomerSearch")?.addEventListener("input",renderV60Customers);
+
+  function v60Conflict(date,excludeId=""){if(!date||Number.isNaN(date.getTime()))return[]; const windowMs=90*60000; return (state?.bookings||[]).filter(b=>b.id!==excludeId&&["accepted","en_route","on_board","new"].includes(b.status)).filter(b=>{const d=bookingDate(b);return d&&Math.abs(d-date)<windowMs}).sort((a,b)=>bookingDate(a)-bookingDate(b));}
+  function showV60Conflict(){const input=document.getElementById("driverDateTime"),box=document.getElementById("v60ConflictBox");if(!input||!box)return;const date=new Date(input.value),hits=v60Conflict(date);box.className=hits.length?"v60-warning":"conflict-ok";box.classList.toggle("hidden",!input.value);box.innerHTML=hits.length?`⚠️ Conflit possible : ${hits.map(x=>`${bookingDate(x).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · ${escapeHtml(x.customerName||"Client")}`).join("<br>")}<br><small>Marge de sécurité V60 : 90 min.</small>`:"✓ Aucun chevauchement détecté dans une marge de 90 min.";}
+  document.getElementById("driverDateTime")?.addEventListener("change",showV60Conflict);
+  document.getElementById("driverBookingForm")?.addEventListener("submit",e=>{const d=new Date(document.getElementById("driverDateTime")?.value||"");const hits=v60Conflict(d);if(hits.length&&!confirm(`Attention : ${hits.length} course(s) sont prévues à moins de 90 minutes. Enregistrer quand même ?`)){e.preventDefault();e.stopImmediatePropagation();}},true);
+
+  const KEY="ouassvtcV60Maintenance"; const readMaint=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}; const saveMaint=x=>localStorage.setItem(KEY,JSON.stringify(x));
+  function renderMaint(){const box=document.getElementById("v60MaintenanceList");if(!box)return;const items=readMaint().sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"));box.innerHTML=items.length?items.map((x,i)=>`<div class="v60-card v60-maint-row"><div><strong>${escapeHtml(x.label)}</strong><small>${x.km?`À ${Number(x.km).toLocaleString("fr-FR")} km · `:""}${x.date?`le ${new Date(x.date+"T12:00:00").toLocaleDateString("fr-FR")}`:"Échéance date non renseignée"}</small></div><button type="button" data-maint-del="${i}">Supprimer</button></div>`).join(""):`<div class="empty">Aucune échéance d’entretien enregistrée.</div>`;box.querySelectorAll("[data-maint-del]").forEach(b=>b.onclick=()=>{const a=readMaint();a.splice(+b.dataset.maintDel,1);saveMaint(a);renderMaint()})}
+  document.getElementById("v60MaintenanceForm")?.addEventListener("submit",e=>{e.preventDefault();const label=document.getElementById("v60MaintLabel").value.trim();if(!label)return;const a=readMaint();a.push({label,km:document.getElementById("v60MaintKm").value,date:document.getElementById("v60MaintDate").value});saveMaint(a);e.target.reset();renderMaint()});
+
+  if(typeof statusLabels!=="undefined"){statusLabels.en_route="En route vers client";statusLabels.on_board="Client à bord";}
+  const oldOpenPanel=window.openPanel||openPanel; openPanel=function(id){oldOpenPanel(id);if(id==="customersPanel")renderV60Customers();if(id==="maintenancePanel")renderMaint()};
+  const oldRender=render; render=function(){oldRender();renderV60Customers();};
+  renderMaint();
+})();
+</script>
+
 </body>
 </html>
-
