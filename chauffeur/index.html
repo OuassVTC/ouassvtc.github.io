@@ -5025,6 +5025,7 @@ Ouassini – OuassVTC`;
       const button = $("saveQuickBooking");
       button.disabled = true;
       button.textContent = "Enregistrement en cours…";
+      let quickBooking = null;
       try {
         localSaveInProgress = true;
         const missionSettings = readMissionCostSettings();
@@ -5032,7 +5033,7 @@ Ouassini – OuassVTC`;
         const quickFuelCost = safeDistance / 100 * missionSettings.consumption * missionSettings.fuelPrice;
         const current = new Date();
         const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
-        const quickBooking = await addDoc(collection(db, "bookings"), {
+        quickBooking = await addDoc(collection(db, "bookings"), {
           customerName: "Course manuelle",
           customerPhone: phone,
           pickup: "Ajout manuel",
@@ -5040,16 +5041,16 @@ Ouassini – OuassVTC`;
           scheduledAtText: currentLocal.toISOString().slice(0, 16),
           passengers: "Non précisé",
           paymentMethod: payment.paymentMethod,
-          paymentCardAmount: payment.paymentCardAmount,
-          paymentCashAmount: payment.paymentCashAmount,
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
-          source: $("driverSource")?.value || "direct",
+          source: "website",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
         await updateDoc(quickBooking, {
+          paymentCardAmount: payment.paymentCardAmount,
+          paymentCashAmount: payment.paymentCashAmount,
           missionHomeAddress: missionSettings.homeAddress,
           missionFuelPrice: missionSettings.fuelPrice,
           missionConsumption: missionSettings.consumption,
@@ -5067,15 +5068,18 @@ Ouassini – OuassVTC`;
           completedAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
-        localSaveInProgress = false;
         $("quickBookingForm").reset();
         delete $("quickBookingPrice").dataset.amount;
         $("quickBookingSuccess").classList.remove("hidden");
       } catch (error) {
-        localSaveInProgress = false;
         console.error(error);
-        alert("La course rapide n’a pas pu être enregistrée. Réessayez.");
+        if (quickBooking) await deleteDoc(quickBooking).catch(cleanupError => console.error("Nettoyage de la course rapide incomplète impossible", cleanupError));
+        const detail = error?.code === "permission-denied"
+          ? "Firebase a refusé l’enregistrement. Vérifiez que vous êtes connecté avec le compte chauffeur autorisé."
+          : "La course rapide n’a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
+        alert(detail);
       } finally {
+        localSaveInProgress = false;
         button.disabled = false;
         button.textContent = "Enregistrer dans l’application";
       }
