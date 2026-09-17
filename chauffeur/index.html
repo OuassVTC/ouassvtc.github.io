@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V64 — suivi définitif -->
+<!-- OuassVTC Chauffeur V65 — navigation, GPS et préférences -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V64</title>
+  <title>OuassVTC Chauffeur — Mission Control V65</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
+  <script>
+    (()=>{const saved=localStorage.getItem("ouassvtcResolvedTheme");document.documentElement.dataset.theme=saved==="dark"?"dark":"light";})();
+  </script>
  
   <style>
     :root{
@@ -759,6 +762,9 @@ body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}.panel-home-row,.ho
 @media(min-width:760px){.app-bottom-nav{left:50%;right:auto;bottom:14px;width:min(620px,calc(100% - 32px));transform:translateX(-50%);border:1px solid #e1e6ee;border-radius:24px;padding-bottom:7px}.app-bottom-nav .bottom-add{margin-top:-20px}}
 .brand{cursor:default}.detail-overlay{z-index:1300}.detail-card{min-height:0}.detail-body{-webkit-overflow-scrolling:touch}
 @media(max-width:600px){.detail-card{display:flex;flex-direction:column;height:100dvh;overflow:hidden!important}.detail-head{flex:0 0 auto}.detail-body{flex:1 1 auto;min-height:0;overflow-y:auto!important;overscroll-behavior-y:contain;touch-action:pan-y;padding-bottom:calc(28px + env(safe-area-inset-bottom))}}
+/* V65.4 — apparence jour, nuit et automatique */
+.theme-choice{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:5px;border-radius:15px;background:#e8edf4}.theme-choice button{min-height:44px;border:0;border-radius:11px;background:transparent;color:#687484;font-size:12px;font-weight:900}.theme-choice button.active{background:#fff;color:#176ef4;box-shadow:0 4px 14px #10182818}.theme-auto-note{grid-column:1/-1;color:#7a8593;font-size:11px;line-height:1.4}.settings-action.disabled-state{background:#edf0f4;color:#6f7986}.settings-action.enabled-state{background:#ddf7e9;color:#087442}
+html[data-theme="dark"]{color-scheme:dark;--text:#f4f7fb;--muted:#9ca8b8;--soft:#080d14;--border:#2a3545;--blue-soft:#12243f}html[data-theme="dark"] body{background:#080d14;color:#f4f7fb}html[data-theme="dark"] .container,html[data-theme="dark"] .tab-panel{color:#f4f7fb}html[data-theme="dark"] .stat,html[data-theme="dark"] .home-action,html[data-theme="dark"] .accepted-row,html[data-theme="dark"] .report-card,html[data-theme="dark"] .finance-section,html[data-theme="dark"] .settings-card,html[data-theme="dark"] .document-section,html[data-theme="dark"] .document-card,html[data-theme="dark"] .v60-card,html[data-theme="dark"] .crm-card,html[data-theme="dark"] .mileage-stat,html[data-theme="dark"] .mileage-group,html[data-theme="dark"] .expense-month-group,html[data-theme="dark"] .net-period-card,html[data-theme="dark"] .history-month,html[data-theme="dark"] .simulator,html[data-theme="dark"] .client-route-card{background:#111925!important;border-color:#2a3545!important;color:#f4f7fb!important}html[data-theme="dark"] .booking,html[data-theme="dark"] .detail-card,html[data-theme="dark"] .detail-body,html[data-theme="dark"] .detail-body .booking-main{background:#0d1520!important;color:#f4f7fb!important;border-color:#2a3545!important}html[data-theme="dark"] .detail-body .route,html[data-theme="dark"] .booking-meta span,html[data-theme="dark"] .crm-addresses,html[data-theme="dark"] .net-breakdown,html[data-theme="dark"] .mileage-detail,html[data-theme="dark"] .expense-month-courses{background:#172130!important;color:#e7edf6!important;border-color:#2a3545!important}html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select,html[data-theme="dark"] .search,html[data-theme="dark"] .v60-search{background:#0d1520!important;color:#f4f7fb!important;border-color:#344155!important}html[data-theme="dark"] .app-bottom-nav{background:#090f18;border-color:#253044;box-shadow:0 -10px 30px #0007}html[data-theme="dark"] .app-bottom-nav button{color:#96a4b6}html[data-theme="dark"] .app-bottom-nav button.active{color:#56a0ff}html[data-theme="dark"] .theme-choice{background:#09111c}html[data-theme="dark"] .theme-choice button{color:#9da9ba}html[data-theme="dark"] .theme-choice button.active{background:#1b293b;color:#67a9ff}html[data-theme="dark"] .document-card,html[data-theme="dark"] .mileage-group-button,html[data-theme="dark"] .expense-month-button,html[data-theme="dark"] .net-history-toggle,html[data-theme="dark"] .net-history-month-button{background:#111925!important;color:#f4f7fb!important}html[data-theme="dark"] .quick-actions a,html[data-theme="dark"] .quick-actions button{background:#172130!important;color:#f4f7fb!important;border-color:#344155!important}html[data-theme="dark"] .empty{color:#9ca8b8}html[data-theme="dark"] .pull-refresh{background:#f4f7fb;color:#0b111a}
 </style>
 </head>
  
@@ -966,7 +972,8 @@ body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}.panel-home-row,.ho
       <section class="tab-panel hidden" id="settingsPanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Préférences de l’application</div><h2 class="section-title">Réglages</h2>
-        <div class="settings-card"><div><small>Alertes et réservations</small><h3>Notifications</h3><p>Recevez les nouvelles courses, les rappels et les échéances de documents.</p></div><button class="settings-action" id="enableNotifications" type="button">Activer</button></div>
+        <div class="settings-card"><div><small>Alertes et réservations</small><h3>Notifications</h3><p>Recevez les nouvelles courses, les rappels et les échéances de documents, même lorsque l’application est fermée.</p></div><button class="settings-action" id="enableNotifications" type="button">Activer</button></div>
+        <div class="settings-card"><div><small>Apparence</small><h3>Mode d’affichage</h3><p>Choisissez le mode jour, nuit, ou le changement automatique selon le soleil à Perpignan.</p></div><div class="theme-choice" id="themeChoice" role="group" aria-label="Mode d’affichage"><button type="button" data-theme-choice="light">☀ Jour</button><button type="button" data-theme-choice="dark">☾ Nuit</button><button type="button" data-theme-choice="auto">◐ Auto</button></div><div class="theme-auto-note" id="themeAutoNote">Le mode automatique suit le lever et le coucher du soleil à Perpignan.</div></div>
         <div class="settings-card"><div><small>Confort de conduite</small><h3>Maintenir l’écran allumé</h3><p>Empêche la mise en veille tant que l’application reste au premier plan.</p></div><button class="settings-action wake-lock-state" id="toggleWakeLock" type="button"><span id="wakeLockState">Désactivé</span></button></div>
       </section>
 
@@ -1304,12 +1311,59 @@ body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}.panel-home-row,.ho
       where
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
-    import { getMessaging, getToken, isSupported, onMessage } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
+    import { deleteToken, getMessaging, getToken, isSupported, onMessage } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
     import { deleteObject, getDownloadURL, getStorage, ref as storageRef, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
  
     const $ = id => document.getElementById(id);
     const state = { bookings: [], documents:[], filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
+    const THEME_MODE_KEY = "ouassvtcThemeMode";
+    const RESOLVED_THEME_KEY = "ouassvtcResolvedTheme";
+    const NOTIFICATIONS_ENABLED_KEY = "ouassvtcNotificationsEnabled";
+    let themeMode = localStorage.getItem(THEME_MODE_KEY) || "auto";
+    let themeTimer = null;
+
+    function sunTimesForPerpignan(date = new Date()) {
+      const latitude = 42.6887, longitude = 2.8948;
+      const start = new Date(date.getFullYear(), 0, 0);
+      const day = Math.floor((date - start) / 86400000);
+      const gamma = 2 * Math.PI / 365 * (day - 1);
+      const equation = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+      const declination = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+      const latRad = latitude * Math.PI / 180;
+      const zenith = 90.833 * Math.PI / 180;
+      const hourAngle = Math.acos(Math.max(-1, Math.min(1, Math.cos(zenith) / (Math.cos(latRad) * Math.cos(declination)) - Math.tan(latRad) * Math.tan(declination))));
+      const localOffset = -date.getTimezoneOffset();
+      const solarNoon = 720 - 4 * longitude - equation + localOffset;
+      return { sunrise: solarNoon - 4 * hourAngle * 180 / Math.PI, sunset: solarNoon + 4 * hourAngle * 180 / Math.PI };
+    }
+
+    function automaticTheme(date = new Date()) {
+      const { sunrise, sunset } = sunTimesForPerpignan(date);
+      const nowMinutes = date.getHours() * 60 + date.getMinutes();
+      return nowMinutes >= sunset || nowMinutes < sunrise ? "dark" : "light";
+    }
+
+    function applyTheme(mode = themeMode) {
+      themeMode = ["light", "dark", "auto"].includes(mode) ? mode : "auto";
+      const resolved = themeMode === "auto" ? automaticTheme() : themeMode;
+      document.documentElement.dataset.theme = resolved;
+      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#070b12" : "#07090d");
+      localStorage.setItem(THEME_MODE_KEY, themeMode);
+      localStorage.setItem(RESOLVED_THEME_KEY, resolved);
+      document.querySelectorAll("[data-theme-choice]").forEach(button => button.classList.toggle("active", button.dataset.themeChoice === themeMode));
+      if ($("themeAutoNote")) {
+        const { sunrise, sunset } = sunTimesForPerpignan();
+        const clock = minutes => { const rounded = Math.round(minutes); return `${String(Math.floor(rounded / 60) % 24).padStart(2, "0")}:${String(rounded % 60).padStart(2, "0")}`; };
+        $("themeAutoNote").textContent = themeMode === "auto" ? `Automatique actif · jour ${clock(sunrise)}–${clock(sunset)} à Perpignan.` : `Mode ${themeMode === "dark" ? "nuit" : "jour"} activé manuellement.`;
+      }
+      clearInterval(themeTimer);
+      if (themeMode === "auto") themeTimer = setInterval(() => applyTheme("auto"), 5 * 60 * 1000);
+    }
+
+    function notificationsOptedIn() {
+      return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
+    }
     const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV1";
     const DEFAULT_MISSION_COST_SETTINGS = {
       homeAddress: "10 rue Claude Monet, 66000 Perpignan",
@@ -4014,13 +4068,14 @@ Ouassini – OuassVTC`;
         $("enableNotifications").disabled = true;
         return;
       }
-      $("enableNotifications").textContent = Notification.permission === "granted"
-        ? "✓ Notifications activées"
-        : "Activer les notifications";
+      const enabled = Notification.permission === "granted" && notificationsOptedIn();
+      $("enableNotifications").textContent = enabled ? "✓ Activées" : "Désactivées";
+      $("enableNotifications").classList.toggle("enabled-state", enabled);
+      $("enableNotifications").classList.toggle("disabled-state", !enabled);
     }
 
     async function keepNotificationsRegistered({confirmation=false}={}) {
-      if (!("Notification" in window) || Notification.permission !== "granted" || !messaging || !auth?.currentUser || !db || !("serviceWorker" in navigator)) return false;
+      if (!("Notification" in window) || Notification.permission !== "granted" || !notificationsOptedIn() || !messaging || !auth?.currentUser || !db || !("serviceWorker" in navigator)) return false;
       const registration=await navigator.serviceWorker.ready;
       const token=await getToken(messaging,{vapidKey:WEB_PUSH_KEY,serviceWorkerRegistration:registration});
       if(!token) throw new Error("Aucun jeton de notification reçu");
@@ -4041,23 +4096,49 @@ Ouassini – OuassVTC`;
         return;
       }
       const permission = await Notification.requestPermission();
-      updateNotificationButton();
       if (permission === "granted") {
         try {
+          localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, "true");
           await keepNotificationsRegistered({confirmation:true});
         } catch (error) {
           console.error(error);
           alert("L’enregistrement du téléphone a échoué. Vérifiez les règles Firebase puis réessayez.");
         }
       } else {
+        localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, "false");
+        updateNotificationButton();
         alert("Autorisez les notifications dans les réglages du téléphone pour recevoir les nouvelles réservations.");
       }
+    }
+
+    async function disableNotifications() {
+      localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, "false");
+      updateNotificationButton();
+      try {
+        if (messaging) await deleteToken(messaging);
+        if (db && auth?.currentUser) await setDoc(doc(db,"notificationTokens",auth.currentUser.uid),{ token:"",enabled:false,updatedAt:serverTimestamp() },{merge:true});
+      } catch (error) {
+        console.error("Désactivation des notifications impossible", error);
+        alert("La désactivation n’a pas pu être finalisée. Vérifiez votre connexion puis réessayez.");
+        return false;
+      }
+      updateNotificationButton();
+      return true;
+    }
+
+    async function toggleNotifications() {
+      const active = ("Notification" in window) && Notification.permission === "granted" && notificationsOptedIn();
+      if (active) {
+        if (confirm("Désactiver toutes les notifications OuassVTC sur ce téléphone ?")) await disableNotifications();
+        return;
+      }
+      await enableNotifications();
     }
  
     let latestIncomingBookingId = null;
 
     async function showBookingNotification(bookingIds = []) {
-      if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
+      if (!("Notification" in window) || Notification.permission !== "granted" || !notificationsOptedIn() || !("serviceWorker" in navigator)) return;
       const ids = Array.isArray(bookingIds) ? bookingIds.filter(Boolean) : [];
       const count = Math.max(1, ids.length);
       const bookingId = ids[0] || "";
@@ -4156,7 +4237,7 @@ Ouassini – OuassVTC`;
       messaging = await isSupported() ? getMessaging(app) : null;
       if (messaging) {
         onMessage(messaging, async payload => {
-          if (Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
+          if (Notification.permission !== "granted" || !notificationsOptedIn() || !("serviceWorker" in navigator)) return;
           const registration = await navigator.serviceWorker.ready;
           await registration.showNotification(payload.data?.title || "Rappel de course OuassVTC", {
             body: payload.data?.body || "Une course approche.",
@@ -4211,7 +4292,8 @@ Ouassini – OuassVTC`;
     }
 
     document.addEventListener("visibilitychange",()=>{
-      if(document.visibilityState!=="visible"||!("Notification" in window)||Notification.permission!=="granted"||!auth?.currentUser)return;
+      if(document.visibilityState==="visible"&&themeMode==="auto") applyTheme("auto");
+      if(document.visibilityState!=="visible"||!("Notification" in window)||Notification.permission!=="granted"||!notificationsOptedIn()||!auth?.currentUser)return;
       const last=Number(localStorage.getItem("ouassvtcNotificationRefresh")||0);
       if(Date.now()-last>24*60*60*1000) keepNotificationsRegistered().catch(error=>console.error("Actualisation des notifications impossible",error));
     });
@@ -4360,7 +4442,7 @@ Ouassini – OuassVTC`;
     });
     $("closeMenu").addEventListener("click", closeMenu);
     $("menuOverlay").addEventListener("click", closeMenu);
-    $("enableNotifications").addEventListener("click", enableNotifications);
+    $("enableNotifications").addEventListener("click", toggleNotifications);
     $("toggleWakeLock").addEventListener("click", toggleScreenWakeLock);
     $("closeDocumentEditor").addEventListener("click",closeDocumentEditor);
     $("documentEditorOverlay").addEventListener("click",event=>{if(event.target===$("documentEditorOverlay"))closeDocumentEditor();});
@@ -4373,6 +4455,8 @@ Ouassini – OuassVTC`;
     updateWakeLockButton();
     if (keepScreenAwake) void requestScreenWakeLock();
     updateNotificationButton();
+    document.querySelectorAll("[data-theme-choice]").forEach(button => button.addEventListener("click", () => applyTheme(button.dataset.themeChoice)));
+    applyTheme(themeMode);
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
 
