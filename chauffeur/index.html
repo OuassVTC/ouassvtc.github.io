@@ -753,6 +753,10 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .crm-detail .v60-kpi{background:#eef4ff}.crm-detail .v60-kpi b{color:#176ef4}.crm-detail .v60-kpi small{color:#596579!important;opacity:1!important}.crm-history-toggle{width:100%;min-height:54px;margin-top:15px;padding:0 15px;border:1px solid #344052;border-radius:14px;background:#171f2c;color:#fff;display:flex;align-items:center;justify-content:space-between;font-weight:900}.crm-history-toggle span:last-child{color:#8eb7ff;font-size:21px}.crm-history-content{display:grid;gap:9px;margin-top:10px}.crm-history-content.hidden{display:none}.crm-month{overflow:hidden;border:1px solid #2d3748;border-radius:14px;background:#111927}.crm-month-button{width:100%;min-height:55px;padding:10px 13px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}.crm-month-button small{display:block;margin-top:3px;color:#9ca9ba}.crm-month-button>strong{color:#8eb7ff;white-space:nowrap}.crm-month-courses{display:grid;gap:7px;padding:8px;border-top:1px solid #2d3748}.crm-month-courses.hidden{display:none}.crm-course.cancelled{border:2px solid #e5484d;background:#2a151a;box-shadow:inset 4px 0 0 #e5484d}.crm-delete{width:100%;min-height:48px;margin-top:16px;border:1px solid #e5484d;border-radius:13px;background:transparent;color:#ff8588;font-weight:900}.crm-delete-note{display:block;margin-top:7px;color:#8f9aab!important;text-align:center;font-size:10px}.crm-hidden-feedback{margin:10px 0;padding:12px;border-radius:13px;background:#edf8f0;color:#0d6b31;font-weight:800}
 /* V63 — continuité d’affichage des courses actives */
 .active-trip-status{display:inline-flex!important;width:max-content;margin-top:7px;padding:5px 8px;border-radius:999px;font-size:10px!important;font-weight:950;letter-spacing:.03em}.active-trip-status.accepted{background:#e9f1ff;color:#155fc2}.active-trip-status.en_route{background:#fff0d8;color:#9a5600}.active-trip-status.on_board{background:#eee7ff;color:#6236b5}.agenda-item.en_route{border-left:5px solid #ff9f0a}.agenda-item.on_board{border-left:5px solid #7c4dff}
+/* V65 — navigation mobile, GPS progressif et actualisation tactile */
+body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}.panel-home-row,.home-icon-btn{display:none!important}.dashboard-priority-actions{grid-template-columns:1fr!important}.dashboard-priority-actions .priority-voice{grid-column:1/-1}.app-bottom-nav{position:fixed;z-index:1050;left:0;right:0;bottom:0;height:calc(72px + env(safe-area-inset-bottom));padding:7px max(10px,env(safe-area-inset-left)) env(safe-area-inset-bottom) max(10px,env(safe-area-inset-right));display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#fff;border-top:1px solid #e1e6ee;box-shadow:0 -10px 30px #15213a12}.app-bottom-nav button{min-width:0;height:58px;border:0;background:transparent;color:#667385;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:850}.app-bottom-nav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.app-bottom-nav button.active{color:#176ef4}.app-bottom-nav .bottom-add{width:58px;height:58px;justify-self:center;margin-top:-24px;border-radius:50%;background:#176ef4;color:#fff;box-shadow:0 10px 24px #176ef455}.app-bottom-nav .bottom-add svg{width:27px;height:27px}.app-bottom-nav .bottom-add span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.waze-actions .gps-stage-link{min-height:54px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:13px;font-size:12px!important;font-weight:950;text-align:center}.waze-actions .gps-stage-link::after{display:none!important}.waze-actions .gps-stage-link small{font-size:9px;font-weight:750;opacity:.72}.waze-actions button.gps-stage-link{width:100%;border:1px solid #dfe5ef;background:#edf0f4;color:#8791a0;cursor:not-allowed}.waze-actions a.gps-stage-link{background:#176ef4!important;color:#fff!important;border-color:#176ef4!important}.waze-actions a.gps-stage-link.destination{background:#101722!important;border-color:#101722!important}.pull-refresh{position:fixed;z-index:1600;left:50%;top:8px;transform:translate(-50%,-80px);min-height:42px;padding:0 15px;border-radius:999px;background:#101722;color:#fff;display:flex;align-items:center;gap:8px;box-shadow:0 9px 28px #0003;font-size:12px;font-weight:900;transition:transform .2s ease}.pull-refresh.visible{transform:translate(-50%,0)}.pull-refresh.refreshing .pull-refresh-icon{animation:pull-spin .8s linear infinite}@keyframes pull-spin{to{transform:rotate(360deg)}}
+@media(min-width:760px){.app-bottom-nav{left:50%;right:auto;bottom:14px;width:min(620px,calc(100% - 32px));transform:translateX(-50%);border:1px solid #e1e6ee;border-radius:24px;padding-bottom:7px}.app-bottom-nav .bottom-add{margin-top:-20px}}
 </style>
 </head>
  
@@ -782,7 +786,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
       <button class="menu-link" type="button" data-menu-tab="bookingsPanel">Historique des courses</button>
-      <button class="menu-link" type="button" data-menu-tab="customersPanel">Clients</button>
+      <button class="menu-link" type="button" data-menu-tab="customersPanel">Fiches clients</button>
       <button class="menu-link" type="button" data-menu-tab="maintenancePanel">Entretien véhicule</button>
       <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">Jeux OuassVTC</button>
@@ -831,7 +835,6 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         <button class="document-dashboard-alert hidden" id="documentDashboardAlert" type="button" data-open-tab="documentsPanel"><span class="document-alert-icon">!</span><span><strong id="documentAlertTitle">Document à renouveler</strong><small id="documentAlertText"></small></span><span class="document-alert-arrow">›</span></button>
         <div class="home-actions dashboard-priority-actions">
           <button class="home-action voice-home-action priority-voice" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Copilote OuassVTC</span></button>
-          <button class="home-action" type="button" data-open-tab="estimatePanel">Nouvelle course</button>
           <button class="home-action secondary" type="button" data-open-tab="bookingsPanel">Historique</button>
         </div>
         <div class="dashboard-mission">
@@ -1181,8 +1184,17 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
         </section>
         <button class="primary" id="sendDriverConfirmationSms" type="button" style="margin-top:20px">Envoyer la confirmation par SMS</button>
       </section>
+      <nav class="app-bottom-nav" id="appBottomNav" aria-label="Navigation rapide">
+        <button class="active" type="button" data-open-tab="dashboardHome" data-bottom-panel="dashboardHome" aria-label="Tableau de bord"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg><span>Accueil</span></button>
+        <button type="button" data-open-tab="bookingsPanel" data-bottom-panel="bookingsPanel" aria-label="Historique des courses"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path><path d="M12 7v5l3 2"></path></svg><span>Historique</span></button>
+        <button class="bottom-add" type="button" data-open-tab="estimatePanel" data-bottom-panel="estimatePanel" aria-label="Nouvelle course"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>Nouvelle course</span></button>
+        <button type="button" data-open-tab="transferPanel" data-bottom-panel="transferPanel" aria-label="Transfert chauffeur"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3"></path><path d="m18 7-3 3"></path><path d="M17 17H6l3 3"></path><path d="m6 17 3-3"></path></svg><span>Transfert</span></button>
+        <button type="button" id="bottomMenuButton" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Menu</span></button>
+      </nav>
     </section>
   </main>
+
+  <div class="pull-refresh" id="pullRefreshIndicator" aria-live="polite"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">Tirez pour actualiser</span></div>
  
   <div class="detail-overlay hidden" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
     <article class="detail-card">
@@ -2999,6 +3011,18 @@ Ouassini – OuassVTC`;
       return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
 
+    function stagedWazeActions(item) {
+      const pickupUnlocked = ["en_route", "on_board", "completed"].includes(item.status);
+      const destinationUnlocked = ["on_board", "completed"].includes(item.status);
+      const pickup = pickupUnlocked
+        ? `<a class="gps-stage-link pickup" href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">GPS vers le client<small>Ouvrir dans Waze</small></a>`
+        : `<button class="gps-stage-link pickup" type="button" disabled>GPS vers le client<small>Disponible après « En route »</small></button>`;
+      const destination = destinationUnlocked
+        ? `<a class="gps-stage-link destination" href="${wazeHref(item.destination)}" target="_blank" rel="noopener">GPS vers la destination<small>Ouvrir dans Waze</small></a>`
+        : `<button class="gps-stage-link destination" type="button" disabled>GPS vers la destination<small>Disponible après « Client à bord »</small></button>`;
+      return `<div class="waze-actions">${pickup}${destination}</div>`;
+    }
+
     function renderCourseHistory() {
       const term = state.search.trim();
       if (!term) {
@@ -3219,10 +3243,7 @@ Ouassini – OuassVTC`;
               <a href="tel:${phone}">☎ Appeler</a>
               <a href="https://wa.me/${whatsapp}" target="_blank" rel="noopener">WhatsApp</a>
             </div>
-            <div class="waze-actions">
-              <a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Waze départ</a>
-              <a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Waze arrivée</a>
-            </div>
+            ${stagedWazeActions(item)}
             <div class="status-actions">${actionButtons(item)}</div>
           </article>`;
       }).join("");
@@ -3272,7 +3293,7 @@ Ouassini – OuassVTC`;
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
-        <div class="waze-actions"><a href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">Adresse de départ</a><a href="${wazeHref(item.destination)}" target="_blank" rel="noopener">Adresse d’arrivée</a></div>
+        ${stagedWazeActions(item)}
         <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
           <div class="actions-screen-head"><button class="actions-back" type="button" data-close-more-actions aria-label="Retour au détail de la course">←</button><div><small>Gestion de la course</small><strong>Autres actions</strong></div></div>
@@ -3826,6 +3847,9 @@ Ouassini – OuassVTC`;
         if (status === "on_board") changes.onBoardAt = serverTimestamp();
         if (status === "completed") { changes.completedAt = serverTimestamp(); }
         await updateDoc(doc(db, "bookings", id), changes);
+        if (current) current.status = status;
+        render();
+        if (!$("detailOverlay").classList.contains("hidden")) openBooking(id);
         return true;
       } catch (error) {
         console.error(error);
@@ -4290,6 +4314,7 @@ Ouassini – OuassVTC`;
       if (panelId !== "gamePanel" && rush.running && !rush.paused) rushPauseGame(false);
       document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== panelId));
       document.querySelectorAll("[data-menu-tab]").forEach(button => button.classList.toggle("active", button.dataset.menuTab === panelId));
+      document.querySelectorAll("[data-bottom-panel]").forEach(button => button.classList.toggle("active", button.dataset.bottomPanel === panelId));
       closeMenu();
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (panelId === "customersPanel") renderCustomerCRM();
@@ -4330,6 +4355,10 @@ Ouassini – OuassVTC`;
       $("sideMenu").classList.remove("hidden");
       $("menuOverlay").classList.remove("hidden");
     });
+    $("bottomMenuButton").addEventListener("click", () => {
+      $("sideMenu").classList.remove("hidden");
+      $("menuOverlay").classList.remove("hidden");
+    });
     $("closeMenu").addEventListener("click", closeMenu);
     $("menuOverlay").addEventListener("click", closeMenu);
     $("enableNotifications").addEventListener("click", enableNotifications);
@@ -4347,6 +4376,47 @@ Ouassini – OuassVTC`;
     updateNotificationButton();
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
+
+    let pullStartY = 0;
+    let pullDistance = 0;
+    let pullTracking = false;
+    let pullRefreshing = false;
+    const resetPullRefresh = () => {
+      pullTracking = false;
+      pullDistance = 0;
+      $("pullRefreshIndicator").classList.remove("visible");
+      $("pullRefreshText").textContent = "Tirez pour actualiser";
+    };
+    document.addEventListener("touchstart", event => {
+      if (pullRefreshing || window.scrollY > 0 || event.touches.length !== 1 || event.target.closest("input, textarea, select, [contenteditable='true']")) return;
+      pullStartY = event.touches[0].clientY;
+      pullTracking = true;
+    }, { passive:true });
+    document.addEventListener("touchmove", event => {
+      if (!pullTracking || pullRefreshing || event.touches.length !== 1) return;
+      const distance = event.touches[0].clientY - pullStartY;
+      if (distance <= 0) return resetPullRefresh();
+      pullDistance = Math.min(120, distance * .55);
+      if (pullDistance > 12) {
+        event.preventDefault();
+        $("pullRefreshIndicator").classList.add("visible");
+        $("pullRefreshText").textContent = pullDistance >= 72 ? "Relâchez pour actualiser" : "Tirez pour actualiser";
+      }
+    }, { passive:false });
+    document.addEventListener("touchend", async () => {
+      if (!pullTracking || pullRefreshing) return;
+      if (pullDistance < 72) return resetPullRefresh();
+      pullRefreshing = true;
+      $("pullRefreshIndicator").classList.add("visible", "refreshing");
+      $("pullRefreshText").textContent = "Actualisation…";
+      try {
+        const registration = await navigator.serviceWorker?.getRegistration("/chauffeur/");
+        await registration?.update();
+      } catch (error) {
+        console.warn("Actualisation du service worker impossible", error);
+      }
+      window.location.reload();
+    }, { passive:true });
     document.querySelectorAll("[data-daily-status]").forEach(button => button.addEventListener("click", () => openDailyList(button.dataset.dailyStatus)));
     document.addEventListener("pointerdown", prepareAlertSound, { once: true });
     $("manualSync").addEventListener("click", () => {
@@ -5346,3 +5416,4 @@ Ouassini – OuassVTC`;
 
 </body>
 </html>
+
