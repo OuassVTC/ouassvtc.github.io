@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V63 -->
+<!-- OuassVTC Chauffeur V64 — suivi définitif -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V60.1</title>
+  <title>OuassVTC Chauffeur — Mission Control V64</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -5042,6 +5042,130 @@ Ouassini – OuassVTC`;
       $("crmCustomerDetail")?.classList.add("hidden");
       renderCustomerCRM();
     });
+
+    /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
+    const HEALTH_VERSION = "64.20260917.1";
+    const HEALTH_KEY = "ouassvtcHealthHistoryV1";
+    const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
+    let healthTimer = null;
+
+    function healthRead() {
+      try {
+        const now = Date.now();
+        const rows = JSON.parse(localStorage.getItem(HEALTH_KEY) || "[]");
+        const kept = Array.isArray(rows) ? rows.filter(row => now - Number(row.time || 0) <= HEALTH_RETENTION) : [];
+        if (kept.length !== rows.length) localStorage.setItem(HEALTH_KEY, JSON.stringify(kept));
+        return kept;
+      } catch (_) { return []; }
+    }
+
+    function healthWrite(level, source, message, details = "") {
+      const rows = healthRead();
+      const signature = `${level}|${source}|${message}|${details}`;
+      const last = rows[0];
+      if (last?.signature === signature && Date.now() - last.time < 60000) return;
+      rows.unshift({ time:Date.now(), level, source, message, details:String(details || "").slice(0, 600), signature });
+      localStorage.setItem(HEALTH_KEY, JSON.stringify(rows.slice(0, 500)));
+      healthUpdateBadge();
+      if (!$('healthScreen')?.classList.contains('hidden')) healthRender();
+    }
+
+    async function healthSwInfo() {
+      if (!("serviceWorker" in navigator)) return { ok:false, text:"Service worker indisponible" };
+      try {
+        const registration = await navigator.serviceWorker.getRegistration('/chauffeur/');
+        if (!registration) return { ok:false, text:"Service worker non installé" };
+        const worker = registration.active || registration.waiting || registration.installing;
+        if (!worker) return { ok:false, text:"Service worker sans processus actif" };
+        return await new Promise(resolve => {
+          const channel = new MessageChannel();
+          const timeout = setTimeout(() => resolve({ ok:true, text:"Service worker actif", version:"non communiquée" }), 1200);
+          channel.port1.onmessage = event => { clearTimeout(timeout); resolve({ ok:true, text:"Service worker actif", ...(event.data || {}) }); };
+          worker.postMessage({ type:"OUASSVTC_HEALTH_CHECK" }, [channel.port2]);
+        });
+      } catch (error) { return { ok:false, text:error?.message || "Contrôle impossible" }; }
+    }
+
+    async function healthSnapshot(manual = false) {
+      const sw = await healthSwInfo();
+      const checks = [
+        { key:"network", label:"Connexion internet", ok:navigator.onLine, value:navigator.onLine ? "Connectée" : "Hors connexion" },
+        { key:"firebase", label:"Connexion Firebase", ok:Boolean(firebaseReady && db && auth?.currentUser && state.unsubscribe), value:auth?.currentUser ? "Connectée" : "Non connectée" },
+        { key:"notifications", label:"Notifications", ok:("Notification" in window) && Notification.permission === "granted", value:("Notification" in window) ? Notification.permission : "indisponibles" },
+        { key:"serviceWorker", label:"Service worker", ok:sw.ok, value:`${sw.text}${sw.version ? ` · ${sw.version}` : ""}` },
+        { key:"version", label:"Version application", ok:true, value:`V${HEALTH_VERSION}` },
+        { key:"bookings", label:"Données des courses", ok:Array.isArray(state.bookings), value:`${state.bookings.length} chargée(s)` },
+        { key:"active", label:"Courses actives", ok:true, value:`${state.bookings.filter(item => ["accepted","en_route","on_board"].includes(item.status)).length}` }
+      ];
+      const problems = checks.filter(check => !check.ok);
+      const previous = JSON.parse(localStorage.getItem('ouassvtcHealthLastState') || '{}');
+      problems.forEach(check => {
+        if (manual || previous[check.key] !== false) healthWrite(check.key === 'network' ? 'warning' : 'error', check.label, check.value);
+      });
+      checks.filter(check => check.ok && previous[check.key] === false).forEach(check => healthWrite('success', check.label, 'Fonctionnement rétabli'));
+      localStorage.setItem('ouassvtcHealthLastState', JSON.stringify(Object.fromEntries(checks.map(check => [check.key, check.ok]))));
+      localStorage.setItem('ouassvtcHealthLastCheck', String(Date.now()));
+      return checks;
+    }
+
+    function healthUpdateBadge() {
+      const badge = $('healthAlertBadge');
+      if (!badge) return;
+      const since = Number(localStorage.getItem('ouassvtcHealthAcknowledgedAt') || 0);
+      const count = healthRead().filter(row => row.time > since && row.level === 'error').length;
+      badge.textContent = count > 99 ? '99+' : String(count);
+      badge.classList.toggle('hidden', count === 0);
+    }
+
+    function healthEscape(value) { return escapeHtml(String(value ?? '')); }
+
+    async function healthRender() {
+      const checks = await healthSnapshot(false);
+      const rows = healthRead();
+      const errors = rows.filter(row => row.level === 'error').length;
+      const warnings = rows.filter(row => row.level === 'warning').length;
+      $('healthSummary').innerHTML = `<div><strong>${checks.every(c => c.ok) ? 'Application opérationnelle' : 'Contrôle nécessaire'}</strong><small>Dernier contrôle : ${new Date().toLocaleString('fr-FR')}</small></div><span class="health-global ${checks.every(c => c.ok) ? 'ok' : 'bad'}">${checks.filter(c => !c.ok).length} anomalie(s)</span>`;
+      $('healthChecks').innerHTML = checks.map(check => `<div class="health-check"><span class="health-dot ${check.ok ? 'ok' : 'bad'}"></span><div><strong>${healthEscape(check.label)}</strong><small>${healthEscape(check.value)}</small></div><b>${check.ok ? 'OK' : 'À contrôler'}</b></div>`).join('');
+      $('healthCounters').innerHTML = `<div><strong>${errors}</strong><small>Erreurs sur 30 jours</small></div><div><strong>${warnings}</strong><small>Avertissements</small></div><div><strong>${rows.length}</strong><small>Événements conservés</small></div>`;
+      $('healthHistory').innerHTML = rows.length ? rows.map(row => `<div class="health-event ${healthEscape(row.level)}"><div><strong>${healthEscape(row.source)}</strong><small>${new Date(row.time).toLocaleString('fr-FR')}</small></div><p>${healthEscape(row.message)}${row.details ? `<br><small>${healthEscape(row.details)}</small>` : ''}</p></div>`).join('') : '<div class="empty">Aucun incident enregistré pendant les 30 derniers jours.</div>';
+    }
+
+    function healthOpen() {
+      $('healthScreen').classList.remove('hidden');
+      localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now()));
+      healthUpdateBadge();
+      healthRender();
+      closeMenu();
+    }
+
+    function healthInstallUi() {
+      if ($('healthScreen')) return;
+      const style = document.createElement('style');
+      style.textContent = `.health-screen{position:fixed;inset:0;z-index:1400;overflow:auto;background:#eef2f7;padding:0 16px 30px}.health-screen.hidden{display:none}.health-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;margin:0 -16px 18px;padding:max(15px,env(safe-area-inset-top)) 16px 15px;background:#080b10;color:#fff}.health-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.health-head small,.health-summary small,.health-check small,.health-event small{display:block;color:#788391;margin-top:4px}.health-summary{display:flex;justify-content:space-between;gap:12px;padding:18px;border-radius:21px;background:#fff}.health-global{align-self:center;padding:8px 10px;border-radius:99px;font-size:12px;font-weight:900}.health-global.ok{background:#dcf7e8;color:#087442}.health-global.bad{background:#ffe0e0;color:#b42323}.health-counters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.health-counters div{padding:14px;border-radius:17px;background:#0b1018;color:#fff}.health-counters strong,.health-counters small{display:block}.health-counters strong{font-size:25px}.health-counters small{margin-top:5px;color:#aeb8c8;font-size:11px}.health-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.health-actions button{min-height:48px;border:0;border-radius:14px;background:#176ef4;color:#fff;font-weight:900}.health-actions button:last-child{background:#fff;color:#111;border:1px solid #dce2ea}.health-list{display:grid;gap:8px}.health-check{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:13px;border:1px solid #dfe4eb;border-radius:16px;background:#fff}.health-check b{font-size:11px}.health-dot{width:11px;height:11px;border-radius:50%}.health-dot.ok{background:#16a065}.health-dot.bad{background:#dc3f3f}.health-title{margin:20px 2px 10px}.health-event{margin-bottom:8px;padding:13px;border-left:5px solid #7d8794;border-radius:14px;background:#fff}.health-event.error{border-color:#dc3f3f}.health-event.warning{border-color:#e59b16}.health-event.success{border-color:#16a065}.health-event>div{display:flex;justify-content:space-between;gap:10px}.health-event p{margin-top:8px;color:#454e5b;line-height:1.4}.health-menu-link{display:flex!important;align-items:center;justify-content:space-between}.health-badge{min-width:25px;height:25px;padding:0 7px;border-radius:99px;background:#ff4545;color:#fff;display:grid;place-items:center;font-size:12px}.health-badge.hidden{display:none}@media(max-width:390px){.health-counters{grid-template-columns:1fr}.health-event>div{display:block}}`;
+      document.head.appendChild(style);
+      const menu = document.createElement('button');
+      menu.type = 'button'; menu.className = 'menu-link health-menu-link'; menu.innerHTML = '<span>État de l’application</span><span id="healthAlertBadge" class="health-badge hidden">0</span>';
+      menu.addEventListener('click', healthOpen);
+      document.querySelector('.menu-nav')?.appendChild(menu);
+      const screen = document.createElement('section');
+      screen.id = 'healthScreen'; screen.className = 'health-screen hidden';
+      screen.innerHTML = `<header class="health-head"><button id="closeHealth" type="button">←</button><div><small>OuassVTC V${HEALTH_VERSION}</small><strong>État de l’application</strong></div></header><div id="healthSummary" class="health-summary"></div><div id="healthCounters" class="health-counters"></div><div class="health-actions"><button id="runHealthCheck" type="button">Lancer un contrôle</button><button id="clearHealthHistory" type="button">Effacer l’historique</button></div><h2 class="health-title">Contrôles actuels</h2><div id="healthChecks" class="health-list"></div><h2 class="health-title">Historique des 30 derniers jours</h2><div id="healthHistory"></div>`;
+      document.body.appendChild(screen);
+      $('closeHealth').addEventListener('click', () => screen.classList.add('hidden'));
+      $('runHealthCheck').addEventListener('click', async event => { event.currentTarget.disabled = true; await healthSnapshot(true); await healthRender(); event.currentTarget.disabled = false; });
+      $('clearHealthHistory').addEventListener('click', () => { if (!confirm('Effacer l’historique de surveillance ?')) return; localStorage.removeItem(HEALTH_KEY); localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now())); healthRender(); healthUpdateBadge(); });
+      healthUpdateBadge();
+    }
+
+    window.addEventListener('error', event => healthWrite('error', 'Erreur JavaScript', event.message || 'Erreur inconnue', `${event.filename || ''}:${event.lineno || ''}`));
+    window.addEventListener('unhandledrejection', event => healthWrite('error', 'Opération interrompue', event.reason?.message || String(event.reason || 'Promesse rejetée')));
+    window.addEventListener('offline', () => healthWrite('warning', 'Connexion internet', 'Connexion perdue'));
+    window.addEventListener('online', () => healthWrite('success', 'Connexion internet', 'Connexion rétablie'));
+    navigator.serviceWorker?.addEventListener('controllerchange', () => healthWrite('success', 'Mise à jour', 'Nouveau service worker activé'));
+    healthInstallUi();
+    setTimeout(() => healthSnapshot(false), 3000);
+    healthTimer = setInterval(() => healthSnapshot(false), 5 * 60 * 1000);
+
     document.addEventListener("gesturestart", event => event.preventDefault(), { passive:false });
     document.addEventListener("dblclick", event => event.preventDefault(), { passive:false });
     document.addEventListener("touchmove", event => {
@@ -5162,4 +5286,3 @@ Ouassini – OuassVTC`;
 
 </body>
 </html>
-
