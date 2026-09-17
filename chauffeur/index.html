@@ -5044,7 +5044,7 @@ Ouassini – OuassVTC`;
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "64.20260917.1";
+    const HEALTH_VERSION = "64.20260917.2";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
@@ -5117,6 +5117,62 @@ Ouassini – OuassVTC`;
       badge.classList.toggle('hidden', count === 0);
     }
 
+    function healthWait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    async function healthRunAnimated() {
+      const overlay = $('healthProgressOverlay');
+      const bar = $('healthProgressBar');
+      const label = $('healthProgressLabel');
+      const button = $('runHealthCheck');
+      if (!overlay || !bar || !label || button?.disabled) return;
+      button.disabled = true;
+      overlay.classList.remove('hidden');
+      const stages = [
+        [12, 'Préparation du diagnostic…'],
+        [28, 'Contrôle de la connexion internet…'],
+        [45, 'Vérification de Firebase…'],
+        [62, 'Vérification des notifications…'],
+        [78, 'Contrôle du service worker et du cache…'],
+        [90, 'Analyse des courses chargées…']
+      ];
+      try {
+        for (const [percent, text] of stages) {
+          bar.style.width = `${percent}%`;
+          label.textContent = text;
+          await healthWait(280);
+        }
+        await healthSnapshot(true);
+        await healthRender();
+        bar.style.width = '100%';
+        label.textContent = 'Contrôle terminé';
+        await healthWait(650);
+      } catch (error) {
+        healthWrite('error', 'Contrôle manuel', 'Le diagnostic n’a pas pu se terminer', error?.message || String(error));
+        label.textContent = 'Le contrôle a rencontré une erreur';
+        await healthWait(900);
+      } finally {
+        overlay.classList.add('hidden');
+        bar.style.width = '0%';
+        button.disabled = false;
+      }
+    }
+
+    function healthAskClearHistory() {
+      $('healthConfirmOverlay')?.classList.remove('hidden');
+    }
+
+    function healthCloseConfirm() {
+      $('healthConfirmOverlay')?.classList.add('hidden');
+    }
+
+    function healthConfirmClearHistory() {
+      localStorage.removeItem(HEALTH_KEY);
+      localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now()));
+      healthCloseConfirm();
+      healthRender();
+      healthUpdateBadge();
+    }
+
     function healthEscape(value) { return escapeHtml(String(value ?? '')); }
 
     async function healthRender() {
@@ -5142,6 +5198,7 @@ Ouassini – OuassVTC`;
       if ($('healthScreen')) return;
       const style = document.createElement('style');
       style.textContent = `.health-screen{position:fixed;inset:0;z-index:1400;overflow:auto;background:#eef2f7;padding:0 16px 30px}.health-screen.hidden{display:none}.health-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;margin:0 -16px 18px;padding:max(15px,env(safe-area-inset-top)) 16px 15px;background:#080b10;color:#fff}.health-head button{width:46px;height:46px;border:1px solid #39414e;border-radius:14px;background:#151a22;color:#fff;font-size:23px}.health-head small,.health-summary small,.health-check small,.health-event small{display:block;color:#788391;margin-top:4px}.health-summary{display:flex;justify-content:space-between;gap:12px;padding:18px;border-radius:21px;background:#fff}.health-global{align-self:center;padding:8px 10px;border-radius:99px;font-size:12px;font-weight:900}.health-global.ok{background:#dcf7e8;color:#087442}.health-global.bad{background:#ffe0e0;color:#b42323}.health-counters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.health-counters div{padding:14px;border-radius:17px;background:#0b1018;color:#fff}.health-counters strong,.health-counters small{display:block}.health-counters strong{font-size:25px}.health-counters small{margin-top:5px;color:#aeb8c8;font-size:11px}.health-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.health-actions button{min-height:48px;border:0;border-radius:14px;background:#176ef4;color:#fff;font-weight:900}.health-actions button:last-child{background:#fff;color:#111;border:1px solid #dce2ea}.health-list{display:grid;gap:8px}.health-check{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:13px;border:1px solid #dfe4eb;border-radius:16px;background:#fff}.health-check b{font-size:11px}.health-dot{width:11px;height:11px;border-radius:50%}.health-dot.ok{background:#16a065}.health-dot.bad{background:#dc3f3f}.health-title{margin:20px 2px 10px}.health-event{margin-bottom:8px;padding:13px;border-left:5px solid #7d8794;border-radius:14px;background:#fff}.health-event.error{border-color:#dc3f3f}.health-event.warning{border-color:#e59b16}.health-event.success{border-color:#16a065}.health-event>div{display:flex;justify-content:space-between;gap:10px}.health-event p{margin-top:8px;color:#454e5b;line-height:1.4}.health-menu-link{display:flex!important;align-items:center;justify-content:space-between}.health-badge{min-width:25px;height:25px;padding:0 7px;border-radius:99px;background:#ff4545;color:#fff;display:grid;place-items:center;font-size:12px}.health-badge.hidden{display:none}@media(max-width:390px){.health-counters{grid-template-columns:1fr}.health-event>div{display:block}}`;
+      style.textContent += `.health-modal-overlay{position:fixed;inset:0;z-index:1500;display:grid;place-items:center;padding:20px;background:#05070bd9;backdrop-filter:blur(7px)}.health-modal-overlay.hidden{display:none}.health-progress-card,.health-confirm-card{width:min(100%,420px);padding:24px;border-radius:24px;background:#fff;box-shadow:0 28px 80px #0008}.health-progress-icon{width:54px;height:54px;margin-bottom:15px;border-radius:17px;background:#edf4ff;color:#176ef4;display:grid;place-items:center;font-size:25px;animation:healthPulse 1s infinite}.health-progress-card h3,.health-confirm-card h3{font-size:23px;margin-bottom:7px}.health-progress-card p,.health-confirm-card p{color:#687281;line-height:1.45}.health-progress-track{height:12px;margin-top:19px;overflow:hidden;border-radius:99px;background:#e7ebf1}.health-progress-bar{width:0;height:100%;border-radius:99px;background:linear-gradient(90deg,#176ef4,#55a5ff);transition:width .28s ease}.health-confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}.health-confirm-actions button{min-height:50px;border:1px solid #dce2ea;border-radius:14px;background:#fff;color:#111;font-weight:900}.health-confirm-actions .danger{border-color:#c82d2d;background:#c82d2d;color:#fff}@keyframes healthPulse{50%{transform:scale(.94);opacity:.78}}`;
       document.head.appendChild(style);
       const menu = document.createElement('button');
       menu.type = 'button'; menu.className = 'menu-link health-menu-link'; menu.innerHTML = '<span>État de l’application</span><span id="healthAlertBadge" class="health-badge hidden">0</span>';
@@ -5149,11 +5206,14 @@ Ouassini – OuassVTC`;
       document.querySelector('.menu-nav')?.appendChild(menu);
       const screen = document.createElement('section');
       screen.id = 'healthScreen'; screen.className = 'health-screen hidden';
-      screen.innerHTML = `<header class="health-head"><button id="closeHealth" type="button">←</button><div><small>OuassVTC V${HEALTH_VERSION}</small><strong>État de l’application</strong></div></header><div id="healthSummary" class="health-summary"></div><div id="healthCounters" class="health-counters"></div><div class="health-actions"><button id="runHealthCheck" type="button">Lancer un contrôle</button><button id="clearHealthHistory" type="button">Effacer l’historique</button></div><h2 class="health-title">Contrôles actuels</h2><div id="healthChecks" class="health-list"></div><h2 class="health-title">Historique des 30 derniers jours</h2><div id="healthHistory"></div>`;
+      screen.innerHTML = `<header class="health-head"><button id="closeHealth" type="button">←</button><div><small>OuassVTC V${HEALTH_VERSION}</small><strong>État de l’application</strong></div></header><div id="healthSummary" class="health-summary"></div><div id="healthCounters" class="health-counters"></div><div class="health-actions"><button id="runHealthCheck" type="button">Lancer un contrôle</button><button id="clearHealthHistory" type="button">Effacer l’historique</button></div><h2 class="health-title">Contrôles actuels</h2><div id="healthChecks" class="health-list"></div><h2 class="health-title">Historique des 30 derniers jours</h2><div id="healthHistory"></div><div id="healthProgressOverlay" class="health-modal-overlay hidden"><div class="health-progress-card"><div class="health-progress-icon">✓</div><h3>Contrôle en cours</h3><p id="healthProgressLabel">Préparation du diagnostic…</p><div class="health-progress-track"><div id="healthProgressBar" class="health-progress-bar"></div></div></div></div><div id="healthConfirmOverlay" class="health-modal-overlay hidden"><div class="health-confirm-card"><h3>Effacer l’historique ?</h3><p>Cette action supprimera définitivement les contrôles et incidents enregistrés pendant les 30 derniers jours.</p><div class="health-confirm-actions"><button id="cancelClearHealth" type="button">Non, conserver</button><button id="confirmClearHealth" class="danger" type="button">Oui, effacer</button></div></div></div>`;
       document.body.appendChild(screen);
       $('closeHealth').addEventListener('click', () => screen.classList.add('hidden'));
-      $('runHealthCheck').addEventListener('click', async event => { event.currentTarget.disabled = true; await healthSnapshot(true); await healthRender(); event.currentTarget.disabled = false; });
-      $('clearHealthHistory').addEventListener('click', () => { if (!confirm('Effacer l’historique de surveillance ?')) return; localStorage.removeItem(HEALTH_KEY); localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now())); healthRender(); healthUpdateBadge(); });
+      $('runHealthCheck').addEventListener('click', healthRunAnimated);
+      $('clearHealthHistory').addEventListener('click', healthAskClearHistory);
+      $('cancelClearHealth').addEventListener('click', healthCloseConfirm);
+      $('confirmClearHealth').addEventListener('click', healthConfirmClearHistory);
+      $('healthConfirmOverlay').addEventListener('click', event => { if (event.target === $('healthConfirmOverlay')) healthCloseConfirm(); });
       healthUpdateBadge();
     }
 
