@@ -843,6 +843,7 @@ html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label
 .vehicle-brand-banner{position:relative;min-height:150px;margin:0 0 8px;overflow:hidden;border:1px solid #26364c;border-radius:25px;background:#07101a url('./ouassvtc-vehicle-banner.png') center/cover no-repeat;box-shadow:0 18px 42px #07111f30;color:#fff}
 .vehicle-brand-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07101af2 0%,#07101ac7 38%,#07101a12 72%)}
 .vehicle-brand-copy{position:relative;z-index:1;width:58%;padding:24px 0 22px 22px}.vehicle-brand-copy small{display:block;color:#78a9f7;font-size:10px;font-weight:950;letter-spacing:.18em;text-transform:uppercase}.vehicle-brand-copy strong{display:block;margin-top:7px;font-size:25px;line-height:1.12;letter-spacing:-.04em}.vehicle-brand-copy span{display:block;margin-top:8px;color:#aeb8c8;font-size:11px;line-height:1.4}
+.dashboard-following{margin:20px 0 4px}.dashboard-following-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:11px}.dashboard-following-head small{display:block;color:var(--blue);font-size:10px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}.dashboard-following-head h2{margin-top:4px;font-size:22px;letter-spacing:-.035em}.dashboard-following-count{min-width:30px;height:30px;padding:0 9px;border-radius:999px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:12px;font-weight:950}.dashboard-following-list{display:grid;gap:10px}.dashboard-following-card{width:100%;display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:11px;padding:14px;border:1px solid var(--border);border-radius:18px;background:#fff;color:var(--text);box-shadow:0 9px 28px #0d1b3209;text-align:left}.dashboard-following-time{font-size:17px;font-weight:950;color:var(--blue)}.dashboard-following-main{min-width:0}.dashboard-following-main strong,.dashboard-following-main small{display:block}.dashboard-following-main strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dashboard-following-main small{margin-top:4px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dashboard-following-price{color:var(--text);font-size:14px;font-weight:950;white-space:nowrap}.dashboard-following-empty{padding:17px;border:1px dashed var(--border);border-radius:17px;color:var(--muted);background:var(--surface);font-size:13px;text-align:center}.dashboard-following-empty.hidden{display:none}html[data-theme="dark"] .dashboard-following-card{background:#111925!important;border-color:#2f3c50!important;color:#f4f7fb!important}html[data-theme="dark"] .dashboard-following-price{color:#f4f7fb!important}html[data-theme="dark"] .dashboard-following-empty{background:#111925!important;border-color:#2f3c50!important;color:#aeb8c8!important}
 html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;border-color:#2f3c50!important}html[data-theme="dark"] #dashboardHome .stat{border-color:#2f3c50!important}
 @media(max-width:380px){#dashboardHome .stat,#dashboardHome .stat.full-width{padding:13px 9px;min-height:112px}#dashboardHome .stat strong{font-size:25px}#dashboardHome .stat span{font-size:9px}.dashboard-next-actions{flex-direction:column}.dashboard-next-actions button,.dashboard-next-actions a{width:100%}.vehicle-brand-copy{width:64%;padding-left:18px}.vehicle-brand-copy strong{font-size:21px}}
 </style>
@@ -926,13 +927,18 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
             <button class="mission-arrow" type="button" data-open-tab="agendaPanel" aria-label="Ouvrir l’agenda">›</button>
           </div>
           <div class="agenda-items" id="todayAgendaList"></div>
-          <div class="empty hidden" id="todayAgendaEmpty">Aucune course à venir.</div>
+          <div class="empty hidden" id="todayAgendaEmpty">Aucune course restante aujourd’hui.</div>
         </div>
         <div class="home-actions dashboard-priority-actions">
           <button class="home-action voice-home-action priority-voice" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Copilote OuassVTC</span></button>
         </div>
         <section class="vehicle-brand-banner" aria-label="OuassVTC, votre journée en mouvement">
           <div class="vehicle-brand-copy"><small>Votre journée</small><strong>Toujours plus loin avec OuassVTC.</strong><span>Une conduite professionnelle, organisée et connectée.</span></div>
+        </section>
+        <section class="dashboard-following" aria-labelledby="dashboardFollowingTitle">
+          <div class="dashboard-following-head"><div><small>Planning du jour</small><h2 id="dashboardFollowingTitle">Courses suivantes aujourd’hui</h2></div><span class="dashboard-following-count" id="dashboardFollowingCount">0</span></div>
+          <div class="dashboard-following-list" id="dashboardFollowingList"></div>
+          <div class="dashboard-following-empty" id="dashboardFollowingEmpty">Aucune autre course prévue aujourd’hui.</div>
         </section>
       </section>
  
@@ -1632,36 +1638,47 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
  
     function renderTodayAgenda() {
       const now = new Date();
-      const active = state.bookings
-        .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && bookingDate(item))
+      const todayCourses = state.bookings
+        .filter(item => {
+          const date = bookingDate(item);
+          if (!["accepted", "en_route", "on_board"].includes(item.status) || !date || !isSameDay(date, now)) return false;
+          return ["en_route", "on_board"].includes(item.status) || date >= now;
+        })
         .sort((a, b) => {
           const activeA = ["en_route", "on_board"].includes(a.status) ? 0 : 1;
           const activeB = ["en_route", "on_board"].includes(b.status) ? 0 : 1;
           return activeA - activeB || bookingDate(a) - bookingDate(b);
         });
-      const item = active.find(course => ["en_route", "on_board"].includes(course.status) || bookingDate(course) >= new Date(now.getTime() - 60 * 60 * 1000));
+      const [item, ...following] = todayCourses;
       $("todayAgendaEmpty").classList.toggle("hidden", Boolean(item));
       if (!item) {
         $("todayAgendaList").innerHTML = "";
-        return;
+      } else {
+        const date = bookingDate(item);
+        const difference = date - now;
+        const minutes = Math.max(0, Math.round(difference / 60000));
+        const timing = ["en_route", "on_board"].includes(item.status)
+          ? (item.status === "on_board" ? "Client à bord" : "En route")
+          : `Dans ${String(Math.floor(minutes / 60)).padStart(2,"0")}:${String(minutes % 60).padStart(2,"0")}`;
+        const wazeAddress = item.status === "on_board" ? item.destination : item.pickup;
+        const wazeUnlocked = ["en_route", "on_board"].includes(item.status);
+        $("todayAgendaList").innerHTML = `<article class="dashboard-next-course">
+          <div class="dashboard-next-head"><span class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(statusLabels[item.status] || "Course acceptée")}</span><span class="dashboard-next-time">◷ ${escapeHtml(timing)}</span></div>
+          <div class="dashboard-next-client"><span><small>Client</small><strong>${escapeHtml(item.customerName || "Client")}</strong></span><span class="dashboard-next-price">${escapeHtml(item.estimatedPrice || "—")}</span></div>
+          <div class="dashboard-next-route"><i>●</i><span><small>Prise en charge</small><strong>${escapeHtml(item.pickup || "Adresse non renseignée")}</strong></span><i>○</i><span><small>Destination</small><strong>${escapeHtml(item.destination || "Adresse non renseignée")}</strong></span></div>
+          <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${escapeHtml(item.id)}">Ouvrir la course ›</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
+        </article>`;
+        $("todayAgendaList").querySelector("[data-open-booking]")?.addEventListener("click", button => openBooking(button.currentTarget.dataset.openBooking));
       }
-      const date = bookingDate(item);
-      const difference = date - now;
-      const minutes = Math.max(0, Math.round(difference / 60000));
-      const timing = ["en_route", "on_board"].includes(item.status)
-        ? (item.status === "on_board" ? "Client à bord" : "En route")
-        : difference < 24 * 60 * 60 * 1000
-          ? `Dans ${String(Math.floor(minutes / 60)).padStart(2,"0")}:${String(minutes % 60).padStart(2,"0")}`
-          : date.toLocaleDateString("fr-FR", { weekday:"short", day:"numeric", month:"short" }) + " · " + date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
-      const wazeAddress = item.status === "on_board" ? item.destination : item.pickup;
-      const wazeUnlocked = ["en_route", "on_board"].includes(item.status);
-      $("todayAgendaList").innerHTML = `<article class="dashboard-next-course">
-        <div class="dashboard-next-head"><span class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(statusLabels[item.status] || "Course acceptée")}</span><span class="dashboard-next-time">◷ ${escapeHtml(timing)}</span></div>
-        <div class="dashboard-next-client"><span><small>Client</small><strong>${escapeHtml(item.customerName || "Client")}</strong></span><span class="dashboard-next-price">${escapeHtml(item.estimatedPrice || "—")}</span></div>
-        <div class="dashboard-next-route"><i>●</i><span><small>Prise en charge</small><strong>${escapeHtml(item.pickup || "Adresse non renseignée")}</strong></span><i>○</i><span><small>Destination</small><strong>${escapeHtml(item.destination || "Adresse non renseignée")}</strong></span></div>
-        <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${item.id}">Ouvrir la course ›</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
-      </article>`;
-      $("todayAgendaList").querySelector("[data-open-booking]")?.addEventListener("click", button => openBooking(button.currentTarget.dataset.openBooking));
+      $("dashboardFollowingCount").textContent = String(following.length);
+      $("dashboardFollowingEmpty").classList.toggle("hidden", following.length > 0);
+      $("dashboardFollowingList").innerHTML = following.map(course => {
+        const date = bookingDate(course);
+        const time = date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+        const route = `${course.pickup || "Départ non renseigné"} → ${course.destination || "Destination non renseignée"}`;
+        return `<button class="dashboard-following-card" type="button" data-open-booking="${escapeHtml(course.id)}"><span class="dashboard-following-time">${escapeHtml(time)}</span><span class="dashboard-following-main"><strong>${escapeHtml(course.customerName || "Client")}</strong><small>${escapeHtml(route)}</small></span><span class="dashboard-following-price">${escapeHtml(course.estimatedPrice || "—")}</span></button>`;
+      }).join("");
+      $("dashboardFollowingList").querySelectorAll("[data-open-booking]").forEach(button => button.addEventListener("click", event => openBooking(event.currentTarget.dataset.openBooking)));
     }
 
     function updateDashboardIdentity() {
