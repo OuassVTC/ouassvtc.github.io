@@ -29,7 +29,7 @@ messaging.onBackgroundMessage(payload => {
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v65-20260918-15";
+const CACHE_NAME = "ouassvtc-chauffeur-v65-20260918-17";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
@@ -89,7 +89,7 @@ self.addEventListener("notificationclick", event => {
 // V64 — Réponse de diagnostic, sans modification du traitement métier.
 self.addEventListener("message", event => {
   if (event.data?.type !== "OUASSVTC_HEALTH_CHECK") return;
-  const reply = { version:"65.20260918.15", cache:CACHE_NAME };
+  const reply = { version:"65.20260918.17", cache:CACHE_NAME };
   if (event.ports?.[0]) event.ports[0].postMessage(reply);
 });
 
