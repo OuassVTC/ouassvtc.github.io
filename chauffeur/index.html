@@ -813,6 +813,35 @@ html[data-theme="dark"] .document-upload-progress strong{color:#d6e7ff!important
 html[data-theme="dark"] .game-tool,html[data-theme="dark"] .game-start{background:#172130!important;color:#f4f7fb!important;border-color:#344155!important}
 html[data-theme="dark"] .crm-contact-actions a,html[data-theme="dark"] .crm-contact-actions button:not(.primary-action){background:#172130!important;color:#f4f7fb!important;border:1px solid #344155!important}
 html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label{color:#c0cad7!important}
+/* V65.11 — tableau de bord premium compact */
+#dashboardHome .hello-row{margin-bottom:18px;align-items:flex-start}
+#dashboardHome .hello-row .eyebrow{color:#8392a8;font-size:11px;letter-spacing:.22em}
+#dashboardHome .hello-row h1{margin-top:6px;font-size:clamp(36px,10vw,52px);letter-spacing:-.06em}
+.dashboard-current-date{display:block;margin-top:7px;color:var(--muted);font-size:13px;font-weight:750;text-transform:capitalize}
+#dashboardHome .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;overflow:hidden;padding:0;margin-bottom:16px;border:1px solid var(--border);border-radius:23px;background:#fff;box-shadow:0 12px 34px #0d1b320b}
+#dashboardHome .stat,#dashboardHome .stat.full-width{position:relative;min-height:120px;padding:16px 13px;border:0!important;border-right:1px solid var(--border)!important;border-radius:0;background:transparent!important;color:var(--text)!important;box-shadow:none!important}
+#dashboardHome .stat:last-child{border-right:0!important}
+#dashboardHome .stat strong{font-size:30px;color:var(--text)!important}
+#dashboardHome .stat span{font-size:11px;color:var(--muted)!important}
+#dashboardHome .stat::before{display:grid;place-items:center;width:31px;height:31px;margin-bottom:9px;border-radius:10px;background:var(--blue-soft);color:var(--blue);font-size:15px;font-weight:950}
+#dashboardHome .stat:nth-child(1)::before{content:"▣"}#dashboardHome .stat:nth-child(2)::before{content:"⌁"}#dashboardHome .stat:nth-child(3)::before{content:"€"}
+#dashboardHome .stat.new-request-stat::after{top:17px;right:13px;width:8px;height:8px}
+#dashboardHome .dashboard-mission{padding:19px;margin:0 0 14px;border:1px solid #26364c;border-radius:25px;background:linear-gradient(150deg,#09111c,#101d2d);box-shadow:0 18px 45px #07111f35}
+#dashboardHome .dashboard-mission::after{width:135px;height:135px;right:-72px;top:-74px;opacity:.3}
+#dashboardHome .dashboard-mission-head{margin-bottom:13px}
+#dashboardHome .dashboard-mission-head .eyebrow{color:#5f9cff;font-size:11px;letter-spacing:.18em}
+#dashboardHome .dashboard-mission-head h2{margin-top:4px;font-size:23px}
+.dashboard-next-course{position:relative;z-index:1;padding:16px;border:1px solid #33445a;border-radius:20px;background:#111c2a;color:#f7f9fc}
+.dashboard-next-head,.dashboard-next-client,.dashboard-next-actions{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dashboard-next-time{padding:7px 10px;border:1px solid #285798;border-radius:999px;color:#6da8ff;font-size:11px;font-weight:900;white-space:nowrap}
+.dashboard-next-client{margin:13px 0}.dashboard-next-client small{display:block;color:#8e9bad;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.dashboard-next-client strong{display:block;margin-top:2px;font-size:22px}.dashboard-next-price{padding:8px 12px;border-radius:12px;background:#132f56;color:#65a3ff;font-size:20px;font-weight:950;white-space:nowrap}
+.dashboard-next-route{display:grid;grid-template-columns:18px minmax(0,1fr);gap:5px 10px;margin:12px 0 15px}.dashboard-next-route i{color:#4d94ff;font-style:normal;font-weight:950}.dashboard-next-route small,.dashboard-next-route strong{display:block}.dashboard-next-route small{color:#8795a8;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.dashboard-next-route strong{margin-top:2px;color:#eef3fa;font-size:13px;line-height:1.35}
+.dashboard-next-actions{padding-top:13px;border-top:1px solid #2b3a4d}.dashboard-next-actions button,.dashboard-next-actions a{flex:1;min-height:49px;border:1px solid #36465b;border-radius:14px;background:#182434;color:#f4f7fb;display:grid;place-items:center;text-decoration:none;font-size:13px;font-weight:900}.dashboard-next-actions .open-course{background:#176ef4;border-color:#176ef4;color:#fff}.dashboard-next-actions button:disabled{opacity:.5;cursor:not-allowed}
+#dashboardHome .dashboard-priority-actions{margin:0 0 15px}
+#dashboardHome .dashboard-priority-actions .priority-voice{min-height:68px;justify-content:flex-start;padding:0 18px;border-radius:20px;font-size:16px}
+#dashboardHome .priority-voice::after{content:"›";margin-left:auto;color:#9bb5d9;font-size:25px}
+html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;border-color:#2f3c50!important}html[data-theme="dark"] #dashboardHome .stat{border-color:#2f3c50!important}
+@media(max-width:380px){#dashboardHome .stat,#dashboardHome .stat.full-width{padding:13px 9px;min-height:112px}#dashboardHome .stat strong{font-size:25px}#dashboardHome .stat span{font-size:9px}.dashboard-next-actions{flex-direction:column}.dashboard-next-actions button,.dashboard-next-actions a{width:100%}}
 </style>
 </head>
  
@@ -876,8 +905,9 @@ html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label
       <section class="tab-panel" id="dashboardHome">
         <div class="hello-row">
           <div>
-            <div class="eyebrow">Tableau de bord privé</div>
-            <h1>Bonjour Ouassini.</h1>
+            <div class="eyebrow" id="dashboardGreeting">Bonjour</div>
+            <h1>Ouassini.</h1>
+            <span class="dashboard-current-date" id="dashboardCurrentDate"></span>
           </div>
           <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
         </div>
@@ -887,16 +917,16 @@ html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label
           <button class="stat full-width" type="button" data-daily-status="completed"><strong id="dailyRevenue">0 €</strong><span>Chiffre d’affaires du jour</span></button>
         </div>
         <button class="document-dashboard-alert hidden" id="documentDashboardAlert" type="button" data-open-tab="documentsPanel"><span class="document-alert-icon">!</span><span><strong id="documentAlertTitle">Document à renouveler</strong><small id="documentAlertText"></small></span><span class="document-alert-arrow">›</span></button>
-        <div class="home-actions dashboard-priority-actions">
-          <button class="home-action voice-home-action priority-voice" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Copilote OuassVTC</span></button>
-        </div>
         <div class="dashboard-mission">
           <div class="dashboard-mission-head">
-            <div><div class="eyebrow">Prochaine mission</div><h2>Votre journée en mouvement</h2></div>
+            <div><div class="eyebrow">Prochaine course</div><h2>Votre prochain trajet</h2></div>
             <button class="mission-arrow" type="button" data-open-tab="agendaPanel" aria-label="Ouvrir l’agenda">›</button>
           </div>
           <div class="agenda-items" id="todayAgendaList"></div>
-          <div class="empty hidden" id="todayAgendaEmpty">Aucune course prévue aujourd’hui.</div>
+          <div class="empty hidden" id="todayAgendaEmpty">Aucune course à venir.</div>
+        </div>
+        <div class="home-actions dashboard-priority-actions">
+          <button class="home-action voice-home-action priority-voice" id="openVoiceAssistant" type="button"><span class="voice-home-icon">●</span><span>Copilote OuassVTC</span></button>
         </div>
       </section>
  
@@ -1595,17 +1625,44 @@ html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label
     }
  
     function renderTodayAgenda() {
-      const todayItems = state.bookings
-        .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && isSameDay(bookingDate(item)))
-        .sort((a, b) => bookingDate(a) - bookingDate(b));
-      $("todayAgendaEmpty").classList.toggle("hidden", todayItems.length !== 0);
-      $("todayAgendaList").innerHTML = todayItems.map(item => {
-        const date = bookingDate(item);
-        return `<button class="agenda-item ${escapeHtml(item.status)}" type="button" data-open-booking="${item.id}"><span class="agenda-time">${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}</span><span><strong>${escapeHtml(item.customerName)} · ${escapeHtml(item.estimatedPrice || "—")}</strong><span class="agenda-route">${escapeHtml(item.pickup)}<br>→ ${escapeHtml(item.destination)}</span>${activeTripStatus(item)}</span><span class="accepted-row-arrow">›</span></button>`;
-      }).join("");
-      $("todayAgendaList").querySelectorAll("[data-open-booking]").forEach(button => {
-        button.addEventListener("click", () => openBooking(button.dataset.openBooking));
-      });
+      const now = new Date();
+      const active = state.bookings
+        .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && bookingDate(item))
+        .sort((a, b) => {
+          const activeA = ["en_route", "on_board"].includes(a.status) ? 0 : 1;
+          const activeB = ["en_route", "on_board"].includes(b.status) ? 0 : 1;
+          return activeA - activeB || bookingDate(a) - bookingDate(b);
+        });
+      const item = active.find(course => ["en_route", "on_board"].includes(course.status) || bookingDate(course) >= new Date(now.getTime() - 60 * 60 * 1000));
+      $("todayAgendaEmpty").classList.toggle("hidden", Boolean(item));
+      if (!item) {
+        $("todayAgendaList").innerHTML = "";
+        return;
+      }
+      const date = bookingDate(item);
+      const difference = date - now;
+      const minutes = Math.max(0, Math.round(difference / 60000));
+      const timing = ["en_route", "on_board"].includes(item.status)
+        ? (item.status === "on_board" ? "Client à bord" : "En route")
+        : difference < 24 * 60 * 60 * 1000
+          ? `Dans ${String(Math.floor(minutes / 60)).padStart(2,"0")}:${String(minutes % 60).padStart(2,"0")}`
+          : date.toLocaleDateString("fr-FR", { weekday:"short", day:"numeric", month:"short" }) + " · " + date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+      const wazeAddress = item.status === "on_board" ? item.destination : item.pickup;
+      const wazeUnlocked = ["en_route", "on_board"].includes(item.status);
+      $("todayAgendaList").innerHTML = `<article class="dashboard-next-course">
+        <div class="dashboard-next-head"><span class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(statusLabels[item.status] || "Course acceptée")}</span><span class="dashboard-next-time">◷ ${escapeHtml(timing)}</span></div>
+        <div class="dashboard-next-client"><span><small>Client</small><strong>${escapeHtml(item.customerName || "Client")}</strong></span><span class="dashboard-next-price">${escapeHtml(item.estimatedPrice || "—")}</span></div>
+        <div class="dashboard-next-route"><i>●</i><span><small>Prise en charge</small><strong>${escapeHtml(item.pickup || "Adresse non renseignée")}</strong></span><i>○</i><span><small>Destination</small><strong>${escapeHtml(item.destination || "Adresse non renseignée")}</strong></span></div>
+        <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${item.id}">Ouvrir la course ›</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
+      </article>`;
+      $("todayAgendaList").querySelector("[data-open-booking]")?.addEventListener("click", button => openBooking(button.currentTarget.dataset.openBooking));
+    }
+
+    function updateDashboardIdentity() {
+      const now = new Date();
+      const hour = now.getHours();
+      $("dashboardGreeting").textContent = hour >= 18 || hour < 5 ? "Bonsoir" : "Bonjour";
+      $("dashboardCurrentDate").textContent = now.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
     }
  
     function dailyItemsForStatus(status) {
@@ -3294,6 +3351,7 @@ Ouassini – OuassVTC`;
     }
 
     function render() {
+      updateDashboardIdentity();
       const term = state.search.trim();
       const requests = state.bookings.filter(item => item.status === "new" && matchesSearch(item));
       const accepted = state.bookings
