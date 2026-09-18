@@ -845,6 +845,15 @@ html[data-theme="dark"] .sim-field label,html[data-theme="dark"] .ads-form label
 .vehicle-brand-copy{position:relative;z-index:1;width:58%;padding:24px 0 22px 22px}.vehicle-brand-copy small{display:block;color:#78a9f7;font-size:10px;font-weight:950;letter-spacing:.18em;text-transform:uppercase}.vehicle-brand-copy strong{display:block;margin-top:7px;font-size:25px;line-height:1.12;letter-spacing:-.04em}.vehicle-brand-copy span{display:block;margin-top:8px;color:#aeb8c8;font-size:11px;line-height:1.4}
 .dashboard-following{margin:20px 0 4px}.dashboard-following-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:11px}.dashboard-following-head small{display:block;color:var(--blue);font-size:10px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}.dashboard-following-head h2{margin-top:4px;font-size:22px;letter-spacing:-.035em}.dashboard-following-count{min-width:30px;height:30px;padding:0 9px;border-radius:999px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-size:12px;font-weight:950}.dashboard-following-list{display:grid;gap:10px}.dashboard-following-card{width:100%;display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:11px;padding:14px;border:1px solid var(--border);border-radius:18px;background:#fff;color:var(--text);box-shadow:0 9px 28px #0d1b3209;text-align:left}.dashboard-following-time{font-size:17px;font-weight:950;color:var(--blue)}.dashboard-following-main{min-width:0}.dashboard-following-main strong,.dashboard-following-main small{display:block}.dashboard-following-main strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dashboard-following-main small{margin-top:4px;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dashboard-following-price{color:var(--text);font-size:14px;font-weight:950;white-space:nowrap}.dashboard-following-empty{padding:17px;border:1px dashed var(--border);border-radius:17px;color:var(--muted);background:var(--surface);font-size:13px;text-align:center}.dashboard-following-empty.hidden{display:none}html[data-theme="dark"] .dashboard-following-card{background:#111925!important;border-color:#2f3c50!important;color:#f4f7fb!important}html[data-theme="dark"] .dashboard-following-price{color:#f4f7fb!important}html[data-theme="dark"] .dashboard-following-empty{background:#111925!important;border-color:#2f3c50!important;color:#aeb8c8!important}
 html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;border-color:#2f3c50!important}html[data-theme="dark"] #dashboardHome .stat{border-color:#2f3c50!important}
+/* V65.15 — pilotage financier premium */
+#reportPanel{--fin-bg:#07101a;--fin-card:#101b29;--fin-line:#2a3b50;--fin-copy:#f7f9fc;--fin-muted:#9eacbf;--fin-blue:#2380ff}
+#reportPanel>.eyebrow{color:var(--blue);letter-spacing:.19em}#reportPanel>.section-title{margin-bottom:18px;font-size:clamp(34px,9vw,46px);letter-spacing:-.055em}
+#reportPanel .finance-tabs{padding:5px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}#reportPanel .finance-tab{min-height:52px;border-radius:14px}#reportPanel .finance-tab.active{background:var(--blue);color:#fff;box-shadow:0 8px 22px #176ef43d}
+.finance-revenue-hero{position:relative;overflow:hidden;margin:15px 0 12px;padding:22px;border:1px solid #176ef4;border-radius:24px;background:radial-gradient(circle at 92% 20%,#154b91 0,#0b2a52 24%,transparent 51%),linear-gradient(145deg,#07101a,#101d2d);color:#fff;box-shadow:0 18px 45px #07111f32}.finance-revenue-hero>*{position:relative;z-index:1}.finance-hero-label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:900}.finance-hero-icon{color:#57a0ff}.finance-hero-amount{display:block;margin-top:9px;font-size:45px;line-height:1;letter-spacing:-.055em}.finance-hero-trips{display:block;margin-top:8px;color:#b4c0cf;font-size:14px}.finance-trend{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:7px 10px;border:1px solid #16b96c88;border-radius:999px;background:#0a8f5030;color:#39df8b;font-size:11px;font-weight:950}.finance-trend.down{border-color:#f05b6688;background:#a4233530;color:#ff8c96}.finance-trend.neutral{border-color:#71809588;background:#71809522;color:#bec7d2}
+.finance-chart-card{margin:12px 0;padding:17px;border:1px solid var(--border);border-radius:22px;background:#fff;box-shadow:0 10px 32px #0d1b320a}.finance-chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.finance-chart-title{font-size:14px;font-weight:950}.finance-chart-periods{display:flex;gap:3px;padding:3px;border-radius:999px;background:var(--surface)}.finance-chart-period{min-height:32px;padding:0 9px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:10px;font-weight:900}.finance-chart-period.active{background:var(--blue);color:#fff}.finance-chart{width:100%;min-height:145px;display:block}.finance-chart-empty{height:145px;display:grid;place-items:center;color:var(--muted);font-size:12px}.finance-chart-grid{stroke:#dfe6ef;stroke-width:1;stroke-dasharray:4 5}.finance-chart-area{fill:url(#financeAreaGradient)}.finance-chart-line{fill:none;stroke:#2380ff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.finance-chart-dot{fill:#2380ff;stroke:#fff;stroke-width:3}.finance-chart-label{fill:#8794a6;font-size:10px;font-weight:700}
+.finance-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.finance-kpi{min-width:0;min-height:116px;padding:13px 10px;border:1px solid var(--border);border-radius:18px;background:#fff;color:var(--text);text-align:left;box-shadow:0 8px 25px #0d1b3208}.finance-kpi small,.finance-kpi strong,.finance-kpi span{display:block}.finance-kpi small{color:var(--muted);font-size:10px;font-weight:850}.finance-kpi strong{margin-top:14px;font-size:21px;letter-spacing:-.04em;white-space:nowrap}.finance-kpi span{margin-top:7px;color:var(--muted);font-size:9px;line-height:1.3}.finance-payment-overview{width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:12px;margin-top:12px;padding:15px;border:1px solid var(--border);border-radius:19px;background:#fff;color:var(--text);text-align:left}.finance-payment-donut{width:46px;height:46px;border-radius:50%;background:conic-gradient(#2380ff 0 var(--card-share,0%),#76b2ff var(--card-share,0%) calc(var(--card-share,0%) + var(--cash-share,0%)),#43536a 0);position:relative}.finance-payment-donut::after{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}.finance-payment-copy strong,.finance-payment-copy small{display:block}.finance-payment-copy strong{font-size:14px}.finance-payment-copy small{margin-top:4px;color:var(--muted);font-size:9px;line-height:1.35}.finance-payment-arrow{color:var(--blue);font-size:23px}.finance-history-button{width:100%;min-height:54px;margin-top:12px;border:2px solid var(--blue);border-radius:17px;background:transparent;color:var(--blue);font-weight:950}.finance-view .history-wrap{margin-top:0}.finance-view .history-toggle{display:none}.finance-view .history-months{margin-top:12px}
+html[data-theme="dark"] #reportPanel .finance-tabs,html[data-theme="dark"] #reportPanel .finance-chart-periods{background:#111925!important;border-color:#2f3c50!important}html[data-theme="dark"] #reportPanel .finance-chart-card,html[data-theme="dark"] #reportPanel .finance-kpi,html[data-theme="dark"] #reportPanel .finance-payment-overview{background:#101925!important;border-color:#2f3c50!important;color:#f4f7fb!important}html[data-theme="dark"] #reportPanel .finance-payment-donut::after{background:#101925}html[data-theme="dark"] #reportPanel .finance-chart-grid{stroke:#2b3a4e}html[data-theme="dark"] #reportPanel .finance-chart-label{fill:#94a2b5}
+@media(max-width:380px){.finance-revenue-hero{padding:18px}.finance-hero-amount{font-size:39px}.finance-chart-head{align-items:flex-start;flex-direction:column}.finance-kpi{padding:11px 8px}.finance-kpi strong{font-size:18px}.finance-kpi span{font-size:8px}}
 @media(max-width:380px){#dashboardHome .stat,#dashboardHome .stat.full-width{padding:13px 9px;min-height:112px}#dashboardHome .stat strong{font-size:25px}#dashboardHome .stat span{font-size:9px}.dashboard-next-actions{flex-direction:column}.dashboard-next-actions button,.dashboard-next-actions a{width:100%}.vehicle-brand-copy{width:64%;padding-left:18px}.vehicle-brand-copy strong{font-size:21px}}
 </style>
 </head>
@@ -1030,15 +1039,18 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
         <h2 class="section-title">Chiffre d’affaires</h2>
         <div class="finance-tabs" role="tablist" aria-label="Suivi financier"><button class="finance-tab active" type="button" data-finance-tab="revenue">Revenus</button><button class="finance-tab" type="button" data-finance-tab="expenses">Dépenses</button><button class="finance-tab" type="button" data-finance-tab="net">Revenu net</button></div>
         <div class="finance-view" id="financeRevenueView">
-        <div class="report-grid">
-          <button class="report-card week-card-button" id="toggleWeekBreakdown" type="button" aria-expanded="false" aria-controls="weekBreakdown"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée · Voir le détail</span></button>
-          <article class="report-card"><small>Ce mois-ci</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
-          <article class="report-card annual-card"><small>Cette année</small><strong id="yearRevenue">0 €</strong><span id="yearTrips">0 course terminée</span></article>
+        <article class="finance-revenue-hero"><div class="finance-hero-label"><span class="finance-hero-icon">▣</span><span>Ce mois-ci</span></div><strong class="finance-hero-amount" id="financeHeroRevenue">0 €</strong><span class="finance-hero-trips" id="financeHeroTrips">0 course terminée</span><span class="finance-trend neutral" id="financeMonthTrend">— vs mois dernier</span></article>
+        <section class="finance-chart-card"><div class="finance-chart-head"><strong class="finance-chart-title">▥ Évolution du chiffre d’affaires</strong><div class="finance-chart-periods"><button class="finance-chart-period" type="button" data-revenue-chart="7d">7 jours</button><button class="finance-chart-period active" type="button" data-revenue-chart="30d">30 jours</button><button class="finance-chart-period" type="button" data-revenue-chart="12m">12 mois</button></div></div><div id="financeRevenueChart"></div></section>
+        <div class="finance-kpis">
+          <button class="finance-kpi" id="toggleWeekBreakdown" type="button" aria-expanded="false" aria-controls="weekBreakdown"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée · Voir le détail</span></button>
+          <article class="finance-kpi"><small>Ce mois</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
+          <article class="finance-kpi"><small>Cette année</small><strong id="yearRevenue">0 €</strong><span id="yearTrips">0 course terminée</span></article>
         </div>
         <div class="week-breakdown hidden" id="weekBreakdown"></div>
-        <button class="payment-split-button" id="openPaymentReport" type="button"><span>Répartition des règlements</span><span>›</span></button>
+        <button class="finance-payment-overview" id="openPaymentReport" type="button"><span class="finance-payment-donut" id="financePaymentDonut"></span><span class="finance-payment-copy"><strong>Répartition des règlements</strong><small id="financePaymentSummary">Cartes 0 % · Espèces 0 % · Autres 0 %</small></span><span class="finance-payment-arrow">›</span></button>
         <div class="history-wrap">
           <button class="history-toggle" id="toggleMonthHistory" type="button">Historique des mois</button>
+          <button class="finance-history-button" id="financeHistoryButton" type="button">Voir l’historique mensuel</button>
           <div class="history-months hidden" id="monthHistoryList"></div>
         </div>
         </div>
@@ -1482,6 +1494,7 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
     let selectedMileagePeriod = "week";
     let selectedTransferStatus = "transferred";
     let selectedPaymentPeriod = "week";
+    let selectedRevenueChartPeriod = "30d";
     let paymentChoiceResolver = null;
     let currentPaymentTotal = 0;
     let voiceRecognition = null;
@@ -2015,6 +2028,7 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
       $("monthTrips").textContent = tripLabel(monthItems);
       $("yearRevenue").textContent = `${total(yearItems).toFixed(0)} €`;
       $("yearTrips").textContent = tripLabel(yearItems);
+      renderRevenueOverview(allCompleted, monthItems, total);
       const dayNames = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
       const dayRows = dayNames.map((name, index) => {
         const start = new Date(weekStart);
@@ -2032,6 +2046,38 @@ html[data-theme="dark"] #dashboardHome .stats{background:#111925!important;borde
       $("weekBreakdown").innerHTML = `<div class="week-breakdown-head"><span>Détail de la semaine</span><span>Chiffre d’affaires</span></div>${dayRows}`;
       renderMonthHistory(allCompleted, total);
       renderFinanceReports();
+    }
+
+    function renderRevenueOverview(allCompleted, monthItems, total) {
+      const now = new Date();
+      const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const monthRevenue = total(monthItems);
+      const previousRevenue = total(allCompleted.filter(item => { const date=completedDate(item); return date>=previousMonthStart && date<currentMonthStart; }));
+      $("financeHeroRevenue").textContent = euroAmount(monthRevenue);
+      $("financeHeroTrips").textContent = monthItems.length === 1 ? "1 course terminée" : `${monthItems.length} courses terminées`;
+      const trend = $("financeMonthTrend");
+      const percent = previousRevenue > 0 ? (monthRevenue - previousRevenue) / previousRevenue * 100 : null;
+      trend.className = "finance-trend " + (percent === null ? "neutral" : percent >= 0 ? "" : "down");
+      trend.textContent = percent === null ? "— aucune comparaison disponible" : `${percent >= 0 ? "↗ +" : "↘ "}${percent.toLocaleString("fr-FR",{maximumFractionDigits:0})} % vs mois dernier`;
+      let points=[],labels=[];
+      if(selectedRevenueChartPeriod==="12m"){
+        for(let offset=11;offset>=0;offset--){const start=new Date(now.getFullYear(),now.getMonth()-offset,1),end=new Date(now.getFullYear(),now.getMonth()-offset+1,1);points.push(total(allCompleted.filter(item=>{const date=completedDate(item);return date>=start&&date<end;})));labels.push(start.toLocaleDateString("fr-FR",{month:"short"}).replace(".",""));}
+      }else{
+        const days=selectedRevenueChartPeriod==="7d"?7:30;
+        for(let offset=days-1;offset>=0;offset--){const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-offset),end=new Date(start);end.setDate(end.getDate()+1);points.push(total(allCompleted.filter(item=>{const date=completedDate(item);return date>=start&&date<end;})));labels.push(start.toLocaleDateString("fr-FR",{day:"numeric",month:days===7?"short":undefined}));}
+      }
+      const width=620,height=190,padX=34,padTop=14,padBottom=28,max=Math.max(...points,1);
+      const coords=points.map((value,index)=>({x:padX+(width-padX*2)*(points.length===1?0:index/(points.length-1)),y:padTop+(height-padTop-padBottom)*(1-value/max),value,index}));
+      const line=coords.map((point,index)=>`${index?"L":"M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
+      const area=`${line} L${coords.at(-1).x.toFixed(1)},${height-padBottom} L${coords[0].x.toFixed(1)},${height-padBottom} Z`;
+      const labelIndexes=[0,Math.floor((points.length-1)/2),points.length-1].filter((value,index,array)=>array.indexOf(value)===index);
+      $("financeRevenueChart").innerHTML=points.some(Boolean)?`<svg class="finance-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Évolution du chiffre d’affaires"><defs><linearGradient id="financeAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2380ff" stop-opacity=".48"/><stop offset="1" stop-color="#2380ff" stop-opacity=".03"/></linearGradient></defs><line class="finance-chart-grid" x1="${padX}" y1="${padTop}" x2="${padX}" y2="${height-padBottom}"/><line class="finance-chart-grid" x1="${padX}" y1="${height-padBottom}" x2="${width-padX}" y2="${height-padBottom}"/><path class="finance-chart-area" d="${area}"/><path class="finance-chart-line" d="${line}"/>${coords.filter((_,i)=>labelIndexes.includes(i)).map(point=>`<circle class="finance-chart-dot" cx="${point.x}" cy="${point.y}" r="5"/>`).join("")}${labelIndexes.map(index=>`<text class="finance-chart-label" x="${coords[index].x}" y="${height-7}" text-anchor="${index===0?"start":index===points.length-1?"end":"middle"}">${escapeHtml(labels[index])}</text>`).join("")}</svg>`:`<div class="finance-chart-empty">Aucun chiffre d’affaires sur cette période.</div>`;
+      document.querySelectorAll("[data-revenue-chart]").forEach(button=>button.classList.toggle("active",button.dataset.revenueChart===selectedRevenueChartPeriod));
+      const amount=category=>monthItems.reduce((sum,item)=>{const kind=paymentCategory(item);if(kind==="mixed")return sum+moneyValue(category==="card"?item.paymentCardAmount:category==="cash"?item.paymentCashAmount:0);return sum+(kind===category?moneyValue(item.estimatedPrice):0);},0);
+      const card=amount("card"),cash=amount("cash"),cardShare=monthRevenue>0?Math.round(card/monthRevenue*100):0,cashShare=monthRevenue>0?Math.round(cash/monthRevenue*100):0,otherShare=Math.max(0,100-cardShare-cashShare);
+      $("financePaymentDonut").style.setProperty("--card-share",`${cardShare}%`);$("financePaymentDonut").style.setProperty("--cash-share",`${cashShare}%`);
+      $("financePaymentSummary").textContent=`Cartes ${cardShare} % · Espèces ${cashShare} % · Autres ${otherShare} %`;
     }
 
     function localDateKey(date) {
@@ -4675,6 +4721,8 @@ Ouassini – OuassVTC`;
         ? "Historique des mois"
         : "Masquer l’historique";
     });
+    $("financeHistoryButton").addEventListener("click",()=>{const list=$("monthHistoryList"),opening=list.classList.contains("hidden");list.classList.toggle("hidden",!opening);$("financeHistoryButton").textContent=opening?"Masquer l’historique mensuel":"Voir l’historique mensuel";if(opening)setTimeout(()=>list.scrollIntoView({behavior:"smooth",block:"start"}),80);});
+    document.querySelectorAll("[data-revenue-chart]").forEach(button=>button.addEventListener("click",()=>{selectedRevenueChartPeriod=button.dataset.revenueChart;renderReport();}));
 
     document.querySelectorAll("[data-finance-tab]").forEach(button => button.addEventListener("click", () => {
       const selected = button.dataset.financeTab;
