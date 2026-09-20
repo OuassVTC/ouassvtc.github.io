@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V65 — navigation, GPS et préférences -->
+<!-- OuassVTC Chauffeur V66 — arrêts, attente offerte et tarif évolutif -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur — Mission Control V65</title>
+  <title>OuassVTC Chauffeur — Mission Control V66</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -866,7 +866,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 /* V65.18 — CRM clients compact et professionnel */
 #customersPanel>.eyebrow{color:var(--blue);letter-spacing:.19em}#customersPanel>.section-title{margin:5px 0 4px;font-size:clamp(34px,9vw,46px);letter-spacing:-.055em}.crm-intro{margin:0 0 17px;color:var(--muted);font-size:13px;line-height:1.45}.crm-summary.crm-summary-premium{gap:8px;margin-bottom:15px}.crm-summary.crm-summary-premium article{min-width:0;min-height:92px;padding:14px 11px;border-radius:18px;box-shadow:0 8px 25px #0d1b3208}.crm-summary.crm-summary-premium strong{font-size:25px;letter-spacing:-.04em;white-space:nowrap}.crm-summary.crm-summary-premium small{font-size:9px;line-height:1.25}.crm-tools{position:sticky;z-index:8;top:82px;margin:0 0 13px;padding:10px;border:1px solid var(--border);border-radius:20px;background:color-mix(in srgb,var(--soft) 92%,transparent);backdrop-filter:blur(16px);box-shadow:0 10px 28px #07111f12}.crm-search-wrap{position:relative}.crm-search-wrap::before{content:"⌕";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:21px}.crm-search-wrap .v60-search{min-height:50px;margin:0;padding-left:43px;border-radius:14px}.crm-control-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:9px}.crm-filters{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}.crm-filters::-webkit-scrollbar{display:none}.crm-filter{min-height:36px;padding:0 11px;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--muted);font-size:10px;font-weight:900;white-space:nowrap}.crm-filter.active{border-color:var(--blue);background:var(--blue);color:#fff}.crm-sort{min-height:36px;max-width:112px;padding:0 9px;border:1px solid var(--border);border-radius:11px;background:#fff;color:var(--text);font-size:10px;font-weight:850}.crm-results-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 2px 10px;color:var(--muted);font-size:10px}.crm-results-meta strong{color:var(--text)}#v60CustomerList{gap:8px}.crm-card.crm-card-premium{min-height:88px;padding:12px;border:1px solid var(--border);border-radius:18px;background:#fff;grid-template-columns:43px minmax(0,1fr) auto;gap:11px;box-shadow:0 8px 24px #0d1b3208}.crm-avatar{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#176ef4,#0b4fb5);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:950;letter-spacing:.02em}.crm-card-main{min-width:0}.crm-card-name-row{display:flex;align-items:center;gap:7px}.crm-card-name-row strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}.crm-state{flex:0 0 auto;padding:4px 7px;border-radius:999px;background:#edf1f6;color:#697689;font-size:8px;font-weight:950}.crm-state.active{background:#dff8eb;color:#087442}.crm-state.upcoming{background:#e6f0ff;color:#155fc2}.crm-state.followup{background:#fff0d8;color:#9a5600}.crm-card-phone,.crm-card-metrics,.crm-card-activity{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.crm-card-phone{margin-top:3px;color:var(--muted);font-size:11px}.crm-card-metrics{margin-top:7px;color:var(--text);font-size:10px;font-weight:850}.crm-card-activity{margin-top:3px;color:var(--muted);font-size:9px}.crm-card-arrow{width:31px;height:31px;border-radius:10px;background:var(--blue-soft);display:grid;place-items:center;font-size:19px}.crm-load-more{width:100%;min-height:49px;margin-top:11px;border:2px solid var(--blue);border-radius:15px;background:transparent;color:var(--blue);font-weight:950}.crm-load-more.hidden{display:none}.crm-detail{border:1px solid #28374b;box-shadow:0 18px 45px #0004}.crm-detail-head h3{letter-spacing:-.03em}.crm-detail-identity{display:flex;align-items:center;gap:11px}.crm-detail-identity .crm-avatar{width:48px;height:48px}.crm-no-results{padding:25px 15px;border:1px dashed var(--border);border-radius:18px;color:var(--muted);text-align:center}.crm-no-results strong,.crm-no-results small{display:block}.crm-no-results small{margin-top:5px}html[data-theme="dark"] .crm-tools{background:#0b131eeF!important;border-color:#2f3c50!important}html[data-theme="dark"] .crm-filter,html[data-theme="dark"] .crm-sort{background:#111925!important;border-color:#344155!important;color:#aeb8c8!important}html[data-theme="dark"] .crm-filter.active{background:#176ef4!important;border-color:#176ef4!important;color:#fff!important}html[data-theme="dark"] .crm-card.crm-card-premium{background:#111925!important;border-color:#2f3c50!important;color:#f4f7fb!important}html[data-theme="dark"] .crm-state{background:#263244;color:#c1cad6}html[data-theme="dark"] .crm-state.active{background:#123b2a;color:#70e2a6}html[data-theme="dark"] .crm-state.upcoming{background:#17365f;color:#82b7ff}html[data-theme="dark"] .crm-state.followup{background:#493114;color:#ffc66e}@media(max-width:390px){.crm-summary.crm-summary-premium article{padding:12px 8px}.crm-summary.crm-summary-premium strong{font-size:21px}.crm-tools{top:74px}.crm-card.crm-card-premium{grid-template-columns:39px minmax(0,1fr) auto}.crm-avatar{width:39px;height:39px;border-radius:12px}.crm-control-row{grid-template-columns:minmax(0,1fr) 98px}.crm-sort{width:98px}}
 /* V65.19 — minuteur d’attente client à 0,34 €/minute */
+/* V66 — arrêts multiples, géolocalisation, attente offerte et total arrondi */
 .waiting-timer-card{margin:14px 0 4px;padding:16px;border:1px solid #237eff;border-radius:20px;background:radial-gradient(circle at 92% 10%,#164d91 0,#0d294d 22%,transparent 48%),linear-gradient(145deg,#08111d,#101d2d);color:#fff;box-shadow:0 15px 36px #07111f35}.waiting-timer-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.waiting-timer-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:950}.waiting-timer-icon{width:28px;height:28px;border:2px solid #8db9ff;border-radius:50%;display:grid;place-items:center;color:#8db9ff;font-size:13px}.waiting-rate{padding:6px 9px;border:1px solid #2f80ff;border-radius:10px;background:#173d70;color:#d9e9ff;font-size:10px;font-weight:950;white-space:nowrap}.waiting-clock{display:block;margin:12px 0 2px;text-align:center;font-size:39px;line-height:1;letter-spacing:.02em}.waiting-supplement{text-align:center;color:#c6d0dc;font-size:12px}.waiting-supplement strong{color:#fff}.waiting-price-row{display:grid;grid-template-columns:1fr auto 1fr auto 1.2fr;align-items:center;gap:6px;margin-top:13px;padding:12px 2px;border-top:1px solid #34506e;border-bottom:1px solid #34506e;text-align:center}.waiting-price-row small,.waiting-price-row strong{display:block}.waiting-price-row small{color:#a7b5c6;font-size:8px}.waiting-price-row strong{margin-top:3px;font-size:13px}.waiting-price-row .waiting-total strong{color:#55a0ff;font-size:17px}.waiting-operator{color:#a7b5c6;font-weight:950}.waiting-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.waiting-control{min-height:43px;padding:0 7px;border:1px solid transparent;border-radius:12px;color:#fff;font-size:10px;font-weight:950}.waiting-control.start{background:#078b43;border-color:#18c567}.waiting-control.pause{background:#a76a00;border-color:#e6a72c}.waiting-control.stop{background:#b9272d;border-color:#ee5158}.waiting-control:disabled{opacity:.38;filter:saturate(.45)}.waiting-finished{margin-top:10px;color:#75e1a8;font-size:10px;font-weight:850;text-align:center}@media(max-width:380px){.waiting-timer-card{padding:13px}.waiting-clock{font-size:34px}.waiting-price-row{gap:3px}.waiting-price-row strong{font-size:11px}.waiting-price-row .waiting-total strong{font-size:15px}.waiting-control{font-size:9px}}
+.trip-extras-card{margin:14px 0;padding:15px;border:1px solid #2f80ff;border-radius:20px;background:#0f1927;color:#fff}.trip-extras-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.trip-extras-head strong{font-size:16px}.trip-stop-list{display:grid;gap:9px}.trip-stop-row{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:8px;padding:10px;border:1px solid #2a3b52;border-radius:13px;background:#162131}.trip-stop-row input{min-width:0;background:transparent!important;border:0!important;padding:0!important;color:#fff!important}.trip-stop-remove{width:34px;height:34px;border:0;border-radius:10px;background:#3a1c24;color:#ff8b90;font-size:18px}.trip-extra-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.trip-extra-actions button{min-height:45px;border-radius:12px;border:1px solid #2f80ff;background:transparent;color:#8ebaff;font-weight:900}.trip-extra-actions .primary{background:#176ef4;color:#fff}.trip-extra-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.trip-extra-summary span{padding:10px;border-radius:12px;background:#17263a;text-align:center;color:#bdd1ec;font-size:11px}.trip-extra-summary strong{display:block;margin-top:3px;color:#5ba0ff;font-size:16px}.waiting-free-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:9px 10px;border-radius:12px;background:#173d70}.waiting-free-row label{font-size:11px;font-weight:850}.waiting-free-row input{width:72px;min-height:36px;padding:6px 8px;border:1px solid #4f7fba;border-radius:9px;background:#0d294d;color:#fff;text-align:center;font-weight:900}.waiting-reset{grid-column:1/-1;min-height:40px;border:1px solid #607086;border-radius:11px;background:transparent;color:#d4dce8;font-weight:850}.price-breakdown-card{margin-top:13px;padding:13px;border:1px solid #2a3b52;border-radius:15px;background:#111b29}.price-breakdown-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;color:#b9c4d4;font-size:11px}.price-breakdown-row.total{margin-top:6px;padding-top:10px;border-top:1px solid #34445a;color:#fff;font-size:15px;font-weight:950}.price-breakdown-row.total strong{color:#58a0ff;font-size:21px}
 </style>
 </head>
  
@@ -1520,6 +1522,8 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     let paymentChoiceResolver = null;
     let currentPaymentTotal = 0;
     const WAITING_RATE_PER_MINUTE = 0.34;
+    const EXTRA_DISTANCE_RATE = 1.80;
+    const DEFAULT_FREE_WAITING_MINUTES = 15;
     let waitingTimerInterval = null;
     let voiceRecognition = null;
     let voiceFlow = null;
@@ -3606,6 +3610,100 @@ Ouassini – OuassVTC`;
       renderCourseHistory();
     }
  
+    function tripOriginalFare(item) {
+      const stored = Number(item?.tripOriginalFare);
+      if (Number.isFinite(stored)) return Math.max(0, stored);
+      return Math.max(0, moneyValue(item?.estimatedPrice) - moneyValue(item?.waitingFee) - moneyValue(item?.tripExtraFare));
+    }
+
+    function tripStops(item) {
+      return Array.isArray(item?.tripStops) ? item.tripStops.filter(stop => String(stop || "").trim()).map(stop => String(stop).trim()) : [];
+    }
+
+    function roundedCourseTotal(value) { return Math.max(0, Math.round(Number(value) || 0)); }
+
+    function tripExtrasMarkup(item) {
+      const stops = tripStops(item);
+      const editable = !["completed", "cancelled", "rejected", "transfer_closed"].includes(item.status);
+      const original = tripOriginalFare(item);
+      const extraKm = Math.max(0, Number(item.tripExtraKm) || 0);
+      const extraFare = Math.max(0, Number(item.tripExtraFare) || 0);
+      const waiting = waitingPriceData(item);
+      const rows = stops.map((stop, index) => `<div class="trip-stop-row"><span>●</span><input value="${escapeHtml(stop)}" data-trip-stop="${index}" aria-label="Adresse de l’arrêt ${index + 1}" ${editable ? "" : "readonly"}><button class="trip-stop-remove" type="button" data-remove-trip-stop="${index}" ${editable ? "" : "disabled"} aria-label="Supprimer l’arrêt">×</button></div>`).join("");
+      if (!editable && !stops.length && !extraFare) return "";
+      return `<section class="trip-extras-card" data-trip-extras>
+        <div class="trip-extras-head"><strong>📍 Arrêts du trajet</strong><small>${stops.length} arrêt${stops.length > 1 ? "s" : ""}</small></div>
+        <div class="trip-stop-list" data-trip-stop-list>${rows || `<div class="empty">Aucun arrêt ajouté.</div>`}</div>
+        ${editable ? `<div class="trip-extra-actions"><button type="button" data-add-trip-stop>＋ Ajouter un arrêt</button><button type="button" data-locate-trip-stop>⌖ Me localiser</button><button class="primary" type="button" data-recalculate-trip style="grid-column:1/-1">⇄ Recalculer l’itinéraire</button></div>` : ""}
+        <div class="trip-extra-summary"><span>Distance ajoutée<strong data-trip-extra-km>+ ${extraKm.toLocaleString("fr-FR", { maximumFractionDigits:1 })} km</strong></span><span>Supplément<strong data-trip-extra-fare>+ ${euroAmount(extraFare)}</strong></span></div>
+        <div class="price-breakdown-card"><div class="price-breakdown-row"><span>Prix initial</span><strong>${euroAmount(original)}</strong></div><div class="price-breakdown-row"><span>Kilomètres supplémentaires</span><strong>+ ${euroAmount(extraFare)}</strong></div><div class="price-breakdown-row"><span>Attente facturable</span><strong>+ ${euroAmount(waiting.fee)}</strong></div><div class="price-breakdown-row total"><span>Total arrondi</span><strong>${euroAmount(roundedCourseTotal(original + extraFare + waiting.fee))}</strong></div></div>
+      </section>`;
+    }
+
+    function routeDistanceWithStops(origin, destination, stops = []) {
+      return new Promise((resolve, reject) => {
+        if (!driverDirectionsService || !window.google?.maps) return reject(new Error("Google Maps indisponible"));
+        driverDirectionsService.route({ origin, destination, waypoints:stops.map(location => ({ location, stopover:true })), optimizeWaypoints:false, travelMode:google.maps.TravelMode.DRIVING }, (result, status) => {
+          if (status !== "OK") return reject(new Error(`Itinéraire impossible : ${status}`));
+          const legs = result.routes?.[0]?.legs || [];
+          resolve(legs.reduce((sum, leg) => sum + Number(leg.distance?.value || 0), 0) / 1000);
+        });
+      });
+    }
+
+    function currentTripStopsFromForm() {
+      return [...($('detailBody')?.querySelectorAll('[data-trip-stop]') || [])].map(input => input.value.trim()).filter(Boolean);
+    }
+
+    async function recalculateTripExtras(item, button) {
+      const stops = currentTripStopsFromForm();
+      button.disabled = true; button.textContent = "Calcul en cours…";
+      try {
+        const [directKm, routeKm] = await Promise.all([routeDistanceWithStops(item.pickup, item.destination), routeDistanceWithStops(item.pickup, item.destination, stops)]);
+        const extraKm = Math.max(0, Math.round((routeKm - directKm) * 10) / 10);
+        const extraFare = Math.round(extraKm * EXTRA_DISTANCE_RATE * 100) / 100;
+        const original = tripOriginalFare(item);
+        const waitingFee = waitingPriceData(item).fee;
+        const changes = { tripStops:stops, tripOriginalFare:original, tripOriginalDistanceKm:directKm, tripRouteDistanceKm:routeKm, tripExtraKm:extraKm, tripExtraFare:extraFare, waitingBasePrice:original + extraFare, estimatedPrice:`${roundedCourseTotal(original + extraFare + waitingFee)} €`, updatedAt:serverTimestamp() };
+        await updateDoc(doc(db, "bookings", item.id), changes);
+        Object.assign(item, changes);
+        openBooking(item.id);
+      } catch (error) {
+        console.error(error); alert("Le nouvel itinéraire n’a pas pu être calculé. Vérifiez les adresses des arrêts.");
+        button.disabled = false; button.textContent = "⇄ Recalculer l’itinéraire";
+      }
+    }
+
+    function addTripStopField(value = "") {
+      const list = $('detailBody')?.querySelector('[data-trip-stop-list]');
+      if (!list) return;
+      if (list.querySelector('.empty')) list.innerHTML = "";
+      const index = list.querySelectorAll('[data-trip-stop]').length;
+      const row = document.createElement('div'); row.className = 'trip-stop-row';
+      row.innerHTML = `<span>●</span><input value="${escapeHtml(value)}" data-trip-stop="${index}" aria-label="Adresse de l’arrêt ${index + 1}"><button class="trip-stop-remove" type="button" aria-label="Supprimer l’arrêt">×</button>`;
+      row.querySelector('button').addEventListener('click', () => row.remove());
+      list.appendChild(row);
+      const input = row.querySelector('input');
+      if (window.google?.maps?.places) createAddressAutocomplete(input);
+      input.focus();
+    }
+
+    async function locateTripStop(button) {
+      if (!navigator.geolocation) return alert("La localisation n’est pas disponible sur ce téléphone.");
+      button.disabled = true; button.textContent = "Localisation…";
+      navigator.geolocation.getCurrentPosition(async position => {
+        try {
+          await loadGoogleMaps();
+          const location = { lat:position.coords.latitude, lng:position.coords.longitude };
+          new google.maps.Geocoder().geocode({ location }, (results, status) => {
+            button.disabled = false; button.textContent = "⌖ Me localiser";
+            if (status !== "OK" || !results?.[0]) return alert("L’adresse actuelle n’a pas pu être déterminée.");
+            addTripStopField(results[0].formatted_address);
+          });
+        } catch (error) { button.disabled = false; button.textContent = "⌖ Me localiser"; alert("Google Maps n’est pas disponible."); }
+      }, () => { button.disabled = false; button.textContent = "⌖ Me localiser"; alert("Autorisez la localisation du téléphone pour ajouter cet arrêt."); }, { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
+    }
+
     function waitingStartedDate(item) {
       if (item?.waitingStartedAt?.toDate) return item.waitingStartedAt.toDate();
       const date = new Date(item?.waitingStartedAtText || "");
@@ -3622,10 +3720,12 @@ Ouassini – OuassVTC`;
     function waitingPriceData(item, reference = new Date()) {
       const seconds = waitingElapsedSeconds(item, reference);
       const minutes = seconds > 0 ? Math.ceil(seconds / 60) : 0;
-      const fee = Math.round(minutes * WAITING_RATE_PER_MINUTE * 100) / 100;
+      const freeMinutes = Math.max(0, Math.floor(Number(item?.waitingFreeMinutes ?? DEFAULT_FREE_WAITING_MINUTES) || 0));
+      const billedMinutes = Math.max(0, minutes - freeMinutes);
+      const fee = Math.round(billedMinutes * WAITING_RATE_PER_MINUTE * 100) / 100;
       const storedBase = Number(item?.waitingBasePrice);
-      const base = Number.isFinite(storedBase) ? Math.max(0, storedBase) : Math.max(0, moneyValue(item?.estimatedPrice) - moneyValue(item?.waitingFee));
-      return { seconds, minutes, fee, base, total:Math.round((base + fee) * 100) / 100 };
+      const base = Number.isFinite(storedBase) ? Math.max(0, storedBase) : tripOriginalFare(item) + Math.max(0, Number(item?.tripExtraFare) || 0);
+      return { seconds, minutes, freeMinutes, billedMinutes, fee, base, exactTotal:Math.round((base + fee) * 100) / 100, total:roundedCourseTotal(base + fee) };
     }
 
     function waitingTimerChanges(item, status) {
@@ -3633,12 +3733,13 @@ Ouassini – OuassVTC`;
       return {
         waitingRate:WAITING_RATE_PER_MINUTE,
         waitingStatus:status,
+        waitingFreeMinutes:data.freeMinutes,
         waitingBasePrice:data.base,
         waitingAccumulatedSeconds:data.seconds,
         waitingStartedAtText:status === "running" ? new Date().toISOString() : null,
         waitingMinutes:data.minutes,
         waitingFee:data.fee,
-        estimatedPrice:`${data.total.toLocaleString("fr-FR", { minimumFractionDigits:data.total % 1 ? 2 : 0, maximumFractionDigits:2 })} €`
+        estimatedPrice:`${data.total.toLocaleString("fr-FR", { maximumFractionDigits:0 })} €`
       };
     }
 
@@ -3658,10 +3759,11 @@ Ouassini – OuassVTC`;
       const stopped = item.waitingStatus === "stopped" || item.status === "completed";
       return `<section class="waiting-timer-card" data-waiting-card>
         <div class="waiting-timer-head"><div class="waiting-timer-title"><span class="waiting-timer-icon">◷</span>Temps d’attente</div><span class="waiting-rate">0,34 € / min</span></div>
+        <div class="waiting-free-row"><label for="waitingFreeMinutesInput">Minutes offertes</label><input id="waitingFreeMinutesInput" type="number" min="0" max="180" step="1" value="${data.freeMinutes}" ${stopped ? "disabled" : ""}></div>
         <strong class="waiting-clock" data-waiting-clock>${waitingClockText(data.seconds)}</strong>
-        <div class="waiting-supplement">Supplément : <strong data-waiting-fee>+${euroAmount(data.fee)}</strong></div>
+        <div class="waiting-supplement"><span data-waiting-billed>${data.billedMinutes} min facturée${data.billedMinutes > 1 ? "s" : ""}</span> · Supplément : <strong data-waiting-fee>+${euroAmount(data.fee)}</strong></div>
         <div class="waiting-price-row"><span><small>Course</small><strong data-waiting-base>${euroAmount(data.base)}</strong></span><span class="waiting-operator">+</span><span><small>Attente</small><strong data-waiting-fee-row>${euroAmount(data.fee)}</strong></span><span class="waiting-operator">=</span><span class="waiting-total"><small>Total</small><strong data-waiting-total>${euroAmount(data.total)}</strong></span></div>
-        ${stopped ? `<div class="waiting-finished">✓ Temps d’attente enregistré dans la course</div>` : `<div class="waiting-controls"><button class="waiting-control start" type="button" data-waiting-action="start" ${running ? "disabled" : ""}>▶ ${paused ? "Reprendre" : "Démarrer"}</button><button class="waiting-control pause" type="button" data-waiting-action="pause" ${running ? "" : "disabled"}>Ⅱ Pause</button><button class="waiting-control stop" type="button" data-waiting-action="stop" ${data.seconds ? "" : "disabled"}>■ Terminer</button></div>`}
+        ${stopped ? `<div class="waiting-finished">✓ Temps d’attente enregistré dans la course</div>` : `<div class="waiting-controls"><button class="waiting-control start" type="button" data-waiting-action="start" ${running ? "disabled" : ""}>▶ ${paused ? "Reprendre" : "Démarrer"}</button><button class="waiting-control pause" type="button" data-waiting-action="pause" ${running ? "" : "disabled"}>Ⅱ Pause</button><button class="waiting-control stop" type="button" data-waiting-action="stop" ${data.seconds ? "" : "disabled"}>■ Terminer</button><button class="waiting-reset" type="button" data-waiting-action="reset" ${data.seconds ? "" : "disabled"}>↻ Remettre à zéro</button></div>`}
       </section>`;
     }
 
@@ -3670,6 +3772,7 @@ Ouassini – OuassVTC`;
       if (!card) return;
       const data = waitingPriceData(item);
       card.querySelector("[data-waiting-clock]").textContent = waitingClockText(data.seconds);
+      card.querySelector("[data-waiting-billed]").textContent = `${data.billedMinutes} min facturée${data.billedMinutes > 1 ? "s" : ""}`;
       card.querySelector("[data-waiting-fee]").textContent = `+${euroAmount(data.fee)}`;
       card.querySelector("[data-waiting-fee-row]").textContent = euroAmount(data.fee);
       card.querySelector("[data-waiting-total]").textContent = euroAmount(data.total);
@@ -3687,9 +3790,10 @@ Ouassini – OuassVTC`;
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item || !db) return;
       button.disabled = true;
-      const status = action === "start" ? "running" : action === "pause" ? "paused" : "stopped";
+      if (action === "reset" && !confirm("Remettre le temps d’attente et son supplément à zéro ?")) { button.disabled = false; return; }
+      const status = action === "start" ? "running" : action === "pause" ? "paused" : action === "reset" ? null : "stopped";
       try {
-        const changes = { ...waitingTimerChanges(item, status), updatedAt:serverTimestamp() };
+        const changes = action === "reset" ? { waitingStatus:null, waitingStartedAtText:null, waitingAccumulatedSeconds:0, waitingMinutes:0, waitingFee:0, estimatedPrice:`${roundedCourseTotal(waitingPriceData(item).base)} €`, updatedAt:serverTimestamp() } : { ...waitingTimerChanges(item, status), updatedAt:serverTimestamp() };
         await updateDoc(doc(db, "bookings", bookingId), changes);
         Object.assign(item, changes);
         openBooking(bookingId);
@@ -3712,6 +3816,7 @@ Ouassini – OuassVTC`;
           <div class="booking-meta"><span class="price-chip" data-detail-price>💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
           ${item.status === "transferred" ? `<div class="transfer-driver-badge">Transférée à ${escapeHtml(item.transferredDriverName || "Chauffeur")}</div>` : ""}
+          ${tripExtrasMarkup(item)}
           ${waitingTimerMarkup(item)}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
@@ -3739,6 +3844,20 @@ Ouassini – OuassVTC`;
       $("detailOverlay").classList.remove("hidden");
       startWaitingTimerDisplay(item);
       $("detailBody").querySelectorAll("[data-waiting-action]").forEach(button => button.addEventListener("click", () => saveWaitingTimerAction(item.id, button.dataset.waitingAction, button)));
+      $("detailBody").querySelector("#waitingFreeMinutesInput")?.addEventListener("change", async event => {
+        const freeMinutes = Math.max(0, Math.min(180, Math.floor(Number(event.target.value) || 0)));
+        const draft = { ...item, waitingFreeMinutes:freeMinutes };
+        const data = waitingPriceData(draft);
+        try {
+          const changes = { waitingFreeMinutes:freeMinutes, waitingMinutes:data.minutes, waitingFee:data.fee, estimatedPrice:`${data.total} €`, updatedAt:serverTimestamp() };
+          await updateDoc(doc(db, "bookings", item.id), changes); Object.assign(item, changes); openBooking(item.id);
+        } catch (error) { console.error(error); alert("Les minutes offertes n’ont pas pu être enregistrées."); }
+      });
+      $("detailBody").querySelector("[data-add-trip-stop]")?.addEventListener("click", () => addTripStopField());
+      $("detailBody").querySelector("[data-locate-trip-stop]")?.addEventListener("click", event => locateTripStop(event.currentTarget));
+      $("detailBody").querySelector("[data-recalculate-trip]")?.addEventListener("click", event => recalculateTripExtras(item, event.currentTarget));
+      $("detailBody").querySelectorAll("[data-remove-trip-stop]").forEach(button => button.addEventListener("click", () => button.closest('.trip-stop-row')?.remove()));
+      $("detailBody").querySelectorAll("[data-trip-stop]").forEach(input => { if (window.google?.maps?.places) createAddressAutocomplete(input); });
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
       $("detailBody").querySelector("[data-transfer-booking]")?.addEventListener("click", () => openTransferBooking(item.id));
@@ -5598,7 +5717,7 @@ Ouassini – OuassVTC`;
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "65.20260919.19";
+    const HEALTH_VERSION = "66.20260920.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
