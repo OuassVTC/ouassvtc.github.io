@@ -29,7 +29,7 @@ messaging.onBackgroundMessage(payload => {
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v65-20260919-19";
+const CACHE_NAME = "ouassvtc-chauffeur-v66-20260920-01";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
@@ -58,16 +58,16 @@ self.addEventListener("activate", event => {
  
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
- 
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        return response;
-      })
-      .catch(() => caches.match(event.request).then(hit => hit || caches.match("/chauffeur/")))
-  );
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+  if (event.request.mode === "navigate") {
+    event.respondWith(fetch(event.request).catch(() => caches.match("/chauffeur/")));
+    return;
+  }
+  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request).then(response => {
+    if (response.ok && response.type === "basic") event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone())));
+    return response;
+  })));
 });
  
 self.addEventListener("notificationclick", event => {
@@ -89,7 +89,7 @@ self.addEventListener("notificationclick", event => {
 // V64 — Réponse de diagnostic, sans modification du traitement métier.
 self.addEventListener("message", event => {
   if (event.data?.type !== "OUASSVTC_HEALTH_CHECK") return;
-  const reply = { version:"65.20260919.19", cache:CACHE_NAME };
+  const reply = { version:"66.20260920.01", cache:CACHE_NAME };
   if (event.ports?.[0]) event.ports[0].postMessage(reply);
 });
 
