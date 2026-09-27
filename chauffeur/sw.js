@@ -29,12 +29,12 @@ messaging.onBackgroundMessage(payload => {
   return self.registration.showNotification(title, options);
 });
  
-const CACHE_NAME = "ouassvtc-chauffeur-v66-1-20260920-02";
+const CACHE_NAME = "ouassvtc-chauffeur-v65-20260927-1";
 const APP_SHELL = [
   "/chauffeur/",
   "/chauffeur/manifest.json",
-  "/ouassvtc-app.png",
-  "./ouassvtc-vehicle-banner.png"
+  "/chauffeur/mission.html",
+  "/ouassvtc-app.png"
 ];
  
 self.addEventListener("install", event => {
@@ -58,16 +58,16 @@ self.addEventListener("activate", event => {
  
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
-  if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).catch(() => caches.match("/chauffeur/")));
-    return;
-  }
-  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request).then(response => {
-    if (response.ok && response.type === "basic") event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone())));
-    return response;
-  })));
+ 
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+        return response;
+      })
+      .catch(() => caches.match(event.request).then(hit => hit || caches.match("/chauffeur/")))
+  );
 });
  
 self.addEventListener("notificationclick", event => {
@@ -84,12 +84,11 @@ self.addEventListener("notificationclick", event => {
     })
   );
 });
-
-
+ 
+ 
 // V64 — Réponse de diagnostic, sans modification du traitement métier.
 self.addEventListener("message", event => {
   if (event.data?.type !== "OUASSVTC_HEALTH_CHECK") return;
-  const reply = { version:"66.1.20260920.02", cache:CACHE_NAME };
+  const reply = { version:"65.20260927.1", cache:CACHE_NAME };
   if (event.ports?.[0]) event.ports[0].postMessage(reply);
 });
-
