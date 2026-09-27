@@ -512,7 +512,7 @@
 .word-mask{text-align:center;font-size:25px;font-weight:1000;letter-spacing:7px;margin:18px 0}.word-letters{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}.word-letters button{width:34px;height:34px;border:0;border-radius:8px;background:#111;color:#fff;font-weight:900}.word-letters button:disabled{opacity:.25}
 #snakeCanvas{display:block;width:100%;max-width:360px;height:auto;margin:auto;background:#151515;border-radius:16px;border:3px solid #d4af37}
 @media(max-width:380px){.arcade-grid{grid-template-columns:1fr}.arcade-card{min-height:94px}}
-
+ 
 /* ===== OUASSVTC V25 — MOBILITY COMMAND DESIGN ===== */
 :root{
   --black:#07090d;
@@ -590,7 +590,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   .container{padding:0 13px}.dashboard{padding-top:22px}.stats{gap:8px}.stat{min-height:121px;padding:15px 11px;border-radius:18px}.stat strong{font-size:27px}.stat span{font-size:11px}.service-pill{padding:8px 10px;font-size:9px}.brand small{font-size:10px}.dashboard-mission{padding:18px;border-radius:23px}.tab-panel:not(#dashboardHome){padding:15px;border-radius:23px}
 }
 @media(max-width:370px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){grid-column:1/-1}.service-pill{display:none}}
-
+ 
 /* ===== V26 — CORRECTION FIDÈLE DES ÉCRANS ===== */
 .topbar{padding:max(9px,env(safe-area-inset-top)) 14px 9px}
 .brand img{width:44px;height:44px;border-radius:12px}
@@ -635,7 +635,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
   .report-grid{grid-template-columns:1fr 1fr}.report-card{min-height:132px;padding:16px}.report-card strong{font-size:28px}
 }
 @media(max-width:390px){.brand small{display:none}.service-pill{display:flex}.report-grid{grid-template-columns:1fr}.report-card.annual-card{grid-column:auto}}
-
+ 
 /* ===== V27 — ALERTE NOUVELLE DEMANDE ===== */
 .stat.new-request-stat{position:relative;overflow:hidden}
 .stat.new-request-stat::after{content:"";position:absolute;top:14px;right:14px;width:10px;height:10px;border-radius:50%;background:#c9ced6;transition:background .2s,box-shadow .2s}
@@ -645,7 +645,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 @keyframes requestAlertPulse{0%,100%{box-shadow:0 8px 28px #0c193208,0 0 0 0 rgba(23,105,255,0)}50%{box-shadow:0 12px 34px #1769ff28,0 0 0 4px rgba(23,105,255,.15)}}
 @keyframes requestAlertDot{0%{box-shadow:0 0 0 0 rgba(23,105,255,.55)}70%,100%{box-shadow:0 0 0 9px rgba(23,105,255,0)}}
 @media(prefers-reduced-motion:reduce){.stat.new-request-stat.request-alert,.stat.new-request-stat.request-alert::after{animation:none}}
-
+ 
 /* ===== V28 — DÉTAIL HEBDOMADAIRE DU CHIFFRE D’AFFAIRES ===== */
 .week-card-button{width:100%;border:1px solid var(--black);text-align:left;cursor:pointer;position:relative}
 .week-card-button::after{content:"⌄";position:absolute;right:17px;top:14px;font-size:22px;color:#fff;transition:transform .2s ease}
@@ -658,7 +658,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .week-day-row small{display:block;color:var(--muted);margin-top:3px}
 .week-day-amount{font-size:19px;font-weight:950;white-space:nowrap;color:var(--text)}
 .week-day-row.is-today .week-day-amount{color:var(--blue)}
-
+ 
 /* ===== V29 — COÛT ET RENTABILITÉ DE MISSION ===== */
 .cost-settings-card,.cost-calculator-card{background:#fff;border:1px solid var(--border);border-radius:23px;padding:18px;margin:16px 0;box-shadow:0 10px 32px #101b300b}
 .cost-card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:17px}
@@ -689,7 +689,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .mission-profit-row.total{background:#0b0e14;color:#fff;border-color:#0b0e14}
 .mission-profit-row.margin{background:var(--blue);color:#fff;border-color:var(--blue)}
 @media(max-width:430px){.cost-result-grid{grid-template-columns:1fr}.cost-result-item.total{grid-column:auto}}
-
+ 
 /* ===== V30 — ACTIONS DE COURSE COMPACTES ===== */
 .detail-body .waze-actions a{font-size:0}
 .detail-body .waze-actions a:first-child::after{content:"Adresse de départ";font-size:14px}
@@ -703,7 +703,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .detail-body .more-actions-panel .mission-profit-panel{grid-column:1/-1;margin:0;background:#fff}
 .detail-body .more-actions-panel [data-purchase-order]{font-weight:900}
 @media(max-width:390px){.detail-body .more-actions-panel{grid-template-columns:1fr}}
-
+ 
 /* ===== V31 — PILOTAGE FINANCIER ===== */
 .finance-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:6px;margin:14px 0 20px;background:#e9edf3;border-radius:17px}.finance-tab{min-height:46px;border:0;border-radius:12px;background:transparent;color:#626b78;font-size:14px;font-weight:900;cursor:pointer}.finance-tab.active{background:#fff;color:var(--text);box-shadow:0 5px 16px #11182712}.finance-view{animation:financeFade .2s ease}@keyframes financeFade{from{opacity:.45;transform:translateY(3px)}to{opacity:1;transform:none}}.finance-summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 0 17px}.finance-summary-card{min-height:108px;padding:16px;border:1px solid var(--border);border-radius:18px;background:#fff;display:flex;flex-direction:column;justify-content:space-between}.finance-summary-card small{color:var(--muted);font-size:13px;font-weight:800;line-height:1.25}.finance-summary-card strong{font-size:25px;letter-spacing:-.04em}.finance-summary-card.dark{background:#0a0d13;color:#fff;border-color:#0a0d13}.finance-summary-card.dark small{color:#aeb7c6}.finance-section{margin:14px 0;padding:18px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 30px #101b3009}.finance-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.finance-section-head h3{font-size:21px;letter-spacing:-.03em}.finance-section-head p{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.4}.finance-compact-button{border:0;border-radius:13px;background:var(--blue);color:#fff;padding:11px 13px;font-weight:900;white-space:nowrap;cursor:pointer}.finance-progress{padding:11px 13px;margin-bottom:12px;border-radius:13px;background:var(--blue-soft);color:#1758bc;font-size:13px;font-weight:800}.expense-list{display:grid;gap:8px}.expense-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 13px;border:1px solid #e5e9ef;border-radius:14px;background:#f9fafb}.expense-row strong,.expense-row small{display:block}.expense-row small{margin-top:3px;color:var(--muted);font-size:12px}.expense-row-amount{font-size:17px;font-weight:950;white-space:nowrap}.expense-delete{border:0;background:transparent;color:#c63d3d;font-weight:900;padding:7px;cursor:pointer}.ads-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ads-form .full{grid-column:1/-1}.ads-form label,.rates-grid label{display:block;margin:0 0 6px;color:#535b67;font-size:13px;font-weight:850}.ads-form input,.rates-grid input{width:100%;min-height:48px;border:1px solid #dce1e8;border-radius:13px;background:#f8f9fb;padding:11px 12px;font:inherit}.ads-form button,.rates-form button{grid-column:1/-1;min-height:48px;border:0;border-radius:14px;background:#0a0d13;color:#fff;font-weight:900;cursor:pointer}.rates-form{padding:17px;margin-bottom:15px;border-radius:19px;background:#101722;color:#fff}.rates-form h3{font-size:20px;margin-bottom:5px}.rates-form>p{color:#aeb8c8;font-size:13px;line-height:1.4;margin:0 0 14px}.rates-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}.rates-grid label{color:#c9d1dd}.rates-grid input{background:#fff;color:#111}.net-periods{display:grid;gap:12px}.net-period-card{overflow:hidden;border:1px solid var(--border);border-radius:21px;background:#fff}.net-period-head{display:flex;align-items:center;justify-content:space-between;padding:16px 17px;background:#f4f6f9}.net-period-head span{font-weight:900}.net-period-head strong{font-size:25px;color:var(--blue)}.net-breakdown{display:grid;gap:8px;padding:14px 17px}.net-line{display:flex;justify-content:space-between;gap:12px;color:#636c78;font-size:14px}.net-line strong{color:var(--text);white-space:nowrap}.net-line.total{padding-top:9px;border-top:1px solid #e5e8ed;color:var(--text);font-weight:900}.finance-note{margin:13px 3px;color:var(--muted);font-size:12px;line-height:1.45}@media(max-width:500px){.finance-summary-grid{grid-template-columns:1fr}.finance-summary-card{min-height:88px}.finance-section-head{display:block}.finance-compact-button{margin-top:10px;width:100%}.ads-form,.rates-grid{grid-template-columns:1fr}.ads-form .full{grid-column:auto}.finance-tabs{gap:4px;padding:5px}.finance-tab{font-size:12px}}
  
@@ -871,10 +871,10 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 .waiting-timer-card{margin:14px 0 4px;padding:16px;border:1px solid #237eff;border-radius:20px;background:radial-gradient(circle at 92% 10%,#164d91 0,#0d294d 22%,transparent 48%),linear-gradient(145deg,#08111d,#101d2d);color:#fff;box-shadow:0 15px 36px #07111f35}.waiting-timer-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.waiting-timer-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:950}.waiting-timer-icon{width:28px;height:28px;border:2px solid #8db9ff;border-radius:50%;display:grid;place-items:center;color:#8db9ff;font-size:13px}.waiting-rate{padding:6px 9px;border:1px solid #2f80ff;border-radius:10px;background:#173d70;color:#d9e9ff;font-size:10px;font-weight:950;white-space:nowrap}.waiting-clock{display:block;margin:12px 0 2px;text-align:center;font-size:39px;line-height:1;letter-spacing:.02em}.waiting-supplement{text-align:center;color:#c6d0dc;font-size:12px}.waiting-supplement strong{color:#fff}.waiting-price-row{display:grid;grid-template-columns:1fr auto 1fr auto 1.2fr;align-items:center;gap:6px;margin-top:13px;padding:12px 2px;border-top:1px solid #34506e;border-bottom:1px solid #34506e;text-align:center}.waiting-price-row small,.waiting-price-row strong{display:block}.waiting-price-row small{color:#a7b5c6;font-size:8px}.waiting-price-row strong{margin-top:3px;font-size:13px}.waiting-price-row .waiting-total strong{color:#55a0ff;font-size:17px}.waiting-operator{color:#a7b5c6;font-weight:950}.waiting-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.waiting-control{min-height:43px;padding:0 7px;border:1px solid transparent;border-radius:12px;color:#fff;font-size:10px;font-weight:950}.waiting-control.start{background:#078b43;border-color:#18c567}.waiting-control.pause{background:#a76a00;border-color:#e6a72c}.waiting-control.stop{background:#b9272d;border-color:#ee5158}.waiting-control:disabled{opacity:.38;filter:saturate(.45)}.waiting-finished{margin-top:10px;color:#75e1a8;font-size:10px;font-weight:850;text-align:center}@media(max-width:380px){.waiting-timer-card{padding:13px}.waiting-clock{font-size:34px}.waiting-price-row{gap:3px}.waiting-price-row strong{font-size:11px}.waiting-price-row .waiting-total strong{font-size:15px}.waiting-control{font-size:9px}}
 .trip-extras-card{margin:14px 0;padding:15px;border:1px solid #2f80ff;border-radius:20px;background:#0f1927;color:#fff}.trip-extras-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.trip-extras-head strong{font-size:16px}.trip-stop-list{display:grid;gap:9px}.trip-stop-row{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:8px;padding:10px;border:1px solid #2a3b52;border-radius:13px;background:#162131}.trip-stop-row input{min-width:0;background:transparent!important;border:0!important;padding:0!important;color:#fff!important}.trip-stop-remove{width:34px;height:34px;border:0;border-radius:10px;background:#3a1c24;color:#ff8b90;font-size:18px}.trip-extra-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.trip-extra-actions button{min-height:45px;border-radius:12px;border:1px solid #2f80ff;background:transparent;color:#8ebaff;font-weight:900}.trip-extra-actions .primary{background:#176ef4;color:#fff}.trip-extra-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.trip-extra-summary span{padding:10px;border-radius:12px;background:#17263a;text-align:center;color:#bdd1ec;font-size:11px}.trip-extra-summary strong{display:block;margin-top:3px;color:#5ba0ff;font-size:16px}.waiting-free-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:9px 10px;border-radius:12px;background:#173d70}.waiting-free-row label{font-size:11px;font-weight:850}.waiting-free-row input{width:72px;min-height:36px;padding:6px 8px;border:1px solid #4f7fba;border-radius:9px;background:#0d294d;color:#fff;text-align:center;font-weight:900}.waiting-reset{grid-column:1/-1;min-height:40px;border:1px solid #607086;border-radius:11px;background:transparent;color:#d4dce8;font-weight:850}.price-breakdown-card{margin-top:13px;padding:13px;border:1px solid #2a3b52;border-radius:15px;background:#111b29}.price-breakdown-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;color:#b9c4d4;font-size:11px}.price-breakdown-row.total{margin-top:6px;padding-top:10px;border-top:1px solid #34445a;color:#fff;font-size:15px;font-weight:950}.price-breakdown-row.total strong{color:#58a0ff;font-size:21px}
 .course-extra-launchers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.course-extra-launcher{min-height:58px;padding:8px;border:1px solid #2f80ff;border-radius:15px;background:#122136;color:#fff;font-size:12px;font-weight:950}.course-extra-launcher span{display:block;margin-bottom:3px;color:#63a5ff;font-size:20px}.course-extra-launcher.active{background:#176ef4}.trip-extras-card.module-collapsed,.waiting-timer-card.module-collapsed{display:none}.waiting-free-option{margin-top:11px;padding:10px;border-radius:13px;background:#17304f}.waiting-free-toggle{display:flex;align-items:center;gap:9px;color:#fff;font-size:12px;font-weight:900}.waiting-free-toggle input{width:19px;height:19px;accent-color:#2180ff}.waiting-free-editor{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:9px}.waiting-free-editor.hidden{display:none}.waiting-free-editor input{min-width:0;min-height:40px;border:1px solid #4f7fba;border-radius:10px;background:#0d294d;color:#fff;padding:8px;text-align:center;font-weight:900}.waiting-free-editor button{min-height:40px;border:0;border-radius:10px;background:#176ef4;color:#fff;padding:0 13px;font-weight:900}.waiting-free-status{display:block;margin-top:7px;color:#9fb1c8;font-size:10px}
-
+ 
 /* V67 — transfert partenaire sécurisé + interprète vocal */
 .interpreter-overlay{position:fixed;inset:0;z-index:1400;background:#07101cf5;color:#fff;overflow:auto;padding:18px}.interpreter-card{max-width:620px;margin:0 auto;background:#101b2a;border:1px solid #2f80ff;border-radius:22px;padding:18px;box-shadow:0 20px 60px #0008}.interpreter-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.interpreter-head h2{margin:0;font-size:21px}.interpreter-close{width:42px;height:42px;border:0;border-radius:12px;background:#25344a;color:#fff;font-size:24px}.interpreter-language{width:100%;margin:16px 0;padding:13px;border:1px solid #41658f;border-radius:12px;background:#0b1522;color:#fff;font-weight:800}.interpreter-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.interpreter-talk{min-height:72px;border:0;border-radius:16px;color:#fff;font-size:16px;font-weight:950}.interpreter-talk.me{background:#176ef4}.interpreter-talk.client{background:#0b8b50}.interpreter-talk.listening{outline:4px solid #ffffff55}.interpreter-result{margin-top:14px;padding:14px;border-radius:15px;background:#0a1421}.interpreter-result small{display:block;color:#9fb1c8;margin-bottom:4px}.interpreter-result strong{display:block;white-space:pre-wrap;font-size:16px}.interpreter-result .translated{margin-top:12px;color:#7db2ff}.interpreter-replay{width:100%;margin-top:12px;min-height:46px;border:1px solid #4777ad;border-radius:12px;background:transparent;color:#fff;font-weight:900}.transfer-live{display:block;margin-top:6px;color:#61a7ff;font-size:11px;font-weight:900}
-
+ 
 </style>
 </head>
  
@@ -1084,7 +1084,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         </div>
         <div class="finance-view hidden" id="financeNetView"><div class="net-period-selector"><button class="net-period-button active" type="button" data-net-period="week">Semaine</button><button class="net-period-button" type="button" data-net-period="month">Mois</button><button class="net-period-button" type="button" data-net-period="year">Année</button></div><form class="rates-form" id="financeRatesForm"><h3>Vos taux de prélèvement</h3><p>Ils restent modifiables et sont appliqués au chiffre d’affaires encaissé.</p><div class="rates-grid"><div><label for="urssafRate">Urssaf (%)</label><input id="urssafRate" type="number" min="0" max="100" step="0.1" value="21.2"></div><div><label for="incomeTaxRate">Impôt sur le revenu (%)</label><input id="incomeTaxRate" type="number" min="0" max="100" step="0.1" value="1.7"></div></div><button type="submit">Enregistrer les taux</button></form><div class="net-periods" id="netSummaryCards"></div><div class="net-history-wrap"><button class="net-history-toggle" id="toggleNetHistory" type="button"><span>Historique du revenu net</span><span>›</span></button><div class="net-history-list hidden" id="netHistoryList"></div></div><button class="net-pdf-export" id="exportNetPdf" type="button"><span><small>Bilan annuel professionnel</small>Exporter le bilan annuel</span><strong>PDF ↓</strong></button><button class="finance-settings-toggle" id="toggleFinanceSettings" type="button">⚙ Modifier les taux</button><p class="finance-note">Revenu net estimé = chiffre d’affaires − carburant − péages − publicité − usure véhicule − Urssaf − impôt.</p></div>
       </section>
-
+ 
       <section class="tab-panel hidden" id="documentsPanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Coffre professionnel sécurisé</div><h2 class="section-title">Documents chauffeur</h2>
@@ -1093,7 +1093,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <section class="document-section"><div class="document-section-head"><span class="document-section-icon">🚘</span><div><h3>Véhicule</h3><p>Assurances et justificatifs liés à votre activité.</p></div></div><div class="document-grid" id="vehicleDocumentList"></div></section>
         <p class="document-security-note">🔒 Les fichiers sont enregistrés dans votre espace Firebase lié à votre compte chauffeur.</p>
       </section>
-
+ 
       <section class="tab-panel hidden" id="settingsPanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Préférences de l’application</div><h2 class="section-title">Réglages</h2>
@@ -1101,7 +1101,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="settings-card"><div><small>Apparence</small><h3>Mode d’affichage</h3><p>Choisissez le mode jour, nuit, ou le changement automatique selon le soleil à Perpignan.</p></div><div class="theme-choice" id="themeChoice" role="group" aria-label="Mode d’affichage"><button type="button" data-theme-choice="light">☀ Jour</button><button type="button" data-theme-choice="dark">☾ Nuit</button><button type="button" data-theme-choice="auto">◐ Auto</button></div><div class="theme-auto-note" id="themeAutoNote">Le mode automatique suit le lever et le coucher du soleil à Perpignan.</div></div>
         <div class="settings-card"><div><small>Confort de conduite</small><h3>Maintenir l’écran allumé</h3><p>Empêche la mise en veille tant que l’application reste au premier plan.</p></div><button class="settings-action wake-lock-state" id="toggleWakeLock" type="button"><span id="wakeLockState">Désactivé</span></button></div>
       </section>
-
+ 
       <section class="tab-panel hidden" id="costPanel">
         <div class="panel-home-row">
           <button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord">
@@ -1145,7 +1145,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="mileage-stats"><article class="mileage-stat"><small>Moyenne par course</small><strong id="mileageAverage">0 km</strong></article><article class="mileage-stat"><small>Coût carburant</small><strong id="mileageFuelCost">0 €</strong></article></div>
         <div class="mileage-history" id="mileageHistory"></div>
       </section>
-
+ 
       <section class="tab-panel hidden" id="customersPanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Fichier clients</div><h2 class="section-title">Clients</h2>
@@ -1160,7 +1160,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="v60-grid" id="v60CustomerList"><div class="empty">Chargement des clients…</div></div>
         <button class="crm-load-more hidden" id="crmLoadMore" type="button">Afficher plus de clients</button>
       </section>
-
+ 
       <section class="tab-panel hidden" id="maintenancePanel">
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Suivi du véhicule</div><h2 class="section-title">Entretien véhicule</h2>
@@ -1172,7 +1172,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         </form>
         <div class="v60-grid" id="v60MaintenanceList" style="margin-top:14px"><div class="empty">Aucune échéance d’entretien enregistrée.</div></div>
       </section>
-
+ 
 <section class="tab-panel hidden" id="gamePanel">
   <div class="panel-head">
     <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
@@ -1329,7 +1329,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       </nav>
     </section>
   </main>
-
+ 
   <div class="pull-refresh" id="pullRefreshIndicator" aria-live="polite"><span class="pull-refresh-icon">↻</span><span id="pullRefreshText">Tirez pour actualiser</span></div>
  
   <div class="detail-overlay hidden" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
@@ -1347,7 +1347,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       <div class="trip-alert-actions"><button class="view-request" id="viewNewRequest" type="button">Voir la demande</button><button id="closeTripAlert" type="button">Fermer</button></div>
     </div>
   </div>
-
+ 
   <div class="payment-overlay hidden" id="paymentOverlay" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
     <div class="payment-sheet">
       <div class="payment-sheet-head"><div><small>Encaissement</small><h2 id="paymentTitle">Mode de règlement</h2></div><button class="payment-close" id="closePaymentChoice" type="button" aria-label="Fermer">×</button></div>
@@ -1357,7 +1357,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       <button class="payment-cancel" id="cancelPaymentChoice" type="button">Revenir à la course</button>
     </div>
   </div>
-
+ 
   <section class="payment-report hidden" id="paymentReport" aria-labelledby="paymentReportTitle">
     <div class="payment-report-head"><button id="closePaymentReport" type="button" aria-label="Retour au chiffre d’affaires">←</button><div><small>Chiffre d’affaires brut</small><strong id="paymentReportTitle">Répartition des règlements</strong></div></div>
     <div class="payment-period-tabs"><button class="payment-period-tab active" type="button" data-payment-period="week">Semaine</button><button class="payment-period-tab" type="button" data-payment-period="month">Mois</button><button class="payment-period-tab" type="button" data-payment-period="year">Année</button></div>
@@ -1369,13 +1369,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     <div class="payment-ok" id="paymentOk">✓ Tous les règlements sont renseignés</div>
     <p class="payment-report-note">Cette répartition détaille uniquement le chiffre d’affaires brut. Elle ne modifie ni les dépenses, ni les charges, ni le revenu net.</p>
   </section>
-
+ 
   <section class="finance-correction hidden" id="financeCorrection" aria-labelledby="financeCorrectionTitle">
     <div class="finance-correction-head"><button id="closeFinanceCorrection" type="button" aria-label="Retour">←</button><div><small id="financeCorrectionEyebrow">Mise à jour</small><strong id="financeCorrectionTitle">Courses à corriger</strong></div></div>
     <p class="finance-correction-intro" id="financeCorrectionIntro"></p>
     <div class="finance-correction-list" id="financeCorrectionList"></div>
   </section>
-
+ 
   <div class="document-editor-overlay hidden" id="documentEditorOverlay">
     <form class="document-editor" id="documentEditorForm">
       <div class="document-editor-head"><div><small>Mise à jour du dossier</small><h2 id="documentEditorTitle">Ajouter un document</h2></div><button id="closeDocumentEditor" type="button" aria-label="Fermer">×</button></div>
@@ -1399,7 +1399,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       <div class="document-editor-error hidden" id="documentEditorError"></div>
     </form>
   </div>
-
+ 
   <section class="voice-assistant hidden" id="voiceAssistant" aria-labelledby="voiceAssistantTitle">
     <div class="voice-assistant-head"><button id="closeVoiceAssistant" type="button" aria-label="Fermer l’assistant vocal">←</button><div><small>Commande mains libres</small><strong id="voiceAssistantTitle">Assistant OuassVTC</strong></div><span aria-hidden="true">🎙</span></div>
     <div class="voice-hero"><div class="voice-state"><span class="voice-state-dot"></span><span id="voiceStateText">Prêt à vous écouter</span></div><h2>Que souhaitez-vous faire ?</h2><p>Appuyez sur le micro, puis parlez naturellement.</p><span class="voice-ai-badge">Copilote IA sécurisé</span></div>
@@ -1455,7 +1455,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     const NOTIFICATIONS_ENABLED_KEY = "ouassvtcNotificationsEnabled";
     let themeMode = localStorage.getItem(THEME_MODE_KEY) || "auto";
     let themeTimer = null;
-
+ 
     function sunTimesForPerpignan(date = new Date()) {
       const latitude = 42.6887, longitude = 2.8948;
       const start = new Date(date.getFullYear(), 0, 0);
@@ -1470,13 +1470,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const solarNoon = 720 - 4 * longitude - equation + localOffset;
       return { sunrise: solarNoon - 4 * hourAngle * 180 / Math.PI, sunset: solarNoon + 4 * hourAngle * 180 / Math.PI };
     }
-
+ 
     function automaticTheme(date = new Date()) {
       const { sunrise, sunset } = sunTimesForPerpignan(date);
       const nowMinutes = date.getHours() * 60 + date.getMinutes();
       return nowMinutes >= sunset || nowMinutes < sunrise ? "dark" : "light";
     }
-
+ 
     function applyTheme(mode = themeMode) {
       themeMode = ["light", "dark", "auto"].includes(mode) ? mode : "auto";
       const resolved = themeMode === "auto" ? automaticTheme() : themeMode;
@@ -1493,7 +1493,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       clearInterval(themeTimer);
       if (themeMode === "auto") themeTimer = setInterval(() => applyTheme("auto"), 5 * 60 * 1000);
     }
-
+ 
     function notificationsOptedIn() {
       return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
     }
@@ -1678,7 +1678,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (item.createdAt?.toDate) return item.createdAt.toDate();
       return bookingDate(item);
     }
-
+ 
     function activeTripStatus(item) {
       const labels = { accepted:"Course acceptée", en_route:"En route vers le client", on_board:"Client à bord" };
       return `<small class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(labels[item.status] || "Course active")}</small>`;
@@ -1737,7 +1737,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }).join("");
       $("dashboardFollowingList").querySelectorAll("[data-open-booking]").forEach(button => button.addEventListener("click", event => openBooking(event.currentTarget.dataset.openBooking)));
     }
-
+ 
     function updateDashboardIdentity() {
       const now = new Date();
       const hour = now.getHours();
@@ -1776,7 +1776,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         button.addEventListener("click", () => openBooking(button.dataset.openDailyBooking));
       });
     }
-
+ 
     function renderAgenda() {
       const planned = state.bookings
         .filter(item => ["accepted", "en_route", "on_board"].includes(item.status) && bookingDate(item))
@@ -1806,7 +1806,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const number = Number.parseFloat(String(value || "0").replace(",", ".").replace(/[^0-9.]/g, ""));
       return Number.isFinite(number) ? number : 0;
     }
-
+ 
     function readMissionCostSettings() {
       try {
         const stored = JSON.parse(localStorage.getItem(MISSION_COST_SETTINGS_KEY) || "null");
@@ -1819,15 +1819,15 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         return { ...DEFAULT_MISSION_COST_SETTINGS };
       }
     }
-
+ 
     function saveMissionCostSettings(settings) {
       localStorage.setItem(MISSION_COST_SETTINGS_KEY, JSON.stringify(settings));
     }
-
+ 
     function euroAmount(value) {
       return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} €`;
     }
-
+ 
     function missionCostResultsMarkup(values) {
       if (!Number.isFinite(Number(values?.missionTotalKm))) {
         return `<div class="mission-profit-intro">Le coût n’a pas encore été calculé pour cette course.</div>`;
@@ -1843,7 +1843,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="mission-profit-row total"><span>Coût réel de la mission</span><strong>${euroAmount(values.missionTotalCost)}</strong></div>
         <div class="mission-profit-row margin"><span>Marge estimée</span><strong>${euroAmount(values.missionMargin)}</strong></div>`;
     }
-
+ 
     function calculateMissionRoute(homeAddress, pickup, destination) {
       return new Promise((resolve, reject) => {
         if (!driverDirectionsService) {
@@ -1870,7 +1870,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         });
       });
     }
-
+ 
     async function automaticallyCalculateMissionCost(reference, booking) {
       if (reference?.id) automaticCostAttemptIds.add(reference.id);
       const pickup = String(booking.pickup || "").trim();
@@ -1897,7 +1897,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         return false;
       }
     }
-
+ 
     async function calculateAndSaveMissionCost(item, button) {
       const settings = readMissionCostSettings();
       const panel = button.closest("[data-mission-profit-panel]");
@@ -2091,7 +2091,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       renderMonthHistory(allCompleted, total);
       renderFinanceReports();
     }
-
+ 
     function renderRevenueOverview(allCompleted, monthItems, total) {
       const now = new Date();
       const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -2123,34 +2123,34 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("financePaymentDonut").style.setProperty("--card-share",`${cardShare}%`);$("financePaymentDonut").style.setProperty("--cash-share",`${cashShare}%`);
       $("financePaymentSummary").textContent=`Cartes ${cardShare} % · Espèces ${cashShare} % · Autres ${otherShare} %`;
     }
-
+ 
     function localDateKey(date) {
       const value = new Date(date);
       return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}`;
     }
-
+ 
     function financePeriodItems(start, end) {
       return state.bookings.filter(item => item.status === "completed" && completedDate(item) >= start && completedDate(item) < end);
     }
-
+ 
     function adExpensesInPeriod(start, end) {
       return (state.financeSettings.adExpenses || []).filter(expense => {
         const date = new Date(`${expense.date}T12:00:00`);
         return date >= start && date < end;
       });
     }
-
+ 
     function monthlyEntryForKey(key) {
       return (state.financeSettings.monthlyEntries || []).find(entry => entry.month === key) || null;
     }
-
+ 
     function monthlyEntriesInPeriod(start,end) {
       return (state.financeSettings.monthlyEntries || []).filter(entry=>{
         const date=new Date(`${entry.month}-01T12:00:00`);
         return date < end && new Date(date.getFullYear(),date.getMonth()+1,1) > start;
       });
     }
-
+ 
     function financeTotals(start, end) {
       const courses = financePeriodItems(start, end);
       const revenue = courses.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
@@ -2166,16 +2166,16 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const kilometers = courses.reduce((sum,item) => sum + mileageValue(item), 0);
       return { courses, revenue, fuel, tolls, wear, trips, ads:adsTotal, urssaf, tax, kilometers, net:revenue - trips - adsTotal - urssaf - tax };
     }
-
+ 
     function pdfMoney(value) {
       return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} EUR`;
     }
-
+ 
     function mileageValue(item) {
       const value = Number(item?.missionTotalKm || 0);
       return Number.isFinite(value) && value > 0 ? value : 0;
     }
-
+ 
     function mileageTotals(start, end) {
       const courses = financePeriodItems(start, end).filter(item => mileageValue(item) > 0);
       return {
@@ -2184,11 +2184,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         fuel:courses.reduce((sum,item) => sum + moneyValue(item.missionFuelCost), 0)
       };
     }
-
+ 
     function formatKm(value) {
       return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:1, maximumFractionDigits:1 })} km`;
     }
-
+ 
     function renderMileageReports() {
       if (!$('mileagePanel')) return;
       const now = new Date();
@@ -2221,7 +2221,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         target.classList.toggle("hidden");
       }));
     }
-
+ 
     async function exportNetAnalysisPdf() {
       const JsPdf = window.jspdf?.jsPDF;
       if (!JsPdf) { alert("Le module PDF n’est pas encore chargé. Vérifiez votre connexion puis réessayez."); return; }
@@ -2326,7 +2326,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         alert("Le rapport PDF n’a pas pu être généré. Réessayez dans quelques instants.");
       } finally { button.disabled = false; }
     }
-
+ 
     function paymentPeriodDates(period = selectedPaymentPeriod) {
       const now = new Date();
       if (period === "month") return { start:new Date(now.getFullYear(), now.getMonth(), 1), end:new Date(now.getFullYear(), now.getMonth() + 1, 1), label:"Ce mois-ci" };
@@ -2334,7 +2334,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const start = mondayOf(now), end = new Date(start); end.setDate(end.getDate() + 7);
       return { start, end, label:"Cette semaine" };
     }
-
+ 
     function paymentCategory(item) {
       const method = normalizeSearch(item.paymentMethod || "");
       if (method.includes("mixte")) return "mixed";
@@ -2342,7 +2342,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (method.includes("carte") || method.includes("cb") || method.includes("lien") || method.includes("securise")) return "card";
       return "unknown";
     }
-
+ 
     function renderPaymentReport() {
       const period = paymentPeriodDates();
       const courses = financePeriodItems(period.start, period.end);
@@ -2370,7 +2370,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("paymentBars").innerHTML=paymentRows.map(([label,value,percent])=>`<div class="payment-bar-row"><span>${label}</span><span class="payment-bar-track"><span class="payment-bar-fill" style="width:${percent}%"></span></span><strong>${euroAmount(value)}</strong></div>`).join("");
       document.querySelectorAll("[data-payment-period]").forEach(button => button.classList.toggle("active", button.dataset.paymentPeriod === selectedPaymentPeriod));
     }
-
+ 
     function askPaymentMethod(title = "Mode de règlement", total = 0) {
       if (paymentChoiceResolver) paymentChoiceResolver(null);
       currentPaymentTotal = Math.max(0, moneyValue(total));
@@ -2384,7 +2384,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       document.body.style.overflow = "hidden";
       return new Promise(resolve => { paymentChoiceResolver = resolve; });
     }
-
+ 
     function resolvePaymentChoice(value = null) {
       $("paymentOverlay").classList.add("hidden");
       document.body.style.overflow = "";
@@ -2393,23 +2393,23 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       currentPaymentTotal = 0;
       if (resolve) resolve(value);
     }
-
+ 
     function missingCostCourses() {
       return state.bookings.filter(item => item.status === "completed" && !Number(item.missionTotalKm)).sort((a,b) => completedDate(b) - completedDate(a));
     }
-
+ 
     function closeFinanceCorrection() {
       $("financeCorrection").classList.add("hidden");
       document.body.style.overflow = "";
     }
-
+ 
     function correctionCourseRow(item, type) {
       const date = completedDate(item).toLocaleDateString("fr-FR");
       const route = `${item.pickup || "Départ non renseigné"} → ${item.destination || "Arrivée non renseignée"}`;
       const action = type === "payment" ? "Renseigner" : "Ouvrir";
       return `<button class="finance-correction-row" type="button" data-finance-correction="${type}" data-correction-booking="${escapeHtml(item.id)}"><span><strong>${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName || "Client non renseigné")}</strong><small>${escapeHtml(date)} · ${euroAmount(item.estimatedPrice)}<br>${escapeHtml(route)}</small></span><span class="finance-correction-action">${action} ›</span></button>`;
     }
-
+ 
     function openFinanceCorrection(type) {
       const period = paymentPeriodDates();
       const items = type === "payment"
@@ -2440,7 +2440,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("financeCorrection").classList.remove("hidden");
       document.body.style.overflow = "hidden";
     }
-
+ 
     function scheduleVoiceListening(delay = 450) {
       clearTimeout(voiceRestartTimer);
       if (!voiceConversationActive || voiceSpeaking || aiRequestRunning || $("voiceAssistant").classList.contains("hidden")) return;
@@ -2448,13 +2448,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         if (voiceConversationActive && !voiceSpeaking && !aiRequestRunning) startVoiceListening();
       }, delay);
     }
-
+ 
     function resetVoiceInactivityTimer() {
       clearTimeout(voiceInactivityTimer);
       if (!voiceConversationActive) return;
       voiceInactivityTimer = setTimeout(() => stopVoiceConversation("La conversation a été arrêtée après quelques minutes sans activité."), 240000);
     }
-
+ 
     function voiceSpeak(text, listenAfter = false) {
       lastVoiceResponse = text;
       $("voiceResponse").textContent = text;
@@ -2483,7 +2483,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       };
       window.speechSynthesis.speak(utterance);
     }
-
+ 
     function startVoiceConversation() {
       window.speechSynthesis?.cancel();
       voiceSpeaking = false;
@@ -2495,7 +2495,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       resetVoiceInactivityTimer();
       startVoiceListening();
     }
-
+ 
     function stopVoiceConversation(message = "Conversation terminée.") {
       voiceConversationActive = false;
       voiceShouldRestart = false;
@@ -2512,33 +2512,33 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("voiceResponse").textContent = message;
       $("voiceMiniStatus").textContent = "Conversation arrêtée";
     }
-
+ 
     function minimizeVoiceAssistant() {
       if (!voiceConversationActive) return;
       $("voiceAssistant").classList.add("minimized");
       document.body.style.overflow = "";
       $("voiceMiniStatus").textContent = voiceSpeaking ? "OuassVTC vous répond…" : aiRequestRunning ? "Analyse en cours…" : "Conversation en cours";
     }
-
+ 
     function expandVoiceAssistant() {
       $("voiceAssistant").classList.remove("minimized");
       document.body.style.overflow = "hidden";
     }
-
+ 
     function openVoiceAssistant() {
       $("voiceAssistant").classList.remove("hidden", "minimized");
       document.body.style.overflow = "hidden";
       $("voiceTranscript").textContent = "Dites par exemple : « Quelles sont mes courses de demain ? »";
       voiceSpeak("Bonjour Ouassini. Appuyez sur le micro et dites-moi ce que vous souhaitez faire.");
     }
-
+ 
     function closeVoiceAssistant() {
       stopVoiceConversation("Conversation terminée.");
       $("voiceAssistant").classList.add("hidden");
       $("voiceAssistant").classList.remove("minimized");
       document.body.style.overflow = "";
     }
-
+ 
     function startVoiceListening() {
       const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!Recognition) {
@@ -2583,13 +2583,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       };
       try { voiceRecognition.start(); } catch (error) { console.warn("Écoute vocale déjà active", error); }
     }
-
+ 
     function voiceDayItems(dayOffset) {
       const target = new Date();
       target.setDate(target.getDate() + dayOffset);
       return state.bookings.filter(item => ["new", "accepted"].includes(item.status) && isSameDay(bookingDate(item), target)).sort((a,b) => bookingDate(a) - bookingDate(b));
     }
-
+ 
     function voiceCoursesSummary(dayOffset) {
       const items = voiceDayItems(dayOffset);
       const dayLabel = dayOffset === 0 ? "aujourd’hui" : "demain";
@@ -2597,7 +2597,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const details = items.slice(0, 5).map(item => `${bookingDate(item).toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })}, ${item.customerName || "client"}`).join(" ; ");
       return `Vous avez ${items.length} course${items.length > 1 ? "s" : ""} prévue${items.length > 1 ? "s" : ""} ${dayLabel}. ${details}.`;
     }
-
+ 
     function voiceRevenue(period) {
       const now = new Date();
       let start, end, label;
@@ -2608,14 +2608,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const total = items.reduce((sum,item) => sum + moneyValue(item.estimatedPrice), 0);
       return `Votre chiffre d’affaires ${label} est de ${total.toLocaleString("fr-FR", { maximumFractionDigits:2 })} euros pour ${items.length} course${items.length > 1 ? "s" : ""} terminée${items.length > 1 ? "s" : ""}.`;
     }
-
+ 
     function voiceEndOfDaySummary() {
       const completed = dailyItemsForStatus("completed");
       const remaining = voiceDayItems(0);
       const revenue = completed.reduce((sum,item) => sum + moneyValue(item.estimatedPrice), 0);
       return `Point de la journée : ${completed.length} course${completed.length > 1 ? "s" : ""} terminée${completed.length > 1 ? "s" : ""}, ${revenue.toLocaleString("fr-FR", { maximumFractionDigits:2 })} euros de chiffre d’affaires, et ${remaining.length} course${remaining.length > 1 ? "s" : ""} encore prévue${remaining.length > 1 ? "s" : ""}.`;
     }
-
+ 
     function parseVoiceDateTime(text) {
       const normalized = normalizeSearch(text);
       const date = new Date();
@@ -2632,27 +2632,27 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       date.setHours(Number(time[1]), Number(time[2] || 0), 0, 0);
       return date;
     }
-
+ 
     function voicePhone(text) {
       const words = { zero:"0", un:"1", une:"1", deux:"2", trois:"3", quatre:"4", cinq:"5", six:"6", sept:"7", huit:"8", neuf:"9" };
       const normalized = normalizeSearch(text).split(/\s+/).map(word => words[word] ?? word).join("");
       return normalized.replace(/\D/g, "");
     }
-
+ 
     const voiceCourseSteps = ["name", "date", "pickup", "destination", "phone", "passengers", "payment", "confirm"];
     function startVoiceCourse() {
       voiceFlow = { type:"course", step:0 };
       $("cancelVoiceFlow").classList.remove("hidden");
       voiceSpeak("Très bien. Quel est le nom du client ?", true);
     }
-
+ 
     function cancelVoiceCourse() {
       const wasCourse = voiceFlow?.type === "course";
       voiceFlow = null;
       $("cancelVoiceFlow").classList.add("hidden");
       voiceSpeak(wasCourse ? "La saisie de la course est annulée." : "L’action est annulée.");
     }
-
+ 
     async function processVoiceCourse(text) {
       const step = voiceCourseSteps[voiceFlow.step];
       const normalized = normalizeSearch(text);
@@ -2693,23 +2693,23 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         voiceFlow = null; $("cancelVoiceFlow").classList.add("hidden"); closeVoiceAssistant(); openPanel("estimatePanel"); setTimeout(() => { voiceSpeak("Confirmation reçue. Je calcule le tarif et j’enregistre la course."); $("driverBookingForm").requestSubmit(); }, 450);
       }
     }
-
+ 
     function nextVoiceMission() {
       const now = new Date();
       return state.bookings.filter(item => ["accepted","en_route","on_board"].includes(item.status) && bookingDate(item) && bookingDate(item) >= new Date(now.getTime() - 45 * 60000)).sort((a,b) => bookingDate(a) - bookingDate(b))[0] || null;
     }
-
+ 
     function latestNewRequest() {
       return state.bookings.filter(item => item.status === "new").sort((a,b) => (createdDate(b) || new Date(0)) - (createdDate(a) || new Date(0)))[0] || null;
     }
-
+ 
     function missionVoiceDescription(item) {
       if (!item) return "Vous n’avez aucune prochaine course acceptée.";
       const date = bookingDate(item);
       const when = date ? `${date.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" })} à ${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}` : "à un horaire non renseigné";
       return `Votre prochaine course est avec ${item.customerName || "le client"}, ${when}, de ${item.pickup || "départ non renseigné"} vers ${item.destination || "arrivée non renseignée"}, pour ${item.estimatedPrice || "un tarif non renseigné"}.`;
     }
-
+ 
     function findVoiceCustomer(command) {
       const candidates = state.bookings.filter(item => item.customerName && item.customerPhone).sort((a,b) => (createdDate(b) || new Date(0)) - (createdDate(a) || new Date(0)));
       return candidates.find(item => {
@@ -2719,13 +2719,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         return command.includes(full) || (meaningful.length && meaningful.every(word => command.includes(word)));
       }) || null;
     }
-
+ 
     function startVoiceConfirmation(prompt, action) {
       voiceFlow = { type:"action", action };
       $("cancelVoiceFlow").classList.remove("hidden");
       voiceSpeak(`${prompt} Dites oui pour confirmer, ou non pour annuler.`, true);
     }
-
+ 
     async function processVoiceAction(text) {
       const command = normalizeSearch(text);
       if (/\b(non|annule|annuler)\b/.test(command)) { cancelVoiceCourse(); return; }
@@ -2735,14 +2735,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("cancelVoiceFlow").classList.add("hidden");
       try { await action(); } catch (error) { console.error(error); voiceSpeak("L’action n’a pas pu être enregistrée. Vérifiez votre connexion puis réessayez."); }
     }
-
+ 
     function startVoiceFinish(item) {
       if (!item) { voiceSpeak("Je ne trouve aucune course acceptée à terminer."); return; }
       voiceFlow = { type:"finish", itemId:item.id, step:"payment" };
       $("cancelVoiceFlow").classList.remove("hidden");
       voiceSpeak(`Je vais terminer la course de ${item.customerName || "ce client"}. Le règlement a-t-il été effectué par carte bancaire ou en espèces ?`, true);
     }
-
+ 
     async function processVoiceFinish(text) {
       const command = normalizeSearch(text);
       if (/\b(non|annule|annuler)\b/.test(command)) { cancelVoiceCourse(); return; }
@@ -2761,7 +2761,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const saved = await updateStatus(itemId, "completed", { paymentMethod });
       voiceSpeak(saved ? "La course est terminée et le règlement est enregistré." : "La course n’a pas pu être terminée. Réessayez lorsque la connexion sera disponible.");
     }
-
+ 
     function voiceComparison(period) {
       const now = new Date();
       let currentStart, currentEnd, previousStart, previousEnd, label;
@@ -2779,17 +2779,17 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const percent = Math.abs(difference / previous * 100).toFixed(0);
       return `Cette ${label}, vous avez réalisé ${euroAmount(current)}, contre ${euroAmount(previous)} précédemment. C’est ${difference >= 0 ? "une hausse" : "une baisse"} de ${percent} pour cent.`;
     }
-
+ 
     function voiceNetSummary(period) {
       const dates = paymentPeriodDates(period === "month" ? "month" : period === "year" ? "year" : "week");
       const result = financeTotals(dates.start, dates.end);
       return `${dates.label}, le chiffre d’affaires est de ${euroAmount(result.revenue)}, le carburant de ${euroAmount(result.fuel)}, les péages de ${euroAmount(result.tolls)}, la publicité de ${euroAmount(result.ads)}, l’usure véhicule de ${euroAmount(result.wear)}, et le revenu net estimé de ${euroAmount(result.net)}.`;
     }
-
+ 
     function voiceCapabilities() {
       return "Je peux créer une course, retrouver un client connu, lire les courses du jour ou de demain, annoncer la prochaine mission, lancer Waze, appeler le client, préparer un SMS, accepter une nouvelle demande, terminer une course avec son règlement, ouvrir chaque page, lire le chiffre d’affaires, le revenu net, les dépenses, la répartition carte et espèces, comparer deux périodes, et utiliser mon intelligence artificielle pour comprendre une demande formulée naturellement.";
     }
-
+ 
     function aiBookingsContext() {
       return state.bookings.slice(0, 60).map(item => ({
         id:item.id,
@@ -2804,11 +2804,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         paymentMethod:item.paymentMethod || ""
       }));
     }
-
+ 
     function aiBookingById(id) {
       return state.bookings.find(item => item.id === id) || null;
     }
-
+ 
     function fillAiBookingDraft(booking = {}) {
       const values = {
         driverName:booking.customerName,
@@ -2829,7 +2829,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         input.dispatchEvent(new Event("change", { bubbles:true }));
       });
     }
-
+ 
     function runAiAction(result) {
       const speech = result.speech || "J’ai préparé cette action.";
       if (result.action === "reply") { voiceSpeak(speech); return; }
@@ -2847,7 +2847,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         });
         return;
       }
-
+ 
       const item = aiBookingById(result.bookingId);
       if (!item) { voiceSpeak("Je ne retrouve pas cette course dans vos données actuelles."); return; }
       if (result.action === "open_booking") { voiceSpeak(speech); setTimeout(() => { openBooking(item.id); minimizeVoiceAssistant(); }, 500); return; }
@@ -2873,7 +2873,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (result.action === "schedule_return") { voiceSpeak(speech); setTimeout(() => { openReturnBooking(item.id); minimizeVoiceAssistant(); }, 450); return; }
       voiceSpeak("Cette action n’est pas encore disponible.");
     }
-
+ 
     async function processAiVoiceCommand(text) {
       if (aiRequestRunning) { voiceSpeak("Je traite déjà votre demande."); return; }
       if (!aiCopilotCallable) { voiceSpeak("L’intelligence artificielle n’est pas encore activée sur le serveur."); return; }
@@ -2908,7 +2908,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         }
       }
     }
-
+ 
     function processLegacyVoiceInput(text) {
       if (voiceFlow?.type === "course") { processVoiceCourse(text); return; }
       if (voiceFlow?.type === "action") { processVoiceAction(text); return; }
@@ -2982,7 +2982,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (command.includes("tableau de bord") || command.includes("accueil")) { closeVoiceAssistant(); openPanel("dashboardHome"); return; }
       processAiVoiceCommand(text);
     }
-
+ 
     function processVoiceInput(text) {
       if (voiceFlow?.type === "action") { processVoiceAction(text); return; }
       if (voiceFlow?.type === "finish") { processVoiceFinish(text); return; }
@@ -2998,7 +2998,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }
       processAiVoiceCommand(text);
     }
-
+ 
     function renderFinanceReports() {
       if (!$("netSummaryCards")) return;
       const now = new Date();
@@ -3066,12 +3066,12 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       renderPaymentReport();
       renderMileageReports();
     }
-
+ 
     async function saveFinanceSettings(values = {}) {
       state.financeSettings = { ...state.financeSettings, ...values };
       await setDoc(doc(db, "counters", "financeSettings"), { ...state.financeSettings, updatedAt:serverTimestamp() }, { merge:true });
     }
-
+ 
     function listenFinanceSettings() {
       if (state.financeUnsubscribe) state.financeUnsubscribe();
       const reference = doc(db, "counters", "financeSettings");
@@ -3081,7 +3081,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         renderFinanceReports();
       }, error => console.error("Réglages financiers indisponibles", error));
     }
-
+ 
     async function completeHistoricCosts() {
       const candidates = state.bookings.filter(item => item.status === "completed" && !Number(item.missionTotalKm) && item.pickup && item.destination && item.pickup !== "Ajout manuel" && item.destination !== "Trajet non renseigné");
       const button = $("estimateHistoricCosts"), progress = $("historicCostsProgress");
@@ -3114,27 +3114,32 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       crypto.getRandomValues(bytes);
       return Array.from(bytes, value => value.toString(16).padStart(2, "0")).join("");
     }
-
+ 
     function transferSmsText(driverName, missionUrl) {
       return `Bonjour ${driverName},\n\nUne course OuassVTC vous est proposée. Ouvrez votre mission sécurisée pour consulter les informations et mettre à jour son avancement :\n${missionUrl}\n\nOuassini – OuassVTC`;
     }
-
+ 
     function partnerMissionForBooking(bookingId) {
       return state.driverMissions.find(mission => mission.bookingId === bookingId) || null;
     }
-
+ 
     function partnerMissionStatusLabel(status) {
       return ({ proposed:"Proposée au chauffeur", accepted:"Acceptée par le chauffeur", en_route:"Chauffeur en route", arrived:"Chauffeur arrivé", passenger_onboard:"Client à bord", completed:"Course terminée", refused:"Refusée par le chauffeur", no_show:"Client absent", problem:"Problème signalé" })[status] || "En attente du chauffeur";
     }
-
+ 
     function listenDriverMissions() {
       if (state.driverMissionsUnsubscribe) state.driverMissionsUnsubscribe();
       state.driverMissionsUnsubscribe = onSnapshot(collection(db, "driverMissions"), snapshot => {
         state.driverMissions = snapshot.docs.map(result => ({ id:result.id, ...result.data() }));
+        for (const mission of state.driverMissions) {
+          const booking = state.bookings.find(item => item.id === mission.bookingId);
+          if (booking) booking.partnerMissionStatus = mission.status || booking.partnerMissionStatus || "proposed";
+        }
         renderTransfers();
+        if (typeof renderBookings === "function") renderBookings();
       }, error => console.error("Suivi chauffeur partenaire", error));
     }
-
+ 
     function openTransferBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
@@ -3198,7 +3203,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         }
       });
     }
-
+ 
     function renderTransfers() {
       const transfers = state.bookings
         .filter(item => ["transferred", "transfer_performed", "transfer_closed"].includes(item.status))
@@ -3219,7 +3224,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("transferYearRevenue").textContent = `${total(year).toFixed(0)} €`;
       $("transferYearTrips").textContent = `${label(year)} · Voir les années ›`;
       $("transferEmpty").classList.toggle("hidden", transfers.length !== 0);
-
+ 
       const statusItems = transfers.filter(item => item.status === selectedTransferStatus);
       const stateClass = selectedTransferStatus === "transfer_performed" ? "performed" : selectedTransferStatus === "transfer_closed" ? "closed" : "";
       const stateText = selectedTransferStatus === "transfer_performed" ? "Effectuée par le chauffeur" : selectedTransferStatus === "transfer_closed" ? "Course clôturée" : "En attente du chauffeur";
@@ -3318,7 +3323,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (item.status === "transfer_closed") return `<button class="action" data-status="transfer_performed" data-id="${item.id}">Rouvrir la course</button>`;
       return `<button class="action" data-status="accepted" data-id="${item.id}">Repasser en réservation acceptée</button>`;
     }
-
+ 
     function stagedWazeActions(item) {
       const pickupUnlocked = ["en_route", "on_board", "completed"].includes(item.status);
       const destinationUnlocked = ["on_board", "completed"].includes(item.status);
@@ -3330,7 +3335,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         : `<button class="gps-stage-link destination" type="button" disabled>GPS vers la destination<small>Disponible après « Client à bord »</small></button>`;
       return `<div class="waze-actions">${pickup}${destination}</div>`;
     }
-
+ 
     function renderCourseHistory() {
       const term = state.search.trim();
       if (!term) {
@@ -3363,15 +3368,15 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (/^[67]\d{8}$/.test(digits)) digits = `0${digits}`;
       return digits;
     }
-
+ 
     function crmSearchText(value) {
       return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
     }
-
+ 
     function crmTopAddress(addresses) {
       return [...addresses.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "Non renseignée";
     }
-
+ 
     const CRM_HIDDEN_KEY = "ouassvtcCrmHiddenCustomersV62";
     let crmActiveFilter = "all";
     let crmVisibleCount = 12;
@@ -3384,7 +3389,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       hidden.add(key);
       localStorage.setItem(CRM_HIDDEN_KEY, JSON.stringify([...hidden]));
     }
-
+ 
     function customerRecords() {
       const records = new Map();
       const now = new Date();
@@ -3419,12 +3424,12 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const hidden = hiddenCustomerKeys();
       return [...records.values()].filter(customer => !hidden.has(customer.key));
     }
-
+ 
     function crmInitials(name) {
       const words = String(name || "Client").trim().split(/\s+/).filter(Boolean);
       return (words.length > 1 ? `${words[0][0]}${words[words.length - 1][0]}` : words[0]?.slice(0, 2) || "CL").toUpperCase();
     }
-
+ 
     function crmCustomerState(customer) {
       const now = new Date();
       if (customer.next) return { key:"upcoming", label:"À venir" };
@@ -3432,12 +3437,12 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (customer.completed === 0) return { key:"new", label:"Nouveau" };
       return { key:"followup", label:"À relancer" };
     }
-
+ 
     function crmActivityLabel(customer) {
       if (customer.next) return `Prochaine course : ${customer.next.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit", year:"numeric" })}`;
       return `Dernière activité : ${customer.last ? customer.last.toLocaleDateString("fr-FR") : "—"}`;
     }
-
+ 
     function openCustomerRecord(key) {
       const customer = customerRecords().find(item => item.key === key);
       const detail = $("crmCustomerDetail");
@@ -3508,7 +3513,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       });
       detail.querySelectorAll("[data-crm-booking]").forEach(button => button.addEventListener("click", () => openBooking(button.dataset.crmBooking)));
     }
-
+ 
     function renderCustomerCRM() {
       const listBox = $("v60CustomerList");
       if (!listBox) return;
@@ -3552,7 +3557,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }).join("") : `<div class="crm-no-results"><strong>Aucun client trouvé</strong><small>Modifiez la recherche ou choisissez un autre filtre.</small></div>`;
       listBox.querySelectorAll("[data-crm-customer]").forEach(button => button.addEventListener("click", () => openCustomerRecord(button.dataset.crmCustomer)));
     }
-
+ 
     function render() {
       updateDashboardIdentity();
       const term = state.search.trim();
@@ -3645,13 +3650,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (Number.isFinite(stored)) return Math.max(0, stored);
       return Math.max(0, moneyValue(item?.estimatedPrice) - moneyValue(item?.waitingFee) - moneyValue(item?.tripExtraFare));
     }
-
+ 
     function tripStops(item) {
       return Array.isArray(item?.tripStops) ? item.tripStops.filter(stop => String(stop || "").trim()).map(stop => String(stop).trim()) : [];
     }
-
+ 
     function roundedCourseTotal(value) { return Math.max(0, Math.round(Number(value) || 0)); }
-
+ 
     function tripExtrasMarkup(item) {
       const stops = tripStops(item);
       const editable = !["completed", "cancelled", "rejected", "transfer_closed"].includes(item.status);
@@ -3669,7 +3674,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="price-breakdown-card"><div class="price-breakdown-row"><span>Prix initial</span><strong>${euroAmount(original)}</strong></div><div class="price-breakdown-row"><span>Kilomètres supplémentaires</span><strong>+ ${euroAmount(extraFare)}</strong></div><div class="price-breakdown-row"><span>Attente facturable</span><strong>+ ${euroAmount(waiting.fee)}</strong></div><div class="price-breakdown-row total"><span>Total arrondi</span><strong>${euroAmount(roundedCourseTotal(original + extraFare + waiting.fee))}</strong></div></div>
       </section>`;
     }
-
+ 
     function routeDistanceWithStops(origin, destination, stops = []) {
       return new Promise((resolve, reject) => {
         if (!driverDirectionsService || !window.google?.maps) return reject(new Error("Google Maps indisponible"));
@@ -3680,11 +3685,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         });
       });
     }
-
+ 
     function currentTripStopsFromForm() {
       return [...($('detailBody')?.querySelectorAll('[data-trip-stop]') || [])].map(input => input.value.trim()).filter(Boolean);
     }
-
+ 
     async function recalculateTripExtras(item, button) {
       const stops = currentTripStopsFromForm();
       button.disabled = true; button.textContent = "Calcul en cours…";
@@ -3703,7 +3708,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         button.disabled = false; button.textContent = "⇄ Recalculer l’itinéraire";
       }
     }
-
+ 
     function addTripStopField(value = "") {
       const list = $('detailBody')?.querySelector('[data-trip-stop-list]');
       if (!list) return;
@@ -3717,7 +3722,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (window.google?.maps?.places) createAddressAutocomplete(input);
       input.focus();
     }
-
+ 
     async function locateTripStop(button) {
       if (!navigator.geolocation) return alert("La localisation n’est pas disponible sur ce téléphone.");
       button.disabled = true; button.textContent = "Localisation…";
@@ -3733,20 +3738,20 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         } catch (error) { button.disabled = false; button.textContent = "⌖ Me localiser"; alert("Google Maps n’est pas disponible."); }
       }, () => { button.disabled = false; button.textContent = "⌖ Me localiser"; alert("Autorisez la localisation du téléphone pour ajouter cet arrêt."); }, { enableHighAccuracy:true, timeout:15000, maximumAge:30000 });
     }
-
+ 
     function waitingStartedDate(item) {
       if (item?.waitingStartedAt?.toDate) return item.waitingStartedAt.toDate();
       const date = new Date(item?.waitingStartedAtText || "");
       return Number.isNaN(date.getTime()) ? null : date;
     }
-
+ 
     function waitingElapsedSeconds(item, reference = new Date()) {
       let seconds = Math.max(0, Math.floor(Number(item?.waitingAccumulatedSeconds) || 0));
       const started = waitingStartedDate(item);
       if (item?.waitingStatus === "running" && started) seconds += Math.max(0, Math.floor((reference - started) / 1000));
       return seconds;
     }
-
+ 
     function waitingPriceData(item, reference = new Date()) {
       const seconds = waitingElapsedSeconds(item, reference);
       const minutes = seconds > 0 ? Math.ceil(seconds / 60) : 0;
@@ -3759,7 +3764,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const base = Number.isFinite(storedBase) ? Math.max(0, storedBase) : tripOriginalFare(item) + Math.max(0, Number(item?.tripExtraFare) || 0);
       return { seconds, minutes, freeEnabled, selectedFreeMinutes, freeMinutes, billedMinutes, fee, base, exactTotal:Math.round((base + fee) * 100) / 100, total:roundedCourseTotal(base + fee) };
     }
-
+ 
     function waitingTimerChanges(item, status) {
       const data = waitingPriceData(item);
       return {
@@ -3775,14 +3780,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         estimatedPrice:`${data.total.toLocaleString("fr-FR", { maximumFractionDigits:0 })} €`
       };
     }
-
+ 
     function waitingClockText(seconds) {
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const remaining = seconds % 60;
       return [hours, minutes, remaining].map(value => String(value).padStart(2, "0")).join(":");
     }
-
+ 
     function waitingTimerMarkup(item) {
       const hasWaiting = item.waitingStatus || Number(item.waitingAccumulatedSeconds) > 0 || Number(item.waitingFee) > 0;
       if (item.status !== "on_board" && !hasWaiting) return "";
@@ -3799,7 +3804,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         ${stopped ? `<div class="waiting-finished">✓ Temps d’attente enregistré dans la course</div>` : `<div class="waiting-controls"><button class="waiting-control start" type="button" data-waiting-action="start" ${running ? "disabled" : ""}>▶ ${paused ? "Reprendre" : "Démarrer"}</button><button class="waiting-control pause" type="button" data-waiting-action="pause" ${running ? "" : "disabled"}>Ⅱ Pause</button><button class="waiting-control stop" type="button" data-waiting-action="stop" ${data.seconds ? "" : "disabled"}>■ Terminer</button><button class="waiting-reset" type="button" data-waiting-action="reset" ${data.seconds ? "" : "disabled"}>↻ Remettre à zéro</button></div>`}
       </section>`;
     }
-
+ 
     function refreshWaitingTimerDisplay(item) {
       const card = $("detailBody")?.querySelector("[data-waiting-card]");
       if (!card) return;
@@ -3811,14 +3816,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       card.querySelector("[data-waiting-total]").textContent = euroAmount(data.total);
       $("detailBody").querySelector("[data-detail-price]").textContent = `💶 Tarif : ${euroAmount(data.total)}`;
     }
-
+ 
     function startWaitingTimerDisplay(item) {
       clearInterval(waitingTimerInterval);
       waitingTimerInterval = null;
       refreshWaitingTimerDisplay(item);
       if (item.waitingStatus === "running") waitingTimerInterval = setInterval(() => refreshWaitingTimerDisplay(item), 1000);
     }
-
+ 
     async function saveWaitingTimerAction(bookingId, action, button) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item || !db) return;
@@ -3836,13 +3841,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         button.disabled = false;
       }
     }
-
+ 
     function courseExtraLaunchersMarkup(item) {
       const waitingAvailable = item.status === "on_board" || item.waitingStatus || Number(item.waitingAccumulatedSeconds) > 0 || Number(item.waitingFee) > 0;
       if (["completed", "cancelled", "rejected", "transfer_closed"].includes(item.status)) return "";
       return `<div class="course-extra-launchers"><button class="course-extra-launcher" type="button" data-toggle-trip-extras><span>＋</span>Ajouter un arrêt</button><button class="course-extra-launcher" type="button" data-toggle-waiting ${waitingAvailable ? "" : "disabled"} title="${waitingAvailable ? "Ouvrir le minuteur" : "Disponible lorsque le client est à bord"}"><span>◷</span>Temps d’attente</button></div>`;
     }
-
+ 
     function openBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
@@ -4128,7 +4133,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (item.completedAt?.toDate) return item.completedAt.toDate();
       return bookingDate(item) || (item.updatedAt?.toDate ? item.updatedAt.toDate() : createdDate(item)) || new Date(0);
     }
-
+ 
     function completedCoursesInNumberOrder() {
       return state.bookings
         .filter(item => item.status === "completed")
@@ -4137,7 +4142,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           return difference || String(first.id).localeCompare(String(second.id));
         });
     }
-
+ 
     function provisionallyNumberedCourses() {
       return state.bookings
         .filter(item => ["new", "accepted"].includes(item.status) && Number(item.purchaseOrderNumber) > 0)
@@ -4147,7 +4152,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           return (createdDate(first) || new Date(0)) - (createdDate(second) || new Date(0));
         });
     }
-
+ 
     async function reconcileCompletedCourseNumbers() {
       numberingRequested = true;
       if (numberingBatchRunning) return;
@@ -4188,7 +4193,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         numberingBatchRunning = false;
       }
     }
-
+ 
     async function getPurchaseOrderNumber(bookingId) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item) throw new Error("Course introuvable");
@@ -4418,7 +4423,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }
       return updateStatus(id, status, extraChanges);
     }
-
+ 
     async function updateStatus(id, status, extraChanges = {}) {
       if (!db) return;
       const button = document.querySelector(`[data-id="${id}"][data-status="${status}"]`);
@@ -4501,20 +4506,20 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       ]
     };
     const DOCUMENTS_WITHOUT_EXPIRY=new Set(["kbis","registration","rir","vehicle_photo_front","vehicle_photo_front_left","vehicle_photo_rear_left"]);
-
+ 
     function documentDefinition(key) {
       for (const [category,items] of Object.entries(DOCUMENT_TYPES)) {
         const match=items.find(item=>item[0]===key); if(match) return { key,label:match[1],category };
       }
       return null;
     }
-
+ 
     function documentDaysLeft(item) {
       if (!item?.expiryDate) return null;
       const expiry=new Date(`${item.expiryDate}T23:59:59`), today=new Date(); today.setHours(0,0,0,0);
       return Math.ceil((expiry-today)/86400000);
     }
-
+ 
     function documentStatus(item) {
       if (!item?.downloadUrl) return { kind:"missing",label:"Document à ajouter" };
       const days=documentDaysLeft(item);
@@ -4524,17 +4529,17 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (days<=30) return { kind:"soon",label:`Expire dans ${days} jour${days>1?"s":""}` };
       return { kind:"valid",label:`Valide jusqu’au ${new Date(`${item.expiryDate}T12:00:00`).toLocaleDateString("fr-FR")}` };
     }
-
+ 
     function expiringDocuments() {
       return state.documents.filter(item => { const days=documentDaysLeft(item); return item.downloadUrl && days!==null && days<=30; }).sort((a,b)=>documentDaysLeft(a)-documentDaysLeft(b));
     }
-
+ 
     function renderDocumentCard(key,label) {
       const item=state.documents.find(document=>document.id===key), status=documentStatus(item);
       const dateText=item?.expiryDate ? `Échéance : ${new Date(`${item.expiryDate}T12:00:00`).toLocaleDateString("fr-FR")}` : "Aucune date d’expiration";
       return `<button class="document-card" type="button" data-edit-document="${escapeHtml(key)}"><span class="document-card-icon">${item?.downloadUrl?"✓":"＋"}</span><span><strong>${escapeHtml(label)}</strong><small>${escapeHtml(dateText)}</small><small class="document-status ${status.kind}">${escapeHtml(status.label)}</small></span><span class="document-card-arrow">›</span></button>`;
     }
-
+ 
     function renderDocuments() {
       $("driverDocumentList").innerHTML=DOCUMENT_TYPES.driver.map(item=>renderDocumentCard(...item)).join("");
       $("vehicleDocumentList").innerHTML=DOCUMENT_TYPES.vehicle.map(item=>renderDocumentCard(...item)).join("");
@@ -4546,13 +4551,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if(alerts.length){ const first=alerts[0], status=documentStatus(first); $("documentAlertTitle").textContent=alerts.length===1?first.label:`${alerts.length} documents à renouveler`; $("documentAlertText").textContent=alerts.length===1?status.label:"Ouvrez votre coffre documentaire pour consulter les échéances."; }
       document.querySelectorAll("[data-edit-document]").forEach(button=>button.addEventListener("click",()=>openDocumentEditor(button.dataset.editDocument)));
     }
-
+ 
     function listenDriverDocuments() {
       if(state.documentsUnsubscribe) state.documentsUnsubscribe();
       renderDocuments();
       state.documentsUnsubscribe=onSnapshot(query(collection(db,"driverDocuments"),where("ownerUid","==",auth.currentUser.uid)),snapshot=>{ state.documents=snapshot.docs.map(result=>({id:result.id,...result.data()})); renderDocuments(); },error=>{ console.error(error); renderDocuments(); $("documentSummaryText").textContent="Liste disponible · synchronisation Firebase à vérifier"; });
     }
-
+ 
     function selectedDocumentFile() { return $("documentCameraFile").files[0] || $("documentEditorFile").files[0] || null; }
     function updateSelectedDocumentFile(input) {
       if(input===$("documentCameraFile")&&input.files.length) $("documentEditorFile").value="";
@@ -4560,13 +4565,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       const file=selectedDocumentFile(); $("documentSelectedFile").textContent=file?`Fichier sélectionné : ${file.name}`:""; $("documentSelectedFile").classList.toggle("hidden",!file);
     }
     function closeDocumentEditor() { $("documentEditorOverlay").classList.add("hidden"); document.body.style.overflow=""; $("documentEditorForm").reset(); $("documentSelectedFile").classList.add("hidden"); }
-
+ 
     function updateDocumentExpiryMode() {
       const noExpiry=$("documentNoExpiry").checked;
       $("documentExpiryWrap").classList.toggle("hidden",noExpiry);
       if(noExpiry) $("documentExpiryDate").value="";
     }
-
+ 
     function uploadDocumentWithProgress(target,file) {
       return new Promise((resolve,reject)=>{
         const task=uploadBytesResumable(target,file,{contentType:file.type||"application/octet-stream"});
@@ -4578,7 +4583,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         },error=>{clearTimeout(timer);reject(error);},()=>{clearTimeout(timer);resolve(task.snapshot);});
       });
     }
-
+ 
     function openDocumentEditor(key) {
       const definition=documentDefinition(key); if(!definition) return;
       const item=state.documents.find(document=>document.id===key);
@@ -4588,7 +4593,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("openStoredDocument").classList.toggle("hidden",!item?.downloadUrl); $("openStoredDocument").onclick=()=>item?.downloadUrl&&window.open(item.downloadUrl,"_blank","noopener");
       $("documentEditorError").classList.add("hidden"); $("documentEditorOverlay").classList.remove("hidden"); document.body.style.overflow="hidden";
     }
-
+ 
     async function saveDriverDocument(event) {
       event.preventDefault();
       const key=$("documentEditorKey").value, definition=documentDefinition(key), existing=state.documents.find(item=>item.id===key), file=selectedDocumentFile(), expiryDate=$("documentNoExpiry").checked?"":$("documentExpiryDate").value;
@@ -4605,7 +4610,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       } catch(error){ console.error(error); const detail=error?.code==="storage/unauthorized"?"Accès Firebase refusé. Fermez puis reconnectez-vous à l’application.":error?.code==="storage/canceled"?"L’envoi a été interrompu. Vérifiez la connexion puis réessayez.":(error?.message||"Vérifiez votre connexion et réessayez."); $("documentEditorError").textContent=`Échec de l’enregistrement : ${detail}`; $("documentEditorError").classList.remove("hidden"); }
       finally{ button.disabled=false; button.textContent="Enregistrer le document"; $("documentUploadProgress").classList.add("hidden"); }
     }
-
+ 
     function updateNotificationButton() {
       if (!("Notification" in window)) {
         $("enableNotifications").textContent = "Notifications indisponibles";
@@ -4617,7 +4622,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("enableNotifications").classList.toggle("enabled-state", enabled);
       $("enableNotifications").classList.toggle("disabled-state", !enabled);
     }
-
+ 
     async function keepNotificationsRegistered({confirmation=false}={}) {
       if (!("Notification" in window) || Notification.permission !== "granted" || !notificationsOptedIn() || !messaging || !auth?.currentUser || !db || !("serviceWorker" in navigator)) return false;
       const registration=await navigator.serviceWorker.ready;
@@ -4654,7 +4659,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         alert("Autorisez les notifications dans les réglages du téléphone pour recevoir les nouvelles réservations.");
       }
     }
-
+ 
     async function disableNotifications() {
       localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, "false");
       updateNotificationButton();
@@ -4669,7 +4674,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       updateNotificationButton();
       return true;
     }
-
+ 
     async function toggleNotifications() {
       const active = ("Notification" in window) && Notification.permission === "granted" && notificationsOptedIn();
       if (active) {
@@ -4680,7 +4685,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     }
  
     let latestIncomingBookingId = null;
-
+ 
     async function showBookingNotification(bookingIds = []) {
       if (!("Notification" in window) || Notification.permission !== "granted" || !notificationsOptedIn() || !("serviceWorker" in navigator)) return;
       const ids = Array.isArray(bookingIds) ? bookingIds.filter(Boolean) : [];
@@ -4835,7 +4840,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         }
       });
     }
-
+ 
     document.addEventListener("visibilitychange",()=>{
       if(document.visibilityState==="visible"&&themeMode==="auto") applyTheme("auto");
       if(document.visibilityState!=="visible"||!("Notification" in window)||Notification.permission!=="granted"||!notificationsOptedIn()||!auth?.currentUser)return;
@@ -4904,7 +4909,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       button.classList.toggle("active", keepScreenAwake);
       $("wakeLockState").textContent = message || (keepScreenAwake ? "Activé" : "Désactivé");
     }
-
+ 
     async function requestScreenWakeLock() {
       if (!keepScreenAwake || document.visibilityState !== "visible") return;
       if (!("wakeLock" in navigator)) { updateWakeLockButton("Non disponible"); return; }
@@ -4917,18 +4922,18 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         updateWakeLockButton("En pause");
       }
     }
-
+ 
     async function toggleScreenWakeLock() {
       keepScreenAwake = !keepScreenAwake;
       localStorage.setItem("ouassvtcKeepScreenAwake", String(keepScreenAwake));
       if (keepScreenAwake) await requestScreenWakeLock();
       else { if (wakeLock) await wakeLock.release(); wakeLock = null; updateWakeLockButton(); }
     }
-
+ 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible" && keepScreenAwake) void requestScreenWakeLock();
     });
-
+ 
     function closeMenu() {
       $("sideMenu").classList.add("hidden");
       $("menuOverlay").classList.add("hidden");
@@ -4959,7 +4964,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }
       if (panelId === "mileagePanel") renderMileageReports();
     }
-
+ 
     function clearNewBookingForms() {
       clearTimeout(automaticFareTimer);
       $("driverBookingForm").reset();
@@ -5005,7 +5010,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     applyTheme(themeMode);
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
-
+ 
     let pullStartY = 0;
     let pullDistance = 0;
     let pullTracking = false;
@@ -5081,7 +5086,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("toggleWeekBreakdown").setAttribute("aria-expanded", String(isOpening));
       $("weekTrips").textContent = $("weekTrips").textContent.replace(isOpening ? "Voir le détail" : "Masquer le détail", isOpening ? "Masquer le détail" : "Voir le détail");
     });
-
+ 
     $("toggleMonthHistory").addEventListener("click", () => {
       $("monthHistoryList").classList.toggle("hidden");
       $("toggleMonthHistory").textContent = $("monthHistoryList").classList.contains("hidden")
@@ -5090,7 +5095,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     });
     $("financeHistoryButton").addEventListener("click",()=>{const list=$("monthHistoryList"),opening=list.classList.contains("hidden");list.classList.toggle("hidden",!opening);$("financeHistoryButton").textContent=opening?"Masquer l’historique mensuel":"Voir l’historique mensuel";if(opening)setTimeout(()=>list.scrollIntoView({behavior:"smooth",block:"start"}),80);});
     document.querySelectorAll("[data-revenue-chart]").forEach(button=>button.addEventListener("click",()=>{selectedRevenueChartPeriod=button.dataset.revenueChart;renderReport();}));
-
+ 
     document.querySelectorAll("[data-finance-tab]").forEach(button => button.addEventListener("click", () => {
       const selected = button.dataset.financeTab;
       document.querySelectorAll("[data-finance-tab]").forEach(item => item.classList.toggle("active", item === button));
@@ -5099,7 +5104,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("financeNetView").classList.toggle("hidden", selected !== "net");
       renderFinanceReports();
     }));
-
+ 
     document.querySelectorAll("[data-payment-choice]").forEach(button => button.addEventListener("click", () => {
       const method = button.dataset.paymentChoice;
       resolvePaymentChoice({
@@ -5157,7 +5162,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("voiceAssistant").classList.add("hidden");
     });
     $("cancelVoiceFlow").addEventListener("click", cancelVoiceCourse);
-
+ 
     document.querySelectorAll("[data-net-period]").forEach(button => button.addEventListener("click", () => {
       selectedNetPeriod = button.dataset.netPeriod;
       document.querySelectorAll("[data-net-period]").forEach(item => item.classList.toggle("active", item === button));
@@ -5182,7 +5187,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       document.querySelectorAll("[data-transfer-status]").forEach(item => item.classList.toggle("active", item === button));
       renderTransfers();
     }));
-
+ 
     $("financeRatesForm").addEventListener("submit", async event => {
       event.preventDefault();
       const urssafRate = $("urssafRate").valueAsNumber;
@@ -5191,7 +5196,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       await saveFinanceSettings({ urssafRate, incomeTaxRate });
       alert("Les taux ont été enregistrés.");
     });
-
+ 
     function loadMonthlyEntry(month) {
       const entry=monthlyEntryForKey(month); if(!entry)return;
       $("monthlyExpenseMonth").value=entry.month;
@@ -5201,7 +5206,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("monthlyExpenseNote").value=entry.note||"";
       $("monthlyExpenseForm").scrollIntoView({behavior:"smooth",block:"center"});
     }
-
+ 
     $("monthlyExpenseForm").addEventListener("submit", async event => {
       event.preventDefault();
       const month=$("monthlyExpenseMonth").value;
@@ -5215,7 +5220,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       await saveFinanceSettings({monthlyEntries});
       alert(existing?"Le mois a été mis à jour et reste dans l’historique.":"Le mois a été enregistré dans l’historique.");
     });
-
+ 
     $("estimateHistoricCosts").addEventListener("click", completeHistoricCosts);
  
     $("detailClose").addEventListener("click", closeBooking);
@@ -5240,7 +5245,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       }
     }, 60000);
     $("driverDateTime").value = localDate.toISOString().slice(0, 16);
-
+ 
     const initialMissionCostSettings = readMissionCostSettings();
     $("costHomeAddress").value = initialMissionCostSettings.homeAddress;
     $("costFuelPrice").value = String(initialMissionCostSettings.fuelPrice);
@@ -5250,7 +5255,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("missionCostSettingsForm").classList.toggle("compact-hidden");
       $("toggleCostSettings").textContent = $("missionCostSettingsForm").classList.contains("compact-hidden") ? "⚙ Réglages" : "Fermer";
     });
-
+ 
     $("missionCostSettingsForm").addEventListener("submit", event => {
       event.preventDefault();
       const settings = {
@@ -5267,7 +5272,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("costSettingsSaved").classList.remove("hidden");
       setTimeout(() => $("costSettingsSaved").classList.add("hidden"), 2500);
     });
-
+ 
     $("missionCostCalculatorForm").addEventListener("submit", event => {
       event.preventDefault();
       const settings = readMissionCostSettings();
@@ -5759,13 +5764,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       crmVisibleCount += 12;
       renderCustomerCRM();
     });
-
+ 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
     const HEALTH_VERSION = "67.0.20260927.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
-
+ 
     function healthRead() {
       try {
         const now = Date.now();
@@ -5775,7 +5780,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         return kept;
       } catch (_) { return []; }
     }
-
+ 
     function healthWrite(level, source, message, details = "") {
       const rows = healthRead();
       const signature = `${level}|${source}|${message}|${details}`;
@@ -5786,7 +5791,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       healthUpdateBadge();
       if (!$('healthScreen')?.classList.contains('hidden')) healthRender();
     }
-
+ 
     async function healthSwInfo() {
       if (!("serviceWorker" in navigator)) return { ok:false, text:"Service worker indisponible" };
       try {
@@ -5802,7 +5807,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         });
       } catch (error) { return { ok:false, text:error?.message || "Contrôle impossible" }; }
     }
-
+ 
     async function healthSnapshot(manual = false) {
       const sw = await healthSwInfo();
       const checks = [
@@ -5824,7 +5829,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       localStorage.setItem('ouassvtcHealthLastCheck', String(Date.now()));
       return checks;
     }
-
+ 
     function healthUpdateBadge() {
       const badge = $('healthAlertBadge');
       if (!badge) return;
@@ -5833,9 +5838,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       badge.textContent = count > 99 ? '99+' : String(count);
       badge.classList.toggle('hidden', count === 0);
     }
-
+ 
     function healthWait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
+ 
     async function healthRunAnimated() {
       const overlay = $('healthProgressOverlay');
       const bar = $('healthProgressBar');
@@ -5873,15 +5878,15 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         button.disabled = false;
       }
     }
-
+ 
     function healthAskClearHistory() {
       $('healthConfirmOverlay')?.classList.remove('hidden');
     }
-
+ 
     function healthCloseConfirm() {
       $('healthConfirmOverlay')?.classList.add('hidden');
     }
-
+ 
     function healthConfirmClearHistory() {
       localStorage.removeItem(HEALTH_KEY);
       localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now()));
@@ -5889,9 +5894,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       healthRender();
       healthUpdateBadge();
     }
-
+ 
     function healthEscape(value) { return escapeHtml(String(value ?? '')); }
-
+ 
     async function healthRender() {
       const checks = await healthSnapshot(false);
       const rows = healthRead();
@@ -5902,7 +5907,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $('healthCounters').innerHTML = `<div><strong>${errors}</strong><small>Erreurs sur 30 jours</small></div><div><strong>${warnings}</strong><small>Avertissements</small></div><div><strong>${rows.length}</strong><small>Événements conservés</small></div>`;
       $('healthHistory').innerHTML = rows.length ? rows.map(row => `<div class="health-event ${healthEscape(row.level)}"><div><strong>${healthEscape(row.source)}</strong><small>${new Date(row.time).toLocaleString('fr-FR')}</small></div><p>${healthEscape(row.message)}${row.details ? `<br><small>${healthEscape(row.details)}</small>` : ''}</p></div>`).join('') : '<div class="empty">Aucun incident enregistré pendant les 30 derniers jours.</div>';
     }
-
+ 
     function healthOpen() {
       $('healthScreen').classList.remove('hidden');
       localStorage.setItem('ouassvtcHealthAcknowledgedAt', String(Date.now()));
@@ -5910,7 +5915,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       healthRender();
       closeMenu();
     }
-
+ 
     function healthInstallUi() {
       if ($('healthScreen')) return;
       const style = document.createElement('style');
@@ -5933,7 +5938,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $('healthConfirmOverlay').addEventListener('click', event => { if (event.target === $('healthConfirmOverlay')) healthCloseConfirm(); });
       healthUpdateBadge();
     }
-
+ 
     window.addEventListener('error', event => healthWrite('error', 'Erreur JavaScript', event.message || 'Erreur inconnue', `${event.filename || ''}:${event.lineno || ''}`));
     window.addEventListener('unhandledrejection', event => healthWrite('error', 'Opération interrompue', event.reason?.message || String(event.reason || 'Promesse rejetée')));
     window.addEventListener('offline', () => healthWrite('warning', 'Connexion internet', 'Connexion perdue'));
@@ -5942,14 +5947,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     healthInstallUi();
     setTimeout(() => healthSnapshot(false), 3000);
     healthTimer = setInterval(() => healthSnapshot(false), 5 * 60 * 1000);
-
+ 
     document.addEventListener("gesturestart", event => event.preventDefault(), { passive:false });
     document.addEventListener("dblclick", event => event.preventDefault(), { passive:false });
     document.addEventListener("touchmove", event => {
       if (event.touches.length > 1) event.preventDefault();
     }, { passive:false });
-
-
+ 
+ 
     /* V67 — Interprète vocal multilingue */
     const INTERPRETER_LANGUAGES = [
       ["en-US","Anglais"],["es-ES","Espagnol"],["ca-ES","Catalan"],["de-DE","Allemand"],["it-IT","Italien"],
@@ -5958,7 +5963,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     let interpreterRecognition = null;
     let interpreterLastTranslation = "";
     let interpreterLastLang = "fr-FR";
-
+ 
     function ensureInterpreterUi() {
       if ($("interpreterOverlay")) return;
       const overlay = document.createElement("section");
@@ -5971,11 +5976,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("interpreterClient").addEventListener("click", () => interpreterListen("client"));
       $("interpreterReplay").addEventListener("click", () => interpreterSpeak(interpreterLastTranslation, interpreterLastLang));
     }
-
+ 
     function openInterpreter() { ensureInterpreterUi(); endVoiceConversation(false); $("interpreterOverlay").classList.remove("hidden"); document.body.style.overflow="hidden"; }
     function closeInterpreter() { interpreterRecognition?.abort(); window.speechSynthesis?.cancel(); $("interpreterOverlay")?.classList.add("hidden"); document.body.style.overflow=""; }
     function interpreterSpeak(text, lang) { if (!text || !("speechSynthesis" in window)) return; window.speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(text); utterance.lang=lang; utterance.rate=.94; window.speechSynthesis.speak(utterance); }
-
+ 
     async function interpreterTranslate(text, direction) {
       if (!aiCopilotCallable) throw new Error("IA indisponible");
       const targetCode = $("interpreterLanguage").value;
@@ -5988,7 +5993,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       if (!translated) throw new Error("Traduction vide");
       return { translated, lang: direction === "driver" ? targetCode : "fr-FR" };
     }
-
+ 
     function interpreterListen(direction) {
       ensureInterpreterUi();
       const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -6010,9 +6015,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       };
       recognition.start();
     }
-
+ 
     $("openInterpreter")?.addEventListener("click", openInterpreter);
-
+ 
   </script>
  
 <script>
@@ -6096,7 +6101,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
   $a("snakeStart").onclick=snakeStart;if($a("snakeBest"))$a("snakeBest").textContent=localStorage.getItem("ouassSnakeBest")||0;
 })();
 </script>
-
+ 
 <script type="application/x-ouassvtc-obsolete">
 // Ancien ajout V60 désactivé : remplacé par l’intégration V61 dans le module principal.
 (()=>{
@@ -6109,22 +6114,22 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
   const topAddr=m=>[...m.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||"—";
   function renderV60Customers(){const box=document.getElementById("v60CustomerList");if(!box)return; const q=(document.getElementById("v60CustomerSearch")?.value||"").toLowerCase(); const list=v60Customers().filter(c=>(c.name+" "+c.phone).toLowerCase().includes(q)); box.innerHTML=list.length?list.map(c=>`<button class="v60-card" type="button" data-v60-phone="${escapeHtml(c.phone)}" style="text-align:left"><strong>${escapeHtml(c.name)}</strong><small>☎ ${escapeHtml(c.phone)}</small><div class="v60-kpis"><div class="v60-kpi"><b>${c.completed}</b><small>courses terminées</small></div><div class="v60-kpi"><b>${c.revenue.toLocaleString("fr-FR",{maximumFractionDigits:2})} €</b><small>CA généré</small></div></div><small>📍 Départ habituel : ${escapeHtml(topAddr(c.pickups))}</small><small>🏁 Destination habituelle : ${escapeHtml(topAddr(c.destinations))}</small><small>Dernière activité : ${c.last?c.last.toLocaleDateString("fr-FR"):"—"} · Annulations/refus : ${c.cancelled}</small></button>`).join(""):`<div class="empty">Aucun client trouvé.</div>`; box.querySelectorAll("[data-v60-phone]").forEach(btn=>btn.onclick=()=>{const b=(state.bookings||[]).filter(x=>v60Phone(x.customerPhone)===btn.dataset.v60Phone).sort((a,b)=>(bookingDate(b)||createdDate(b)||0)-(bookingDate(a)||createdDate(a)||0))[0]; if(b)openBooking(b.id)});}
   document.getElementById("v60CustomerSearch")?.addEventListener("input",renderV60Customers);
-
+ 
   function v60Conflict(date,excludeId=""){if(!date||Number.isNaN(date.getTime()))return[]; const windowMs=30*60000; return (state?.bookings||[]).filter(b=>b.id!==excludeId&&["accepted","en_route","on_board","new"].includes(b.status)).filter(b=>{const d=bookingDate(b);return d&&Math.abs(d-date)<windowMs}).sort((a,b)=>bookingDate(a)-bookingDate(b));}
   function showV60Conflict(){const input=document.getElementById("driverDateTime"),box=document.getElementById("v60ConflictBox");if(!input||!box)return;const date=new Date(input.value),hits=v60Conflict(date);box.className=hits.length?"v60-warning":"conflict-ok";box.classList.toggle("hidden",!input.value);box.innerHTML=hits.length?`⚠️ Conflit possible : ${hits.map(x=>`${bookingDate(x).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · ${escapeHtml(x.customerName||"Client")}`).join("<br>")}<br><small>Marge de sécurité : 30 min. Vous pouvez forcer l’enregistrement si nécessaire.</small>`:"✓ Aucun chevauchement détecté dans une marge de 30 min.";}
   document.getElementById("driverDateTime")?.addEventListener("change",showV60Conflict);
   document.getElementById("driverBookingForm")?.addEventListener("submit",e=>{const d=new Date(document.getElementById("driverDateTime")?.value||"");const hits=v60Conflict(d);if(hits.length&&!confirm(`Attention : ${hits.length} course(s) sont prévues à moins de 30 minutes.\n\nOK = FORCER ET ENREGISTRER\nAnnuler = revenir à la course`)){e.preventDefault();e.stopImmediatePropagation();}},true);
-
+ 
   const KEY="ouassvtcV60Maintenance"; const readMaint=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return[]}}; const saveMaint=x=>localStorage.setItem(KEY,JSON.stringify(x));
   function renderMaint(){const box=document.getElementById("v60MaintenanceList");if(!box)return;const items=readMaint().sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"));box.innerHTML=items.length?items.map((x,i)=>`<div class="v60-card v60-maint-row"><div><strong>${escapeHtml(x.label)}</strong><small>${x.km?`À ${Number(x.km).toLocaleString("fr-FR")} km · `:""}${x.date?`le ${new Date(x.date+"T12:00:00").toLocaleDateString("fr-FR")}`:"Échéance date non renseignée"}</small></div><button type="button" data-maint-del="${i}">Supprimer</button></div>`).join(""):`<div class="empty">Aucune échéance d’entretien enregistrée.</div>`;box.querySelectorAll("[data-maint-del]").forEach(b=>b.onclick=()=>{const a=readMaint();a.splice(+b.dataset.maintDel,1);saveMaint(a);renderMaint()})}
   document.getElementById("v60MaintenanceForm")?.addEventListener("submit",e=>{e.preventDefault();const label=document.getElementById("v60MaintLabel").value.trim();if(!label)return;const a=readMaint();a.push({label,km:document.getElementById("v60MaintKm").value,date:document.getElementById("v60MaintDate").value});saveMaint(a);e.target.reset();renderMaint()});
-
+ 
   if(typeof statusLabels!=="undefined"){statusLabels.en_route="En route vers client";statusLabels.on_board="Client à bord";}
   const oldOpenPanel=window.openPanel||openPanel; openPanel=function(id){oldOpenPanel(id);if(id==="customersPanel")renderV60Customers();if(id==="maintenancePanel")renderMaint()};
   const oldRender=render; render=function(){oldRender();renderV60Customers();};
   renderMaint();
 })();
 </script>
-
+ 
 </body>
 </html>
