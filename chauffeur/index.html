@@ -5977,7 +5977,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("interpreterReplay").addEventListener("click", () => interpreterSpeak(interpreterLastTranslation, interpreterLastLang));
     }
  
-    function openInterpreter() { ensureInterpreterUi(); endVoiceConversation(false); $("interpreterOverlay").classList.remove("hidden"); document.body.style.overflow="hidden"; }
+    function openInterpreter() { ensureInterpreterUi(); if (typeof stopVoiceConversation === "function") stopVoiceConversation("Conversation du copilote arrêtée."); $("voiceAssistant")?.classList.add("hidden"); $("interpreterOverlay").classList.remove("hidden"); document.body.style.overflow="hidden"; }
     function closeInterpreter() { interpreterRecognition?.abort(); window.speechSynthesis?.cancel(); $("interpreterOverlay")?.classList.add("hidden"); document.body.style.overflow=""; }
     function interpreterSpeak(text, lang) { if (!text || !("speechSynthesis" in window)) return; window.speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(text); utterance.lang=lang; utterance.rate=.94; window.speechSynthesis.speak(utterance); }
  
