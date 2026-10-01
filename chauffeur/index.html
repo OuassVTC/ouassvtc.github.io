@@ -875,6 +875,10 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 /* V67 — transfert partenaire sécurisé + interprète vocal */
 .interpreter-overlay{position:fixed;inset:0;z-index:1400;background:#07101cf5;color:#fff;overflow:auto;padding:18px}.interpreter-card{max-width:620px;margin:0 auto;background:#101b2a;border:1px solid #2f80ff;border-radius:22px;padding:18px;box-shadow:0 20px 60px #0008}.interpreter-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.interpreter-head h2{margin:0;font-size:21px}.interpreter-close{width:42px;height:42px;border:0;border-radius:12px;background:#25344a;color:#fff;font-size:24px}.interpreter-language{width:100%;margin:16px 0;padding:13px;border:1px solid #41658f;border-radius:12px;background:#0b1522;color:#fff;font-weight:800}.interpreter-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.interpreter-talk{min-height:72px;border:0;border-radius:16px;color:#fff;font-size:16px;font-weight:950}.interpreter-talk.me{background:#176ef4}.interpreter-talk.client{background:#0b8b50}.interpreter-talk.listening{outline:4px solid #ffffff55}.interpreter-result{margin-top:14px;padding:14px;border-radius:15px;background:#0a1421}.interpreter-result small{display:block;color:#9fb1c8;margin-bottom:4px}.interpreter-result strong{display:block;white-space:pre-wrap;font-size:16px}.interpreter-result .translated{margin-top:12px;color:#7db2ff}.interpreter-replay{width:100%;margin-top:12px;min-height:46px;border:1px solid #4777ad;border-radius:12px;background:transparent;color:#fff;font-weight:900}.transfer-live{display:block;margin-top:6px;color:#61a7ff;font-size:11px;font-weight:900}
  
+ 
+    /* V68 - Espace chauffeurs partenaires */
+    .partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:16px 0}.partner-card{background:var(--card,#fff);border:1px solid rgba(127,127,127,.22);border-radius:18px;padding:16px}.partner-card h3{margin:0 0 6px}.partner-card small{display:block;opacity:.72;margin:3px 0}.partner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.partner-actions button{border:0;border-radius:12px;padding:10px 12px;font-weight:700}.partner-form{display:grid;gap:12px;background:var(--card,#fff);padding:16px;border-radius:18px;border:1px solid rgba(127,127,127,.22);margin:14px 0}.partner-form label{font-size:.82rem;font-weight:800;display:block;margin-bottom:5px}.partner-form input{width:100%;box-sizing:border-box;border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:12px;background:transparent;color:inherit}.partner-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.partner-chip{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef7ef;color:#176b2c;font-size:.76rem;font-weight:800}.partner-empty{padding:18px;text-align:center;opacity:.7}.partner-admin-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.partner-admin-head button{border:0;border-radius:12px;padding:11px 14px;font-weight:800}.transfer-partner-select{width:100%;box-sizing:border-box;border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:12px;background:var(--card,#fff);color:inherit}
+    @media(max-width:620px){.partner-form-row{grid-template-columns:1fr}}
 </style>
 </head>
  
@@ -899,6 +903,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">×</button></div>
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
+      <button class="menu-link" type="button" data-menu-tab="partnersPanel">Chauffeurs partenaires</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
@@ -1028,6 +1033,22 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <h2 class="section-title">Par chauffeur</h2>
         <div class="history-list" id="transferDriverList"></div>
         <div class="empty hidden" id="transferEmpty">Aucune course transférée pour le moment.</div>
+      </section>
+ 
+ 
+      <section class="tab-panel hidden" id="partnersPanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button></div>
+        <div class="partner-admin-head"><div><div class="eyebrow">Administration V68</div><h2 class="section-title">Chauffeurs partenaires</h2></div><button class="primary" id="newPartnerDriver" type="button">+ Ajouter un chauffeur</button></div>
+        <p>Créez une fois la fiche du chauffeur. Elle sera ensuite proposée automatiquement lors du transfert d’une course.</p>
+        <form class="partner-form hidden" id="partnerDriverForm">
+          <input id="partnerDriverId" type="hidden">
+          <div class="partner-form-row"><div><label for="partnerDisplayName">Nom du chauffeur</label><input id="partnerDisplayName" required placeholder="Exemple : Sylvain"></div><div><label for="partnerEmail">E-mail de connexion Google</label><input id="partnerEmail" required type="email" placeholder="sylvain@gmail.com"></div></div>
+          <div class="partner-form-row"><div><label for="partnerCompanyName">Raison sociale</label><input id="partnerCompanyName" placeholder="Nom de l’entreprise"></div><div><label for="partnerSiret">SIRET</label><input id="partnerSiret" inputmode="numeric" placeholder="14 chiffres"></div></div>
+          <div class="partner-form-row"><div><label for="partnerPhone">Téléphone</label><input id="partnerPhone" type="tel"></div><div><label for="partnerAddress">Adresse professionnelle</label><input id="partnerAddress"></div></div>
+          <div class="partner-form-row"><div><label for="partnerVehicle">Véhicule</label><input id="partnerVehicle" placeholder="Exemple : Toyota Corolla"></div><div><label for="partnerRegistration">Immatriculation</label><input id="partnerRegistration" placeholder="AA-123-AA"></div></div>
+          <div class="partner-actions"><button class="primary" type="submit">Enregistrer le chauffeur</button><button id="cancelPartnerDriver" type="button">Annuler</button></div>
+        </form>
+        <div class="partner-grid" id="partnerDriverList"></div><div class="partner-empty hidden" id="partnerDriverEmpty">Aucun chauffeur partenaire enregistré.</div>
       </section>
  
       <section class="tab-panel hidden" id="agendaPanel">
@@ -1449,7 +1470,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
  
     const $ = id => document.getElementById(id);
-    const state = { bookings: [], documents:[], driverMissions:[], filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, driverMissionsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
+    const state = { bookings: [], documents:[], driverMissions:[], partnerDrivers:[], partnerDriversUnsubscribe:null, filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, driverMissionsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
     const THEME_MODE_KEY = "ouassvtcThemeMode";
     const RESOLVED_THEME_KEY = "ouassvtcResolvedTheme";
     const NOTIFICATIONS_ENABLED_KEY = "ouassvtcNotificationsEnabled";
@@ -3105,6 +3126,30 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       button.disabled = false;
     }
  
+    function partnerIdFromEmail(email) { return String(email || "").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || `chauffeur-${Date.now()}`; }
+ 
+    function renderPartnerDrivers() {
+      const list = $("partnerDriverList"), empty = $("partnerDriverEmpty");
+      if (!list || !empty) return;
+      const drivers = [...state.partnerDrivers].sort((a,b)=>String(a.displayName||"").localeCompare(String(b.displayName||""),"fr"));
+      empty.classList.toggle("hidden", drivers.length > 0);
+      list.innerHTML = drivers.map(driver => `<article class="partner-card"><span class="partner-chip">${driver.active === false ? "Désactivé" : "Actif"}</span><h3>${escapeHtml(driver.displayName || "Chauffeur")}</h3><small>${escapeHtml(driver.companyName || "Entreprise non renseignée")}</small><small>${escapeHtml(driver.email || "")}</small><small>${escapeHtml(driver.vehicle || "Véhicule non renseigné")} ${driver.registration ? "· "+escapeHtml(driver.registration) : ""}</small><div class="partner-actions"><button type="button" data-edit-partner="${escapeHtml(driver.id)}">Modifier</button><button type="button" data-toggle-partner="${escapeHtml(driver.id)}">${driver.active === false ? "Réactiver" : "Désactiver"}</button></div></article>`).join("");
+      document.querySelectorAll("[data-edit-partner]").forEach(button=>button.addEventListener("click",()=>editPartnerDriver(button.dataset.editPartner)));
+      document.querySelectorAll("[data-toggle-partner]").forEach(button=>button.addEventListener("click",async()=>{ const driver=state.partnerDrivers.find(x=>x.id===button.dataset.togglePartner); if(driver) await updateDoc(doc(db,"partnerDrivers",driver.id),{active:driver.active===false,updatedAt:serverTimestamp()}); }));
+    }
+ 
+    function listenPartnerDrivers() {
+      if (state.partnerDriversUnsubscribe) state.partnerDriversUnsubscribe();
+      state.partnerDriversUnsubscribe = onSnapshot(collection(db,"partnerDrivers"), snapshot=>{ state.partnerDrivers=snapshot.docs.map(d=>({id:d.id,...d.data()})); renderPartnerDrivers(); }, error=>console.error("Chauffeurs partenaires",error));
+    }
+ 
+    function editPartnerDriver(id) {
+      const driver=state.partnerDrivers.find(x=>x.id===id); if(!driver)return;
+      $("partnerDriverId").value=driver.id; $("partnerDisplayName").value=driver.displayName||""; $("partnerEmail").value=driver.email||""; $("partnerCompanyName").value=driver.companyName||""; $("partnerSiret").value=driver.siret||""; $("partnerPhone").value=driver.phone||""; $("partnerAddress").value=driver.address||""; $("partnerVehicle").value=driver.vehicle||""; $("partnerRegistration").value=driver.registration||""; $("partnerDriverForm").classList.remove("hidden"); $("partnerDisplayName").focus();
+    }
+ 
+    function resetPartnerDriverForm() { $("partnerDriverForm")?.reset(); if($("partnerDriverId")) $("partnerDriverId").value=""; $("partnerDriverForm")?.classList.add("hidden"); }
+ 
     function transferArchiveDate(item) {
       return bookingDate(item) || (item.transferredAt?.toDate ? item.transferredAt.toDate() : completedDate(item));
     }
@@ -3151,7 +3196,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           <div class="booking-meta"><span class="price-chip">💶 ${escapeHtml(item.estimatedPrice || "Tarif non renseigné")}</span></div>
         </div>
         <form class="transfer-form" id="transferBookingForm">
-          <div><label for="transferDriverName">Nom du chauffeur</label><input id="transferDriverName" required autocomplete="name" placeholder="Exemple : Karim"></div>
+          <div><label for="transferPartnerDriver">Chauffeur partenaire</label><select class="transfer-partner-select" id="transferPartnerDriver" required><option value="">Choisir un chauffeur enregistré</option>${state.partnerDrivers.filter(driver=>driver.active!==false).map(driver=>`<option value="${escapeHtml(driver.id)}">${escapeHtml(driver.displayName||driver.email||driver.id)}</option>`).join("")}</select></div>
           <button class="primary" type="submit">Créer le lien sécurisé et ouvrir le SMS</button>
           <button class="primary" id="cancelTransferBooking" type="button" style="background:#fff;color:#000;border:1px solid #000">Annuler</button>
         </form>`;
@@ -3159,8 +3204,10 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("cancelTransferBooking").addEventListener("click", () => openBooking(id));
       $("transferBookingForm").addEventListener("submit", async event => {
         event.preventDefault();
-        const driverName = $("transferDriverName").value.trim();
-        if (!driverName) return;
+        const partnerId = $("transferPartnerDriver").value;
+        const partner = state.partnerDrivers.find(driver => driver.id === partnerId);
+        const driverName = partner?.displayName || "";
+        if (!partner || !driverName) return;
         const button = event.submitter;
         button.disabled = true;
         button.textContent = "Création du lien…";
@@ -3171,6 +3218,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           await setDoc(doc(db, "driverMissions", token), {
             bookingId:id,
             driverName,
+            partnerId:partner.id,
+            driverEmail:partner.email || "",
+            partnerProfile:{ displayName:partner.displayName||"", companyName:partner.companyName||"", siret:partner.siret||"", phone:partner.phone||"", address:partner.address||"", vehicle:partner.vehicle||"", registration:partner.registration||"" },
             customerName:item.customerName || "Client",
             customerPhone:item.customerPhone || "",
             pickup:item.pickup || "",
@@ -3189,7 +3239,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
             expiresAt:new Date((date && !Number.isNaN(date.getTime()) ? date.getTime() : Date.now()) + 48*60*60*1000)
           });
           await updateDoc(doc(db, "bookings", id), {
-            status:"transferred", transferredDriverName:driverName, transferredAt:serverTimestamp(),
+            status:"transferred", transferredDriverName:driverName, transferredDriverId:partner.id, transferredDriverEmail:partner.email||"", transferredAt:serverTimestamp(),
             partnerMissionToken:token, partnerMissionStatus:"proposed", updatedAt:serverTimestamp()
           });
           const sms = transferSmsText(driverName, missionUrl);
@@ -4831,15 +4881,28 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           listenFinanceSettings();
           listenDriverDocuments();
           listenDriverMissions();
+          listenPartnerDrivers();
           if("Notification" in window&&Notification.permission==="granted") keepNotificationsRegistered().catch(error=>console.error("Renouvellement silencieux des notifications impossible",error));
           if (new URLSearchParams(window.location.search).has("documents")) { openPanel("documentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
         } else {
           if (state.unsubscribe) state.unsubscribe();
           if (state.financeUnsubscribe) state.financeUnsubscribe();
           if (state.documentsUnsubscribe) state.documentsUnsubscribe();
+          if (state.partnerDriversUnsubscribe) state.partnerDriversUnsubscribe();
         }
       });
     }
+ 
+    $("newPartnerDriver")?.addEventListener("click",()=>{ resetPartnerDriverForm(); $("partnerDriverForm").classList.remove("hidden"); $("partnerDisplayName").focus(); });
+    $("cancelPartnerDriver")?.addEventListener("click",resetPartnerDriverForm);
+    $("partnerDriverForm")?.addEventListener("submit", async event=>{
+      event.preventDefault();
+      const email=$("partnerEmail").value.trim().toLowerCase(), existingId=$("partnerDriverId").value.trim();
+      const id=existingId || partnerIdFromEmail(email);
+      const payload={ displayName:$("partnerDisplayName").value.trim(), email, companyName:$("partnerCompanyName").value.trim(), siret:$("partnerSiret").value.trim(), phone:$("partnerPhone").value.trim(), address:$("partnerAddress").value.trim(), vehicle:$("partnerVehicle").value.trim(), registration:$("partnerRegistration").value.trim().toUpperCase(), active:true, updatedAt:serverTimestamp() };
+      if(!existingId) payload.createdAt=serverTimestamp();
+      try { await setDoc(doc(db,"partnerDrivers",id),payload,{merge:true}); resetPartnerDriverForm(); } catch(error){ console.error(error); alert("Impossible d’enregistrer le chauffeur. Vérifiez les règles Firebase V68."); }
+    });
  
     document.addEventListener("visibilitychange",()=>{
       if(document.visibilityState==="visible"&&themeMode==="auto") applyTheme("auto");
