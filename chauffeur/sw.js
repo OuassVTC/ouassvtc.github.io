@@ -12,11 +12,12 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const SW_VERSION = "67.1.20260927.01";
-const CACHE_NAME = "ouassvtc-chauffeur-v67-1-20260927-01";
+const SW_VERSION = "68.2.20261003.01";
+const CACHE_NAME = "ouassvtc-chauffeur-v68-2-20261003-01";
 
 const APP_SHELL = [
   "/chauffeur/manifest.json",
+  "/chauffeur/manifest-chauffeur.json",
   "/ouassvtc-app.png"
 ];
 
@@ -69,7 +70,8 @@ self.addEventListener("fetch", event => {
     event.request.mode === "navigate" ||
     requestUrl.pathname === "/chauffeur/" ||
     requestUrl.pathname === "/chauffeur/index.html" ||
-    requestUrl.pathname === "/chauffeur/mission.html";
+    requestUrl.pathname === "/chauffeur/mission.html" ||
+    requestUrl.pathname === "/chauffeur/chauffeur.html";
 
   if (isFreshHtml) {
     event.respondWith(
@@ -88,6 +90,12 @@ self.addEventListener("fetch", event => {
         .catch(async () => {
           const cached = await caches.match(event.request);
           if (cached) return cached;
+
+          if (requestUrl.pathname === "/chauffeur/chauffeur.html") {
+            const partnerFallback = await caches.match("/chauffeur/chauffeur.html");
+            if (partnerFallback) return partnerFallback;
+          }
+
           const fallback = await caches.match("/chauffeur/");
           return fallback || Response.error();
         })
@@ -140,4 +148,5 @@ self.addEventListener("message", event => {
   };
   if (event.ports?.[0]) event.ports[0].postMessage(response);
 });
+
 
