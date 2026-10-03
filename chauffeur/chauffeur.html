@@ -4878,7 +4878,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       $("emptyState").textContent = "La connexion Firebase est nécessaire pour recevoir les demandes.";
       $("emptyState").classList.remove("hidden");
     } else {
-      const app = initializeApp(firebaseConfig);
+      const app = initializeApp(firebaseConfig, "ouassvtc-partner");
       auth = getAuth(app);
       db = getFirestore(app);
       storage = getStorage(app);
@@ -6487,6 +6487,48 @@ document.addEventListener("DOMContentLoaded",()=>{
   setTimeout(bindPartnerLogoutV715,400);
   setTimeout(bindPartnerLogoutV715,1800);
 });
+</script>
+
+
+<script id="partner-auth-isolation-v716">
+async function partnerLogoutV716(){
+  try{
+    if(partnerHeartbeatTimer){clearInterval(partnerHeartbeatTimer);partnerHeartbeatTimer=null}
+    if(partnerIdentityUnsubscribe){partnerIdentityUnsubscribe();partnerIdentityUnsubscribe=null}
+    if(partnerDocsUnsub){partnerDocsUnsub();partnerDocsUnsub=null}
+    try{
+      if(currentPartnerProfile?.id && auth?.currentUser){
+        await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
+          online:false,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()
+        });
+      }
+    }catch(e){}
+    await signOut(auth);
+    currentPartnerProfile=null;
+    const login=document.getElementById("loginView");
+    const dash=document.getElementById("dashboardView");
+    document.getElementById("authLoadingView")?.classList.add("hidden");
+    login?.classList.remove("hidden");
+    dash?.classList.add("hidden");
+    document.querySelectorAll(".partner-menu-page").forEach(x=>x.classList.add("partner-view-hidden"));
+    const email=document.getElementById("partnerLoginEmail");
+    const pass=document.getElementById("partnerLoginPassword");
+    if(email) email.value="";
+    if(pass) pass.value="";
+    history.replaceState({},document.title,location.pathname+"?login=1");
+    setTimeout(()=>email?.focus(),100);
+  }catch(e){
+    console.error("Déconnexion V71.6",e);
+    alert("La déconnexion a échoué. Rechargez la page puis réessayez.");
+  }
+}
+function bindLogoutV716(){
+  const b=document.getElementById("pmLogout");
+  if(b){b.onclick=(e)=>{e.preventDefault();e.stopPropagation();partnerLogoutV716()}}
+  const old=document.getElementById("logout");
+  if(old){old.onclick=(e)=>{e.preventDefault();partnerLogoutV716()}}
+}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(bindLogoutV716,500);setTimeout(bindLogoutV716,2000)});
 </script>
 
 </body>
