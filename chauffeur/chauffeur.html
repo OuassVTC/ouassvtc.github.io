@@ -1449,7 +1449,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
-      browserSessionPersistence,
+      browserSessionPersistence, signInWithEmailAndPassword, sendPasswordResetEmail,
       getAuth,
       GoogleAuthProvider,
       signInWithEmailAndPassword,
@@ -6685,6 +6685,82 @@ onAuthStateChanged(auth,user=>{
     setTimeout(loadPartnerIdentityAndPresenceV718,1200);
   }
 });
+</script>
+
+
+<style id="partner-email-auth-v719-style">
+#partnerEmailAuthV719{position:fixed;z-index:30000;inset:0;background:linear-gradient(180deg,#f4f7fb,#fff);display:none;align-items:center;justify-content:center;padding:22px}
+#partnerEmailAuthV719.show{display:flex}.pea-card{width:min(420px,100%);background:#fff;border:1px solid #e6eaf0;border-radius:28px;padding:25px;box-shadow:0 24px 60px rgba(11,22,39,.13)}
+.pea-logo{width:76px;height:76px;border-radius:20px;display:block;margin:0 auto 16px}.pea-card h1{text-align:center;margin:0;font-size:28px}.pea-card>p{text-align:center;color:#667085;margin:8px 0 22px}.pea-field{display:block;font-size:12px;font-weight:850;color:#344054;margin:12px 0}.pea-field input{width:100%;box-sizing:border-box;margin-top:6px;padding:14px;border:1px solid #d0d5dd;border-radius:14px;font-size:16px;background:#fff}.pea-submit{width:100%;border:0;border-radius:15px;padding:14px;background:#0b1627;color:#fff;font-size:16px;font-weight:900;margin-top:8px}.pea-forgot{width:100%;border:0;background:transparent;color:#175cd3;font-weight:800;padding:14px}.pea-error{min-height:20px;color:#b42318;text-align:center;font-size:12px;margin-top:8px}
+</style>
+<div id="partnerEmailAuthV719">
+ <div class="pea-card">
+  <img class="pea-logo" src="/ouassvtc-app.png" alt="OuassVTC">
+  <h1>Espace chauffeur</h1>
+  <p>Connectez-vous avec votre compte chauffeur OuassVTC.</p>
+  <form id="partnerEmailLoginFormV719">
+   <label class="pea-field">Adresse e-mail<input id="partnerEmailV719" type="email" autocomplete="username" required></label>
+   <label class="pea-field">Mot de passe<input id="partnerPasswordV719" type="password" autocomplete="current-password" required></label>
+   <button class="pea-submit" type="submit">Se connecter</button>
+  </form>
+  <button class="pea-forgot" id="partnerForgotV719" type="button">Mot de passe oublié</button>
+  <div class="pea-error" id="partnerAuthErrorV719"></div>
+ </div>
+</div>
+<script id="partner-email-auth-v719">
+const partnerEmailAuthBoxV719=document.getElementById("partnerEmailAuthV719");
+const partnerEmailFormV719=document.getElementById("partnerEmailLoginFormV719");
+const partnerEmailInputV719=document.getElementById("partnerEmailV719");
+const partnerPasswordInputV719=document.getElementById("partnerPasswordV719");
+const partnerAuthErrorV719=document.getElementById("partnerAuthErrorV719");
+
+function partnerAuthMessageV719(code){
+ if(code==="auth/invalid-credential"||code==="auth/wrong-password"||code==="auth/user-not-found")return"E-mail ou mot de passe incorrect.";
+ if(code==="auth/too-many-requests")return"Trop de tentatives. Réessayez un peu plus tard.";
+ return"Connexion impossible. Vérifiez vos informations.";
+}
+partnerEmailFormV719.addEventListener("submit",async e=>{
+ e.preventDefault();partnerAuthErrorV719.textContent="";
+ try{
+  await setPersistence(auth,browserSessionPersistence);
+  await signInWithEmailAndPassword(auth,partnerEmailInputV719.value.trim(),partnerPasswordInputV719.value);
+ }catch(err){console.error(err);partnerAuthErrorV719.textContent=partnerAuthMessageV719(err.code)}
+});
+document.getElementById("partnerForgotV719").addEventListener("click",async()=>{
+ const email=partnerEmailInputV719.value.trim();
+ if(!email){partnerAuthErrorV719.textContent="Saisissez d’abord votre adresse e-mail.";return}
+ try{await sendPasswordResetEmail(auth,email);partnerAuthErrorV719.textContent="E-mail de réinitialisation envoyé."}
+ catch(err){partnerAuthErrorV719.textContent="Impossible d’envoyer l’e-mail de réinitialisation."}
+});
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){
+   partnerEmailAuthBoxV719.classList.add("show");
+   document.getElementById("loginView")?.classList.add("hidden");
+   return;
+ }
+ partnerEmailAuthBoxV719.classList.remove("show");
+ document.getElementById("loginView")?.classList.add("hidden");
+ setTimeout(loadPartnerIdentityAndPresenceV718,100);
+});
+
+// V71.9 logout: sign out, then stay on the email/password screen. No Google screen.
+async function partnerLogoutV719(){
+ try{
+  try{
+   if(currentPartnerProfile?.id&&auth.currentUser){
+    await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{online:false,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   }
+  }catch(_){}
+  await signOut(auth);
+  partnerPasswordInputV719.value="";
+  partnerEmailAuthBoxV719.classList.add("show");
+ }catch(err){console.error(err);partnerAuthErrorV719.textContent="La déconnexion a échoué."}
+}
+function bindPartnerLogoutV719(){
+ ["pmLogout","logout"].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=e=>{e.preventDefault();e.stopImmediatePropagation();partnerLogoutV719()}});
+}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(bindPartnerLogoutV719,400);setTimeout(bindPartnerLogoutV719,1800)});
 </script>
 
 </body>
