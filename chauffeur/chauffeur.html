@@ -6282,5 +6282,19 @@ async function refreshPartnerDashboard(){const box=document.getElementById("ptrI
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
 </script>
 
+
+<script id="partner-heartbeat-v712">
+let ouassHeartbeatTimer=null;
+async function ouassPushHeartbeat(){
+  try{
+    if(!currentPartnerProfile?.id||!auth?.currentUser)return;
+    await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  }catch(e){console.warn("Présence chauffeur",e)}
+}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)ouassPushHeartbeat()});
+window.addEventListener("focus",ouassPushHeartbeat);
+setTimeout(ouassPushHeartbeat,2500);
+ouassHeartbeatTimer=setInterval(ouassPushHeartbeat,60000);
+</script>
 </body>
 </html>
