@@ -6254,127 +6254,32 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 </script>
 
 
-<style id="ouass-partner-twin">
-  [data-menu-tab="partnersPanel"],
-  [data-menu-tab="transferPanel"],
-  [data-menu-tab="documentsPanel"],
-  [data-menu-tab="customersPanel"],
-  [data-menu-tab="maintenancePanel"],
-  [data-menu-tab="gamePanel"] { display:none!important; }
-  #partnersPanel,#transferPanel,#documentsPanel,#customersPanel,#maintenancePanel,#gamePanel {display:none!important}
-  body{padding-bottom:86px!important}
-  .partner-presence{display:flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:9px 13px;background:#111;color:#fff;font-weight:800}
-  .partner-presence i{width:9px;height:9px;border-radius:50%;background:#8a8f98}
-  .partner-presence.online i{background:#23b36b}
-  .partner-bottom{position:fixed;z-index:9997;left:0;right:0;bottom:0;height:78px;background:#fff;border-top:1px solid rgba(0,0,0,.12);display:flex;align-items:center;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -8px 28px rgba(0,0,0,.08)}
-  .partner-bottom button{border:0;background:transparent;color:#111;font-weight:800;font-size:11px;min-width:58px}
-  .partner-bottom button span{display:block;font-size:20px;margin-bottom:2px}
-  .partner-bottom .partner-plus{width:64px;height:64px;min-width:64px;border-radius:50%;background:#050505;color:#fff;font-size:36px;line-height:1;border:5px solid #fff;transform:translateY(-17px);box-shadow:0 7px 20px rgba(0,0,0,.25)}
-  .partner-dispatch-btn{width:100%;margin-top:10px;border:1px solid #111;background:#fff;color:#111;border-radius:14px;padding:13px;font-weight:850}
+
+
+
+
+
+<style id="ouass-partner-v711">
+body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;left:12px;right:12px;bottom:10px;height:72px;display:grid;grid-template-columns:1fr 1fr 82px 1fr 1fr;align-items:center;background:rgba(8,15,27,.97);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:0 8px calc(env(safe-area-inset-bottom)/2);box-shadow:0 18px 45px rgba(0,0,0,.30);backdrop-filter:blur(16px)}
+.partner-bottom button{appearance:none;border:0;background:transparent;color:#9aa9bd;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:800 10px/1.05 system-ui}
+.partner-bottom .nav-ico{width:34px;height:30px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:#c9d5e5}.partner-bottom button.active{color:#fff}.partner-bottom button.active .nav-ico{color:#fff;background:linear-gradient(145deg,#1769ff,#2d8cff);box-shadow:0 7px 18px rgba(23,105,255,.35)}
+.partner-bottom .partner-plus{width:70px;height:70px;justify-self:center;border-radius:50%;background:linear-gradient(145deg,#1769ff,#0864f7);color:#fff;border:5px solid #fff;transform:translateY(-18px);box-shadow:0 12px 28px rgba(10,96,255,.38)}.partner-bottom .partner-plus .nav-ico{font-size:35px;color:#fff;background:transparent}
+.partner-view-hidden{display:none!important}.ptr-indicator{position:fixed;z-index:10010;left:50%;top:82px;transform:translate(-50%,-70px);min-width:148px;padding:10px 15px;border-radius:999px;background:#0b1627;color:#fff;font:800 12px system-ui;box-shadow:0 8px 25px rgba(0,0,0,.2);text-align:center;transition:transform .2s;pointer-events:none}.ptr-indicator.show{transform:translate(-50%,0)}
 </style>
-<nav class="partner-bottom" id="partnerBottomNav" aria-label="Navigation chauffeur">
-  <button type="button" data-partner-tab="dashboardHome"><span>⌂</span>Accueil</button>
-  <button type="button" data-partner-tab="agendaPanel"><span>▣</span>Planning</button>
-  <button type="button" class="partner-plus" id="partnerNewCourse" aria-label="Nouvelle course">+</button>
-  <button type="button" data-partner-tab="reportPanel"><span>€</span>CA</button>
-  <button type="button" data-partner-tab="settingsPanel"><span>●</span>Profil</button>
+<div class="ptr-indicator" id="ptrIndicator"><span id="ptrText">Actualisation…</span></div>
+<nav class="partner-bottom" id="partnerBottomNav">
+<button type="button" data-target="dashboardHome" class="active"><span class="nav-ico">⌂</span><span>Accueil</span></button>
+<button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
+<button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
+<button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
+<button type="button" data-target="settingsPanel"><span class="nav-ico">●</span><span>Profil</span></button>
 </nav>
-<script id="ouass-partner-runtime">
-window.OUASSVTC_ROLE = "partner";
-let currentPartnerProfile = null;
-
-async function loadPartnerIdentityAndPresence(){
-  const email = auth?.currentUser?.email?.toLowerCase();
-  if(!email || !db) return;
-  try{
-    const q = query(collection(db,"partnerDrivers"), where("email","==",email), limit(1));
-    state.partnerPresenceUnsubscribe = onSnapshot(q, snap => {
-      if(snap.empty){
-        showLoginError("Ce compte n’est pas autorisé comme chauffeur partenaire.");
-        signOut(auth);
-        return;
-      }
-      const d = snap.docs[0];
-      currentPartnerProfile = {id:d.id,...d.data()};
-      const name = currentPartnerProfile.displayName || currentPartnerProfile.companyName || "Chauffeur";
-      const hello = document.querySelector("#dashboardHome .hello-row h1");
-      if(hello) hello.textContent = name + ".";
-      renderPartnerPresence();
-    });
-  }catch(error){ console.error("Profil partenaire",error); }
-}
-
-function renderPartnerPresence(){
-  let b=document.getElementById("partnerPresence");
-  if(!b){
-    b=document.createElement("button"); b.id="partnerPresence"; b.type="button"; b.className="partner-presence";
-    b.innerHTML="<i></i><span></span>";
-    const host=document.querySelector(".hello-row") || document.querySelector("header") || document.body;
-    host.appendChild(b);
-    b.addEventListener("click",togglePartnerPresence);
-  }
-  const online=Boolean(currentPartnerProfile?.online);
-  b.classList.toggle("online",online);
-  b.querySelector("span").textContent=online?"En ligne":"Hors ligne";
-}
-
-async function togglePartnerPresence(){
-  if(!currentPartnerProfile?.id) return;
-  await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
-    online:!Boolean(currentPartnerProfile.online),
-    lastSeenAt:serverTimestamp(),
-    updatedAt:serverTimestamp()
-  });
-}
-
-async function sendCurrentBookingToDispatch(){
-  const id=window.__partnerOpenBookingId;
-  const item=state.bookings.find(x=>x.id===id);
-  if(!item){ alert("Ouvrez d’abord une fiche course."); return; }
-  if(item.partnerOwnerEmail && item.partnerOwnerEmail !== auth.currentUser.email.toLowerCase()){
-    alert("Seules vos propres courses peuvent être envoyées au dispatch.");
-    return;
-  }
-  await addDoc(collection(db,"dispatchRequests"),{
-    bookingId:item.id,
-    requesterEmail:auth.currentUser.email.toLowerCase(),
-    requesterName:currentPartnerProfile?.displayName || "",
-    customerName:item.customerName || "",
-    customerPhone:item.customerPhone || "",
-    pickup:item.pickup || "",
-    destination:item.destination || "",
-    scheduledAtText:item.scheduledAtText || "",
-    estimatedPrice:item.estimatedPrice || "",
-    status:"pending",
-    createdAt:serverTimestamp(),
-    updatedAt:serverTimestamp()
-  });
-  alert("Demande envoyée à OuassVTC pour dispatch.");
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  document.querySelectorAll("[data-partner-tab]").forEach(btn=>btn.addEventListener("click",()=>{
-    const id=btn.dataset.partnerTab;
-    if(typeof openPanel==="function") openPanel(id);
-    else document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
-  }));
-  document.getElementById("partnerNewCourse")?.addEventListener("click",()=>{
-    if(typeof openPanel==="function") openPanel("estimatePanel");
-    else document.getElementById("estimatePanel")?.scrollIntoView({behavior:"smooth"});
-  });
-
-  const detail=document.getElementById("detailBody");
-  if(detail){
-    new MutationObserver(()=>{
-      if(detail.querySelector("#partnerDispatchCurrent")) return;
-      const btn=document.createElement("button");
-      btn.id="partnerDispatchCurrent"; btn.type="button"; btn.className="partner-dispatch-btn";
-      btn.textContent="Envoyer à OuassVTC pour dispatch";
-      btn.addEventListener("click",sendCurrentBookingToDispatch);
-      detail.appendChild(btn);
-    }).observe(detail,{childList:true,subtree:true});
-  }
-});
+<script id="ouass-partner-v711-runtime">
+window.OUASSVTC_ROLE="partner";
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
+async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
+document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
 </script>
 
 </body>
