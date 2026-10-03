@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=722">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=723">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -896,6 +896,70 @@ body.partner-signed-out{padding-bottom:0!important}
 <style id="partner-v722-single-nav">
 #appBottomNav{display:none!important}
 body{padding-bottom:94px!important}
+</style>
+
+
+<style id="partner-v723-login-and-nav">
+body.partner-signed-out{
+  margin:0!important;padding:0!important;min-height:100vh!important;
+  background:radial-gradient(circle at 50% 0%,rgba(0,153,255,.18),transparent 34%),
+             linear-gradient(180deg,#07111f 0%,#0b1728 100%)!important;
+}
+body.partner-signed-out header,
+body.partner-signed-out #partnerBottomNav,
+body.partner-signed-out #appBottomNav,
+body.partner-signed-out .bottom-nav,
+body.partner-signed-out nav.bottom,
+body.partner-signed-out .pull-refresh-indicator{display:none!important}
+#appBottomNav{display:none!important;visibility:hidden!important;pointer-events:none!important;height:0!important;min-height:0!important;overflow:hidden!important}
+body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9999!important}
+#loginView:not(.hidden){
+  display:flex!important;min-height:100vh!important;width:100%!important;
+  align-items:center!important;justify-content:center!important;
+  padding:28px 20px!important;box-sizing:border-box!important;background:transparent!important;
+}
+#loginView .login-card,#loginView .auth-card,#loginView>div{
+  width:min(100%,420px)!important;margin:0 auto!important;padding:34px 26px 28px!important;
+  border-radius:28px!important;box-sizing:border-box!important;background:#fff!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.35)!important;text-align:center!important;
+}
+#loginView img{
+  width:92px!important;height:92px!important;object-fit:contain!important;border-radius:22px!important;
+  margin:0 auto 20px!important;display:block!important;
+}
+#loginView h1,#loginView h2{
+  margin:0 0 8px!important;color:#0b1728!important;font-size:28px!important;line-height:1.1!important;
+  font-weight:850!important;letter-spacing:-.7px!important;
+}
+#loginView .muted,#loginView p{
+  color:#6b7280!important;font-size:14px!important;line-height:1.45!important;margin:0 0 24px!important;
+}
+#loginView label{
+  display:block!important;text-align:left!important;color:#334155!important;font-size:13px!important;
+  font-weight:750!important;margin:14px 0 7px!important;
+}
+#loginView input[type="email"],#loginView input[type="password"],#loginView input[type="text"]{
+  display:block!important;width:100%!important;height:54px!important;box-sizing:border-box!important;
+  border:1.5px solid #d7dee8!important;border-radius:15px!important;background:#f8fafc!important;
+  color:#0f172a!important;font-size:16px!important;padding:0 16px!important;margin:0 0 12px!important;
+  outline:none!important;-webkit-appearance:none!important;
+}
+#loginView input:focus{
+  border-color:#149cf7!important;background:#fff!important;box-shadow:0 0 0 4px rgba(20,156,247,.12)!important;
+}
+#loginView button[type="submit"],#loginView #emailLogin,#loginView .primary{
+  width:100%!important;min-height:54px!important;border:0!important;border-radius:16px!important;
+  margin:10px 0 12px!important;background:linear-gradient(135deg,#078df0,#20c6ee)!important;
+  color:#fff!important;font-size:16px!important;font-weight:850!important;
+  box-shadow:0 10px 25px rgba(0,145,240,.25)!important;
+}
+#loginView #forgotPassword,#loginView .link-button{
+  display:inline-flex!important;justify-content:center!important;align-items:center!important;
+  width:auto!important;min-height:38px!important;margin:0 auto!important;padding:4px 10px!important;
+  border:0!important;background:transparent!important;color:#087fc9!important;font-size:14px!important;
+  font-weight:750!important;box-shadow:none!important;
+}
+#loginError{margin:12px 0 0!important;color:#c62828!important;font-size:13px!important;line-height:1.4!important}
 </style>
 
 </head>
@@ -4952,24 +5016,35 @@ body{padding-bottom:94px!important}
       async function loadPartnerIdentityAndPresence() {
         const user = auth?.currentUser;
         if (!user?.email) return false;
-        const email = String(user.email).trim().toLowerCase();
+
+        const rawEmail = String(user.email).trim();
+        const email = rawEmail.toLowerCase();
+        let profileDoc = null;
+
+        const tryEmailQuery = async candidate => {
+          const snap = await getDocs(query(
+            collection(db, "partnerDrivers"),
+            where("email", "==", candidate),
+            limit(1)
+          ));
+          return snap.empty ? null : snap.docs[0];
+        };
 
         try {
-          const profileQuery = query(
-            collection(db, "partnerDrivers"),
-            where("email", "==", email),
-            limit(1)
-          );
-          const profileSnapshot = await getDocs(profileQuery);
+          profileDoc = await tryEmailQuery(email);
 
-          if (profileSnapshot.empty) {
+          if (!profileDoc && rawEmail !== email) {
+            profileDoc = await tryEmailQuery(rawEmail);
+          }
+
+          if (!profileDoc) {
             window.currentPartnerProfile = null;
-            $("partnerDashboardName").textContent = "Profil introuvable";
-            $("loginError").textContent = "Aucune fiche chauffeur ne correspond à " + email + ".";
+            $("partnerDashboardName").textContent = "Chauffeur.";
+            $("loginError").textContent =
+              "Votre compte est connecté, mais aucune fiche chauffeur active n’est associée à cette adresse e-mail.";
             return false;
           }
 
-          const profileDoc = profileSnapshot.docs[0];
           const profile = { id: profileDoc.id, ...profileDoc.data() };
 
           if (profile.active === false) {
@@ -4979,8 +5054,15 @@ body{padding-bottom:94px!important}
           }
 
           window.currentPartnerProfile = profile;
-          const fullName = String(profile.displayName || profile.companyName || "Chauffeur").trim();
-          const firstName = fullName.split(/\\s+/)[0] || "Chauffeur";
+
+          const fullName = String(
+            profile.displayName ||
+            profile.firstName ||
+            profile.companyName ||
+            "Chauffeur"
+          ).trim();
+
+          const firstName = fullName.split(/\s+/)[0] || "Chauffeur";
           $("partnerDashboardName").textContent = firstName + ".";
 
           await updateDoc(profileDoc.ref, {
@@ -4990,12 +5072,15 @@ body{padding-bottom:94px!important}
             lastSeenAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
-          startPartnerPresence(profileDoc.id);
 
+          startPartnerPresence(profileDoc.id);
           return true;
         } catch (error) {
           console.error("Chargement profil chauffeur", error);
-          $("partnerDashboardName").textContent = "Profil introuvable";
+          window.currentPartnerProfile = null;
+          $("partnerDashboardName").textContent = "Chauffeur.";
+          $("loginError").textContent =
+            "Impossible de charger votre profil chauffeur. Vérifiez la connexion puis réessayez.";
           return false;
         }
       }
@@ -5053,6 +5138,26 @@ body{padding-bottom:94px!important}
         if (partnerPresenceTimer) { clearInterval(partnerPresenceTimer); partnerPresenceTimer = null; }
         await signOut(auth);
       }
+
+
+      function polishPartnerLogin() {
+        const view = $("loginView");
+        if (!view) return;
+        const heading = view.querySelector("h1,h2");
+        if (heading) heading.textContent = "Espace chauffeur";
+        const emailInput = view.querySelector('input[type="email"]');
+        const passwordInput = view.querySelector('input[type="password"]');
+        if (emailInput) {
+          emailInput.placeholder = "Adresse e-mail";
+          emailInput.autocomplete = "email";
+          emailInput.inputMode = "email";
+        }
+        if (passwordInput) {
+          passwordInput.placeholder = "Mot de passe";
+          passwordInput.autocomplete = "current-password";
+        }
+      }
+      polishPartnerLogin();
 
       onAuthStateChanged(auth, user => {
         const connected = Boolean(user);
@@ -5993,7 +6098,7 @@ body{padding-bottom:94px!important}
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=722", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=723", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
