@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
-  <title>OuassVTC Chauffeur</title>
+  <title>OuassVTC Chauffeur — Mission Control V66.1</title>
   <link rel="manifest" href="/chauffeur/manifest.json">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
@@ -929,16 +929,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     <section class="login hidden" id="loginView">
       <div class="login-card">
         <img src="/ouassvtc-app.png" alt="Application OuassVTC Chauffeur">
-        <h1>Espace chauffeur</h1>
-        <p>Connectez-vous avec votre compte chauffeur OuassVTC.</p>
-        <form id="partnerLoginForm">
-          <label for="partnerLoginEmail">E-mail</label>
-          <input id="partnerLoginEmail" type="email" autocomplete="username" required>
-          <label for="partnerLoginPassword">Mot de passe</label>
-          <input id="partnerLoginPassword" type="password" autocomplete="current-password" required>
-          <button class="primary" type="submit">Se connecter</button>
-        </form>
-        <button class="secondary" id="partnerForgotPassword" type="button">Mot de passe oublié</button>
+        <h1>Votre espace chauffeur</h1>
+        <p>Connectez-vous avec votre compte Google autorisé pour gérer vos demandes.</p>
+        <button class="primary" id="loginGoogle" type="button">Continuer avec Google</button>
         <p class="login-error hidden" id="loginError"></p>
       </div>
     </section>
@@ -952,7 +945,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="hello-row">
           <div>
             <div class="eyebrow" id="dashboardGreeting">Bonjour</div>
-            <h1 id="partnerDashboardName">Chauffeur.</h1>
+            <h1>Ouassini.</h1>
             <span class="dashboard-current-date" id="dashboardCurrentDate"></span>
           </div>
           <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
@@ -1452,7 +1445,6 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       browserLocalPersistence,
       getAuth,
       GoogleAuthProvider,
-      signInWithEmailAndPassword,
       onAuthStateChanged,
       setPersistence,
       sendPasswordResetEmail,
@@ -3939,7 +3931,6 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     }
 
     function openBooking(id) {
-      window.__partnerOpenBookingId = id;
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
       $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : ["transferred", "transfer_performed", "transfer_closed"].includes(item.status) ? "Suivi du transfert" : "Détail de la réservation";
@@ -4091,7 +4082,6 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         try {
           localSaveInProgress = true;
           const createdReturn = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
             customerName: item.customerName || "Client",
             customerPhone: item.customerPhone || "",
             pickup: item.destination || "",
@@ -4827,44 +4817,36 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
  
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
-      if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
-      const email = auth?.currentUser?.email?.toLowerCase();
-      if (!email) return;
-
-      const own = new Map();
-      const transferred = new Map();
-
-      const publish = () => {
-        const merged = new Map([...own, ...transferred]);
-        state.bookings = Array.from(merged.values()).sort((a,b) => {
-          const da = a.createdAt?.toMillis?.() || Date.parse(a.scheduledAtText || "") || 0;
-          const dbv = b.createdAt?.toMillis?.() || Date.parse(b.scheduledAtText || "") || 0;
-          return dbv - da;
+      const bookingsQuery = query(collection(db, "bookings"), orderBy("createdAt", "desc"), limit(1000));
+      state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
+        const incoming = firstBookingsSnapshot ? [] : snapshot.docChanges().filter(change => {
+          const item = change.doc.data();
+          return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
+        state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
+        state.bookings.filter(item => ["new", "accepted"].includes(item.status) && !Number(item.missionTotalKm) && !automaticCostAttemptIds.has(item.id)).forEach(item => {
+          automaticCostAttemptIds.add(item.id);
+          void automaticallyCalculateMissionCost(doc(db, "bookings", item.id), item);
+        });
+        void reconcileCompletedCourseNumbers();
+        state.bookings.filter(item => item.status === "new").forEach(item => knownNewBookingIds.add(item.id));
+        firstBookingsSnapshot = false;
         render();
-        $("manualSync")?.classList.remove("syncing");
-      };
-
-      const ownQuery = query(collection(db, "bookings"), where("partnerOwnerEmail", "==", email), limit(1000));
-      const transferQuery = query(collection(db, "bookings"), where("transferredDriverEmail", "==", email), limit(1000));
-
-      state.unsubscribe = onSnapshot(ownQuery, snapshot => {
-        own.clear();
-        snapshot.docs.forEach(result => own.set(result.id, { id:result.id, ...result.data() }));
-        publish();
+        $("manualSync").classList.remove("syncing");
+        const requestedBookingId = new URLSearchParams(window.location.search).get("booking");
+        if (requestedBookingId && state.bookings.some(item => item.id === requestedBookingId)) {
+          openBooking(requestedBookingId);
+          window.history.replaceState({}, document.title, "/chauffeur/");
+        }
+        if (incoming.length) showTripAlert(incoming.map(change => change.doc.id));
       }, error => {
-        console.error("Courses chauffeur", error);
-        $("emptyState").textContent = "Impossible de charger vos courses. Vérifiez les règles Firebase.";
+        console.error(error);
+        $("manualSync").classList.remove("syncing");
+        $("emptyState").textContent = "Impossible de charger les demandes. Vérifiez les règles Firebase.";
         $("emptyState").classList.remove("hidden");
       });
-
-      state.partnerTransferUnsubscribe = onSnapshot(transferQuery, snapshot => {
-        transferred.clear();
-        snapshot.docs.forEach(result => transferred.set(result.id, { id:result.id, ...result.data() }));
-        publish();
-      }, error => console.error("Courses transférées", error));
     }
-
+ 
     function showLoginError(message) {
       $("loginError").textContent = message;
       $("loginError").classList.remove("hidden");
@@ -4908,22 +4890,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         console.error("La session locale n’a pas pu être configurée", error);
       }
  
-      $("partnerLoginForm")?.addEventListener("submit", async event => {
-        event.preventDefault();
+      $("loginGoogle").addEventListener("click", async () => {
         try {
-          const email = $("partnerLoginEmail").value.trim().toLowerCase();
-          const password = $("partnerLoginPassword").value;
-          await signInWithEmailAndPassword(auth, email, password);
+          await signInWithPopup(auth, new GoogleAuthProvider());
         } catch (error) {
           console.error(error);
-          showLoginError("E-mail ou mot de passe incorrect.");
+          showLoginError("Connexion impossible. Vérifiez que Google est activé dans Firebase.");
         }
-      });
-      $("partnerForgotPassword")?.addEventListener("click", async () => {
-        const email = $("partnerLoginEmail")?.value.trim().toLowerCase();
-        if (!email) { showLoginError("Saisissez d’abord votre e-mail."); return; }
-        try { await sendPasswordResetEmail(auth, email); alert("E-mail de réinitialisation envoyé."); }
-        catch (error) { console.error(error); showLoginError("Impossible d’envoyer l’e-mail de réinitialisation."); }
       });
  
       $("logout").addEventListener("click", () => signOut(auth));
@@ -4937,12 +4910,18 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         $("openMenu").classList.toggle("hidden", !connected);
         if (connected) {
           listenToBookings();
-          loadPartnerIdentityAndPresence();
+          listenFinanceSettings();
+          listenDriverDocuments();
+          listenDriverMissions();
+          listenPartnerDrivers();
+          listenDispatchRequests();
+          if("Notification" in window&&Notification.permission==="granted") keepNotificationsRegistered().catch(error=>console.error("Renouvellement silencieux des notifications impossible",error));
           if (new URLSearchParams(window.location.search).has("documents")) { openPanel("documentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
         } else {
           if (state.unsubscribe) state.unsubscribe();
-          if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
-          if (state.partnerPresenceUnsubscribe) state.partnerPresenceUnsubscribe();
+          if (state.financeUnsubscribe) state.financeUnsubscribe();
+          if (state.documentsUnsubscribe) state.documentsUnsubscribe();
+          if (state.partnerDriversUnsubscribe) state.partnerDriversUnsubscribe();
         }
       });
     }
@@ -5710,7 +5689,6 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         const current = new Date();
         const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
         quickBooking = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
           customerName: "Course manuelle",
           customerPhone: phone,
           pickup: "Ajout manuel",
@@ -5806,7 +5784,6 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       try {
         localSaveInProgress = true;
         const createdBooking = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
           customerName: params.nom,
           customerPhone: params.telephone,
           pickup: params.depart,
@@ -6254,174 +6231,28 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 </script>
 
 
-
-
-
-
-
-<style id="ouass-partner-v711">
-body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;left:12px;right:12px;bottom:10px;height:72px;display:grid;grid-template-columns:1fr 1fr 82px 1fr 1fr;align-items:center;background:rgba(8,15,27,.97);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:0 8px calc(env(safe-area-inset-bottom)/2);box-shadow:0 18px 45px rgba(0,0,0,.30);backdrop-filter:blur(16px)}
-.partner-bottom button{appearance:none;border:0;background:transparent;color:#9aa9bd;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:800 10px/1.05 system-ui}
-.partner-bottom .nav-ico{width:34px;height:30px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:#c9d5e5}.partner-bottom button.active{color:#fff}.partner-bottom button.active .nav-ico{color:#fff;background:linear-gradient(145deg,#1769ff,#2d8cff);box-shadow:0 7px 18px rgba(23,105,255,.35)}
-.partner-bottom .partner-plus{width:70px;height:70px;justify-self:center;border-radius:50%;background:linear-gradient(145deg,#1769ff,#0864f7);color:#fff;border:5px solid #fff;transform:translateY(-18px);box-shadow:0 12px 28px rgba(10,96,255,.38)}.partner-bottom .partner-plus .nav-ico{font-size:35px;color:#fff;background:transparent}
-.partner-view-hidden{display:none!important}.ptr-indicator{position:fixed;z-index:10010;left:50%;top:82px;transform:translate(-50%,-70px);min-width:148px;padding:10px 15px;border-radius:999px;background:#0b1627;color:#fff;font:800 12px system-ui;box-shadow:0 8px 25px rgba(0,0,0,.2);text-align:center;transition:transform .2s;pointer-events:none}.ptr-indicator.show{transform:translate(-50%,0)}
+<style id="partner-admin-v712-style">
+.partner-admin-v712{padding:18px 0 110px}.pa-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.pa-grid{display:grid;gap:12px}.pa-card{background:#fff;border:1px solid #e5e9f0;border-radius:22px;padding:16px;box-shadow:0 10px 28px rgba(10,24,45,.06)}.pa-top{display:flex;align-items:center;gap:12px}.pa-avatar{width:50px;height:50px;border-radius:16px;background:#0b1627;color:#fff;display:grid;place-items:center;font-weight:900;font-size:18px}.pa-grow{flex:1}.pa-name{font-size:17px;font-weight:900}.pa-sub{font-size:12px;color:#667085}.pa-pres{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:#f2f4f7;color:#667085;font-size:11px;font-weight:850}.pa-pres i{width:8px;height:8px;border-radius:50%;background:#98a2b3}.pa-pres.live{background:#ecfdf3;color:#067647}.pa-pres.live i{background:#12b76a}.pa-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px;font-size:12px;color:#475467}.pa-actions{display:flex;gap:8px;margin-top:14px}.pa-actions button{flex:1;border:0;border-radius:13px;padding:11px;font-weight:850}.pa-open{background:#0b1627;color:#fff}.pa-edit{background:#eef4ff;color:#175cd3}.pa-detail{position:fixed;z-index:12000;inset:0;background:#f5f7fa;overflow:auto;padding:18px 16px 100px}.pa-detail.hidden{display:none}.pa-detailbar{display:flex;gap:12px;align-items:center}.pa-back{width:42px;height:42px;border:0;border-radius:13px;background:#fff;font-size:24px}.pa-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.pa-kpi,.pa-section{background:#fff;border-radius:19px;padding:14px}.pa-kpi{text-align:center}.pa-kpi strong{display:block;font-size:20px}.pa-section{margin-top:12px}.pa-course{padding:11px 0;border-bottom:1px solid #edf0f4}
 </style>
-<div class="ptr-indicator" id="ptrIndicator"><span id="ptrText">Actualisation…</span></div>
-<nav class="partner-bottom" id="partnerBottomNav">
-<button type="button" data-target="dashboardHome" class="active"><span class="nav-ico">⌂</span><span>Accueil</span></button>
-<button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
-<button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
-<button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
-<button type="button" data-target="partnerMenuPanel"><span class="nav-ico">☰</span><span>Menu</span></button>
-</nav>
-<script id="ouass-partner-v711-runtime">
-window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
-function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
-async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
+<script id="partner-admin-v712-runtime">
+let paProfiles=[],paCourses=[],paSelected=null,paStarted=false;
+function paEsc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function paInitials(p){return(p.displayName||p.companyName||"CH").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
+function paLive(p){const d=p.lastSeenAt?.toDate?.();return !!(p.online&&d&&(Date.now()-d.getTime()<150000))}
+function paLogin(p){const d=p.lastLoginAt?.toDate?.();return d?"Dernière connexion "+d.toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"Aucune connexion enregistrée"}
+function paSeen(p){const d=p.lastSeenAt?.toDate?.();if(!d)return"Jamais vu";const s=(Date.now()-d)/1000;if(s<90)return"Actif maintenant";if(s<3600)return"Actif il y a "+Math.floor(s/60)+" min";return"Dernière activité "+d.toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}
+function paAmount(c){return parseFloat(String(c.estimatedPrice||"").replace(",",".").replace(/[^\d.]/g,""))||0}
+function paEnsure(){
+ if(document.getElementById("partnerAdminV712"))return;
+ const main=document.querySelector("main")||document.body,s=document.createElement("section");s.id="partnerAdminV712";s.className="partner-admin-v712 hidden";s.innerHTML='<div class="pa-head"><div><div class="eyebrow">ADMINISTRATION</div><h1>Chauffeurs partenaires</h1></div><button class="primary" id="paAdd">+ Ajouter</button></div><div class="pa-grid" id="paList"></div>';main.appendChild(s);
+ const nav=document.querySelector(".menu-nav");if(nav&&!document.getElementById("paMenu")){const b=document.createElement("button");b.id="paMenu";b.className="menu-link";b.type="button";b.textContent="Chauffeurs partenaires";b.onclick=paOpen;nav.appendChild(b)}
+ document.getElementById("paAdd").onclick=()=>{const old=document.querySelector('[data-menu-tab="partnersPanel"]');if(old)old.click();else alert("Utilisez le formulaire chauffeur partenaire existant.")};
+}
+function paOpen(){document.querySelectorAll("main > section").forEach(s=>s.classList.add("hidden"));document.getElementById("partnerAdminV712")?.classList.remove("hidden");paRender();document.getElementById("sideMenu")?.classList.add("hidden");document.getElementById("menuOverlay")?.classList.add("hidden")}
+function paRender(){const h=document.getElementById("paList");if(!h)return;h.innerHTML=paProfiles.length?paProfiles.map(p=>{const cs=paCourses.filter(c=>(c.partnerOwnerEmail||"").toLowerCase()===(p.email||"").toLowerCase()||(c.transferredDriverEmail||"").toLowerCase()===(p.email||"").toLowerCase()),done=cs.filter(c=>c.status==="completed"),ca=done.reduce((s,c)=>s+paAmount(c),0),live=paLive(p);return`<article class="pa-card"><div class="pa-top"><div class="pa-avatar">${paInitials(p)}</div><div class="pa-grow"><div class="pa-name">${paEsc(p.displayName||"Chauffeur")}</div><div class="pa-sub">${paEsc(p.companyName||p.email||"")}</div></div><span class="pa-pres ${live?"live":""}"><i></i>${live?"En ligne":"Hors ligne"}</span></div><div class="pa-meta"><span>${paSeen(p)}<br><small>${paLogin(p)}</small></span><span>${done.length} terminée(s)</span><span>${ca.toFixed(2)} € CA</span><span>${paEsc(p.vehicle||"Véhicule non renseigné")}</span></div><div class="pa-actions"><button class="pa-open" onclick="paDetail('${p.id}')">Voir le profil</button><button class="pa-edit" onclick="window.editPartnerDriver?editPartnerDriver('${p.id}'):paDetail('${p.id}')">Modifier</button></div></article>`}).join(""):'<div class="empty-state">Aucun chauffeur partenaire enregistré.</div>'}
+function paDetail(id){const p=paProfiles.find(x=>x.id===id);if(!p)return;paSelected=p;let v=document.getElementById("paDetail");if(!v){v=document.createElement("div");v.id="paDetail";v.className="pa-detail";document.body.appendChild(v)}const cs=paCourses.filter(c=>(c.partnerOwnerEmail||"").toLowerCase()===(p.email||"").toLowerCase()||(c.transferredDriverEmail||"").toLowerCase()===(p.email||"").toLowerCase()).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0)),done=cs.filter(c=>c.status==="completed"),ca=done.reduce((s,c)=>s+paAmount(c),0);v.innerHTML=`<div class="pa-detailbar"><button class="pa-back" onclick="document.getElementById('paDetail').classList.add('hidden')">‹</button><div><div class="eyebrow">CHAUFFEUR PARTENAIRE</div><h2>${paEsc(p.displayName||"Chauffeur")}</h2></div></div><div class="pa-kpis"><div class="pa-kpi"><strong>${paLive(p)?"🟢":"⚫"}</strong><small>${paLive(p)?"En ligne":"Hors ligne"}</small></div><div class="pa-kpi"><strong>${cs.length}</strong><small>Courses</small></div><div class="pa-kpi"><strong>${ca.toFixed(0)} €</strong><small>CA</small></div></div><div class="pa-section"><h3>Profil</h3><p><b>Société :</b> ${paEsc(p.companyName||"—")}</p><p><b>E-mail :</b> ${paEsc(p.email||"—")}</p><p><b>Téléphone :</b> ${paEsc(p.phone||"—")}</p><p><b>SIRET :</b> ${paEsc(p.siret||"—")}</p><p><b>Adresse :</b> ${paEsc(p.address||"—")}</p><p><b>Véhicule :</b> ${paEsc(p.vehicle||"—")} · ${paEsc(p.registration||"—")}</p><p><b>${paLogin(p)}</b><br>${paSeen(p)}</p></div><div class="pa-section"><h3>Activité</h3>${cs.length?cs.slice(0,100).map(c=>`<div class="pa-course"><b>${paEsc(c.customerName||"Client")}</b><br><small>${paEsc(c.pickup||"")} → ${paEsc(c.destination||"")}</small><br><small>${paEsc(c.scheduledAtText||"")} · ${paEsc(c.estimatedPrice||"")} · ${paEsc(c.status||"")}</small></div>`).join(""):"Aucune course."}</div>`;v.classList.remove("hidden")}
+function paStart(){if(paStarted||!auth?.currentUser)return;paStarted=true;paEnsure();onSnapshot(query(collection(db,"partnerDrivers"),limit(200)),s=>{paProfiles=s.docs.map(d=>({id:d.id,...d.data()}));paRender();if(paSelected)paDetail(paSelected.id)});onSnapshot(query(collection(db,"bookings"),limit(1000)),s=>{paCourses=s.docs.map(d=>({id:d.id,...d.data()}));paRender();if(paSelected)paDetail(paSelected.id)})}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(paStart,1800));
 </script>
-
-
-<script id="partner-heartbeat-v712">
-let ouassHeartbeatTimer=null;
-async function ouassPushHeartbeat(){
-  try{
-    if(!currentPartnerProfile?.id||!auth?.currentUser)return;
-    await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
-  }catch(e){console.warn("Présence chauffeur",e)}
-}
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)ouassPushHeartbeat()});
-window.addEventListener("focus",ouassPushHeartbeat);
-setTimeout(ouassPushHeartbeat,2500);
-ouassHeartbeatTimer=setInterval(ouassPushHeartbeat,60000);
-</script>
-
-<style id="partner-menu-v713-style">
-.partner-menu-page{padding:8px 0 110px}.pm-hero{background:linear-gradient(145deg,#0a1628,#122744);color:#fff;border-radius:24px;padding:20px;margin-bottom:14px;box-shadow:0 14px 34px rgba(7,22,43,.18)}.pm-hero h2{margin:5px 0}.pm-hero small{color:#b8c7da}.pm-list{display:grid;gap:10px}.pm-item{width:100%;border:1px solid #e5e9f0;background:#fff;border-radius:18px;padding:15px;display:flex;align-items:center;gap:13px;text-align:left;box-shadow:0 8px 24px rgba(10,24,45,.05)}.pm-icon{width:42px;height:42px;border-radius:14px;background:#eef4ff;display:grid;place-items:center;font-size:21px}.pm-grow{flex:1}.pm-grow b{display:block;font-size:14px}.pm-grow small{color:#667085}.pm-arrow{font-size:22px;color:#98a2b3}.pm-card{background:#fff;border:1px solid #e5e9f0;border-radius:20px;padding:16px;margin-bottom:12px}.pm-grid{display:grid;gap:11px}.pm-grid label{font-size:12px;font-weight:800;color:#344054}.pm-grid input{width:100%;box-sizing:border-box;margin-top:5px;border:1px solid #d0d5dd;border-radius:13px;padding:12px}.pm-save{width:100%;border:0;border-radius:14px;padding:13px;background:#0b1627;color:#fff;font-weight:900}.pm-back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:23px;box-shadow:0 5px 18px rgba(0,0,0,.07);margin-bottom:12px}.pm-doc{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f4}.pm-doc:last-child{border-bottom:0}.pm-doc-state{margin-left:auto;font-size:11px;font-weight:850}.pm-good{color:#067647}.pm-warn{color:#b54708}.pm-setting{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #edf0f4}.pm-logout{width:100%;border:0;border-radius:14px;padding:13px;background:#fff0f0;color:#b42318;font-weight:900;margin-top:12px}
-</style>
-<script id="partner-menu-v713-runtime">
-let partnerDocsUnsub=null;
-const PARTNER_DOC_TYPES=[
- ["vtc_card","Carte professionnelle VTC"],
- ["driving_license","Permis de conduire"],
- ["identity","Pièce d’identité"],
- ["insurance","Assurance professionnelle / véhicule"],
- ["registration","Carte grise"],
- ["technical_control","Contrôle technique"]
-];
-function pme(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function pmEnsure(){
- const main=document.querySelector("main")||document.body;
- if(!document.getElementById("partnerMenuPanel")){
-   const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
-   main.appendChild(s);
- }
- if(!document.getElementById("partnerProfilePanel")){
-   const s=document.createElement("section");s.id="partnerProfilePanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse<input id="pmAddress"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
-   main.appendChild(s);
- }
- if(!document.getElementById("partnerDocumentsPanel")){
-   const s=document.createElement("section");s.id="partnerDocumentsPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mes documents</h2><div class="pm-card"><div id="pmDocumentsList">Chargement…</div></div>';
-   main.appendChild(s);
- }
- if(!document.getElementById("partnerSettingsPanel")){
-   const s=document.createElement("section");s.id="partnerSettingsPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Réglages</h2><div class="pm-card"><div class="pm-setting"><span>Notifications</span><button type="button" id="pmNotifications">Activer</button></div><div class="pm-setting"><span>Interprète</span><button type="button" id="pmInterpreter">Ouvrir</button></div><div class="pm-setting"><span>Installation de l’application</span><button type="button" id="pmInstall">Installer</button></div></div><button class="pm-logout" id="pmLogout" type="button">Déconnexion</button>';
-   main.appendChild(s);
- }
- document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showPartnerPage(b.dataset.pm));
- document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
- document.getElementById("pmLogout").onclick=()=>signOut(auth);
- document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
- document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
- document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
- pmFillProfile();pmListenDocuments();
-}
-function pmFillProfile(){
- const p=currentPartnerProfile;if(!p)return;
- document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
- [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
-}
-async function pmSaveProfile(e){
- e.preventDefault();if(!currentPartnerProfile?.id)return;
- const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),updatedAt:serverTimestamp()};
- try{await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),data);alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
-}
-function pmListenDocuments(){
- if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
- const email=auth.currentUser.email.toLowerCase();
- const q=query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),limit(100));
- partnerDocsUnsub=onSnapshot(q,s=>pmRenderDocuments(s.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(e);const h=document.getElementById("pmDocumentsList");if(h)h.innerHTML="Impossible de charger les documents."});
-}
-function pmRenderDocuments(docs){
- const h=document.getElementById("pmDocumentsList");if(!h)return;
- h.innerHTML=PARTNER_DOC_TYPES.map(([type,label])=>{const d=docs.find(x=>x.type===type),ok=!!d;return`<div class="pm-doc"><span>📎</span><span><b>${label}</b><br><small>${ok?(d.fileName||"Document enregistré"):"À ajouter"}</small></span><span class="pm-doc-state ${ok?"pm-good":"pm-warn"}">${ok?"Ajouté":"Manquant"}</span></div>`}).join("");
-}
-async function pmRecordLogin(){
- try{
-  const email=auth?.currentUser?.email?.toLowerCase();if(!email)return;
-  const q=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1)),s=await getDocs(q);
-  if(!s.empty)await updateDoc(doc(db,"partnerDrivers",s.docs[0].id),{lastLoginAt:serverTimestamp(),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
- }catch(e){console.warn("Dernière connexion",e)}
-}
-document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
-</script>
-
-
-<script id="partner-identity-v714">
-let currentPartnerProfile = null;
-let partnerIdentityUnsubscribe = null;
-
-function partnerFirstName(profile){
-  const raw=String(profile?.displayName||profile?.companyName||"Chauffeur").trim();
-  return raw.split(/\s+/)[0] || "Chauffeur";
-}
-function applyAuthenticatedPartnerProfile(profile){
-  currentPartnerProfile=profile;
-  const first=partnerFirstName(profile);
-  const dash=document.getElementById("partnerDashboardName");
-  if(dash) dash.textContent=first+".";
-  const menuName=document.getElementById("pmName");
-  if(menuName) menuName.textContent=profile.displayName||profile.companyName||first;
-  if(typeof pmFillProfile==="function") pmFillProfile();
-}
-async function loadPartnerIdentityAndPresence(){
-  const user=auth?.currentUser;
-  if(!user?.email) return;
-  const email=user.email.trim().toLowerCase();
-
-  if(partnerIdentityUnsubscribe){ partnerIdentityUnsubscribe(); partnerIdentityUnsubscribe=null; }
-
-  const q=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1));
-  const snap=await getDocs(q);
-
-  if(snap.empty){
-    currentPartnerProfile=null;
-    const dash=document.getElementById("partnerDashboardName");
-    if(dash) dash.textContent="Chauffeur.";
-    console.error("Aucun profil partnerDrivers autorisé pour",email);
-    return;
-  }
-
-  const ref=snap.docs[0].ref;
-  applyAuthenticatedPartnerProfile({id:snap.docs[0].id,...snap.docs[0].data()});
-
-  await updateDoc(ref,{
-    lastSeenAt:serverTimestamp(),
-    lastLoginAt:serverTimestamp(),
-    updatedAt:serverTimestamp()
-  });
-
-  partnerIdentityUnsubscribe=onSnapshot(ref,d=>{
-    if(!d.exists()) return;
-    applyAuthenticatedPartnerProfile({id:d.id,...d.data()});
-  });
-}
-</script>
-
 </body>
 </html>
