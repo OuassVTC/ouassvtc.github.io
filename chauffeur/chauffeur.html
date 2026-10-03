@@ -881,6 +881,17 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     .partner-detail{margin-top:16px;background:var(--card,#fff);border:1px solid rgba(127,127,127,.22);border-radius:18px;padding:16px}.partner-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.partner-revenue-nav{display:grid;gap:9px;margin-top:12px}.partner-revenue-item{width:100%;border:1px solid rgba(127,127,127,.22);background:transparent;color:inherit;border-radius:14px;padding:12px;text-align:left;display:flex;justify-content:space-between;gap:10px;align-items:center}.partner-revenue-item small{display:block;opacity:.7;margin-top:3px}.partner-revenue-item b{white-space:nowrap}.partner-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.partner-detail-grid div{padding:10px;border-radius:12px;background:rgba(127,127,127,.08)}
     @media(max-width:620px){.partner-form-row{grid-template-columns:1fr}}
 </style>
+
+<style id="partner-auth-exclusive-v720">
+body.partner-signed-out .partner-bottom,
+body.partner-signed-out .app-bottom-nav,
+.partner-bottom.auth-hidden,
+.app-bottom-nav.auth-hidden{display:none!important}
+body.partner-signed-out{padding-bottom:0!important}
+#loginView:not(.hidden){display:flex!important;min-height:calc(100vh - 90px);align-items:center;justify-content:center}
+#authLoadingView.hidden{display:none!important}
+</style>
+
 </head>
  
 <body>
@@ -1449,14 +1460,12 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
-      browserSessionPersistence, signInWithEmailAndPassword, sendPasswordResetEmail,
+      browserSessionPersistence,
       getAuth,
-      GoogleAuthProvider,
       signInWithEmailAndPassword,
       onAuthStateChanged,
       setPersistence,
       sendPasswordResetEmail,
-      signInWithPopup,
       signOut
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
     import {
@@ -1464,6 +1473,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       collection,
       deleteDoc,
       doc,
+      getDocs,
       getFirestore,
       limit,
       onSnapshot,
@@ -4926,8 +4936,82 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         catch (error) { console.error(error); showLoginError("Impossible d’envoyer l’e-mail de réinitialisation."); }
       });
  
-      $("logout").addEventListener("click", event => { event.preventDefault(); partnerLogoutV717(); });
+      $("logout").addEventListener("click", async event => {
+        event.preventDefault();
+        await partnerLogoutClean();
+      });
  
+
+      async function loadPartnerIdentityAndPresence() {
+        const user = auth?.currentUser;
+        if (!user?.email) return false;
+        const email = String(user.email).trim().toLowerCase();
+
+        try {
+          const profileQuery = query(
+            collection(db, "partnerDrivers"),
+            where("email", "==", email),
+            limit(1)
+          );
+          const profileSnapshot = await getDocs(profileQuery);
+
+          if (profileSnapshot.empty) {
+            window.currentPartnerProfile = null;
+            $("partnerDashboardName").textContent = "Profil introuvable";
+            $("loginError").textContent = "Aucune fiche chauffeur ne correspond à " + email + ".";
+            return false;
+          }
+
+          const profileDoc = profileSnapshot.docs[0];
+          const profile = { id: profileDoc.id, ...profileDoc.data() };
+
+          if (profile.active === false) {
+            await signOut(auth);
+            showLoginError("Ce compte chauffeur est désactivé.");
+            return false;
+          }
+
+          window.currentPartnerProfile = profile;
+          const fullName = String(profile.displayName || profile.companyName || "Chauffeur").trim();
+          const firstName = fullName.split(/\\s+/)[0] || "Chauffeur";
+          $("partnerDashboardName").textContent = firstName + ".";
+
+          await updateDoc(profileDoc.ref, {
+            online: true,
+            lastLoginAt: serverTimestamp(),
+            lastSeenAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+
+          return true;
+        } catch (error) {
+          console.error("Chargement profil chauffeur", error);
+          $("partnerDashboardName").textContent = "Profil introuvable";
+          return false;
+        }
+      }
+
+      async function setPartnerOfflineBeforeLogout() {
+        try {
+          const p = window.currentPartnerProfile;
+          if (p?.id && auth?.currentUser) {
+            await updateDoc(doc(db, "partnerDrivers", p.id), {
+              online: false,
+              lastSeenAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
+          }
+        } catch (error) {
+          console.warn("Mise hors ligne chauffeur", error);
+        }
+      }
+
+      async function partnerLogoutClean() {
+        await setPartnerOfflineBeforeLogout();
+        window.currentPartnerProfile = null;
+        await signOut(auth);
+      }
+
       onAuthStateChanged(auth, user => {
         const connected = Boolean(user);
         $("authLoadingView").classList.add("hidden");
@@ -4935,6 +5019,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         $("dashboardView").classList.toggle("hidden", !connected);
         $("logout").classList.toggle("hidden", !connected);
         $("openMenu").classList.toggle("hidden", !connected);
+        document.body.classList.toggle("partner-signed-out", !connected);
+        setTimeout(() => {
+          document.getElementById("partnerBottomNav")?.classList.toggle("auth-hidden", !connected);
+          document.getElementById("appBottomNav")?.classList.toggle("auth-hidden", !connected);
+        }, 0);
         if (connected) {
           listenToBookings();
           loadPartnerIdentityAndPresence();
@@ -6287,8 +6376,8 @@ document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#pa
 let ouassHeartbeatTimer=null;
 async function ouassPushHeartbeat(){
   try{
-    if(!currentPartnerProfile?.id||!auth?.currentUser)return;
-    await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+    if(!window.currentPartnerProfile?.id||!auth?.currentUser)return;
+    await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),{lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
   }catch(e){console.warn("Présence chauffeur",e)}
 }
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)ouassPushHeartbeat()});
@@ -6342,14 +6431,14 @@ function pmEnsure(){
  pmFillProfile();pmListenDocuments();
 }
 function pmFillProfile(){
- const p=currentPartnerProfile;if(!p)return;
+ const p=window.currentPartnerProfile;if(!p)return;
  document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
  [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
 }
 async function pmSaveProfile(e){
- e.preventDefault();if(!currentPartnerProfile?.id)return;
+ e.preventDefault();if(!window.currentPartnerProfile?.id)return;
  const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),updatedAt:serverTimestamp()};
- try{await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),data);alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
+ try{await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
 }
 function pmListenDocuments(){
  if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
@@ -6370,398 +6459,6 @@ async function pmRecordLogin(){
 }
 document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
 </script>
-
-
-<script id="partner-identity-v714">
-let currentPartnerProfile = null;
-let partnerIdentityUnsubscribe = null;
-
-function partnerFirstName(profile){
-  const raw=String(profile?.displayName||profile?.companyName||"Chauffeur").trim();
-  return raw.split(/\s+/)[0] || "Chauffeur";
-}
-function applyAuthenticatedPartnerProfile(profile){
-  currentPartnerProfile=profile;
-  const first=partnerFirstName(profile);
-  const dash=document.getElementById("partnerDashboardName");
-  if(dash) dash.textContent=first+".";
-  const menuName=document.getElementById("pmName");
-  if(menuName) menuName.textContent=profile.displayName||profile.companyName||first;
-  if(typeof pmFillProfile==="function") pmFillProfile();
-}
-async function loadPartnerIdentityAndPresence(){
-  const user=auth?.currentUser;
-  if(!user?.email) return;
-  const email=user.email.trim().toLowerCase();
-
-  if(partnerIdentityUnsubscribe){ partnerIdentityUnsubscribe(); partnerIdentityUnsubscribe=null; }
-
-  const q=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1));
-  const snap=await getDocs(q);
-
-  if(snap.empty){
-    currentPartnerProfile=null;
-    const dash=document.getElementById("partnerDashboardName");
-    if(dash) dash.textContent="Chauffeur.";
-    console.error("Aucun profil partnerDrivers autorisé pour",email);
-    return;
-  }
-
-  const ref=snap.docs[0].ref;
-  applyAuthenticatedPartnerProfile({id:snap.docs[0].id,...snap.docs[0].data()});
-
-  await updateDoc(ref,{
-    lastSeenAt:serverTimestamp(),
-    lastLoginAt:serverTimestamp(),
-    updatedAt:serverTimestamp()
-  });
-
-  partnerIdentityUnsubscribe=onSnapshot(ref,d=>{
-    if(!d.exists()) return;
-    applyAuthenticatedPartnerProfile({id:d.id,...d.data()});
-  });
-}
-</script>
-
-
-<script id="partner-session-v715">
-let partnerForcedLogoutRunning=false;
-
-async function forcePartnerLogout(message=""){
-  if(partnerForcedLogoutRunning) return;
-  partnerForcedLogoutRunning=true;
-  try{
-    if(partnerHeartbeatTimer){clearInterval(partnerHeartbeatTimer);partnerHeartbeatTimer=null}
-    if(partnerIdentityUnsubscribe){partnerIdentityUnsubscribe();partnerIdentityUnsubscribe=null}
-    if(partnerDocsUnsub){partnerDocsUnsub();partnerDocsUnsub=null}
-
-    try{
-      if(currentPartnerProfile?.id && auth?.currentUser){
-        await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
-          online:false,
-          lastSeenAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-      }
-    }catch(e){console.warn("Mise hors ligne",e)}
-
-    currentPartnerProfile=null;
-
-    // Only clear OuassVTC partner-side local/session state, then Firebase auth.
-    try{
-      Object.keys(localStorage).filter(k=>/partner|chauffeur|ouass/i.test(k)).forEach(k=>localStorage.removeItem(k));
-      Object.keys(sessionStorage).filter(k=>/partner|chauffeur|ouass/i.test(k)).forEach(k=>sessionStorage.removeItem(k));
-    }catch(e){}
-
-    await signOut(auth);
-
-    // Force a clean reload so the login screen is rebuilt from auth state.
-    const clean=location.pathname+"?logout="+Date.now();
-    location.replace(clean);
-  }catch(e){
-    console.error("Déconnexion chauffeur",e);
-    try{await signOut(auth)}catch(_){}
-    location.reload();
-  }
-}
-
-function bindPartnerLogoutV715(){
-  const b=document.getElementById("pmLogout");
-  if(b){
-    b.type="button";
-    b.onclick=(e)=>{e.preventDefault();e.stopPropagation();forcePartnerLogout()};
-  }
-}
-
-// Override profile application to enforce active:false immediately.
-const _applyAuthenticatedPartnerProfileV714=applyAuthenticatedPartnerProfile;
-applyAuthenticatedPartnerProfile=function(profile){
-  if(profile && profile.active===false){
-    forcePartnerLogout("Compte désactivé");
-    return;
-  }
-  _applyAuthenticatedPartnerProfileV714(profile);
-};
-
-document.addEventListener("DOMContentLoaded",()=>{
-  setTimeout(bindPartnerLogoutV715,400);
-  setTimeout(bindPartnerLogoutV715,1800);
-});
-</script>
-
-
-<script id="partner-auth-isolation-v716">
-async function partnerLogoutV716(){
-  try{
-    if(partnerHeartbeatTimer){clearInterval(partnerHeartbeatTimer);partnerHeartbeatTimer=null}
-    if(partnerIdentityUnsubscribe){partnerIdentityUnsubscribe();partnerIdentityUnsubscribe=null}
-    if(partnerDocsUnsub){partnerDocsUnsub();partnerDocsUnsub=null}
-    try{
-      if(currentPartnerProfile?.id && auth?.currentUser){
-        await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
-          online:false,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()
-        });
-      }
-    }catch(e){}
-    await signOut(auth);
-    currentPartnerProfile=null;
-    const login=document.getElementById("loginView");
-    const dash=document.getElementById("dashboardView");
-    document.getElementById("authLoadingView")?.classList.add("hidden");
-    login?.classList.remove("hidden");
-    dash?.classList.add("hidden");
-    document.querySelectorAll(".partner-menu-page").forEach(x=>x.classList.add("partner-view-hidden"));
-    const email=document.getElementById("partnerLoginEmail");
-    const pass=document.getElementById("partnerLoginPassword");
-    if(email) email.value="";
-    if(pass) pass.value="";
-    history.replaceState({},document.title,location.pathname+"?login=1");
-    setTimeout(()=>email?.focus(),100);
-  }catch(e){
-    console.error("Déconnexion V71.6",e);
-    alert("La déconnexion a échoué. Rechargez la page puis réessayez.");
-  }
-}
-function bindLogoutV716(){
-  const b=document.getElementById("pmLogout");
-  if(b){b.onclick=(e)=>{e.preventDefault();e.stopPropagation();partnerLogoutV716()}}
-  const old=document.getElementById("logout");
-  if(old){old.onclick=(e)=>{e.preventDefault();partnerLogoutV716()}}
-}
-document.addEventListener("DOMContentLoaded",()=>{setTimeout(bindLogoutV716,500);setTimeout(bindLogoutV716,2000)});
-</script>
-
-
-<script id="partner-auth-v717">
-let partnerLogoutLockV717=false;
-
-async function partnerLogoutV717(){
-  if(partnerLogoutLockV717)return;
-  partnerLogoutLockV717=true;
-  try{
-    try{
-      if(currentPartnerProfile?.id && auth?.currentUser){
-        await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
-          online:false,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()
-        });
-      }
-    }catch(e){console.warn("Présence hors ligne",e)}
-
-    await signOut(auth);
-
-    try{
-      sessionStorage.setItem("ouassvtcPartnerLoggedOut","1");
-      Object.keys(localStorage).filter(k=>/^firebase:authUser:/.test(k)).forEach(k=>localStorage.removeItem(k));
-    }catch(e){}
-
-    location.replace(location.pathname+"?loggedout=1&v=717");
-  }catch(e){
-    console.error("Déconnexion V71.7",e);
-    partnerLogoutLockV717=false;
-    alert("Impossible de fermer la session. Rechargez la page et réessayez.");
-  }
-}
-
-async function partnerForceLoggedOutModeV717(){
-  const params=new URLSearchParams(location.search);
-  if(!params.has("loggedout") && !params.has("forceLogout"))return false;
-  try{await signOut(auth)}catch(e){}
-  const loading=document.getElementById("authLoadingView");
-  const login=document.getElementById("loginView");
-  const dash=document.getElementById("dashboardView");
-  loading?.classList.add("hidden");
-  login?.classList.remove("hidden");
-  dash?.classList.add("hidden");
-  document.getElementById("logout")?.classList.add("hidden");
-  document.getElementById("openMenu")?.classList.add("hidden");
-  const email=document.getElementById("partnerLoginEmail");
-  const pass=document.getElementById("partnerLoginPassword");
-  if(email)email.value="";
-  if(pass)pass.value="";
-  setTimeout(()=>email?.focus(),100);
-  return true;
-}
-
-function bindPartnerLogoutV717(){
-  ["pmLogout","logout"].forEach(id=>{
-    const b=document.getElementById(id);
-    if(b)b.onclick=e=>{e.preventDefault();e.stopImmediatePropagation();partnerLogoutV717()};
-  });
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  setTimeout(bindPartnerLogoutV717,300);
-  setTimeout(bindPartnerLogoutV717,1500);
-  setTimeout(partnerForceLoggedOutModeV717,400);
-});
-</script>
-
-
-<script id="partner-profile-resolution-v718">
-function normalizePartnerEmail(v){return String(v||"").trim().toLowerCase()}
-
-async function resolveAuthenticatedPartnerV718(){
-  const user=auth?.currentUser;
-  if(!user?.email)return null;
-  const email=normalizePartnerEmail(user.email);
-
-  let found=null;
-
-  try{
-    const exact=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1));
-    const snap=await getDocs(exact);
-    if(!snap.empty)found=snap.docs[0];
-  }catch(e){console.warn("Recherche exacte profil",e)}
-
-  // Handles an older profile saved with capitals/spaces in its email field.
-  if(!found){
-    try{
-      const snap=await getDocs(collection(db,"partnerDrivers"));
-      found=snap.docs.find(d=>normalizePartnerEmail(d.data().email)===email)||null;
-    }catch(e){console.warn("Recherche profil autorisé",e)}
-  }
-
-  if(!found)return null;
-  return {id:found.id,ref:found.ref,...found.data()};
-}
-
-async function loadPartnerIdentityAndPresenceV718(){
-  const profile=await resolveAuthenticatedPartnerV718();
-  if(!profile){
-    currentPartnerProfile=null;
-    const h=document.getElementById("partnerDashboardName");
-    if(h)h.textContent="Profil introuvable";
-    return;
-  }
-
-  if(profile.active===false){
-    if(typeof partnerLogoutV717==="function")await partnerLogoutV717();
-    return;
-  }
-
-  currentPartnerProfile=profile;
-  const name=String(profile.displayName||profile.name||profile.companyName||"Chauffeur").trim();
-  const first=name.split(/\s+/)[0]||"Chauffeur";
-  const h=document.getElementById("partnerDashboardName");
-  if(h)h.textContent=first+".";
-  const mn=document.getElementById("pmName");
-  if(mn)mn.textContent=name;
-  if(typeof pmFillProfile==="function")pmFillProfile();
-
-  try{
-    await updateDoc(profile.ref,{
-      online:true,
-      lastSeenAt:serverTimestamp(),
-      updatedAt:serverTimestamp()
-    });
-  }catch(e){console.warn("Présence profil",e)}
-
-  if(partnerIdentityUnsubscribe)partnerIdentityUnsubscribe();
-  partnerIdentityUnsubscribe=onSnapshot(profile.ref,d=>{
-    if(!d.exists())return;
-    const p={id:d.id,ref:d.ref,...d.data()};
-    if(p.active===false){
-      if(typeof partnerLogoutV717==="function")partnerLogoutV717();
-      return;
-    }
-    currentPartnerProfile=p;
-    const full=String(p.displayName||p.name||p.companyName||"Chauffeur").trim();
-    const firstname=full.split(/\s+/)[0]||"Chauffeur";
-    const title=document.getElementById("partnerDashboardName");
-    if(title)title.textContent=firstname+".";
-    const menu=document.getElementById("pmName");
-    if(menu)menu.textContent=full;
-    if(typeof pmFillProfile==="function")pmFillProfile();
-  });
-}
-
-// Replace the old loader at runtime with the robust resolver.
-loadPartnerIdentityAndPresence=loadPartnerIdentityAndPresenceV718;
-
-// Re-resolve immediately after authentication is restored / login completes.
-onAuthStateChanged(auth,user=>{
-  if(user){
-    setTimeout(loadPartnerIdentityAndPresenceV718,150);
-    setTimeout(loadPartnerIdentityAndPresenceV718,1200);
-  }
-});
-</script>
-
-
-<style id="partner-email-auth-v719-style">
-#partnerEmailAuthV719{position:fixed;z-index:30000;inset:0;background:linear-gradient(180deg,#f4f7fb,#fff);display:none;align-items:center;justify-content:center;padding:22px}
-#partnerEmailAuthV719.show{display:flex}.pea-card{width:min(420px,100%);background:#fff;border:1px solid #e6eaf0;border-radius:28px;padding:25px;box-shadow:0 24px 60px rgba(11,22,39,.13)}
-.pea-logo{width:76px;height:76px;border-radius:20px;display:block;margin:0 auto 16px}.pea-card h1{text-align:center;margin:0;font-size:28px}.pea-card>p{text-align:center;color:#667085;margin:8px 0 22px}.pea-field{display:block;font-size:12px;font-weight:850;color:#344054;margin:12px 0}.pea-field input{width:100%;box-sizing:border-box;margin-top:6px;padding:14px;border:1px solid #d0d5dd;border-radius:14px;font-size:16px;background:#fff}.pea-submit{width:100%;border:0;border-radius:15px;padding:14px;background:#0b1627;color:#fff;font-size:16px;font-weight:900;margin-top:8px}.pea-forgot{width:100%;border:0;background:transparent;color:#175cd3;font-weight:800;padding:14px}.pea-error{min-height:20px;color:#b42318;text-align:center;font-size:12px;margin-top:8px}
-</style>
-<div id="partnerEmailAuthV719">
- <div class="pea-card">
-  <img class="pea-logo" src="/ouassvtc-app.png" alt="OuassVTC">
-  <h1>Espace chauffeur</h1>
-  <p>Connectez-vous avec votre compte chauffeur OuassVTC.</p>
-  <form id="partnerEmailLoginFormV719">
-   <label class="pea-field">Adresse e-mail<input id="partnerEmailV719" type="email" autocomplete="username" required></label>
-   <label class="pea-field">Mot de passe<input id="partnerPasswordV719" type="password" autocomplete="current-password" required></label>
-   <button class="pea-submit" type="submit">Se connecter</button>
-  </form>
-  <button class="pea-forgot" id="partnerForgotV719" type="button">Mot de passe oublié</button>
-  <div class="pea-error" id="partnerAuthErrorV719"></div>
- </div>
 </div>
-<script id="partner-email-auth-v719">
-const partnerEmailAuthBoxV719=document.getElementById("partnerEmailAuthV719");
-const partnerEmailFormV719=document.getElementById("partnerEmailLoginFormV719");
-const partnerEmailInputV719=document.getElementById("partnerEmailV719");
-const partnerPasswordInputV719=document.getElementById("partnerPasswordV719");
-const partnerAuthErrorV719=document.getElementById("partnerAuthErrorV719");
-
-function partnerAuthMessageV719(code){
- if(code==="auth/invalid-credential"||code==="auth/wrong-password"||code==="auth/user-not-found")return"E-mail ou mot de passe incorrect.";
- if(code==="auth/too-many-requests")return"Trop de tentatives. Réessayez un peu plus tard.";
- return"Connexion impossible. Vérifiez vos informations.";
-}
-partnerEmailFormV719.addEventListener("submit",async e=>{
- e.preventDefault();partnerAuthErrorV719.textContent="";
- try{
-  await setPersistence(auth,browserSessionPersistence);
-  await signInWithEmailAndPassword(auth,partnerEmailInputV719.value.trim(),partnerPasswordInputV719.value);
- }catch(err){console.error(err);partnerAuthErrorV719.textContent=partnerAuthMessageV719(err.code)}
-});
-document.getElementById("partnerForgotV719").addEventListener("click",async()=>{
- const email=partnerEmailInputV719.value.trim();
- if(!email){partnerAuthErrorV719.textContent="Saisissez d’abord votre adresse e-mail.";return}
- try{await sendPasswordResetEmail(auth,email);partnerAuthErrorV719.textContent="E-mail de réinitialisation envoyé."}
- catch(err){partnerAuthErrorV719.textContent="Impossible d’envoyer l’e-mail de réinitialisation."}
-});
-
-onAuthStateChanged(auth,async user=>{
- if(!user){
-   partnerEmailAuthBoxV719.classList.add("show");
-   document.getElementById("loginView")?.classList.add("hidden");
-   return;
- }
- partnerEmailAuthBoxV719.classList.remove("show");
- document.getElementById("loginView")?.classList.add("hidden");
- setTimeout(loadPartnerIdentityAndPresenceV718,100);
-});
-
-// V71.9 logout: sign out, then stay on the email/password screen. No Google screen.
-async function partnerLogoutV719(){
- try{
-  try{
-   if(currentPartnerProfile?.id&&auth.currentUser){
-    await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{online:false,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
-   }
-  }catch(_){}
-  await signOut(auth);
-  partnerPasswordInputV719.value="";
-  partnerEmailAuthBoxV719.classList.add("show");
- }catch(err){console.error(err);partnerAuthErrorV719.textContent="La déconnexion a échoué."}
-}
-function bindPartnerLogoutV719(){
- ["pmLogout","logout"].forEach(id=>{const b=document.getElementById(id);if(b)b.onclick=e=>{e.preventDefault();e.stopImmediatePropagation();partnerLogoutV719()}});
-}
-document.addEventListener("DOMContentLoaded",()=>{setTimeout(bindPartnerLogoutV719,400);setTimeout(bindPartnerLogoutV719,1800)});
-</script>
-
 </body>
 </html>
