@@ -311,7 +311,7 @@
     .transfer-course-note{margin-top:8px;font-size:12px;color:var(--muted)}
     .transfer-form{display:grid;gap:12px}
     .transfer-form label{display:block;margin-bottom:6px;font-size:12px;font-weight:900}
-    .transfer-form input{width:100%;min-height:48px;padding:0 13px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;font:inherit}
+    .transfer-form input{width:100%;min-height:48px;padding:0 13px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;font:inherit}.transfer-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.transfer-mode-button{min-height:50px;border:1px solid #d8d8d8;border-radius:13px;background:#fff;color:#111;font-weight:900}.transfer-mode-button.active{background:#000;color:#fff;border-color:#000}.transfer-occasional-fields{display:grid;gap:12px}.transfer-partner-select{width:100%;min-height:48px;padding:0 13px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;font:inherit}
  
     .accepted-row{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer}
     .accepted-row-time{font-size:17px;font-weight:950}
@@ -3212,18 +3212,26 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           <div class="booking-meta"><span class="price-chip">💶 ${escapeHtml(item.estimatedPrice || "Tarif non renseigné")}</span></div>
         </div>
         <form class="transfer-form" id="transferBookingForm">
-          <div><label for="transferPartnerDriver">Chauffeur partenaire</label><select class="transfer-partner-select" id="transferPartnerDriver" required><option value="">Choisir un chauffeur enregistré</option>${state.partnerDrivers.filter(driver=>driver.active!==false).map(driver=>`<option value="${escapeHtml(driver.id)}">${escapeHtml(driver.displayName||driver.email||driver.id)}</option>`).join("")}</select></div>
+          <div><label>Type de chauffeur</label><div class="transfer-mode-grid"><button class="transfer-mode-button active" id="transferModePartner" type="button">Chauffeur enregistré</button><button class="transfer-mode-button" id="transferModeOccasional" type="button">Chauffeur occasionnel</button></div></div>
+          <div id="transferPartnerFields"><label for="transferPartnerDriver">Chauffeur partenaire</label><select class="transfer-partner-select" id="transferPartnerDriver"><option value="">Choisir un chauffeur enregistré</option>${state.partnerDrivers.filter(driver=>driver.active!==false).map(driver=>`<option value="${escapeHtml(driver.id)}">${escapeHtml(driver.displayName||driver.email||driver.id)}</option>`).join("")}</select></div>
+          <div class="transfer-occasional-fields hidden" id="transferOccasionalFields"><div><label for="transferOccasionalName">Nom du chauffeur</label><input id="transferOccasionalName" placeholder="Nom du chauffeur"></div><div><label for="transferOccasionalPhone">Numéro de téléphone</label><input id="transferOccasionalPhone" type="tel" placeholder="06 00 00 00 00"></div><div class="transfer-course-note">Aucun compte n'est nécessaire. Le chauffeur recevra uniquement le lien sécurisé de cette mission.</div></div>
           <button class="primary" type="submit">Créer le lien sécurisé et ouvrir le SMS</button>
           <button class="primary" id="cancelTransferBooking" type="button" style="background:#fff;color:#000;border:1px solid #000">Annuler</button>
         </form>`;
       $("detailOverlay").classList.remove("hidden");
+      let transferMode = "partner";
+      const setTransferMode = mode => { transferMode=mode; $("transferModePartner").classList.toggle("active",mode==="partner"); $("transferModeOccasional").classList.toggle("active",mode==="occasional"); $("transferPartnerFields").classList.toggle("hidden",mode!=="partner"); $("transferOccasionalFields").classList.toggle("hidden",mode!=="occasional"); };
+      $("transferModePartner").addEventListener("click",()=>setTransferMode("partner"));
+      $("transferModeOccasional").addEventListener("click",()=>setTransferMode("occasional"));
       $("cancelTransferBooking").addEventListener("click", () => openBooking(id));
       $("transferBookingForm").addEventListener("submit", async event => {
         event.preventDefault();
-        const partnerId = $("transferPartnerDriver").value;
-        const partner = state.partnerDrivers.find(driver => driver.id === partnerId);
-        const driverName = partner?.displayName || "";
-        if (!partner || !driverName) return;
+        const partnerId = transferMode === "partner" ? $("transferPartnerDriver").value : "";
+        const partner = transferMode === "partner" ? state.partnerDrivers.find(driver => driver.id === partnerId) : null;
+        const driverName = transferMode === "partner" ? String(partner?.displayName || "").trim() : String($("transferOccasionalName").value || "").trim();
+        const driverPhone = transferMode === "partner" ? String(partner?.phone || "").trim() : String($("transferOccasionalPhone").value || "").trim();
+        if (transferMode === "partner" && (!partner || !driverName)) { alert("Choisissez un chauffeur enregistré."); return; }
+        if (transferMode === "occasional" && (!driverName || !driverPhone)) { alert("Renseignez le nom et le numéro du chauffeur occasionnel."); return; }
         const button = event.submitter;
         button.disabled = true;
         button.textContent = "Création du lien…";
@@ -3234,9 +3242,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           await setDoc(doc(db, "driverMissions", token), {
             bookingId:id,
             driverName,
-            partnerId:partner.id,
-            driverEmail:partner.email || "",
-            partnerProfile:{ displayName:partner.displayName||"", companyName:partner.companyName||"", siret:partner.siret||"", phone:partner.phone||"", address:partner.address||"", vehicle:partner.vehicle||"", registration:partner.registration||"" },
+            driverPhone,
+            transferType:transferMode,
+            partnerId:partner?.id || "",
+            driverEmail:partner?.email || "",
+            partnerProfile:partner ? { displayName:partner.displayName||"", companyName:partner.companyName||"", siret:partner.siret||"", phone:partner.phone||"", address:partner.address||"", vehicle:partner.vehicle||"", registration:partner.registration||"" } : null,
             customerName:item.customerName || "Client",
             customerPhone:item.customerPhone || "",
             pickup:item.pickup || "",
@@ -3255,12 +3265,13 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
             expiresAt:new Date((date && !Number.isNaN(date.getTime()) ? date.getTime() : Date.now()) + 48*60*60*1000)
           });
           await updateDoc(doc(db, "bookings", id), {
-            status:"transferred", transferredDriverName:driverName, transferredDriverId:partner.id, transferredDriverEmail:partner.email||"", transferredAt:serverTimestamp(),
+            status:"transferred", transferredDriverName:driverName, transferredDriverId:partner?.id || null, transferredDriverEmail:partner?.email || null, transferredDriverPhone:driverPhone || null, transferType:transferMode, transferredAt:serverTimestamp(),
             partnerMissionToken:token, partnerMissionStatus:"proposed", updatedAt:serverTimestamp()
           });
           const sms = transferSmsText(driverName, missionUrl);
           closeBooking();
-          window.location.href = `sms:?body=${encodeURIComponent(sms)}`;
+          const smsNumber = transferMode === "occasional" ? driverPhone.replace(/[^+0-9]/g, "") : "";
+          window.location.href = `sms:${smsNumber}?body=${encodeURIComponent(sms)}`;
         } catch (error) {
           console.error(error);
           alert("Le lien sécurisé n’a pas pu être créé. Vérifiez les règles Firebase.");
