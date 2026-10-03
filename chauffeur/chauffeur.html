@@ -6272,11 +6272,11 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 <button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
 <button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
 <button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
-<button type="button" data-target="settingsPanel"><span class="nav-ico">●</span><span>Profil</span></button>
+<button type="button" data-target="partnerMenuPanel"><span class="nav-ico">☰</span><span>Menu</span></button>
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -6296,5 +6296,80 @@ window.addEventListener("focus",ouassPushHeartbeat);
 setTimeout(ouassPushHeartbeat,2500);
 ouassHeartbeatTimer=setInterval(ouassPushHeartbeat,60000);
 </script>
+
+<style id="partner-menu-v713-style">
+.partner-menu-page{padding:8px 0 110px}.pm-hero{background:linear-gradient(145deg,#0a1628,#122744);color:#fff;border-radius:24px;padding:20px;margin-bottom:14px;box-shadow:0 14px 34px rgba(7,22,43,.18)}.pm-hero h2{margin:5px 0}.pm-hero small{color:#b8c7da}.pm-list{display:grid;gap:10px}.pm-item{width:100%;border:1px solid #e5e9f0;background:#fff;border-radius:18px;padding:15px;display:flex;align-items:center;gap:13px;text-align:left;box-shadow:0 8px 24px rgba(10,24,45,.05)}.pm-icon{width:42px;height:42px;border-radius:14px;background:#eef4ff;display:grid;place-items:center;font-size:21px}.pm-grow{flex:1}.pm-grow b{display:block;font-size:14px}.pm-grow small{color:#667085}.pm-arrow{font-size:22px;color:#98a2b3}.pm-card{background:#fff;border:1px solid #e5e9f0;border-radius:20px;padding:16px;margin-bottom:12px}.pm-grid{display:grid;gap:11px}.pm-grid label{font-size:12px;font-weight:800;color:#344054}.pm-grid input{width:100%;box-sizing:border-box;margin-top:5px;border:1px solid #d0d5dd;border-radius:13px;padding:12px}.pm-save{width:100%;border:0;border-radius:14px;padding:13px;background:#0b1627;color:#fff;font-weight:900}.pm-back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:23px;box-shadow:0 5px 18px rgba(0,0,0,.07);margin-bottom:12px}.pm-doc{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f4}.pm-doc:last-child{border-bottom:0}.pm-doc-state{margin-left:auto;font-size:11px;font-weight:850}.pm-good{color:#067647}.pm-warn{color:#b54708}.pm-setting{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #edf0f4}.pm-logout{width:100%;border:0;border-radius:14px;padding:13px;background:#fff0f0;color:#b42318;font-weight:900;margin-top:12px}
+</style>
+<script id="partner-menu-v713-runtime">
+let partnerDocsUnsub=null;
+const PARTNER_DOC_TYPES=[
+ ["vtc_card","Carte professionnelle VTC"],
+ ["driving_license","Permis de conduire"],
+ ["identity","Pièce d’identité"],
+ ["insurance","Assurance professionnelle / véhicule"],
+ ["registration","Carte grise"],
+ ["technical_control","Contrôle technique"]
+];
+function pme(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function pmEnsure(){
+ const main=document.querySelector("main")||document.body;
+ if(!document.getElementById("partnerMenuPanel")){
+   const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   main.appendChild(s);
+ }
+ if(!document.getElementById("partnerProfilePanel")){
+   const s=document.createElement("section");s.id="partnerProfilePanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse<input id="pmAddress"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
+   main.appendChild(s);
+ }
+ if(!document.getElementById("partnerDocumentsPanel")){
+   const s=document.createElement("section");s.id="partnerDocumentsPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mes documents</h2><div class="pm-card"><div id="pmDocumentsList">Chargement…</div></div>';
+   main.appendChild(s);
+ }
+ if(!document.getElementById("partnerSettingsPanel")){
+   const s=document.createElement("section");s.id="partnerSettingsPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Réglages</h2><div class="pm-card"><div class="pm-setting"><span>Notifications</span><button type="button" id="pmNotifications">Activer</button></div><div class="pm-setting"><span>Interprète</span><button type="button" id="pmInterpreter">Ouvrir</button></div><div class="pm-setting"><span>Installation de l’application</span><button type="button" id="pmInstall">Installer</button></div></div><button class="pm-logout" id="pmLogout" type="button">Déconnexion</button>';
+   main.appendChild(s);
+ }
+ document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showPartnerPage(b.dataset.pm));
+ document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
+ document.getElementById("pmLogout").onclick=()=>signOut(auth);
+ document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
+ document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
+ document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
+ pmFillProfile();pmListenDocuments();
+}
+function pmFillProfile(){
+ const p=currentPartnerProfile;if(!p)return;
+ document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
+ [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
+}
+async function pmSaveProfile(e){
+ e.preventDefault();if(!currentPartnerProfile?.id)return;
+ const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),updatedAt:serverTimestamp()};
+ try{await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),data);alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
+}
+function pmListenDocuments(){
+ if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
+ const email=auth.currentUser.email.toLowerCase();
+ const q=query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),limit(100));
+ partnerDocsUnsub=onSnapshot(q,s=>pmRenderDocuments(s.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(e);const h=document.getElementById("pmDocumentsList");if(h)h.innerHTML="Impossible de charger les documents."});
+}
+function pmRenderDocuments(docs){
+ const h=document.getElementById("pmDocumentsList");if(!h)return;
+ h.innerHTML=PARTNER_DOC_TYPES.map(([type,label])=>{const d=docs.find(x=>x.type===type),ok=!!d;return`<div class="pm-doc"><span>📎</span><span><b>${label}</b><br><small>${ok?(d.fileName||"Document enregistré"):"À ajouter"}</small></span><span class="pm-doc-state ${ok?"pm-good":"pm-warn"}">${ok?"Ajouté":"Manquant"}</span></div>`}).join("");
+}
+async function pmRecordLogin(){
+ try{
+  const email=auth?.currentUser?.email?.toLowerCase();if(!email)return;
+  const q=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1)),s=await getDocs(q);
+  if(!s.empty)await updateDoc(doc(db,"partnerDrivers",s.docs[0].id),{lastLoginAt:serverTimestamp(),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+ }catch(e){console.warn("Dernière connexion",e)}
+}
+document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
+</script>
+
 </body>
 </html>
