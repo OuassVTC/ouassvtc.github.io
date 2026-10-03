@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=721">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=722">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -892,6 +892,12 @@ body.partner-signed-out{padding-bottom:0!important}
 #authLoadingView.hidden{display:none!important}
 </style>
 
+
+<style id="partner-v722-single-nav">
+#appBottomNav{display:none!important}
+body{padding-bottom:94px!important}
+</style>
+
 </head>
  
 <body>
@@ -1460,7 +1466,7 @@ body.partner-signed-out{padding-bottom:0!important}
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
-      browserSessionPersistence,
+      browserLocalPersistence,
       getAuth,
       signInWithEmailAndPassword,
       onAuthStateChanged,
@@ -3262,7 +3268,7 @@ body.partner-signed-out{padding-bottom:0!important}
         const missionUrl = `${window.location.origin}/chauffeur/mission.html?token=${encodeURIComponent(token)}`;
         const date = bookingDate(item);
         try {
-          await setDoc(doc(db, "driverMissions", token), {
+          const missionWrite = setDoc(doc(db, "driverMissions", token), {
             bookingId:id,
             driverName,
             driverPhone,
@@ -3287,10 +3293,11 @@ body.partner-signed-out{padding-bottom:0!important}
             updatedAt:serverTimestamp(),
             expiresAt:new Date((date && !Number.isNaN(date.getTime()) ? date.getTime() : Date.now()) + 48*60*60*1000)
           });
-          await updateDoc(doc(db, "bookings", id), {
+          const bookingWrite = updateDoc(doc(db, "bookings", id), {
             status:"transferred", transferredDriverName:driverName, transferredDriverId:partner?.id || null, transferredDriverEmail:partner?.email || null, transferredDriverPhone:driverPhone || null, transferType:transferMode, transferredAt:serverTimestamp(),
             partnerMissionToken:token, partnerMissionStatus:"proposed", updatedAt:serverTimestamp()
           });
+          await Promise.all([missionWrite, bookingWrite]);
           const sms = transferSmsText(driverName, missionUrl);
           closeBooking();
           const smsNumber = transferMode === "occasional" ? driverPhone.replace(/[^+0-9]/g, "") : "";
@@ -4913,7 +4920,7 @@ body.partner-signed-out{padding-bottom:0!important}
         });
       }
       try {
-        await setPersistence(auth, browserSessionPersistence);
+        await setPersistence(auth, browserLocalPersistence);
       } catch (error) {
         console.error("La session locale n’a pas pu être configurée", error);
       }
@@ -4978,10 +4985,12 @@ body.partner-signed-out{padding-bottom:0!important}
 
           await updateDoc(profileDoc.ref, {
             online: true,
+            availability: "online",
             lastLoginAt: serverTimestamp(),
             lastSeenAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
+          startPartnerPresence(profileDoc.id);
 
           return true;
         } catch (error) {
@@ -4991,12 +5000,43 @@ body.partner-signed-out{padding-bottom:0!important}
         }
       }
 
+
+      let partnerPresenceTimer = null;
+      let partnerPresenceId = null;
+
+      async function pushPartnerPresence() {
+        if (!partnerPresenceId || !auth?.currentUser || document.hidden) return;
+        try {
+          await updateDoc(doc(db, "partnerDrivers", partnerPresenceId), {
+            online: true,
+            availability: "online",
+            lastSeenAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        } catch (error) {
+          console.warn("Présence chauffeur", error);
+        }
+      }
+
+      function startPartnerPresence(profileId) {
+        partnerPresenceId = profileId;
+        if (partnerPresenceTimer) clearInterval(partnerPresenceTimer);
+        pushPartnerPresence();
+        partnerPresenceTimer = setInterval(pushPartnerPresence, 30000);
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) pushPartnerPresence();
+      });
+      window.addEventListener("focus", pushPartnerPresence);
+
       async function setPartnerOfflineBeforeLogout() {
         try {
           const p = window.currentPartnerProfile;
           if (p?.id && auth?.currentUser) {
             await updateDoc(doc(db, "partnerDrivers", p.id), {
               online: false,
+              availability: "offline",
               lastSeenAt: serverTimestamp(),
               updatedAt: serverTimestamp()
             });
@@ -5009,6 +5049,8 @@ body.partner-signed-out{padding-bottom:0!important}
       async function partnerLogoutClean() {
         await setPartnerOfflineBeforeLogout();
         window.currentPartnerProfile = null;
+        partnerPresenceId = null;
+        if (partnerPresenceTimer) { clearInterval(partnerPresenceTimer); partnerPresenceTimer = null; }
         await signOut(auth);
       }
 
@@ -5951,7 +5993,7 @@ body.partner-signed-out{padding-bottom:0!important}
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=721", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=722", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6372,19 +6414,7 @@ document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#pa
 </script>
 
 
-<script id="partner-heartbeat-v712">
-let ouassHeartbeatTimer=null;
-async function ouassPushHeartbeat(){
-  try{
-    if(!window.currentPartnerProfile?.id||!auth?.currentUser)return;
-    await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),{lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
-  }catch(e){console.warn("Présence chauffeur",e)}
-}
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)ouassPushHeartbeat()});
-window.addEventListener("focus",ouassPushHeartbeat);
-setTimeout(ouassPushHeartbeat,2500);
-ouassHeartbeatTimer=setInterval(ouassPushHeartbeat,60000);
-</script>
+<script id="partner-heartbeat-v712" type="application/json">{"disabled":"V72.2 presence is handled inside Firebase module"}</script>
 
 <style id="partner-menu-v713-style">
 .partner-menu-page{padding:8px 0 110px}.pm-hero{background:linear-gradient(145deg,#0a1628,#122744);color:#fff;border-radius:24px;padding:20px;margin-bottom:14px;box-shadow:0 14px 34px rgba(7,22,43,.18)}.pm-hero h2{margin:5px 0}.pm-hero small{color:#b8c7da}.pm-list{display:grid;gap:10px}.pm-item{width:100%;border:1px solid #e5e9f0;background:#fff;border-radius:18px;padding:15px;display:flex;align-items:center;gap:13px;text-align:left;box-shadow:0 8px 24px rgba(10,24,45,.05)}.pm-icon{width:42px;height:42px;border-radius:14px;background:#eef4ff;display:grid;place-items:center;font-size:21px}.pm-grow{flex:1}.pm-grow b{display:block;font-size:14px}.pm-grow small{color:#667085}.pm-arrow{font-size:22px;color:#98a2b3}.pm-card{background:#fff;border:1px solid #e5e9f0;border-radius:20px;padding:16px;margin-bottom:12px}.pm-grid{display:grid;gap:11px}.pm-grid label{font-size:12px;font-weight:800;color:#344054}.pm-grid input{width:100%;box-sizing:border-box;margin-top:5px;border:1px solid #d0d5dd;border-radius:13px;padding:12px}.pm-save{width:100%;border:0;border-radius:14px;padding:13px;background:#0b1627;color:#fff;font-weight:900}.pm-back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:23px;box-shadow:0 5px 18px rgba(0,0,0,.07);margin-bottom:12px}.pm-doc{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f4}.pm-doc:last-child{border-bottom:0}.pm-doc-state{margin-left:auto;font-size:11px;font-weight:850}.pm-good{color:#067647}.pm-warn{color:#b54708}.pm-setting{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #edf0f4}.pm-logout{width:100%;border:0;border-radius:14px;padding:13px;background:#fff0f0;color:#b42318;font-weight:900;margin-top:12px}
@@ -6424,7 +6454,7 @@ function pmEnsure(){
  }
  document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showPartnerPage(b.dataset.pm));
  document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
- document.getElementById("pmLogout").onclick=()=>signOut(auth);
+ document.getElementById("pmLogout").onclick=()=>document.getElementById("logout")?.click();
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
