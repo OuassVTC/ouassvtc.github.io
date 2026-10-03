@@ -24,6 +24,44 @@ body{padding-bottom:92px!important;background:var(--pro-bg)!important}
 .v691-close{float:right;border:0;background:#eee;border-radius:50%;width:36px;height:36px;font-size:20px}
 </style>
 
+
+<style id="v692-premium">
+:root{
+ --ouass-black:#101114;--ouass-white:#ffffff;--ouass-bg:#f6f7f9;
+ --ouass-soft:#eef0f3;--ouass-border:#dfe2e7;--ouass-text:#15171a;
+ --ouass-muted:#6d727a;--ouass-success:#188a55;
+}
+html,body{background:var(--ouass-bg)!important;color:var(--ouass-text)!important}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important;letter-spacing:0!important}
+main,.app,.container{max-width:760px;margin-inline:auto}
+.card,.panel,.mission-card,.booking-card{background:#fff!important;border:1px solid var(--ouass-border)!important;border-radius:22px!important;box-shadow:0 8px 30px rgba(16,17,20,.055)!important;padding:18px!important;margin:12px 0!important}
+button,input,select,textarea{font-family:inherit!important}
+input,select,textarea{min-height:50px!important;border-radius:14px!important;border:1px solid #d9dde3!important;padding:12px 14px!important;font-size:16px!important;background:#fff!important}
+button{letter-spacing:0!important}
+.v691-bottom{height:82px!important;border-top:1px solid var(--ouass-border)!important;box-shadow:0 -10px 35px rgba(0,0,0,.07)!important}
+.v691-nav{font-size:11px!important;color:#555b64!important}
+.v691-plus{width:66px!important;height:66px!important;background:var(--ouass-black)!important}
+.v691-online{top:12px!important;background:var(--ouass-black)!important}
+.v691-online[data-online="true"]{background:var(--ouass-success)!important}
+.v691-sheet>div{border-radius:30px 30px 0 0!important;padding:22px 18px 110px!important;background:var(--ouass-bg)!important}
+.v691-sheet label{display:block;font-size:12px;font-weight:800;color:#555b64;margin:8px 2px 2px;text-transform:uppercase;letter-spacing:.04em}
+.v691-sheet h2{font-size:25px!important}
+.v692-route-card{background:#fff;border:1px solid var(--ouass-border);border-radius:20px;padding:14px;margin:14px 0}
+.v692-map{height:310px;border-radius:17px;overflow:hidden;background:#edf0f3;border:1px solid #e0e3e7}
+.v692-map iframe{width:100%;height:100%;border:0}
+.v692-fare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.v692-stat{background:var(--ouass-soft);border-radius:15px;padding:13px}
+.v692-stat small{display:block;color:var(--ouass-muted);font-weight:700;margin-bottom:4px}
+.v692-stat strong{font-size:21px}
+.v692-price{grid-column:1/-1;background:var(--ouass-black);color:#fff;border-radius:17px;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.v692-price strong{font-size:27px}
+.v692-tools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.v692-tools button{min-height:50px;border:1px solid var(--ouass-border);background:#fff;border-radius:14px;font-weight:800;color:#16181b}
+.v692-tools .primary{background:var(--ouass-black);color:#fff;border-color:var(--ouass-black)}
+.v692-note{font-size:12px;color:var(--ouass-muted);line-height:1.45;margin:8px 2px}
+@media(max-width:420px){.v692-map{height:260px}.v691-sheet>div{padding-left:14px!important;padding-right:14px!important}.v692-fare{gap:8px}}
+</style>
+
 </head><body>
 <header class="top hidden" id="top"><button class="iconbtn" id="menuBtn" aria-label="Menu">☰</button><div class="brand"><strong>OuassVTC Chauffeur</strong><small id="driverTopName">Espace partenaire</small></div><span class="net" id="netBadge">En ligne</span></header><div class="drawerMask hidden" id="drawerMask"></div><aside class="drawer hidden" id="drawer"><div class="drawerHead"><img src="/ouassvtc-app.png" alt="OuassVTC"><div><strong id="drawerName">Chauffeur</strong><small>Espace partenaire OuassVTC</small></div></div><button data-go="homeTab">⌂  Accueil</button><button data-go="missionsTab">🚘  Mes missions</button><button data-go="newCourseTab">＋  Nouvelle course</button><button data-go="revenueTab">€  Mon chiffre d’affaires</button><button data-go="profileTab">👤  Mon profil</button><div class="sep"></div><button data-go="interpreterTab">🌐  Interprète</button><button class="install hidden" id="installBtn">＋  Installer l’application</button><div class="sep"></div><button id="logout">↪  Déconnexion</button><div class="version">OuassVTC Chauffeur V69.0</div></aside>
 <main class="wrap"><section class="login" id="login"><div class="card"><img class="logo" src="/ouassvtc-app.png" alt="OuassVTC"><h1>Espace chauffeur</h1><p>Connectez-vous avec votre compte chauffeur OuassVTC.</p><div class="form"><label>Adresse e-mail</label><input id="loginEmail" type="email" autocomplete="email" placeholder="votre@email.com"><label>Mot de passe</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Votre mot de passe"></div><button class="primary" id="loginEmailPassword">Se connecter</button><button class="primary secondary" id="showCreateAccount" type="button">Première connexion : créer mon mot de passe</button><div class="hidden" id="createAccountBox"><div class="form" style="margin-top:14px"><label>Confirmez votre mot de passe</label><input id="createPasswordConfirm" type="password" autocomplete="new-password" placeholder="Confirmez le mot de passe"></div><button class="primary" id="createAccount" type="button">Créer mon compte chauffeur</button></div><p class="error hidden" id="loginError"></p></div></section>
@@ -98,7 +136,19 @@ onAuthStateChanged(auth,user=>{if(unsubProfile)unsubProfile();if(unsubMissions)u
  <label>Destination</label><input id="v691Destination">
  <label>Date et heure</label><input id="v691When" type="datetime-local">
  <label>Prix (€)</label><input id="v691Price" type="number" min="0" step="0.01">
- <div id="v691Map" class="v691-map"><div class="v691-map-empty">Saisis le départ et la destination pour afficher l’itinéraire.</div></div>
+ <section class="v692-route-card">
+ <div id="v692Map" class="v692-map"><div class="v691-map-empty">Renseigne le départ et la destination pour préparer l’itinéraire.</div></div>
+ <div class="v692-fare">
+  <div class="v692-stat"><small>Distance estimée</small><strong id="v692Km">— km</strong></div>
+  <div class="v692-stat"><small>Durée estimée</small><strong id="v692Duration">— min</strong></div>
+  <div class="v692-price"><span>Tarif estimé</span><strong id="v692Fare">— €</strong></div>
+ </div>
+ <div class="v692-tools">
+  <button id="v692Preview" type="button">Calculer / simuler</button>
+  <button id="v692UsePrice" class="primary" type="button">Utiliser ce tarif</button>
+ </div>
+ <p class="v692-note">Barème OuassVTC : 20 € jusqu’à 7 km, puis 1,80 € par km supplémentaire. Estimation indicative avant validation de la course.</p>
+</section>
  <div class="v691-actions">
   <button id="v691Route" type="button">🗺️ Itinéraire / temps</button>
   <button id="v691Save" class="dark" type="button">Enregistrer la course</button>
@@ -168,6 +218,53 @@ onAuthStateChanged(auth,user=>{if(unsubProfile)unsubProfile();if(unsubMissions)u
    ];
    defs.forEach(([t,fn])=>{const b=document.createElement("button");b.type="button";b.textContent=t;b.onclick=fn;wrap.appendChild(b)});return wrap;
  };
+})();
+</script>
+
+
+<script id="v692-map-fare">
+(()=>{
+ const $=s=>document.querySelector(s);
+ let lastFare=null;
+ const fareFromKm=km=>km<=7?20:20+(km-7)*1.8;
+ const straightKm=(a,b)=>{
+   // Deterministic local fallback only when route distance is not available.
+   // User may type a km value in the distance prompt opened by the simulator.
+   return null;
+ };
+ function renderMap(a,b){
+   const box=$("#v692Map"); if(!box)return;
+   const q=encodeURIComponent(a+" to "+b);
+   box.innerHTML='<iframe title="Itinéraire Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q='+q+'&output=embed"></iframe>';
+ }
+ async function simulate(){
+   const a=$("#v691Pickup")?.value.trim(),b=$("#v691Destination")?.value.trim();
+   if(!a||!b){alert("Renseigne le départ et la destination.");return}
+   renderMap(a,b);
+   // Google Maps embedded preview is integrated without requiring a Maps API key.
+   // Exact road distance requires Directions/Routes API. Until configured, ask for km so pricing remains truthful.
+   const raw=prompt("Distance routière en km pour la simulation tarifaire :","");
+   if(raw===null)return;
+   const km=Number(String(raw).replace(",","."));
+   if(!Number.isFinite(km)||km<=0){alert("Entre une distance valide en kilomètres.");return}
+   const fare=fareFromKm(km); lastFare=Math.round(fare*100)/100;
+   $("#v692Km").textContent=km.toFixed(1).replace(".",",")+" km";
+   $("#v692Duration").textContent="Voir Maps";
+   $("#v692Fare").textContent=lastFare.toFixed(2).replace(".",",")+" €";
+ }
+ $("#v692Preview")?.addEventListener("click",simulate);
+ $("#v692UsePrice")?.addEventListener("click",()=>{
+   if(lastFare==null){alert("Calcule d’abord le tarif.");return}
+   const p=$("#v691Price");if(p)p.value=lastFare.toFixed(2);
+ });
+ // Keep map preview in the app while typing.
+ let timer;
+ ["#v691Pickup","#v691Destination"].forEach(s=>$(s)?.addEventListener("input",()=>{
+   clearTimeout(timer);timer=setTimeout(()=>{
+     const a=$("#v691Pickup")?.value.trim(),b=$("#v691Destination")?.value.trim();
+     if(a&&b)renderMap(a,b);
+   },700);
+ }));
 })();
 </script>
 
