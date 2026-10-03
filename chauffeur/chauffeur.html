@@ -952,7 +952,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         <div class="hello-row">
           <div>
             <div class="eyebrow" id="dashboardGreeting">Bonjour</div>
-            <h1>Ouassini.</h1>
+            <h1 id="partnerDashboardName">Chauffeur.</h1>
             <span class="dashboard-current-date" id="dashboardCurrentDate"></span>
           </div>
           <button class="install-button hidden" id="installApp" type="button">Installer l’application</button>
@@ -6369,6 +6369,124 @@ async function pmRecordLogin(){
  }catch(e){console.warn("Dernière connexion",e)}
 }
 document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
+</script>
+
+
+<script id="partner-identity-v714">
+let currentPartnerProfile = null;
+let partnerIdentityUnsubscribe = null;
+
+function partnerFirstName(profile){
+  const raw=String(profile?.displayName||profile?.companyName||"Chauffeur").trim();
+  return raw.split(/\s+/)[0] || "Chauffeur";
+}
+function applyAuthenticatedPartnerProfile(profile){
+  currentPartnerProfile=profile;
+  const first=partnerFirstName(profile);
+  const dash=document.getElementById("partnerDashboardName");
+  if(dash) dash.textContent=first+".";
+  const menuName=document.getElementById("pmName");
+  if(menuName) menuName.textContent=profile.displayName||profile.companyName||first;
+  if(typeof pmFillProfile==="function") pmFillProfile();
+}
+async function loadPartnerIdentityAndPresence(){
+  const user=auth?.currentUser;
+  if(!user?.email) return;
+  const email=user.email.trim().toLowerCase();
+
+  if(partnerIdentityUnsubscribe){ partnerIdentityUnsubscribe(); partnerIdentityUnsubscribe=null; }
+
+  const q=query(collection(db,"partnerDrivers"),where("email","==",email),limit(1));
+  const snap=await getDocs(q);
+
+  if(snap.empty){
+    currentPartnerProfile=null;
+    const dash=document.getElementById("partnerDashboardName");
+    if(dash) dash.textContent="Chauffeur.";
+    console.error("Aucun profil partnerDrivers autorisé pour",email);
+    return;
+  }
+
+  const ref=snap.docs[0].ref;
+  applyAuthenticatedPartnerProfile({id:snap.docs[0].id,...snap.docs[0].data()});
+
+  await updateDoc(ref,{
+    lastSeenAt:serverTimestamp(),
+    lastLoginAt:serverTimestamp(),
+    updatedAt:serverTimestamp()
+  });
+
+  partnerIdentityUnsubscribe=onSnapshot(ref,d=>{
+    if(!d.exists()) return;
+    applyAuthenticatedPartnerProfile({id:d.id,...d.data()});
+  });
+}
+</script>
+
+
+<script id="partner-session-v715">
+let partnerForcedLogoutRunning=false;
+
+async function forcePartnerLogout(message=""){
+  if(partnerForcedLogoutRunning) return;
+  partnerForcedLogoutRunning=true;
+  try{
+    if(partnerHeartbeatTimer){clearInterval(partnerHeartbeatTimer);partnerHeartbeatTimer=null}
+    if(partnerIdentityUnsubscribe){partnerIdentityUnsubscribe();partnerIdentityUnsubscribe=null}
+    if(partnerDocsUnsub){partnerDocsUnsub();partnerDocsUnsub=null}
+
+    try{
+      if(currentPartnerProfile?.id && auth?.currentUser){
+        await updateDoc(doc(db,"partnerDrivers",currentPartnerProfile.id),{
+          online:false,
+          lastSeenAt:serverTimestamp(),
+          updatedAt:serverTimestamp()
+        });
+      }
+    }catch(e){console.warn("Mise hors ligne",e)}
+
+    currentPartnerProfile=null;
+
+    // Only clear OuassVTC partner-side local/session state, then Firebase auth.
+    try{
+      Object.keys(localStorage).filter(k=>/partner|chauffeur|ouass/i.test(k)).forEach(k=>localStorage.removeItem(k));
+      Object.keys(sessionStorage).filter(k=>/partner|chauffeur|ouass/i.test(k)).forEach(k=>sessionStorage.removeItem(k));
+    }catch(e){}
+
+    await signOut(auth);
+
+    // Force a clean reload so the login screen is rebuilt from auth state.
+    const clean=location.pathname+"?logout="+Date.now();
+    location.replace(clean);
+  }catch(e){
+    console.error("Déconnexion chauffeur",e);
+    try{await signOut(auth)}catch(_){}
+    location.reload();
+  }
+}
+
+function bindPartnerLogoutV715(){
+  const b=document.getElementById("pmLogout");
+  if(b){
+    b.type="button";
+    b.onclick=(e)=>{e.preventDefault();e.stopPropagation();forcePartnerLogout()};
+  }
+}
+
+// Override profile application to enforce active:false immediately.
+const _applyAuthenticatedPartnerProfileV714=applyAuthenticatedPartnerProfile;
+applyAuthenticatedPartnerProfile=function(profile){
+  if(profile && profile.active===false){
+    forcePartnerLogout("Compte désactivé");
+    return;
+  }
+  _applyAuthenticatedPartnerProfileV714(profile);
+};
+
+document.addEventListener("DOMContentLoaded",()=>{
+  setTimeout(bindPartnerLogoutV715,400);
+  setTimeout(bindPartnerLogoutV715,1800);
+});
 </script>
 
 </body>
