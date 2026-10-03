@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=723">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=724">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -962,6 +962,39 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
 #loginError{margin:12px 0 0!important;color:#c62828!important;font-size:13px!important;line-height:1.4!important}
 </style>
 
+
+<style id="partner-v724-activation">
+#activationView:not(.hidden){
+  position:fixed;inset:0;z-index:30050;display:flex!important;align-items:center;justify-content:center;
+  padding:24px 20px;box-sizing:border-box;overflow:auto;
+  background:radial-gradient(circle at 50% 0%,rgba(0,153,255,.18),transparent 34%),
+             linear-gradient(180deg,#07111f 0%,#0b1728 100%);
+}
+#activationView .activation-card{
+  width:min(100%,420px);padding:30px 26px 26px;box-sizing:border-box;border-radius:28px;
+  background:#fff;box-shadow:0 24px 70px rgba(0,0,0,.35);text-align:center;
+}
+#activationView img{width:82px;height:82px;object-fit:contain;border-radius:20px;margin:0 auto 16px;display:block}
+#activationView h2{margin:0 0 8px;color:#0b1728;font-size:27px;font-weight:850;letter-spacing:-.6px}
+#activationView .activation-intro{margin:0 0 20px;color:#64748b;font-size:14px;line-height:1.45}
+#activationView label{display:block;text-align:left;margin:12px 0 6px;color:#334155;font-size:13px;font-weight:750}
+#activationView input{
+  display:block;width:100%;height:52px;box-sizing:border-box;border:1.5px solid #d7dee8;border-radius:15px;
+  background:#f8fafc;color:#0f172a;font-size:16px;padding:0 16px;outline:none;
+}
+#activationView input:focus{border-color:#149cf7;background:#fff;box-shadow:0 0 0 4px rgba(20,156,247,.12)}
+#activatePartnerAccount{
+  width:100%;min-height:54px;border:0;border-radius:16px;margin:20px 0 8px;
+  background:linear-gradient(135deg,#078df0,#20c6ee);color:#fff;font-size:16px;font-weight:850;
+  box-shadow:0 10px 25px rgba(0,145,240,.25);
+}
+#activatePartnerAccount:disabled{opacity:.65}
+#backToPartnerLogin{
+  border:0;background:transparent;color:#087fc9;font-size:14px;font-weight:750;padding:10px 12px;
+}
+#activationError{min-height:18px;margin-top:8px;color:#c62828;font-size:13px;line-height:1.4}
+</style>
+
 </head>
  
 <body>
@@ -1023,6 +1056,23 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
         <p class="login-error hidden" id="loginError"></p>
       </div>
     </section>
+<section id="activationView" class="hidden">
+  <div class="activation-card">
+    <img src="/ouassvtc-app.png" alt="OuassVTC">
+    <h2>Activer mon espace</h2>
+    <p class="activation-intro">Votre espace chauffeur a déjà été créé par OuassVTC. Utilisez la même adresse e-mail et choisissez votre mot de passe personnel.</p>
+    <label for="activationEmail">Adresse e-mail</label>
+    <input id="activationEmail" type="email" autocomplete="email" placeholder="Adresse e-mail">
+    <label for="activationPassword">Créer mon mot de passe</label>
+    <input id="activationPassword" type="password" autocomplete="new-password" placeholder="8 caractères minimum">
+    <label for="activationPassword2">Confirmer mon mot de passe</label>
+    <input id="activationPassword2" type="password" autocomplete="new-password" placeholder="Confirmez le mot de passe">
+    <button id="activatePartnerAccount" type="button">Activer mon compte</button>
+    <button id="backToPartnerLogin" type="button" class="activation-link">J’ai déjà un compte</button>
+    <div id="activationError" role="alert"></div>
+  </div>
+</section>
+
  
     <section class="dashboard hidden" id="dashboardView">
       <div class="setup-warning hidden" id="setupWarning">
@@ -1533,6 +1583,9 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
       browserLocalPersistence,
       getAuth,
       signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      deleteUser,
       onAuthStateChanged,
       setPersistence,
       sendPasswordResetEmail,
@@ -5055,6 +5108,13 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
 
           window.currentPartnerProfile = profile;
 
+          if (profile.authActivated === true && user.emailVerified !== true) {
+            await sendEmailVerification(user).catch(() => {});
+            await signOut(auth);
+            showLoginError("Validez d’abord l’e-mail de vérification envoyé à " + email + ", puis reconnectez-vous.");
+            return false;
+          }
+
           const fullName = String(
             profile.displayName ||
             profile.firstName ||
@@ -5140,6 +5200,20 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
       }
 
 
+
+      function ensureFirstActivationButton() {
+        const view = $("loginView");
+        if (!view || $("openPartnerActivation")) return;
+        const forgot = $("forgotPassword");
+        const btn = document.createElement("button");
+        btn.id = "openPartnerActivation";
+        btn.type = "button";
+        btn.className = "link-button";
+        btn.textContent = "Première connexion / Activer mon compte";
+        if (forgot?.parentNode) forgot.parentNode.insertBefore(btn, forgot);
+        else view.appendChild(btn);
+      }
+
       function polishPartnerLogin() {
         const view = $("loginView");
         if (!view) return;
@@ -5158,11 +5232,116 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
         }
       }
       polishPartnerLogin();
+      ensureFirstActivationButton();
+
+
+      function showPartnerActivation() {
+        $("loginView").classList.add("hidden");
+        $("activationView").classList.remove("hidden");
+        $("activationError").textContent = "";
+        const currentEmail = $("email")?.value || "";
+        if (currentEmail) $("activationEmail").value = currentEmail.trim();
+      }
+
+      function showPartnerLoginFromActivation() {
+        $("activationView").classList.add("hidden");
+        $("loginView").classList.remove("hidden");
+        $("activationError").textContent = "";
+      }
+
+      $("openPartnerActivation")?.addEventListener("click", showPartnerActivation);
+      $("backToPartnerLogin")?.addEventListener("click", showPartnerLoginFromActivation);
+
+      $("activatePartnerAccount")?.addEventListener("click", async () => {
+        const email = String($("activationEmail").value || "").trim().toLowerCase();
+        const password = String($("activationPassword").value || "");
+        const password2 = String($("activationPassword2").value || "");
+        const errorBox = $("activationError");
+        errorBox.textContent = "";
+
+        if (!email) {
+          errorBox.textContent = "Saisissez l’adresse e-mail utilisée par OuassVTC pour créer votre espace.";
+          return;
+        }
+        if (password.length < 8) {
+          errorBox.textContent = "Choisissez un mot de passe d’au moins 8 caractères.";
+          return;
+        }
+        if (password !== password2) {
+          errorBox.textContent = "Les deux mots de passe ne correspondent pas.";
+          return;
+        }
+
+        const button = $("activatePartnerAccount");
+        button.disabled = true;
+        button.textContent = "Vérification de votre espace…";
+
+        let createdUser = null;
+        try {
+          await setPersistence(auth, browserLocalPersistence);
+          const credential = await createUserWithEmailAndPassword(auth, email, password);
+          createdUser = credential.user;
+
+          // Once authenticated, Firestore rules allow this user to resolve only
+          // the partner profile carrying the same authenticated email.
+          const snap = await getDocs(query(
+            collection(db, "partnerDrivers"),
+            where("email", "==", email),
+            limit(1)
+          ));
+
+          if (snap.empty || snap.docs[0].data()?.active === false) {
+            await deleteUser(createdUser);
+            createdUser = null;
+            throw new Error("OUASSVTC_NOT_AUTHORIZED");
+          }
+
+          const profileDoc = snap.docs[0];
+          await updateDoc(profileDoc.ref, {
+            authActivated: true,
+            authActivatedAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+
+          // Verify ownership of the mailbox before allowing normal dashboard access.
+          await sendEmailVerification(createdUser);
+          await signOut(auth);
+
+          $("activationView").classList.add("hidden");
+          $("loginView").classList.remove("hidden");
+          $("email").value = email;
+          showLoginError("Compte activé. Un e-mail de vérification vient de vous être envoyé. Validez-le puis connectez-vous.");
+        } catch (error) {
+          console.error("Activation chauffeur", error);
+          if (createdUser && error?.code !== "auth/requires-recent-login") {
+            try { await deleteUser(createdUser); } catch (_) {}
+          }
+          const code = error?.code || "";
+          if (code === "auth/email-already-in-use") {
+            errorBox.textContent = "Cet espace est déjà activé. Utilisez Se connecter ou Mot de passe oublié.";
+          } else if (code === "auth/invalid-email") {
+            errorBox.textContent = "Cette adresse e-mail n’est pas valide.";
+          } else if (code === "auth/weak-password") {
+            errorBox.textContent = "Le mot de passe choisi n’est pas assez sécurisé.";
+          } else if (error?.message === "OUASSVTC_NOT_AUTHORIZED") {
+            errorBox.textContent = "Cette adresse n’est pas autorisée comme chauffeur OuassVTC.";
+          } else {
+            errorBox.textContent = "Activation impossible pour le moment. Réessayez dans quelques instants.";
+          }
+        } finally {
+          button.disabled = false;
+          button.textContent = "Activer mon compte";
+        }
+      });
 
       onAuthStateChanged(auth, user => {
         const connected = Boolean(user);
         $("authLoadingView").classList.add("hidden");
-        $("loginView").classList.toggle("hidden", connected);
+        if (!connected && !$("activationView").classList.contains("hidden")) {
+          $("loginView").classList.add("hidden");
+        } else {
+          $("loginView").classList.toggle("hidden", connected);
+        }
         $("dashboardView").classList.toggle("hidden", !connected);
         $("logout").classList.toggle("hidden", !connected);
         $("openMenu").classList.toggle("hidden", !connected);
@@ -6098,7 +6277,7 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=723", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=724", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
