@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=752">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=753">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1206,6 +1206,13 @@ body.partner-authenticated .action.partner-back{
 .pm-doc-expiry{display:flex!important;align-items:center!important;gap:8px!important;color:#dbeafe!important}.pm-doc-expiry input{min-height:38px!important;border-radius:10px!important;padding:6px 8px!important}
 .pm-doc-no-expiry{display:flex;align-items:center;padding:8px 10px;border-radius:10px;background:#102c22;color:#86efac;font-size:12px;font-weight:800}
 .pm-full{grid-column:1/-1}.pm-cost-section{margin-top:8px;padding-top:14px;border-top:1px solid #263a55}.pm-cost-section small{color:#79aefc;font-weight:900;letter-spacing:.08em}.pm-cost-section h3{margin-top:3px}.pm-cost-result{display:flex;flex-direction:column;justify-content:center;padding:12px;border:1px solid #33465f;border-radius:14px;background:#0d1725}.pm-cost-result small{color:#9aa8bc}.pm-cost-result strong{margin-top:4px;font-size:20px;color:#fff}
+</style><style id="v753-hide-copilot">
+#voiceAssistant,#voiceMiniBar,.voice-mini-bar,[data-menu-tab="voiceAssistantPanel"],[data-action="voice-assistant"],#openVoiceAssistant{display:none!important}
+</style><style id="v753-cost-style">
+#partnerCostPanel .pm-grid{grid-template-columns:1fr!important}
+.pm-cost-title{margin-top:8px;padding:14px 0 4px;border-top:1px solid #263a55;display:flex;flex-direction:column;gap:3px}
+.pm-cost-title small{color:#60a5fa;font-weight:900;letter-spacing:.08em}.pm-cost-title b{font-size:18px}
+.pm-cost-result{padding:13px;border-radius:13px;background:#0d1725;color:#dbeafe}.pm-cost-result strong{font-size:18px;color:#fff}
 </style></head>
  
 <body>
@@ -6727,7 +6734,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=752", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=753", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7196,6 +7203,23 @@ function pmEnsure(){
    s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mes documents</h2><div class="pm-card"><div id="pmDocumentsList">Chargement…</div></div>';
    main.appendChild(s);
  }
+ if(!document.getElementById("partnerCostPanel")){
+   const s=document.createElement("section");s.id="partnerCostPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML=`<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Coût kilométrique</h2><div class="pm-card"><form id="pmCostForm" class="pm-grid">
+   <label>Adresse de référence<input id="pmCostHome" autocomplete="street-address" placeholder="Départ / retour des bilans"></label>
+   <div class="pm-cost-title"><small>THERMIQUE / HYBRIDE</small><b>Carburant</b></div>
+   <label>Consommation moyenne (L/100 km)<input id="pmCostFuelConsumption" type="number" min="0" step="0.1"></label>
+   <label>Prix carburant (€/L)<input id="pmCostFuelPrice" type="number" min="0" step="0.001"></label>
+   <label>Kilomètres à calculer<input id="pmCostFuelKm" type="number" min="0" step="1" value="100"></label>
+   <div class="pm-cost-result">Coût : <strong id="pmCostFuelResult">—</strong></div>
+   <div class="pm-cost-title"><small>100 % ÉLECTRIQUE</small><b>Électricité</b></div>
+   <label>Consommation moyenne (kWh/100 km)<input id="pmCostEvConsumption" type="number" min="0" step="0.1"></label>
+   <label>Prix électricité (€/kWh)<input id="pmCostKwhPrice" type="number" min="0" step="0.001"></label>
+   <label>Kilomètres à calculer<input id="pmCostEvKm" type="number" min="0" step="1" value="100"></label>
+   <div class="pm-cost-result">Coût : <strong id="pmCostEvResult">—</strong></div>
+   <button class="pm-save" type="submit">Enregistrer dans mon profil</button></form></div>`;
+   main.appendChild(s);
+ }
  if(!document.getElementById("partnerSettingsPanel")){
    const s=document.createElement("section");s.id="partnerSettingsPanel";s.className="partner-menu-page partner-view-hidden";
    s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Réglages</h2><div class="pm-card"><div class="pm-setting"><span>Notifications</span><button type="button" id="pmNotifications">Activer</button></div><div class="pm-setting"><span>Interprète</span><button type="button" id="pmInterpreter">Ouvrir</button></div><div class="pm-setting"><span>Installation de l’application</span><button type="button" id="pmInstall">Installer</button></div></div><button class="pm-logout" id="pmLogout" type="button">Déconnexion</button>';
@@ -7203,6 +7227,21 @@ function pmEnsure(){
  }
  document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showPartnerPage(b.dataset.pm));
  document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
+ const pmCostCalc=()=>{
+   const fc=Number(document.getElementById("pmCostFuelConsumption")?.value||0),fp=Number(document.getElementById("pmCostFuelPrice")?.value||0),fkm=Number(document.getElementById("pmCostFuelKm")?.value||100);
+   const ec=Number(document.getElementById("pmCostEvConsumption")?.value||0),kp=Number(document.getElementById("pmCostKwhPrice")?.value||0),ekm=Number(document.getElementById("pmCostEvKm")?.value||100);
+   const fr=document.getElementById("pmCostFuelResult"),er=document.getElementById("pmCostEvResult");
+   if(fr)fr.textContent=fc>0&&fp>0?`${(fkm/100*fc*fp).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} € / ${fkm} km`:"—";
+   if(er)er.textContent=ec>0&&kp>0?`${(ekm/100*ec*kp).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} € / ${ekm} km`:"—";
+ };
+ ["pmCostFuelConsumption","pmCostFuelPrice","pmCostFuelKm","pmCostEvConsumption","pmCostKwhPrice","pmCostEvKm"].forEach(id=>document.getElementById(id)?.addEventListener("input",pmCostCalc));
+ document.getElementById("pmCostForm").onsubmit=async event=>{
+   event.preventDefault();const p=window.currentPartnerProfile;if(!p?.id)return alert("Profil chauffeur indisponible.");
+   const data={homeAddress:document.getElementById("pmCostHome").value.trim(),fuelPrice:Number(document.getElementById("pmCostFuelPrice").value)||null,consumption:Number(document.getElementById("pmCostFuelConsumption").value)||null,evConsumption:Number(document.getElementById("pmCostEvConsumption").value)||null,kwhPrice:Number(document.getElementById("pmCostKwhPrice").value)||null,updatedAt:serverTimestamp()};
+   try{await updateDoc(doc(db,"partnerDrivers",p.id),data);Object.assign(p,data);try{localStorage.removeItem(missionCostStorageKey())}catch(_){}
+   pmCostCalc();alert("Coût kilométrique enregistré.");}catch(err){console.error(err);alert("Impossible d’enregistrer le coût kilométrique.");}
+ };
+
  document.getElementById("pmLogout").onclick=()=>document.getElementById("logout")?.click();
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
@@ -7222,7 +7261,13 @@ function pmFillProfile(){
 async function pmSaveProfile(e){
  e.preventDefault();if(!window.currentPartnerProfile?.id)return;
  const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),homeAddress:pmHomeAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),vtcRegistry:pmVtcRegistry.value.trim(),fuelPrice:Number(pmFuelPrice.value)||null,consumption:Number(pmConsumption.value)||null,reviewUrl:pmReviewUrl.value.trim(),updatedAt:serverTimestamp()};
- try{await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);Object.assign(window.currentPartnerProfile,data);localStorage.removeItem(missionCostStorageKey());alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
+ try{
+  await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);
+  Object.assign(window.currentPartnerProfile,data);
+  try{ if(typeof missionCostStorageKey==="function") localStorage.removeItem(missionCostStorageKey()); }catch(cacheError){console.warn("Cache coût mission",cacheError)}
+  pmFillProfile();
+  alert("Profil mis à jour.");
+ }catch(err){console.error("Enregistrement profil",err);alert("Impossible de modifier le profil : "+(err?.message||"erreur inconnue"))}
 }
 function pmListenDocuments(){
  if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
