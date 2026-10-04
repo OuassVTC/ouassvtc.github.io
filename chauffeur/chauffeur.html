@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=728">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=729">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -3707,6 +3707,15 @@ body.partner-authenticated .partner-menu-page input:disabled{
     }
  
     function actionButtons(item) {
+      if (item.isPartnerMission && item.missionId) {
+        const ms = item.partnerMissionStatus || "proposed";
+        if (ms === "proposed") return `<button class="action accept" data-status="accepted" data-id="${item.id}">Accepter la course</button><button class="action reject" data-status="refused" data-id="${item.id}">Refuser</button>`;
+        if (ms === "accepted") return `<button class="action accept" data-status="en_route" data-id="${item.id}">🚗 Je pars vers le client</button>`;
+        if (ms === "en_route") return `<button class="action accept" data-status="arrived" data-id="${item.id}">📍 Je suis arrivé</button>`;
+        if (ms === "arrived") return `<button class="action accept" data-status="passenger_onboard" data-id="${item.id}">👤 Client à bord</button><button class="action reject" data-status="no_show" data-id="${item.id}">Client absent</button>`;
+        if (ms === "passenger_onboard") return `<button class="action finish" data-status="completed" data-id="${item.id}">✓ Course terminée</button>`;
+        return "";
+      }
       if (item.status === "new") return `<button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button><button class="action reject" data-delete="${item.id}">Refuser la demande</button>`;
       if (item.status === "accepted") return `<button class="action accept" data-status="en_route" data-id="${item.id}">🚗 En route vers client</button><button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler le trajet</button>`;
       if (item.status === "en_route") return `<button class="action accept" data-status="on_board" data-id="${item.id}">👤 Client à bord</button><button class="action" data-status="accepted" data-id="${item.id}">Retour acceptée</button>`;
@@ -4808,6 +4817,21 @@ body.partner-authenticated .partner-menu-page input:disabled{
     }
  
     async function handleStatusAction(id, status) {
+      const currentMissionItem = state.bookings.find(item => item.id === id);
+      if (currentMissionItem?.isPartnerMission && currentMissionItem?.missionId) {
+        try {
+          await updateDoc(doc(db, "driverMissions", currentMissionItem.missionId), {
+            status,
+            statusUpdatedAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+          return true;
+        } catch (error) {
+          console.error("Mise à jour mission partenaire", error);
+          alert("La mission n’a pas pu être mise à jour.");
+          return false;
+        }
+      }
       let extraChanges = {};
       if (status === "completed") {
         const current = state.bookings.find(item => item.id === id);
@@ -5140,23 +5164,38 @@ body.partner-authenticated .partner-menu-page input:disabled{
       const transferred = new Map();
       const missions = new Map();
 
+      const missionUiStatus = missionStatus => ({
+        proposed: "new",
+        accepted: "accepted",
+        en_route: "en_route",
+        arrived: "en_route",
+        passenger_onboard: "on_board",
+        completed: "completed",
+        refused: "cancelled",
+        no_show: "cancelled",
+        problem: "accepted"
+      })[missionStatus] || "new";
+
       const publish = () => {
         const merged = new Map([...own, ...transferred]);
 
         // Les missions sont la source la plus fiable pour une course transférée.
         // Si la lecture du booking est retardée/bloquée, on affiche quand même la mission.
         missions.forEach(mission => {
+          if (mission.active === false) return;
           const bookingId = mission.bookingId || mission.id;
           const existing = merged.get(bookingId) || {};
+          const missionStatus = mission.status || "proposed";
           merged.set(bookingId, {
-            ...mission,
             ...existing,
+            ...mission,
             id: bookingId,
             missionId: mission.id,
             partnerMissionToken: mission.token || mission.id,
-            partnerMissionStatus: mission.status || existing.partnerMissionStatus || "proposed",
-            status: existing.status || "transferred",
-            transferredDriverEmail: existing.transferredDriverEmail || mission.driverEmail || email
+            partnerMissionStatus: missionStatus,
+            status: missionUiStatus(missionStatus),
+            transferredDriverEmail: mission.driverEmail || existing.transferredDriverEmail || email,
+            isPartnerMission: true
           });
         });
 
@@ -6475,7 +6514,7 @@ body.partner-authenticated .partner-menu-page input:disabled{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=728", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=729", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
