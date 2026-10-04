@@ -4857,9 +4857,14 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       state.unsubscribe = onSnapshot(bookingsQuery, snapshot => {
         const incoming = firstBookingsSnapshot ? [] : snapshot.docChanges().filter(change => {
           const item = change.doc.data();
-          return change.type === "added" && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
+          const isPartnerOwned = Boolean(item.partnerOwnerEmail);
+          return change.type === "added" && !isPartnerOwned && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
-        state.bookings = snapshot.docs.map(result => ({ id: result.id, ...result.data() }));
+        // Les courses créées par un chauffeur restent visibles dans son profil,
+        // mais n'entrent pas dans le planning / les nouvelles courses Admin.
+        state.bookings = snapshot.docs
+          .map(result => ({ id: result.id, ...result.data() }))
+          .filter(item => !item.partnerOwnerEmail);
         state.bookings.filter(item => ["new", "accepted"].includes(item.status) && !Number(item.missionTotalKm) && !automaticCostAttemptIds.has(item.id)).forEach(item => {
           automaticCostAttemptIds.add(item.id);
           void automaticallyCalculateMissionCost(doc(db, "bookings", item.id), item);
