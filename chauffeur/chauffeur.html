@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=744">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=745">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1199,7 +1199,7 @@ body.partner-authenticated .action.partner-back{
 .detail-body{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
 .detail-body .status-actions{position:relative!important;display:grid!important;visibility:visible!important;opacity:1!important;z-index:3!important}
 .detail-body [data-toggle-more-actions]{display:block!important;visibility:visible!important;opacity:1!important;min-height:52px!important}
-.detail-body .more-actions-panel.actions-screen:not(.hidden){display:grid!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:5!important;margin-bottom:calc(80px + env(safe-area-inset-bottom))!important}
+.detail-body .more-actions-panel.actions-screen:not(.hidden){display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;inset:50% auto auto 50%!important;transform:translate(-50%,-50%)!important;width:min(92vw,520px)!important;max-height:min(82dvh,760px)!important;overflow-y:auto!important;z-index:1601!important;margin:0!important;padding:0 16px calc(18px + env(safe-area-inset-bottom))!important;border-radius:24px!important;box-shadow:0 24px 80px #0008!important;background:#eef2f7!important} .detail-body .more-actions-panel.actions-screen:not(.hidden)::before{content:"";position:fixed;inset:-100vh -100vw;z-index:-1;background:#0008} .detail-body .actions-screen-head{position:sticky!important;top:0!important;margin:0 -16px 16px!important;padding:15px 16px!important} .detail-body .actions-back{font-size:0!important}.detail-body .actions-back::before{content:"×";font-size:30px!important;line-height:1}
 @supports(padding:max(0px)){.detail-body{padding-bottom:max(110px,calc(90px + env(safe-area-inset-bottom)))!important}}
 </style>
 </head>
@@ -2096,11 +2096,12 @@ body.partner-authenticated .action.partner-back{
           <div class="dashboard-next-head"><span class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(statusLabels[item.status] || "Course acceptée")}</span><span class="dashboard-next-time">◷ ${escapeHtml(timing)}</span></div>
           <div class="dashboard-next-client"><span><small>Client</small><strong>${escapeHtml(item.customerName || "Client")}</strong></span><span class="dashboard-next-price">${escapeHtml(item.estimatedPrice || "—")}</span></div>
           <div class="dashboard-next-route"><i>●</i><span><small>Prise en charge</small><strong>${escapeHtml(item.pickup || "Adresse non renseignée")}</strong></span><i>○</i><span><small>Destination</small><strong>${escapeHtml(item.destination || "Adresse non renseignée")}</strong></span></div>
-          <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${escapeHtml(item.id)}">Ouvrir la course ›</button><button class="open-course" type="button" data-open-next-planning aria-label="Ouvrir le planning">Planning →</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
+          <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${escapeHtml(item.id)}">Ouvrir la course ›</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
         </article>`;
         $("todayAgendaList").querySelector("[data-open-booking]")?.addEventListener("click", button => openBooking(button.currentTarget.dataset.openBooking));
-        $("todayAgendaList").querySelector("[data-open-next-planning]")?.addEventListener("click", () => openPanel("agendaPanel"));
+
       }
+      bindPartnerDashboardAgendaArrow();
       $("dashboardFollowingCount").textContent = String(following.length);
       $("dashboardFollowingEmpty").classList.toggle("hidden", following.length > 0);
       $("dashboardFollowingList").innerHTML = following.map(course => {
@@ -4695,8 +4696,8 @@ body.partner-authenticated .action.partner-back{
       if (Number.isInteger(existingNumber) && existingNumber > 0) return existingNumber;
       const nextNumber = completedCoursesInNumberOrder().length + provisionallyNumberedCourses().length + 1;
       await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:nextNumber });
-      await setDoc(doc(db, "counters", "purchaseOrders"), { lastNumber:nextNumber, updatedAt:serverTimestamp() }, { merge:true });
-      lastReconciledCompletedCount = nextNumber;
+      // Espace chauffeur : pas d'écriture dans le compteur global Admin.
+      // Le numéro reste enregistré sur la course appartenant au chauffeur.
       return nextNumber;
     }
  
@@ -4892,7 +4893,7 @@ body.partner-authenticated .action.partner-back{
           alert("Le bon de commande n’est pas disponible pour une course annulée ou transférée.");
           return;
         }
-        alert("Le bon de commande n’a pas pu être créé. Vérifiez votre connexion et réessayez.");
+        alert(error?.code === "permission-denied" ? "Le bon de commande n’a pas pu être créé : autorisation refusée." : `Le bon de commande n’a pas pu être créé${error?.message ? " : " + error.message : "."}`);
       } finally {
         button.disabled = false;
         button.textContent = sharePdf ? "Partager le PDF" : "Bon de commande PDF";
@@ -6665,7 +6666,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=744", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=745", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
