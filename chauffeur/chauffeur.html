@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=750">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=751">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1202,7 +1202,11 @@ body.partner-authenticated .action.partner-back{
 .detail-body .more-actions-panel.actions-screen:not(.hidden){display:block!important;visibility:visible!important;opacity:1!important;position:fixed!important;inset:50% auto auto 50%!important;transform:translate(-50%,-50%)!important;width:min(92vw,520px)!important;max-height:min(82dvh,760px)!important;overflow-y:auto!important;z-index:1601!important;margin:0!important;padding:0 16px calc(18px + env(safe-area-inset-bottom))!important;border-radius:24px!important;box-shadow:0 24px 80px #0008!important;background:#eef2f7!important} .detail-body .more-actions-panel.actions-screen:not(.hidden)::before{content:"";position:fixed;inset:-100vh -100vw;z-index:-1;background:#0008} .detail-body .actions-screen-head{position:sticky!important;top:0!important;margin:0 -16px 16px!important;padding:15px 16px!important} .detail-body .actions-back{font-size:0!important}.detail-body .actions-back::before{content:"×";font-size:30px!important;line-height:1}
 @supports(padding:max(0px)){.detail-body{padding-bottom:max(110px,calc(90px + env(safe-area-inset-bottom)))!important}}
 </style>
-</head>
+<style id="v751-partner-cost-docs">
+.pm-doc-expiry{display:flex!important;align-items:center!important;gap:8px!important;color:#dbeafe!important}.pm-doc-expiry input{min-height:38px!important;border-radius:10px!important;padding:6px 8px!important}
+.pm-doc-no-expiry{display:flex;align-items:center;padding:8px 10px;border-radius:10px;background:#102c22;color:#86efac;font-size:12px;font-weight:800}
+.pm-full{grid-column:1/-1}.pm-cost-section{margin-top:8px;padding-top:14px;border-top:1px solid #263a55}.pm-cost-section small{color:#79aefc;font-weight:900;letter-spacing:.08em}.pm-cost-section h3{margin-top:3px}.pm-cost-result{display:flex;flex-direction:column;justify-content:center;padding:12px;border:1px solid #33465f;border-radius:14px;background:#0d1725}.pm-cost-result small{color:#9aa8bc}.pm-cost-result strong{margin-top:4px;font-size:20px;color:#fff}
+</style></head>
  
 <body>
   <header class="topbar">
@@ -4349,12 +4353,10 @@ body.partner-authenticated .action.partner-back{
           <div class="actions-screen-head"><button class="actions-back" type="button" data-close-more-actions aria-label="Retour au détail de la course">←</button><div><small>Gestion de la course</small><strong>Autres actions</strong></div></div>
           <div class="actions-screen-grid">
           <button class="actions-command" type="button" data-edit-booking="${item.id}"><span class="action-symbol">✎</span>Modifier la course</button>
-          <button class="actions-command" type="button" data-transfer-booking="${item.id}"><span class="action-symbol">⇄</span>Transfert chauffeur</button>
           <button class="actions-command" type="button" data-purchase-order="${item.id}"><span class="action-symbol">PDF</span>Bon de commande</button>
           <button class="mission-profit-toggle actions-command" type="button" data-toggle-mission-profit><span class="action-symbol">€</span><span>Bilan de course</span><span>＋</span></button>
           <button class="actions-command" type="button" data-duplicate-booking="${item.id}"><span class="action-symbol">＋</span>Dupliquer</button>
           <button class="actions-command" type="button" data-return-booking="${item.id}"><span class="action-symbol">↩</span>Programmer le retour</button>
-          ${item.partnerOwnerEmail && !item.isPartnerMission && item.dispatchStatus !== "pending" ? `<button class="actions-command" type="button" data-more-transfer-admin="${item.id}"><span class="action-symbol">↗</span>Transférer à l’administrateur</button>` : ""}
           </div>
           <div class="mission-profit-panel hidden mission-screen" data-mission-profit-panel>
             <div class="mission-screen-head"><button type="button" data-close-mission-profit aria-label="Retour aux autres actions">←</button><strong>Bilan de course</strong></div>
@@ -6725,7 +6727,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=750", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=751", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7154,19 +7156,34 @@ document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#pa
 <script id="partner-menu-v713-runtime">
 let partnerDocsUnsub=null;
 const PARTNER_DOC_TYPES=[
- ["vtc_card","Carte professionnelle VTC"],
- ["driving_license","Permis de conduire"],
- ["identity","Pièce d’identité"],
- ["insurance","Assurance professionnelle / véhicule"],
+ ["driving_licence_front","Permis de conduire · recto"],
+ ["driving_licence_back","Permis de conduire · verso"],
+ ["identity_front","Pièce d’identité · recto"],
+ ["identity_back","Pièce d’identité · verso"],
+ ["vtc_card_front","Carte VTC · recto"],
+ ["vtc_card_back","Carte VTC · verso"],
+ ["medical_exam","Visite médicale VTC"],
+ ["continuing_training","Attestation de formation continue VTC"],
+ ["kbis","Extrait Kbis"],
+ ["vtc_register","Registre des VTC"],
+ ["insurance_memo","Mémo d’assurance"],
+ ["rc_pro","Responsabilité civile professionnelle"],
+ ["paid_transport","Assurance transport à titre onéreux"],
  ["registration","Carte grise"],
- ["technical_control","Contrôle technique"]
+ ["technical_inspection","Contrôle technique"],
+ ["vtc_sticker","Vignette / macaron VTC"],
+ ["vehicle_photo_front","Photo du véhicule · face"],
+ ["vehicle_photo_front_left","Photo du véhicule · 3/4 avant gauche"],
+ ["vehicle_photo_rear_left","Photo du véhicule · 3/4 arrière gauche"],
+ ["rir","Relevé d’information restreint (RIR)"]
 ];
+const PARTNER_DOC_NO_EXPIRY=new Set(["kbis","registration","rir","vehicle_photo_front","vehicle_photo_front_left","vehicle_photo_rear_left"]);
 function pme(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7196,6 +7213,11 @@ function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
  document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
  [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmHomeAddress","homeAddress"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmVtcRegistry","vtcRegistry"],["pmFuelPrice","fuelPrice"],["pmConsumption","consumption"],["pmReviewUrl","reviewUrl"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
+
+ const cp=window.currentPartnerProfile||{};
+ const setv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??""};
+ setv("pmCostHome",cp.homeAddress||cp.address||"");setv("pmCostFuelConsumption",cp.fuelConsumption||cp.consumption||"");setv("pmCostFuelPrice",cp.fuelPrice||"");setv("pmCostEvConsumption",cp.evConsumption||"");setv("pmCostKwhPrice",cp.kwhPrice||"");
+ ["pmCostFuelConsumption","pmCostFuelPrice","pmCostEvConsumption","pmCostKwhPrice"].forEach(id=>document.getElementById(id)?.dispatchEvent(new Event("input")));
 }
 async function pmSaveProfile(e){
  e.preventDefault();if(!window.currentPartnerProfile?.id)return;
@@ -7208,22 +7230,38 @@ function pmListenDocuments(){
  const q=query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),limit(100));
  partnerDocsUnsub=onSnapshot(q,s=>pmRenderDocuments(s.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(e);const h=document.getElementById("pmDocumentsList");if(h)h.innerHTML='<div class="pm-doc-error">Impossible de charger les documents.</div>'});
 }
+function pmDocExpiryState(d){
+ if(!d?.downloadUrl)return "";
+ if(d.noExpiry)return "Sans date de fin";
+ if(!d.expiryDate)return "Date de validité à renseigner";
+ const expiry=new Date(`${d.expiryDate}T23:59:59`),today=new Date();today.setHours(0,0,0,0);
+ const days=Math.ceil((expiry-today)/86400000);
+ if(days<0)return `Expiré depuis ${Math.abs(days)} jour${Math.abs(days)>1?"s":""}`;
+ if(days<=30)return `Expire dans ${days} jour${days>1?"s":""}`;
+ return `Valide jusqu’au ${expiry.toLocaleDateString("fr-FR")}`;
+}
 function pmRenderDocuments(docs){
  const h=document.getElementById("pmDocumentsList");if(!h)return;
  h.innerHTML=PARTNER_DOC_TYPES.map(([type,label])=>{
-   const d=docs.find(x=>x.type===type),ok=!!d?.downloadUrl;
+   const d=docs.find(x=>x.type===type),ok=!!d?.downloadUrl,noExpiry=PARTNER_DOC_NO_EXPIRY.has(type);
    return `<div class="pm-doc-card">
-     <div class="pm-doc-icon">📄</div>
-     <div class="pm-doc-copy"><b>${pme(label)}</b><small>${ok?pme(d.fileName||"Document enregistré"):"Aucun document enregistré"}</small></div>
-     <div class="pm-doc-actions">
-       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
-       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
-       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
-     </div>
+    <div class="pm-doc-icon">📄</div>
+    <div class="pm-doc-copy"><b>${pme(label)}</b><small>${ok?pme(d.fileName||"Document enregistré"):"Aucun document enregistré"}</small>${ok?`<small>${pme(pmDocExpiryState(d))}</small>`:""}</div>
+    <div class="pm-doc-actions">
+      ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
+      <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
+      ${ok&&!noExpiry?`<label class="pm-doc-expiry">Validité <input type="date" value="${pme(d.expiryDate||"")}" data-partner-doc-expiry="${pme(d.id)}"></label>`:""}
+      ${ok&&noExpiry?`<span class="pm-doc-no-expiry">Sans date de fin</span>`:""}
+      ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
+    </div>
    </div>`;
  }).join("");
  h.querySelectorAll("[data-partner-doc-upload]").forEach(input=>input.addEventListener("change",pmUploadDocument));
  h.querySelectorAll("[data-partner-doc-delete]").forEach(button=>button.addEventListener("click",pmDeleteDocument));
+ h.querySelectorAll("[data-partner-doc-expiry]").forEach(input=>input.addEventListener("change",async event=>{
+   try{await updateDoc(doc(db,"partnerDocuments",event.currentTarget.dataset.partnerDocExpiry),{expiryDate:event.currentTarget.value||null,noExpiry:false,updatedAt:serverTimestamp()})}
+   catch(e){console.error(e);alert("La date de validité n’a pas pu être enregistrée.")}
+ }));
 }
 async function pmUploadDocument(event){
  const input=event.currentTarget,file=input.files?.[0],type=input.dataset.partnerDocUpload;
@@ -7240,7 +7278,7 @@ async function pmUploadDocument(event){
    await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
-   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,updatedAt:serverTimestamp()};
+   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,noExpiry:PARTNER_DOC_NO_EXPIRY.has(type),updatedAt:serverTimestamp()};
    if(existing.empty) await addDoc(collection(db,"partnerDocuments"),{...payload,createdAt:serverTimestamp()});
    else {
      const old=existing.docs[0].data();
@@ -7268,6 +7306,23 @@ async function pmRecordLogin(){
 document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
 </script>
 </div>
+
+<script id="v751-home-navigation">
+document.addEventListener("click", event => {
+  const homeButton = event.target.closest('#partnerBottomNav [data-target="dashboardHome"]');
+  if (!homeButton) return;
+  event.preventDefault();
+  document.getElementById("detailOverlay")?.classList.add("hidden");
+  document.getElementById("menuOverlay")?.classList.add("hidden");
+  document.getElementById("sideMenu")?.classList.add("hidden");
+  if (typeof closeBooking === "function") { try { closeBooking(); } catch (_) {} }
+  if (typeof showPartnerPage === "function") {
+    document.querySelectorAll(".partner-menu-page").forEach(panel => panel.classList.add("partner-view-hidden"));
+  }
+  if (typeof openPanel === "function") openPanel("dashboardHome");
+  window.scrollTo({top:0,behavior:"instant"});
+}, true);
+</script>
 
 <script id="v75-runtime-stability">
 (() => {
