@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=743">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=744">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1194,6 +1194,14 @@ body.partner-authenticated .action.partner-back{
 }
 </style>
 
+<style id="v744-mobile-course-actions">
+.detail-card{max-height:calc(100dvh - 18px)!important;display:flex!important;flex-direction:column!important}
+.detail-body{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;padding-bottom:calc(110px + env(safe-area-inset-bottom))!important}
+.detail-body .status-actions{position:relative!important;display:grid!important;visibility:visible!important;opacity:1!important;z-index:3!important}
+.detail-body [data-toggle-more-actions]{display:block!important;visibility:visible!important;opacity:1!important;min-height:52px!important}
+.detail-body .more-actions-panel.actions-screen:not(.hidden){display:grid!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:5!important;margin-bottom:calc(80px + env(safe-area-inset-bottom))!important}
+@supports(padding:max(0px)){.detail-body{padding-bottom:max(110px,calc(90px + env(safe-area-inset-bottom)))!important}}
+</style>
 </head>
  
 <body>
@@ -2088,9 +2096,10 @@ body.partner-authenticated .action.partner-back{
           <div class="dashboard-next-head"><span class="active-trip-status ${escapeHtml(item.status)}">${escapeHtml(statusLabels[item.status] || "Course acceptée")}</span><span class="dashboard-next-time">◷ ${escapeHtml(timing)}</span></div>
           <div class="dashboard-next-client"><span><small>Client</small><strong>${escapeHtml(item.customerName || "Client")}</strong></span><span class="dashboard-next-price">${escapeHtml(item.estimatedPrice || "—")}</span></div>
           <div class="dashboard-next-route"><i>●</i><span><small>Prise en charge</small><strong>${escapeHtml(item.pickup || "Adresse non renseignée")}</strong></span><i>○</i><span><small>Destination</small><strong>${escapeHtml(item.destination || "Adresse non renseignée")}</strong></span></div>
-          <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${escapeHtml(item.id)}">Ouvrir la course ›</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
+          <div class="dashboard-next-actions"><button class="open-course" type="button" data-open-booking="${escapeHtml(item.id)}">Ouvrir la course ›</button><button class="open-course" type="button" data-open-next-planning aria-label="Ouvrir le planning">Planning →</button>${wazeUnlocked ? `<a href="${wazeHref(wazeAddress)}" target="_blank" rel="noopener">Waze ›</a>` : `<button type="button" disabled title="Disponible après En route">Waze verrouillé</button>`}</div>
         </article>`;
         $("todayAgendaList").querySelector("[data-open-booking]")?.addEventListener("click", button => openBooking(button.currentTarget.dataset.openBooking));
+        $("todayAgendaList").querySelector("[data-open-next-planning]")?.addEventListener("click", () => openPanel("agendaPanel"));
       }
       $("dashboardFollowingCount").textContent = String(following.length);
       $("dashboardFollowingEmpty").classList.toggle("hidden", following.length > 0);
@@ -4311,6 +4320,7 @@ body.partner-authenticated .action.partner-back{
           <button class="mission-profit-toggle actions-command" type="button" data-toggle-mission-profit><span class="action-symbol">€</span><span>Bilan de course</span><span>＋</span></button>
           <button class="actions-command" type="button" data-duplicate-booking="${item.id}"><span class="action-symbol">＋</span>Dupliquer</button>
           <button class="actions-command" type="button" data-return-booking="${item.id}"><span class="action-symbol">↩</span>Programmer le retour</button>
+          ${item.partnerOwnerEmail && !item.isPartnerMission && item.dispatchStatus !== "pending" ? `<button class="actions-command" type="button" data-more-transfer-admin="${item.id}"><span class="action-symbol">↗</span>Transférer à l’administrateur</button>` : ""}
           </div>
           <div class="mission-profit-panel hidden mission-screen" data-mission-profit-panel>
             <div class="mission-screen-head"><button type="button" data-close-mission-profit aria-label="Retour aux autres actions">←</button><strong>Bilan de course</strong></div>
@@ -4369,6 +4379,9 @@ body.partner-authenticated .action.partner-back{
       }));
       $("detailBody").querySelector("[data-transfer-to-admin]")?.addEventListener("click", async event => {
         await transferOwnBookingToAdmin(event.currentTarget.dataset.transferToAdmin);
+      });
+      $("detailBody").querySelector("[data-more-transfer-admin]")?.addEventListener("click", async event => {
+        await transferOwnBookingToAdmin(event.currentTarget.dataset.moreTransferAdmin);
       });
       $("detailBody").querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", async () => {
         const deleted = await refuseAndDelete(button.dataset.delete);
@@ -4804,10 +4817,16 @@ body.partner-authenticated .action.partner-back{
         context.textAlign = "right";
         context.fillText(`Édité le ${new Date().toLocaleDateString("fr-FR")}`, 1135, 330);
         context.beginPath(); context.moveTo(105, 350); context.lineTo(1135, 350); context.stroke();
+        const partnerProfile = window.currentPartnerProfile || {};
+        const partnerCompany = partnerProfile.companyName || partnerProfile.displayName || "Chauffeur VTC";
+        const partnerAddress = partnerProfile.address || "Adresse non renseignée";
+        const partnerPhone = partnerProfile.phone || auth?.currentUser?.email || "Non renseigné";
+        const partnerSiret = partnerProfile.siret || "Non renseigné";
+        const partnerVtcRegistry = partnerProfile.vtcRegistry || partnerProfile.evtc || partnerProfile.vtcNumber || "Non renseigné";
         context.font = "700 24px Arial";
-        context.fillText("OUASSVTC", 1135, 395);
+        context.fillText(partnerCompany, 1135, 395);
         context.font = "400 22px Arial";
-        ["10 rue Claude Monet", "66000 Perpignan", "Téléphone : 06 44 12 07 84", "SIRET : 818 284 788 00012", "Registre des VTC : EVTC095161898"].forEach((line, index) => context.fillText(line, 1135, 430 + index * 31));
+        [partnerAddress, `Téléphone : ${partnerPhone}`, `SIRET : ${partnerSiret}`, `Registre des VTC : ${partnerVtcRegistry}`].forEach((line, index) => context.fillText(line, 1135, 430 + index * 31));
         context.textAlign = "left";
         context.font = "700 30px Arial";
         context.fillText("Informations client", 105, 610);
@@ -4835,9 +4854,9 @@ body.partner-authenticated .action.partner-back{
         y = drawOrderField(context, "Mode de paiement", item.paymentMethod || "Non précisé", y);
         y = Math.max(y + 30, 1370);
         context.font = "400 24px Arial";
-        context.fillText("Chauffeur : BOUAB Ouassini", 150, y);
-        context.fillText("Véhicule : Toyota Auris break", 150, y + 38);
-        context.fillText("Immatriculation : GB-580-NS", 150, y + 76);
+        context.fillText(`Chauffeur : ${partnerProfile.displayName || partnerProfile.firstName || partnerCompany}`, 150, y);
+        context.fillText(`Véhicule : ${partnerProfile.vehicle || "Non renseigné"}`, 150, y + 38);
+        context.fillText(`Immatriculation : ${partnerProfile.registration || "Non renseignée"}`, 150, y + 76);
         context.font = "italic 21px Arial";
         const legalText = "Conformément à l’article L. 3122-2 du Code des transports, la course est effectuée sur réservation préalable, matérialisée par le présent bon de commande.";
         drawWrappedText(context, legalText, 105, y + 145, 1030, 30);
@@ -6646,7 +6665,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=743", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=744", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
