@@ -3166,13 +3166,37 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 
     function listenPartnerDrivers() {
       if (state.partnerDriversUnsubscribe) state.partnerDriversUnsubscribe();
-          if (state.dispatchRequestsUnsubscribe) state.dispatchRequestsUnsubscribe();
       state.partnerDriversUnsubscribe = onSnapshot(collection(db,"partnerDrivers"), snapshot=>{ state.partnerDrivers=snapshot.docs.map(d=>({id:d.id,...d.data()})); renderPartnerDrivers(); }, error=>console.error("Chauffeurs partenaires",error));
     }
 
+    function mergePendingDispatchIntoAdminBookings() {
+      const normal = state.bookings.filter(item => !item.isPartnerDispatchRequest);
+      const pending = state.dispatchRequests.filter(item => item.status === "pending").map(item => ({
+        id: `dispatch_${item.id}`,
+        dispatchRequestId: item.id,
+        isPartnerDispatchRequest: true,
+        customerName: item.customerName || "Client",
+        customerPhone: item.customerPhone || "",
+        pickup: item.pickup || "",
+        destination: item.destination || "",
+        scheduledAtText: item.scheduledAtText || "",
+        passengers: item.passengers || "Non précisé",
+        paymentMethod: item.paymentMethod || "Non précisé",
+        customerMessage: item.customerMessage || "",
+        estimatedPrice: item.estimatedPrice || "",
+        status: "new",
+        source: "partner_dispatch_request",
+        sourcePartnerName: item.driverName || "Chauffeur partenaire",
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt
+      }));
+      state.bookings = [...pending, ...normal];
+      render();
+    }
+
     function renderDispatchRequests(){const list=$("partnerDispatchList"),empty=$("partnerDispatchEmpty");if(!list||!empty)return;const items=[...state.dispatchRequests].filter(x=>x.status==="pending").sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));empty.classList.toggle("hidden",items.length>0);list.innerHTML=items.map(x=>`<article class="partner-card"><span class="partner-chip">Dispatch demandé</span><h3>${escapeHtml(x.driverName||"Chauffeur partenaire")}</h3><small><b>${escapeHtml(x.customerName||"Client")}</b> · ${escapeHtml(x.customerPhone||"")}</small><small>${escapeHtml(x.scheduledAtText||"")}</small><small>${escapeHtml(x.pickup||"Départ")} → ${escapeHtml(x.destination||"Destination")}</small><small>${escapeHtml(x.estimatedPrice||"Prix non renseigné")}</small><div class="partner-actions"><button type="button" data-take-dispatch="${escapeHtml(x.id)}">Ajouter à mes nouvelles courses</button><button type="button" data-close-dispatch="${escapeHtml(x.id)}">Clôturer</button></div></article>`).join("");document.querySelectorAll("[data-take-dispatch]").forEach(b=>b.onclick=()=>takeDispatchRequest(b.dataset.takeDispatch));document.querySelectorAll("[data-close-dispatch]").forEach(b=>b.onclick=()=>updateDoc(doc(db,"dispatchRequests",b.dataset.closeDispatch),{status:"closed",updatedAt:serverTimestamp()}));}
-    function listenDispatchRequests(){if(state.dispatchRequestsUnsubscribe)state.dispatchRequestsUnsubscribe();state.dispatchRequestsUnsubscribe=onSnapshot(collection(db,"dispatchRequests"),snap=>{state.dispatchRequests=snap.docs.map(d=>({id:d.id,...d.data()}));renderDispatchRequests()},e=>console.error("Dispatch partenaires",e));}
-    async function takeDispatchRequest(id){const x=state.dispatchRequests.find(v=>v.id===id);if(!x)return;try{await addDoc(collection(db,"bookings"),{customerName:x.customerName||"Client",customerPhone:x.customerPhone||"",pickup:x.pickup||"",destination:x.destination||"",scheduledAtText:x.scheduledAtText||"",passengers:x.passengers||1,paymentMethod:x.paymentMethod||"À définir",customerMessage:x.customerMessage||"",estimatedPrice:x.estimatedPrice||"",status:"new",source:"partner_dispatch",sourcePartnerId:x.partnerId||"",sourcePartnerName:x.driverName||"",sourcePartnerEmail:x.requesterEmail||"",sourcePartnerBookingId:x.bookingId||"",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});await updateDoc(doc(db,"dispatchRequests",id),{status:"taken",takenAt:serverTimestamp(),updatedAt:serverTimestamp()});alert("Course ajoutée dans vos nouvelles courses. Vous pouvez maintenant la prendre ou la transférer.");openPanel("newPanel");}catch(e){console.error(e);alert("Impossible de reprendre la demande. Publiez les règles Firestore V69.")}}
+    function listenDispatchRequests(){if(state.dispatchRequestsUnsubscribe)state.dispatchRequestsUnsubscribe();state.dispatchRequestsUnsubscribe=onSnapshot(collection(db,"dispatchRequests"),snap=>{state.dispatchRequests=snap.docs.map(d=>({id:d.id,...d.data()}));renderDispatchRequests();mergePendingDispatchIntoAdminBookings()},e=>console.error("Dispatch partenaires",e));}
+    async function takeDispatchRequest(id){const x=state.dispatchRequests.find(v=>v.id===id);if(!x)return;try{await addDoc(collection(db,"bookings"),{customerName:x.customerName||"Client",customerPhone:x.customerPhone||"",pickup:x.pickup||"",destination:x.destination||"",scheduledAtText:x.scheduledAtText||"",passengers:x.passengers||1,paymentMethod:x.paymentMethod||"À définir",customerMessage:x.customerMessage||"",estimatedPrice:x.estimatedPrice||"",status:"new",source:"partner_dispatch",sourcePartnerId:x.partnerId||"",sourcePartnerName:x.driverName||"",sourcePartnerEmail:x.requesterEmail||"",sourcePartnerBookingId:x.bookingId||"",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});await updateDoc(doc(db,"dispatchRequests",id),{status:"taken",takenAt:serverTimestamp(),updatedAt:serverTimestamp()});if(x.bookingId){try{await updateDoc(doc(db,"bookings",x.bookingId),{dispatchStatus:"accepted_by_admin",dispatchAcceptedAt:serverTimestamp(),updatedAt:serverTimestamp()})}catch(syncError){console.warn("Synchronisation course chauffeur",syncError)}}alert("Course acceptée. Elle est maintenant dans vos nouvelles courses.");openPanel("newPanel");}catch(e){console.error(e);alert("Impossible de reprendre la demande. Publiez les règles Firestore V69.")}}
 
     function editPartnerDriver(id) {
       const driver=state.partnerDrivers.find(x=>x.id===id); if(!driver)return;
@@ -3427,7 +3451,11 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       document.querySelectorAll("[data-open-transfer-course]").forEach(b => b.addEventListener("click",()=> openBooking(b.dataset.openTransferCourse)));
     }
  
-    function actionButtons(item) {
+    function actionButtons(item) { 
+      if (item.isPartnerDispatchRequest) {
+        return `<button class="action accept" type="button" data-take-dispatch="${escapeHtml(item.dispatchRequestId)}">✓ Accepter cette course</button>`;
+      }
+
       if (item.status === "new") return `<button class="action accept" data-status="accepted" data-id="${item.id}">Accepter</button><button class="action reject" data-delete="${item.id}">Refuser la demande</button>`;
       if (item.status === "accepted") return `<button class="action accept" data-status="en_route" data-id="${item.id}">🚗 En route vers client</button><button class="action reject" data-status="cancelled" data-id="${item.id}">Annuler le trajet</button>`;
       if (item.status === "en_route") return `<button class="action accept" data-status="on_board" data-id="${item.id}">👤 Client à bord</button><button class="action" data-status="accepted" data-id="${item.id}">Retour acceptée</button>`;
@@ -4046,6 +4074,10 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       });
       $("detailBody").querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", async () => {
         await handleStatusAction(button.dataset.id, button.dataset.status);
+      }));
+      $("detailBody").querySelectorAll("[data-take-dispatch]").forEach(button => button.addEventListener("click", async () => {
+        await takeDispatchRequest(button.dataset.takeDispatch);
+        closeBooking();
       }));
       $("detailBody").querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", async () => {
         const deleted = await refuseAndDelete(button.dataset.delete);
@@ -4865,6 +4897,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         state.bookings = snapshot.docs
           .map(result => ({ id: result.id, ...result.data() }))
           .filter(item => !item.partnerOwnerEmail);
+        mergePendingDispatchIntoAdminBookings();
         state.bookings.filter(item => ["new", "accepted"].includes(item.status) && !Number(item.missionTotalKm) && !automaticCostAttemptIds.has(item.id)).forEach(item => {
           automaticCostAttemptIds.add(item.id);
           void automaticallyCalculateMissionCost(doc(db, "bookings", item.id), item);
