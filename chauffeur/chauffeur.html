@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=755">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=756">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -6770,7 +6770,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=755", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=756", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7295,19 +7295,25 @@ function pmEnsure(){
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
  pmFillProfile();pmListenDocuments();
 }
-function pmOwnedBookings(){
- const email=String(auth?.currentUser?.email||"").trim().toLowerCase();
- return (state.bookings||[]).filter(x=>String(x.partnerOwnerEmail||"").trim().toLowerCase()===email);
+async function pmLoadOwnedBookings(){
+ const email=String(auth?.currentUser?.email||"").trim();
+ if(!db||!email)return [];
+ try{
+  const snap=await getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",email),limit(1000)));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+ }catch(error){console.error("Fichier clients chauffeur",error);return []}
 }
 function pmCustomerKey(item){
  const phone=String(item.customerPhone||"").replace(/\D/g,"");
  return phone || normalizeSearch(item.customerName||"client");
 }
-function pmRenderCustomers(){
+async function pmRenderCustomers(){
  const box=document.getElementById("pmCustomersList");if(!box)return;
+ box.innerHTML='<div class="pm-empty">Chargement du fichier clients…</div>';
+ const owned=await pmLoadOwnedBookings();
  const q=normalizeSearch(document.getElementById("pmCustomerSearch")?.value||"");
  const map=new Map();
- pmOwnedBookings().forEach(item=>{
+ owned.forEach(item=>{
    const key=pmCustomerKey(item);if(!key)return;
    const d=bookingDate(item),current=map.get(key)||{name:item.customerName||"Client",phone:item.customerPhone||"",courses:[],addresses:new Set(),last:null,ca:0};
    current.courses.push(item);if(item.pickup)current.addresses.add(item.pickup);if(item.destination)current.addresses.add(item.destination);
@@ -7317,11 +7323,24 @@ function pmRenderCustomers(){
  const rows=Array.from(map.values()).sort((a,b)=>(b.last?.getTime?.()||0)-(a.last?.getTime?.()||0)).filter(x=>!q||normalizeSearch([x.name,x.phone,...x.addresses].join(" ")).includes(q));
  box.innerHTML=rows.length?rows.map(x=>`<article class="pm-customer"><div><b>${pme(x.name)}</b><small>${pme(x.phone||"Téléphone non renseigné")}</small></div><div class="pm-customer-stats"><strong>${x.courses.length}</strong><small>course${x.courses.length>1?"s":""}</small><strong>${x.ca.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €</strong></div><details><summary>Voir la fiche client</summary><div class="pm-customer-detail"><b>Adresses utilisées</b>${Array.from(x.addresses).map(a=>`<small>• ${pme(a)}</small>`).join("")||"<small>Aucune adresse</small>"}<b>Historique</b>${x.courses.sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0)).map(i=>`<small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")} · ${pme(i.pickup||"")} → ${pme(i.destination||"")} · ${pme(i.estimatedPrice||"")}</small>`).join("")}</div></details></article>`).join(""):'<div class="pm-empty">Aucun client dans votre fichier.</div>';
 }
-function pmRenderHistory(){
+async function pmRenderHistory(){
  const box=document.getElementById("pmHistoryList");if(!box)return;
- const email=String(auth?.currentUser?.email||"").trim().toLowerCase();
- const rows=(state.bookings||[]).filter(x=>String(x.partnerOwnerEmail||"").trim().toLowerCase()===email || (x.isPartnerMission===true && ["completed","transfer_performed","transfer_closed"].includes(x.status))).sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0));
- box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-row"><div><b>${pme(i.customerName||"Client")}</b><small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")}</small><small>${pme(i.pickup||"")} → ${pme(i.destination||"")}</small></div><div><strong>${pme(i.estimatedPrice||"—")}</strong><small>${pme(i.paymentMethod||i.partnerPaymentMethod||"Règlement non renseigné")}</small></div></article>`).join(""):'<div class="pm-empty">Aucune course dans votre historique.</div>';
+ box.innerHTML='<div class="pm-empty">Chargement de l’historique…</div>';
+ const email=String(auth?.currentUser?.email||"").trim();
+ let owned=[],missions=[];
+ try{
+  const [bookSnap,missionSnap]=await Promise.all([
+   getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",email),limit(1000))),
+   getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",email),limit(1000)))
+  ]);
+  owned=bookSnap.docs.map(d=>({id:d.id,...d.data(),historyOrigin:"owned"}));
+  missions=missionSnap.docs.map(d=>({id:d.data().bookingId||d.id,missionId:d.id,...d.data(),historyOrigin:"mission"})).filter(x=>x.status==="completed");
+ }catch(error){console.error("Historique chauffeur",error)}
+ const merged=new Map();
+ owned.forEach(x=>merged.set(`owned:${x.id}`,x));
+ missions.forEach(x=>merged.set(`mission:${x.missionId}`,x));
+ const rows=Array.from(merged.values()).sort((a,b)=>(bookingDate(b)?.getTime?.()||b.statusUpdatedAt?.toMillis?.()||0)-(bookingDate(a)?.getTime?.()||a.statusUpdatedAt?.toMillis?.()||0));
+ box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-row"><div><b>${pme(i.customerName||"Client")}</b><small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")}</small><small>${pme(i.pickup||"")} → ${pme(i.destination||"")}</small></div><div><strong>${pme(i.estimatedPrice||"—")}</strong><small>${pme(i.paymentMethod||"Règlement non renseigné")}</small></div></article>`).join(""):'<div class="pm-empty">Aucune course dans votre historique.</div>';
 }
 function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
