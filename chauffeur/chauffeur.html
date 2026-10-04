@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=753">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=754">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -4733,14 +4733,29 @@ body.partner-authenticated .action.partner-back{
     async function getPurchaseOrderNumber(bookingId) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item) throw new Error("Course introuvable");
-      if (!["new", "accepted", "completed"].includes(item.status)) throw new Error("COURSE_NOT_ELIGIBLE");
+      if (!["new","accepted","en_route","on_board","completed"].includes(item.status)) throw new Error("COURSE_NOT_ELIGIBLE");
       const existingNumber = Number(item.purchaseOrderNumber);
       if (Number.isInteger(existingNumber) && existingNumber > 0) return existingNumber;
-      const nextNumber = completedCoursesInNumberOrder().length + provisionallyNumberedCourses().length + 1;
-      await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:nextNumber });
-      // Espace chauffeur : pas d'écriture dans le compteur global Admin.
-      // Le numéro reste enregistré sur la course appartenant au chauffeur.
-      return nextNumber;
+
+      // Course créée par le chauffeur : il peut mémoriser le numéro dans son propre booking.
+      if (!item.isPartnerMission && String(item.partnerOwnerEmail||"").trim().toLowerCase() === String(auth?.currentUser?.email||"").trim().toLowerCase()) {
+        const nextNumber = completedCoursesInNumberOrder().length + provisionallyNumberedCourses().length + 1;
+        await updateDoc(doc(db, "bookings", bookingId), { purchaseOrderNumber:nextNumber, updatedAt:serverTimestamp() });
+        item.purchaseOrderNumber = nextNumber;
+        return nextNumber;
+      }
+
+      // Mission reçue d'un autre compte/Admin : ne jamais tenter d'écrire dans le booking source.
+      // Le bon reste éditable avec un numéro chauffeur stable propre à cette mission.
+      const key = `ouassvtcPartnerPO:${String(auth?.currentUser?.uid||"driver")}:${String(item.missionId||bookingId)}`;
+      const saved = Number(localStorage.getItem(key));
+      if (Number.isInteger(saved) && saved > 0) return saved;
+      const stamp = new Date();
+      const datePart = Number(`${String(stamp.getFullYear()).slice(-2)}${String(stamp.getMonth()+1).padStart(2,"0")}${String(stamp.getDate()).padStart(2,"0")}`);
+      const suffix = Math.abs(Array.from(String(item.missionId||bookingId)).reduce((acc,ch)=>(acc*31+ch.charCodeAt(0))%997,0));
+      const number = datePart * 1000 + suffix;
+      localStorage.setItem(key,String(number));
+      return number;
     }
  
     function loadPdfImage(url) {
@@ -4957,42 +4972,38 @@ body.partner-authenticated .action.partner-back{
     async function handleStatusAction(id, status) {
       const currentMissionItem = state.bookings.find(item => item.id === id);
       if (currentMissionItem?.isPartnerMission && currentMissionItem?.missionId) {
+        const missionRef = doc(db, "driverMissions", currentMissionItem.missionId);
         try {
-          await updateDoc(doc(db, "driverMissions", currentMissionItem.missionId), {
+          await updateDoc(missionRef, {
             status,
             statusUpdatedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
+        } catch (error) {
+          console.error("Écriture statut mission partenaire", {code:error?.code||"",message:error?.message||String(error),missionId:currentMissionItem.missionId,status});
+          alert(error?.code === "permission-denied" ? "Action refusée pour cette mission." : "La mission n’a pas pu être mise à jour.");
+          return false;
+        }
 
-          // Mise à jour optimiste immédiate de la fiche : aucun besoin de sortir/rentrer.
+        // L'écriture serveur est validée : les opérations d'affichage ne doivent jamais transformer
+        // un succès Firebase en faux message d'erreur.
+        try {
           currentMissionItem.partnerMissionStatus = status;
           currentMissionItem.status = missionUiStatus(status);
           currentMissionItem.updatedAt = new Date();
           render();
-
           if (status === "accepted" || status === "refused") {
             if (typeof closeBooking === "function") closeBooking();
             openPanel("dashboardHome");
           } else {
-            // La fiche reste ouverte et passe instantanément à l'étape suivante
-            // (GPS / arrivé / client à bord / terminé / retour arrière).
-            openBooking(id);
+            requestAnimationFrame(() => {
+              try { openBooking(id); } catch (uiError) { console.warn("Rafraîchissement fiche mission", uiError); }
+            });
           }
-          return true;
-        } catch (error) {
-          console.error("Mise à jour mission partenaire", {
-            code: error?.code || "",
-            message: error?.message || String(error),
-            missionId: currentMissionItem?.missionId || "",
-            status
-          });
-          if (error?.code === "permission-denied") {
-            alert("La mission n’a pas pu être mise à jour : autorisation Firebase refusée.");
-          } else {
-            alert("La mission n’a pas pu être mise à jour.");
-          }
-          return false;
+        } catch (uiError) {
+          console.warn("Mission enregistrée, rafraîchissement visuel différé", uiError);
         }
+        return true;
       }
       let extraChanges = {};
       if (status === "completed") {
@@ -6734,7 +6745,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=753", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=754", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7376,6 +7387,16 @@ document.addEventListener("click", event => {
 }, true);
 </script>
 
+<script id="v754-status-feedback">
+document.addEventListener("click", event => {
+ const b=event.target.closest("button[data-status]");
+ if(!b||b.disabled)return;
+ const original=b.textContent;
+ b.dataset.v754Label=original;
+ b.textContent="Validation…";
+ setTimeout(()=>{if(document.body.contains(b)&&b.textContent==="Validation…"){b.textContent=b.dataset.v754Label||original;}},2200);
+}, true);
+</script>
 <script id="v75-runtime-stability">
 (() => {
   const locks = new WeakMap();
