@@ -4529,7 +4529,19 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         const changes = { status, updatedAt: serverTimestamp(), ...automaticWaitingChanges, ...extraChanges };
         if (["transferred", "transfer_performed", "transfer_closed"].includes(current?.status) && !["transferred", "transfer_performed", "transfer_closed"].includes(status)) {
           changes.transferredDriverName = null;
+          changes.transferredDriverId = null;
+          changes.transferredDriverEmail = null;
+          changes.transferredDriverPhone = null;
           changes.transferredAt = null;
+          const mission = partnerMissionForBooking(id);
+          if (mission) {
+            await updateDoc(doc(db, "driverMissions", mission.id), {
+              active: false,
+              status: "cancelled",
+              statusUpdatedAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
+          }
         }
         if (status === "transfer_performed") changes.transferPerformedAt = serverTimestamp();
         if (status === "transfer_closed") changes.transferClosedAt = serverTimestamp();
