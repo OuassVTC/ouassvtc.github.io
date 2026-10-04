@@ -2456,10 +2456,23 @@ body.partner-authenticated .action.partner-back{
       });
     }
  
+    function financeCompletedItems() {
+      const rows = new Map();
+      (state.bookings || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
+        const key = item.isPartnerMission && item.missionId ? `mission:${item.missionId}` : `booking:${item.id}`;
+        rows.set(key, item);
+      });
+      (state.driverMissions || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
+        const missionId = item.missionId || item.token || item.id || item.bookingId;
+        const bookingId = item.bookingId || item.id;
+        if (bookingId) rows.delete(`booking:${bookingId}`);
+        rows.set(`mission:${missionId}`, {...item, id:bookingId || missionId, missionId, isPartnerMission:true});
+      });
+      return Array.from(rows.values()).filter(item => completedDate(item)).sort((a,b)=>completedDate(b)-completedDate(a));
+    }
+
     function renderReport() {
-      const allCompleted = state.bookings
-        .filter(item => item.status === "completed" && completedDate(item))
-        .sort((a, b) => completedDate(b) - completedDate(a));
+      const allCompleted = financeCompletedItems();
       const today = new Date();
       const weekStart = new Date(today);
       const day = (weekStart.getDay() + 6) % 7;
@@ -2546,7 +2559,7 @@ body.partner-authenticated .action.partner-back{
     }
 
     function financePeriodItems(start, end) {
-      return state.bookings.filter(item => item.status === "completed" && completedDate(item) >= start && completedDate(item) < end);
+      return financeCompletedItems().filter(item => completedDate(item) >= start && completedDate(item) < end);
     }
 
     function adExpensesInPeriod(start, end) {
@@ -7537,7 +7550,7 @@ async function pmUploadDocument(event){
  const email=auth.currentUser.email.toLowerCase();
  const profileId=window.currentPartnerProfile?.id||auth.currentUser.uid;
  const safeName=file.name.replace(/[^a-zA-Z0-9._-]+/g,"-");
- const path=`${auth.currentUser.uid}/partner-documents/${type}-${Date.now()}-${safeName}`;
+ const path=`driverDocuments/${auth.currentUser.uid}/partner/${type}-${Date.now()}-${safeName}`;
  const ref=storageRef(storage,path);
  try{
    input.disabled=true;
@@ -7755,7 +7768,7 @@ html[data-theme="dark"] .pm-setting-card{background:#111925!important;border-col
 </style>
 
 <style id="ouass-v762-final-ui">
-/* V76.2 - finition mobile chauffeur */
+/* V76.3 - finition mobile chauffeur */
 #partnerCustomersPanel .pm-filter-row{display:flex!important;justify-content:center!important;align-items:center!important;width:100%!important}
 #partnerCustomersPanel .pm-filter-row label{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:8px!important;min-height:46px!important;width:min(100%,360px)!important;margin:0 auto!important;line-height:1.25!important}
 #partnerCustomersPanel .pm-loading-card,#partnerCustomersPanel .pm-empty-state{color:#475467!important;background:#fff!important}
@@ -7776,6 +7789,40 @@ html[data-theme="dark"] #partnerCustomersPanel .pm-loading-card,html[data-theme=
 html[data-theme="dark"] #partnerCostPanel>h2,html[data-theme="dark"] #partnerCostPanel .pm-card,html[data-theme="dark"] #partnerCostPanel label,html[data-theme="dark"] #partnerCostPanel .pm-cost-title,html[data-theme="dark"] #partnerCostPanel .pm-cost-result{color:#f4f7fb!important}html[data-theme="dark"] #partnerCostPanel .pm-cost-result{background:#172130!important;border-color:#344155!important}
 html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;color:#e7edf6!important;border-color:#344155!important}
 @media(max-width:360px){#partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr!important}#partnerHistoryPanel .pm-filter-grid label{font-size:12px!important}}
+</style>
+
+<style id="ouass-v763-theme-contrast">
+/* V76.3 : contraste exhaustif Jour / Nuit sur l'espace chauffeur */
+:root{--pm-day-bg:#f5f7fb;--pm-day-card:#ffffff;--pm-day-text:#101828;--pm-day-muted:#475467;--pm-day-border:#d0d5dd;--pm-night-bg:#080d14;--pm-night-card:#111925;--pm-night-text:#f7f9fc;--pm-night-muted:#b8c3d2;--pm-night-border:#344155}
+#partnerMenuPanel,#partnerProfilePanel,#partnerDocumentsPanel,#partnerCustomersPanel,#partnerHistoryPanel,#partnerCostPanel,#partnerSettingsPanel{background:var(--pm-day-bg)!important;color:var(--pm-day-text)!important}
+#partnerMenuPanel .pm-item,#partnerProfilePanel .pm-card,#partnerCustomersPanel .pm-card,#partnerHistoryPanel .pm-card,#partnerCostPanel .pm-card,#partnerSettingsPanel .pm-setting-card,.pm-client-card,.pm-history-card,.pm-loading-card,.pm-empty-state{background:var(--pm-day-card)!important;color:var(--pm-day-text)!important;border-color:var(--pm-day-border)!important}
+#partnerMenuPanel .pm-grow b,#partnerMenuPanel .pm-arrow,#partnerMenuPanel .pm-icon,#partnerCostPanel h2,#partnerCostPanel h3,#partnerCostPanel label,#partnerCostPanel strong,#partnerProfilePanel label,#partnerProfilePanel b{color:var(--pm-day-text)!important}
+#partnerMenuPanel .pm-grow small,#partnerCostPanel p,#partnerCostPanel small,#partnerProfilePanel small{color:var(--pm-day-muted)!important}
+#partnerMenuPanel .pm-icon{background:#e8f1ff!important}.pm-icon,.pm-setting-icon{opacity:1!important}
+#partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr!important;gap:8px!important}
+#partnerHistoryPanel .pm-filter-grid label{box-sizing:border-box!important;width:100%!important;min-height:48px!important;display:grid!important;grid-template-columns:24px minmax(0,1fr)!important;align-items:center!important;justify-items:start!important;gap:10px!important;padding:10px 12px!important;overflow:visible!important;white-space:normal!important;text-align:left!important;font-size:13px!important;font-weight:800!important;line-height:1.25!important;background:#fff!important;color:#101828!important;border:1px solid #d0d5dd!important;border-radius:13px!important}
+#partnerHistoryPanel .pm-filter-grid label input{width:20px!important;height:20px!important;margin:0!important;position:static!important;transform:none!important;opacity:1!important}
+#partnerCustomersPanel .pm-filter-row label{color:#101828!important;background:#fff!important;border:1px solid #d0d5dd!important}
+#partnerCostPanel input,#partnerCostPanel select,#partnerProfilePanel input,#partnerProfilePanel select{background:#fff!important;color:#101828!important;border-color:#cfd6df!important}
+#partnerCostPanel .pm-cost-result{background:#fff!important;color:#101828!important;border-color:#d0d5dd!important}
+#partnerCostPanel .pm-cost-result *,#partnerCostPanel .pm-cost-title{color:#101828!important}.pm-cost-result strong{color:#176ef4!important}
+#partnerDocumentsPanel .pm-doc-icon{background:#fff!important;color:#176ef4!important;border:1px solid #d6e4fb!important}.pm-doc-icon{opacity:1!important}
+.pm-theme-buttons button{color:#344054!important;background:#fff!important}.pm-theme-buttons button.active{color:#fff!important;background:#176ef4!important}
+.pm-settings-security .pm-logout,.pm-settings-security .pm-logout *{color:#fff!important}
+html[data-theme="dark"] #partnerMenuPanel,html[data-theme="dark"] #partnerProfilePanel,html[data-theme="dark"] #partnerDocumentsPanel,html[data-theme="dark"] #partnerCustomersPanel,html[data-theme="dark"] #partnerHistoryPanel,html[data-theme="dark"] #partnerCostPanel,html[data-theme="dark"] #partnerSettingsPanel{background:var(--pm-night-bg)!important;color:var(--pm-night-text)!important}
+html[data-theme="dark"] #partnerMenuPanel .pm-item,html[data-theme="dark"] #partnerProfilePanel .pm-card,html[data-theme="dark"] #partnerCustomersPanel .pm-card,html[data-theme="dark"] #partnerHistoryPanel .pm-card,html[data-theme="dark"] #partnerCostPanel .pm-card,html[data-theme="dark"] #partnerSettingsPanel .pm-setting-card,html[data-theme="dark"] .pm-client-card,html[data-theme="dark"] .pm-history-card,html[data-theme="dark"] .pm-loading-card,html[data-theme="dark"] .pm-empty-state{background:var(--pm-night-card)!important;color:var(--pm-night-text)!important;border-color:var(--pm-night-border)!important}
+html[data-theme="dark"] #partnerMenuPanel .pm-grow b,html[data-theme="dark"] #partnerMenuPanel .pm-arrow,html[data-theme="dark"] #partnerMenuPanel .pm-icon,html[data-theme="dark"] #partnerCostPanel h2,html[data-theme="dark"] #partnerCostPanel h3,html[data-theme="dark"] #partnerCostPanel label,html[data-theme="dark"] #partnerCostPanel strong,html[data-theme="dark"] #partnerProfilePanel label,html[data-theme="dark"] #partnerProfilePanel b{color:var(--pm-night-text)!important}
+html[data-theme="dark"] #partnerMenuPanel .pm-grow small,html[data-theme="dark"] #partnerCostPanel p,html[data-theme="dark"] #partnerCostPanel small,html[data-theme="dark"] #partnerProfilePanel small{color:var(--pm-night-muted)!important}
+html[data-theme="dark"] #partnerMenuPanel .pm-icon,html[data-theme="dark"] .pm-setting-icon{background:#172b47!important;color:#f7f9fc!important}
+html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label,html[data-theme="dark"] #partnerCustomersPanel .pm-filter-row label{background:#172130!important;color:#f7f9fc!important;border-color:#344155!important}
+html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label *{color:#f7f9fc!important}
+html[data-theme="dark"] #partnerCostPanel input,html[data-theme="dark"] #partnerCostPanel select,html[data-theme="dark"] #partnerProfilePanel input,html[data-theme="dark"] #partnerProfilePanel select{background:#0d1520!important;color:#f7f9fc!important;border-color:#344155!important}
+html[data-theme="dark"] #partnerCostPanel .pm-cost-result{background:#172130!important;color:#f7f9fc!important;border-color:#344155!important}
+html[data-theme="dark"] #partnerCostPanel .pm-cost-result *,html[data-theme="dark"] #partnerCostPanel .pm-cost-title{color:#f7f9fc!important}html[data-theme="dark"] #partnerCostPanel .pm-cost-result strong{color:#69a8ff!important}
+html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-icon{background:#172b47!important;color:#f7f9fc!important;border-color:#344155!important}
+html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;color:#f7f9fc!important;border-color:#344155!important}html[data-theme="dark"] .pm-theme-buttons button.active{background:#176ef4!important;color:#fff!important}
+/* Navigation basse toujours lisible */
+#partnerBottomNav button,#partnerBottomNav .nav-ico{opacity:1!important}#partnerBottomNav button:not(.active){color:#c4cfdd!important}#partnerBottomNav button:not(.active) .nav-ico{color:#e3e9f1!important}
 </style>
 </body>
 </html>
