@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=727">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=728">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1118,6 +1118,49 @@ body.partner-signed-out #partnerForgotPassword{
   color:#087fc9!important;text-align:center!important;font-size:14px!important;font-weight:800!important;line-height:1.25!important;
 }
 body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
+</style>
+
+
+<style id="partner-v728-dark-ui">
+body.partner-authenticated .partner-menu-page{
+  color:#f8fafc!important;background:transparent!important;
+}
+body.partner-authenticated .partner-menu-page h2,
+body.partner-authenticated .partner-menu-page b,
+body.partner-authenticated .partner-menu-page strong{color:#f8fafc!important}
+body.partner-authenticated .partner-menu-page small,
+body.partner-authenticated .partner-menu-page label{color:#9aa8bc!important}
+body.partner-authenticated .pm-card,
+body.partner-authenticated .pm-list,
+body.partner-authenticated .pm-item,
+body.partner-authenticated .pm-doc-card{
+  background:#111c2b!important;border:1px solid #2a3a50!important;color:#f8fafc!important;
+  box-shadow:none!important;
+}
+body.partner-authenticated .pm-item{border-radius:18px!important}
+body.partner-authenticated .partner-menu-page input,
+body.partner-authenticated .partner-menu-page select,
+body.partner-authenticated .partner-menu-page textarea{
+  width:100%!important;box-sizing:border-box!important;background:#0a1422!important;color:#f8fafc!important;
+  border:1px solid #33465f!important;border-radius:14px!important;-webkit-text-fill-color:#f8fafc!important;
+}
+body.partner-authenticated .partner-menu-page input:disabled{
+  opacity:.75!important;background:#0d1725!important;color:#9aa8bc!important;-webkit-text-fill-color:#9aa8bc!important;
+}
+#pmDocumentsList{display:grid!important;gap:12px!important;background:transparent!important}
+.pm-doc-card{display:grid!important;grid-template-columns:42px 1fr!important;gap:12px!important;padding:15px!important;border-radius:18px!important}
+.pm-doc-icon{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;border-radius:13px!important;background:#172b47!important}
+.pm-doc-copy{min-width:0!important;display:flex!important;flex-direction:column!important;gap:4px!important}
+.pm-doc-copy small{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.pm-doc-actions{grid-column:1/-1!important;display:flex!important;gap:8px!important;flex-wrap:wrap!important}
+.pm-doc-actions a,.pm-doc-actions label,.pm-doc-actions button{
+  flex:1 1 auto!important;min-height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:8px 11px!important;border-radius:11px!important;border:1px solid #335075!important;background:#14243a!important;
+  color:#dbeafe!important;font-size:13px!important;font-weight:800!important;text-decoration:none!important;box-sizing:border-box!important;
+}
+.pm-doc-actions .pm-doc-add{background:#1677ff!important;border-color:#1677ff!important;color:white!important}
+.pm-doc-actions .pm-doc-delete{color:#fecaca!important;border-color:#60303a!important;background:#26151b!important}
+.pm-doc-error{padding:16px!important;border-radius:14px!important;background:#26151b!important;color:#fecaca!important}
 </style>
 
 </head>
@@ -5088,17 +5131,38 @@ body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
       if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
-      const email = auth?.currentUser?.email?.toLowerCase();
+      if (state.driverMissionsUnsubscribe) state.driverMissionsUnsubscribe();
+
+      const email = String(auth?.currentUser?.email || "").trim().toLowerCase();
       if (!email) return;
 
       const own = new Map();
       const transferred = new Map();
+      const missions = new Map();
 
       const publish = () => {
         const merged = new Map([...own, ...transferred]);
+
+        // Les missions sont la source la plus fiable pour une course transférée.
+        // Si la lecture du booking est retardée/bloquée, on affiche quand même la mission.
+        missions.forEach(mission => {
+          const bookingId = mission.bookingId || mission.id;
+          const existing = merged.get(bookingId) || {};
+          merged.set(bookingId, {
+            ...mission,
+            ...existing,
+            id: bookingId,
+            missionId: mission.id,
+            partnerMissionToken: mission.token || mission.id,
+            partnerMissionStatus: mission.status || existing.partnerMissionStatus || "proposed",
+            status: existing.status || "transferred",
+            transferredDriverEmail: existing.transferredDriverEmail || mission.driverEmail || email
+          });
+        });
+
         state.bookings = Array.from(merged.values()).sort((a,b) => {
-          const da = a.createdAt?.toMillis?.() || Date.parse(a.scheduledAtText || "") || 0;
-          const dbv = b.createdAt?.toMillis?.() || Date.parse(b.scheduledAtText || "") || 0;
+          const da = a.createdAt?.toMillis?.() || a.statusUpdatedAt?.toMillis?.() || Date.parse(a.scheduledAtText || "") || 0;
+          const dbv = b.createdAt?.toMillis?.() || b.statusUpdatedAt?.toMillis?.() || Date.parse(b.scheduledAtText || "") || 0;
           return dbv - da;
         });
         render();
@@ -5107,22 +5171,29 @@ body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
 
       const ownQuery = query(collection(db, "bookings"), where("partnerOwnerEmail", "==", email), limit(1000));
       const transferQuery = query(collection(db, "bookings"), where("transferredDriverEmail", "==", email), limit(1000));
+      const missionQuery = query(collection(db, "driverMissions"), where("driverEmail", "==", email), limit(1000));
 
       state.unsubscribe = onSnapshot(ownQuery, snapshot => {
         own.clear();
         snapshot.docs.forEach(result => own.set(result.id, { id:result.id, ...result.data() }));
         publish();
-      }, error => {
-        console.error("Courses chauffeur", error);
-        $("emptyState").textContent = "Impossible de charger vos courses. Vérifiez les règles Firebase.";
-        $("emptyState").classList.remove("hidden");
-      });
+      }, error => console.warn("Courses chauffeur", error));
 
       state.partnerTransferUnsubscribe = onSnapshot(transferQuery, snapshot => {
         transferred.clear();
         snapshot.docs.forEach(result => transferred.set(result.id, { id:result.id, ...result.data() }));
         publish();
-      }, error => console.error("Courses transférées", error));
+      }, error => console.warn("Courses transférées", error));
+
+      state.driverMissionsUnsubscribe = onSnapshot(missionQuery, snapshot => {
+        missions.clear();
+        snapshot.docs.forEach(result => missions.set(result.id, { id:result.id, ...result.data() }));
+        publish();
+      }, error => {
+        console.error("Missions chauffeur", error);
+        $("emptyState").textContent = "Synchronisation des missions impossible. Vérifiez les règles Firebase.";
+        $("emptyState").classList.remove("hidden");
+      });
     }
 
     function showLoginError(message) {
@@ -5293,9 +5364,21 @@ body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
       }
 
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) pushPartnerPresence();
+        if (document.hidden) {
+          const p = window.currentPartnerProfile;
+          if (p?.id && auth?.currentUser) {
+            updateDoc(doc(db, "partnerDrivers", p.id), {
+              online: false,
+              lastSeenAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            }).catch(() => {});
+          }
+        } else {
+          pushPartnerPresence();
+        }
       });
       window.addEventListener("focus", pushPartnerPresence);
+      window.addEventListener("pageshow", pushPartnerPresence);
 
       async function setPartnerOfflineBeforeLogout() {
         try {
@@ -6392,7 +6475,7 @@ body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=727", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=728", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6873,11 +6956,57 @@ function pmListenDocuments(){
  if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
  const email=auth.currentUser.email.toLowerCase();
  const q=query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),limit(100));
- partnerDocsUnsub=onSnapshot(q,s=>pmRenderDocuments(s.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(e);const h=document.getElementById("pmDocumentsList");if(h)h.innerHTML="Impossible de charger les documents."});
+ partnerDocsUnsub=onSnapshot(q,s=>pmRenderDocuments(s.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(e);const h=document.getElementById("pmDocumentsList");if(h)h.innerHTML='<div class="pm-doc-error">Impossible de charger les documents.</div>'});
 }
 function pmRenderDocuments(docs){
  const h=document.getElementById("pmDocumentsList");if(!h)return;
- h.innerHTML=PARTNER_DOC_TYPES.map(([type,label])=>{const d=docs.find(x=>x.type===type),ok=!!d;return`<div class="pm-doc"><span>📎</span><span><b>${label}</b><br><small>${ok?(d.fileName||"Document enregistré"):"À ajouter"}</small></span><span class="pm-doc-state ${ok?"pm-good":"pm-warn"}">${ok?"Ajouté":"Manquant"}</span></div>`}).join("");
+ h.innerHTML=PARTNER_DOC_TYPES.map(([type,label])=>{
+   const d=docs.find(x=>x.type===type),ok=!!d?.downloadUrl;
+   return `<div class="pm-doc-card">
+     <div class="pm-doc-icon">📄</div>
+     <div class="pm-doc-copy"><b>${pme(label)}</b><small>${ok?pme(d.fileName||"Document enregistré"):"Aucun document enregistré"}</small></div>
+     <div class="pm-doc-actions">
+       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
+       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
+       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
+     </div>
+   </div>`;
+ }).join("");
+ h.querySelectorAll("[data-partner-doc-upload]").forEach(input=>input.addEventListener("change",pmUploadDocument));
+ h.querySelectorAll("[data-partner-doc-delete]").forEach(button=>button.addEventListener("click",pmDeleteDocument));
+}
+async function pmUploadDocument(event){
+ const input=event.currentTarget,file=input.files?.[0],type=input.dataset.partnerDocUpload;
+ if(!file||!type||!auth?.currentUser)return;
+ if(file.size>12*1024*1024){alert("Le document dépasse 12 Mo.");input.value="";return}
+ const email=auth.currentUser.email.toLowerCase();
+ const profileId=window.currentPartnerProfile?.id||auth.currentUser.uid;
+ const safeName=file.name.replace(/[^a-zA-Z0-9._-]+/g,"-");
+ const path=`partner-documents/${profileId}/${type}-${Date.now()}-${safeName}`;
+ const ref=storageRef(storage,path);
+ try{
+   input.disabled=true;
+   const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
+   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
+   const downloadUrl=await getDownloadURL(ref);
+   const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
+   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,updatedAt:serverTimestamp()};
+   if(existing.empty) await addDoc(collection(db,"partnerDocuments"),{...payload,createdAt:serverTimestamp()});
+   else {
+     const old=existing.docs[0].data();
+     await updateDoc(existing.docs[0].ref,payload);
+     if(old.storagePath&&old.storagePath!==path) deleteObject(storageRef(storage,old.storagePath)).catch(()=>{});
+   }
+ }catch(e){console.error(e);alert("Impossible d’enregistrer ce document.")}
+ finally{input.disabled=false;input.value=""}
+}
+async function pmDeleteDocument(event){
+ const b=event.currentTarget,id=b.dataset.partnerDocDelete,path=b.dataset.partnerDocPath;
+ if(!id||!confirm("Supprimer ce document ?"))return;
+ try{
+   await deleteDoc(doc(db,"partnerDocuments",id));
+   if(path) await deleteObject(storageRef(storage,path)).catch(()=>{});
+ }catch(e){console.error(e);alert("Impossible de supprimer ce document.")}
 }
 async function pmRecordLogin(){
  try{
