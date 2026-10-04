@@ -3,7 +3,7 @@
   "name": "OuassVTC Chauffeur Partenaire",
   "short_name": "Ouass Chauffeur",
   "description": "Application chauffeur partenaire OuassVTC",
-  "start_url": "/chauffeur/chauffeur.html?source=pwa&v=725",
+  "start_url": "/chauffeur/chauffeur.html?source=pwa&v=726",
   "scope": "/chauffeur/",
   "display": "standalone",
   "orientation": "portrait",
