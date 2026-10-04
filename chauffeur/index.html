@@ -4890,7 +4890,8 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         const incoming = firstBookingsSnapshot ? [] : snapshot.docChanges().filter(change => {
           const item = change.doc.data();
           const isPartnerOwned = Boolean(item.partnerOwnerEmail);
-          return change.type === "added" && !isPartnerOwned && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
+          const silentSource = ["partner_dispatch","admin_manual","driver-quick"].includes(String(item.source||""));
+          return change.type === "added" && !isPartnerOwned && !silentSource && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
         // Les courses créées par un chauffeur restent visibles dans son profil,
         // mais n'entrent pas dans le planning / les nouvelles courses Admin.
@@ -5773,7 +5774,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
-          source: "website",
+          source: "driver-quick",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
@@ -5868,7 +5869,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           customerMessage: params.message,
           estimatedPrice: params.prix,
           status: "new",
-          source: "website",
+          source: "admin_manual",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
@@ -6328,5 +6329,35 @@ function paDetail(id){const p=paProfiles.find(x=>x.id===id);if(!p)return;paSelec
 function paStart(){if(paStarted||!auth?.currentUser)return;paStarted=true;paEnsure();onSnapshot(query(collection(db,"partnerDrivers"),limit(200)),s=>{paProfiles=s.docs.map(d=>({id:d.id,...d.data()}));paRender();if(paSelected)paDetail(paSelected.id)});onSnapshot(query(collection(db,"bookings"),limit(1000)),s=>{paCourses=s.docs.map(d=>({id:d.id,...d.data()}));paRender();if(paSelected)paDetail(paSelected.id)})}
 document.addEventListener("DOMContentLoaded",()=>setTimeout(paStart,1800));
 </script>
+
+<style id="v760-admin-theme-audit">
+html[data-theme="dark"] .partner-card,
+html[data-theme="dark"] .partner-driver-card,
+html[data-theme="dark"] .partner-revenue-item,
+html[data-theme="dark"] .pa-card,
+html[data-theme="dark"] .pa-section,
+html[data-theme="dark"] .pa-kpi,
+html[data-theme="dark"] .partner-profile-card,
+html[data-theme="dark"] .partner-empty{
+  background:#111925!important;color:#f4f7fb!important;border-color:#2a3545!important;
+}
+html[data-theme="dark"] .partner-card small,
+html[data-theme="dark"] .pa-sub,
+html[data-theme="dark"] .pa-card small,
+html[data-theme="dark"] .pa-section small,
+html[data-theme="dark"] .partner-profile-card small{color:#aeb8c8!important}
+html[data-theme="dark"] .pa-detail{background:#080d14!important;color:#f4f7fb!important}
+html[data-theme="dark"] .pa-detailbar{background:#0d1520!important;border-color:#2a3545!important}
+html[data-theme="dark"] .partner-actions button:not(.primary),
+html[data-theme="dark"] [data-take-dispatch],
+html[data-theme="dark"] [data-close-dispatch]{
+  background:#172130!important;color:#f4f7fb!important;border-color:#344155!important;
+}
+html[data-theme="dark"] .partner-chip{background:#172b47!important;color:#7db4ff!important}
+html[data-theme="dark"] .trip-alert{background:#0d1520!important;color:#f4f7fb!important;border-color:#344155!important}
+html[data-theme="light"] .partner-card,
+html[data-theme="light"] .pa-card,
+html[data-theme="light"] .pa-section{color:#101828}
+</style>
 </body>
 </html>
