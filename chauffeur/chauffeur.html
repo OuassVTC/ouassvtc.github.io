@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=724">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=725">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -993,6 +993,97 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
   border:0;background:transparent;color:#087fc9;font-size:14px;font-weight:750;padding:10px 12px;
 }
 #activationError{min-height:18px;margin-top:8px;color:#c62828;font-size:13px;line-height:1.4}
+</style>
+
+
+<style id="partner-v725-login-professionnel">
+body:not(.partner-authenticated){overflow:hidden!important;background:#07111f!important}
+body:not(.partner-authenticated) #pullRefreshIndicator,
+body:not(.partner-authenticated) header,
+body:not(.partner-authenticated) #partnerBottomNav,
+body:not(.partner-authenticated) #appBottomNav{display:none!important}
+
+body:not(.partner-authenticated) #loginView:not(.hidden){
+  position:fixed!important;inset:0!important;z-index:40000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:22px!important;box-sizing:border-box!important;overflow:auto!important;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(20,156,247,.22),transparent 38%),
+    linear-gradient(180deg,#07111f 0%,#0b1728 100%)!important;
+}
+body:not(.partner-authenticated) #loginView > *{
+  width:min(100%,390px)!important;max-width:390px!important;
+  margin:0 auto!important;box-sizing:border-box!important;
+}
+body:not(.partner-authenticated) #loginView .login-card,
+body:not(.partner-authenticated) #loginView .auth-card,
+body:not(.partner-authenticated) #loginView > div{
+  width:min(100%,390px)!important;max-width:390px!important;
+  padding:28px 24px 24px!important;margin:0 auto!important;
+  border-radius:28px!important;background:#fff!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.38)!important;
+  overflow:hidden!important;box-sizing:border-box!important;text-align:left!important;
+}
+body:not(.partner-authenticated) #loginView img{
+  display:block!important;width:76px!important;height:76px!important;object-fit:contain!important;
+  margin:0 auto 16px!important;border-radius:18px!important;
+}
+body:not(.partner-authenticated) #loginView h1,
+body:not(.partner-authenticated) #loginView h2{
+  margin:0 0 6px!important;text-align:center!important;color:#0b1728!important;
+  font-size:29px!important;line-height:1.08!important;font-weight:850!important;letter-spacing:-.7px!important;
+}
+body:not(.partner-authenticated) #loginView p{
+  max-width:290px!important;margin:0 auto 22px!important;text-align:center!important;
+  color:#64748b!important;font-size:14px!important;line-height:1.45!important;
+}
+body:not(.partner-authenticated) #loginView label{
+  display:block!important;width:100%!important;margin:13px 0 6px!important;
+  color:#334155!important;font-size:13px!important;font-weight:800!important;text-align:left!important;
+}
+body:not(.partner-authenticated) #loginView input{
+  display:block!important;width:100%!important;max-width:none!important;height:54px!important;
+  margin:0!important;padding:0 16px!important;box-sizing:border-box!important;
+  border:1.5px solid #d7dee8!important;border-radius:15px!important;
+  background:#f8fafc!important;color:#0f172a!important;font-size:16px!important;outline:none!important;
+}
+body:not(.partner-authenticated) #loginView input:focus{
+  border-color:#149cf7!important;background:#fff!important;
+  box-shadow:0 0 0 4px rgba(20,156,247,.12)!important;
+}
+body:not(.partner-authenticated) #loginView button{
+  float:none!important;position:static!important;left:auto!important;right:auto!important;
+  top:auto!important;bottom:auto!important;transform:none!important;
+  max-width:none!important;box-sizing:border-box!important;
+}
+body:not(.partner-authenticated) #loginView button[type="submit"],
+body:not(.partner-authenticated) #loginView #loginButton,
+body:not(.partner-authenticated) #loginView #emailLogin{
+  display:block!important;width:100%!important;min-height:54px!important;margin:20px 0 10px!important;
+  border:0!important;border-radius:16px!important;padding:12px 18px!important;
+  background:linear-gradient(135deg,#078df0,#20c6ee)!important;color:#fff!important;
+  font-size:16px!important;font-weight:850!important;line-height:1.2!important;
+  box-shadow:0 10px 25px rgba(0,145,240,.24)!important;
+}
+body:not(.partner-authenticated) #openPartnerActivation,
+body:not(.partner-authenticated) #forgotPassword{
+  display:block!important;width:100%!important;min-height:auto!important;margin:2px 0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  padding:9px 6px!important;text-align:center!important;color:#087fc9!important;
+  font-size:14px!important;line-height:1.3!important;font-weight:750!important;
+  white-space:normal!important;
+}
+body:not(.partner-authenticated) #forgotPassword{color:#64748b!important;font-weight:700!important}
+body:not(.partner-authenticated) #loginError{
+  width:100%!important;margin:8px 0 0!important;text-align:center!important;color:#c62828!important;
+  font-size:13px!important;line-height:1.35!important;
+}
+@media(max-width:420px){
+  body:not(.partner-authenticated) #loginView:not(.hidden){padding:18px!important}
+  body:not(.partner-authenticated) #loginView .login-card,
+  body:not(.partner-authenticated) #loginView .auth-card,
+  body:not(.partner-authenticated) #loginView > div{padding:24px 20px 20px!important;border-radius:24px!important}
+}
 </style>
 
 </head>
@@ -5249,8 +5340,10 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
         $("activationError").textContent = "";
       }
 
-      $("openPartnerActivation")?.addEventListener("click", showPartnerActivation);
-      $("backToPartnerLogin")?.addEventListener("click", showPartnerLoginFromActivation);
+      document.addEventListener("click", event => {
+        if (event.target?.closest?.("#openPartnerActivation")) showPartnerActivation();
+        if (event.target?.closest?.("#backToPartnerLogin")) showPartnerLoginFromActivation();
+      });
 
       $("activatePartnerAccount")?.addEventListener("click", async () => {
         const email = String($("activationEmail").value || "").trim().toLowerCase();
@@ -6277,7 +6370,7 @@ body:not(.partner-signed-out) #partnerBottomNav{display:flex!important;z-index:9
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=724", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=725", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
