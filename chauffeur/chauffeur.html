@@ -5068,6 +5068,12 @@ async function handleStatusAction(id, status) {
             requestAnimationFrame(()=>{try{openBooking(id)}catch(_){}});
           }
           if(typeof render==="function") requestAnimationFrame(()=>{try{render()}catch(_){}});
+          if(status==="completed"){
+            try{if(typeof renderFinance==="function")renderFinance()}catch(_){}
+            try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}
+            try{if(typeof pmRenderHistory==="function")pmRenderHistory()}catch(_){}
+            try{if(typeof pmRenderCustomers==="function")pmRenderCustomers()}catch(_){}
+          }
         } catch (uiError) {
           console.warn("Mission enregistrée, affichage déjà avancé", uiError);
         }
@@ -5151,6 +5157,12 @@ async function handleStatusAction(id, status) {
         if (status === "completed") {
           if (typeof closeBooking === "function") closeBooking();
           openPanel("dashboardHome");
+          // Synchronisation immédiate de tous les écrans chauffeur après fin de course.
+          try { if (typeof renderFinance === "function") renderFinance(); } catch (_) {}
+          try { if (typeof renderFinanceReports === "function") renderFinanceReports(); } catch (_) {}
+          try { if (typeof pmRenderHistory === "function") pmRenderHistory(); } catch (_) {}
+          try { if (typeof pmRenderCustomers === "function") pmRenderCustomers(); } catch (_) {}
+          try { if (typeof render === "function") render(); } catch (_) {}
         } else if (!$("detailOverlay").classList.contains("hidden")) {
           requestAnimationFrame(() => { try { openBooking(id); } catch (_) {} });
         }
@@ -7355,7 +7367,7 @@ function pmEnsure(){
  }
  if(!document.getElementById("partnerSettingsPanel")){
    const s=document.createElement("section");s.id="partnerSettingsPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Réglages</h2><div class="pm-card"><div class="pm-setting"><span>Notifications</span><button type="button" id="pmNotifications">Activer</button></div><div class="pm-setting"><span>Interprète</span><button type="button" id="pmInterpreter">Ouvrir</button></div><div class="pm-setting"><span>Installation de l’application</span><button type="button" id="pmInstall">Installer</button></div></div><button class="pm-logout" id="pmLogout" type="button">Déconnexion</button>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><div class="pm-page-head"><div><small>PRÉFÉRENCES</small><h2>Réglages</h2><p>Gérez les fonctions utiles de votre application chauffeur.</p></div></div><div class="pm-settings-list"><button type="button" class="pm-setting-card" id="pmNotifications"><span class="pm-setting-icon">🔔</span><span class="pm-setting-copy"><b>Notifications</b><small>Recevoir les nouvelles missions et alertes OuassVTC</small></span><span class="pm-setting-action">Activer ›</span></button><button type="button" class="pm-setting-card" id="pmInterpreter"><span class="pm-setting-icon">🌐</span><span class="pm-setting-copy"><b>Interprète</b><small>Ouvrir la traduction vocale pour vos passagers</small></span><span class="pm-setting-action">Ouvrir ›</span></button><button type="button" class="pm-setting-card" id="pmInstall"><span class="pm-setting-icon">📲</span><span class="pm-setting-copy"><b>Installation de l’application</b><small>Ajouter OuassVTC sur l’écran d’accueil du téléphone</small></span><span class="pm-setting-action">Installer ›</span></button></div><div class="pm-settings-security"><small>SESSION</small><button class="pm-logout" id="pmLogout" type="button"><span>↪</span><span><b>Déconnexion</b><small>Fermer la session sur cet appareil</small></span></button></div>';
    main.appendChild(s);
  }
  document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>{const target=b.dataset.pm;showPartnerPage(target);if(target==="partnerCustomersPanel")pmRenderCustomers();if(target==="partnerHistoryPanel")pmRenderHistory();});
@@ -7505,7 +7517,7 @@ function pmRenderDocuments(docs){
     <div class="pm-doc-actions">
       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
-      ${ok?`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d.expiryDate||"")}" data-partner-doc-expiry="${pme(d.id)}"></label>`:""}
+      ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
    </div>`;
@@ -7524,7 +7536,7 @@ async function pmUploadDocument(event){
  const email=auth.currentUser.email.toLowerCase();
  const profileId=window.currentPartnerProfile?.id||auth.currentUser.uid;
  const safeName=file.name.replace(/[^a-zA-Z0-9._-]+/g,"-");
- const path=`partner-documents/${profileId}/${type}-${Date.now()}-${safeName}`;
+ const path=`partner-documents/${auth.currentUser.uid}/${type}-${Date.now()}-${safeName}`;
  const ref=storageRef(storage,path);
  try{
    input.disabled=true;
@@ -7532,7 +7544,9 @@ async function pmUploadDocument(event){
    await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
-   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,updatedAt:serverTimestamp()};
+   const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
+   const expiryDate=PARTNER_DOC_NO_EXPIRY.has(type)?null:(dateInput?.value||null);
+   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,expiryDate,noExpiry:PARTNER_DOC_NO_EXPIRY.has(type),updatedAt:serverTimestamp()};
    if(existing.empty) await addDoc(collection(db,"partnerDocuments"),{...payload,createdAt:serverTimestamp()});
    else {
      const old=existing.docs[0].data();
@@ -7700,6 +7714,42 @@ html[data-theme="dark"] .v755-pay-choice.active{background:#17365f!important;col
 html[data-theme="dark"] .v755-pay-cancel{background:#263244!important;color:#f4f7fb!important}
 html[data-theme="dark"] .pm-client-card details{border-color:#2a3545!important}
 html[data-theme="dark"] .pm-history-date{border-color:#2a3545!important}
+</style>
+
+<style id="v761-visibility-docs-settings-sync">
+/* Contraste clair : CRM + historique */
+#partnerCustomersPanel,#partnerHistoryPanel,#partnerSettingsPanel{background:#f6f8fb!important;color:#101828!important}
+#partnerCustomersPanel .pm-page-head small,#partnerHistoryPanel .pm-page-head small,#partnerSettingsPanel .pm-page-head small{color:#176ef4!important;opacity:1!important}
+#partnerCustomersPanel .pm-page-head h2,#partnerHistoryPanel .pm-page-head h2,#partnerSettingsPanel .pm-page-head h2{color:#101828!important;opacity:1!important}
+#partnerCustomersPanel .pm-page-head p,#partnerHistoryPanel .pm-page-head p,#partnerSettingsPanel .pm-page-head p{color:#475467!important;opacity:1!important}
+#partnerCustomersPanel .pm-crm-kpis article,#partnerHistoryPanel .pm-crm-kpis article{background:#fff!important;border-color:#dfe4ea!important}
+#partnerCustomersPanel .pm-crm-kpis b,#partnerHistoryPanel .pm-crm-kpis b{color:#101828!important}
+#partnerCustomersPanel .pm-crm-kpis small,#partnerHistoryPanel .pm-crm-kpis small{color:#475467!important}
+#partnerHistoryPanel .pm-history-filters{background:#13233b!important;color:#fff!important}
+#partnerHistoryPanel .pm-history-filters>b{color:#fff!important}
+#partnerHistoryPanel .pm-filter-grid label{background:#fff!important;color:#101828!important;border-color:#d0d5dd!important}
+#partnerHistoryPanel .pm-filter-grid label *{color:#101828!important}
+#partnerCustomersPanel .pm-filter-row label{background:#fff!important;color:#101828!important}
+.pm-client-card,.pm-history-card,.pm-empty-state,.pm-loading-card{color:#101828!important}
+.pm-empty-state p,.pm-loading-card small,.pm-client-head small,.pm-client-meta small,.pm-history-main>small{color:#475467!important}
+/* Documents : date visible avant l'envoi + actions lisibles */
+#partnerDocumentsPanel .pm-doc-card{background:#132b49!important;color:#fff!important;border:1px solid #31567f!important}
+#partnerDocumentsPanel .pm-doc-copy b{color:#fff!important}
+#partnerDocumentsPanel .pm-doc-copy small{color:#dbe7f5!important}
+#partnerDocumentsPanel .pm-doc-expiry{width:100%;justify-content:space-between;background:#fff!important;color:#101828!important;padding:8px 10px!important;border-radius:12px!important;box-sizing:border-box!important}
+#partnerDocumentsPanel .pm-doc-expiry input{background:#fff!important;color:#101828!important;border:1px solid #cfd6df!important;max-width:165px!important}
+#partnerDocumentsPanel .pm-doc-open,#partnerDocumentsPanel .pm-doc-add{min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+#partnerDocumentsPanel .pm-doc-no-expiry{background:#e9fff3!important;color:#067647!important}
+/* Réglages */
+.pm-settings-list{display:grid;gap:11px;margin-top:8px}.pm-setting-card{width:100%;display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;text-align:left;border:1px solid #dfe4ea;background:#fff;border-radius:18px;padding:14px;box-shadow:0 7px 22px rgba(16,24,40,.05)}
+.pm-setting-icon{width:46px;height:46px;border-radius:14px;background:#edf4ff;display:grid;place-items:center;font-size:21px}.pm-setting-copy{min-width:0}.pm-setting-copy b,.pm-setting-copy small{display:block}.pm-setting-copy b{color:#101828;font-size:14px}.pm-setting-copy small{color:#667085;font-size:11px;line-height:1.35;margin-top:3px}.pm-setting-action{color:#176ef4;font-size:12px;font-weight:900;white-space:nowrap}.pm-settings-security{margin-top:22px}.pm-settings-security>small{display:block;color:#667085;font-size:10px;font-weight:900;letter-spacing:.08em;margin:0 0 8px 4px}.pm-settings-security .pm-logout{display:grid;grid-template-columns:38px 1fr;align-items:center;text-align:left;gap:9px;margin:0;background:#fff3f2!important;border:1px solid #ffd3cf!important;color:#b42318!important}.pm-settings-security .pm-logout b,.pm-settings-security .pm-logout small{display:block}.pm-settings-security .pm-logout small{font-size:11px;color:#b5473c;margin-top:2px}
+/* Mode sombre */
+html[data-theme="dark"] #partnerCustomersPanel,html[data-theme="dark"] #partnerHistoryPanel,html[data-theme="dark"] #partnerSettingsPanel{background:#080d14!important;color:#f4f7fb!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-page-head h2,html[data-theme="dark"] #partnerHistoryPanel .pm-page-head h2,html[data-theme="dark"] #partnerSettingsPanel .pm-page-head h2{color:#f4f7fb!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-page-head p,html[data-theme="dark"] #partnerHistoryPanel .pm-page-head p,html[data-theme="dark"] #partnerSettingsPanel .pm-page-head p{color:#b9c3d1!important}
+html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label,html[data-theme="dark"] #partnerCustomersPanel .pm-filter-row label{background:#172130!important;color:#f4f7fb!important;border-color:#344155!important}
+html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label *{color:#f4f7fb!important}
+html[data-theme="dark"] .pm-setting-card{background:#111925!important;border-color:#2a3545!important}html[data-theme="dark"] .pm-setting-icon{background:#172b47!important}html[data-theme="dark"] .pm-setting-copy b{color:#f4f7fb!important}html[data-theme="dark"] .pm-setting-copy small{color:#aeb8c8!important}html[data-theme="dark"] .pm-settings-security>small{color:#aeb8c8!important}
 </style>
 </body>
 </html>
