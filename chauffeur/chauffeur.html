@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=733">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=734">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5207,6 +5207,20 @@ body.partner-authenticated .action.partner-back{
       alertTimeout = setTimeout(closeTripAlert, 20000);
     }
  
+    function missionUiStatus(missionStatus) {
+      return ({
+        proposed: "new",
+        accepted: "accepted",
+        en_route: "en_route",
+        arrived: "en_route",
+        passenger_onboard: "on_board",
+        completed: "completed",
+        refused: "cancelled",
+        no_show: "cancelled",
+        problem: "accepted"
+      })[missionStatus] || "new";
+    }
+
     function listenToBookings() {
       if (state.unsubscribe) state.unsubscribe();
       if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
@@ -5218,18 +5232,6 @@ body.partner-authenticated .action.partner-back{
       const own = new Map();
       const transferred = new Map();
       const missions = new Map();
-
-      const missionUiStatus = missionStatus => ({
-        proposed: "new",
-        accepted: "accepted",
-        en_route: "en_route",
-        arrived: "en_route",
-        passenger_onboard: "on_board",
-        completed: "completed",
-        refused: "cancelled",
-        no_show: "cancelled",
-        problem: "accepted"
-      })[missionStatus] || "new";
 
       const publish = () => {
         const merged = new Map(own);
@@ -6595,7 +6597,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=733", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=734", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
