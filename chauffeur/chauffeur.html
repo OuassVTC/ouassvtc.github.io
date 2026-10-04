@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=742">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=743">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5327,6 +5327,14 @@ body.partner-authenticated .action.partner-back{
           ) merged.delete(bookingId);
         }
 
+        // Une course confiée à l'Admin reste visible jusqu'à son acceptation.
+        // Dès acceptation Admin, elle sort du planning du chauffeur.
+        for (const [bookingId, item] of merged) {
+          if (item.partnerOwnerEmail === email && item.dispatchStatus === "accepted_by_admin") {
+            merged.delete(bookingId);
+          }
+        }
+
         state.bookings = Array.from(merged.values()).sort((a,b) => {
           const da = a.createdAt?.toMillis?.() || a.statusUpdatedAt?.toMillis?.() || Date.parse(a.scheduledAtText || "") || 0;
           const dbv = b.createdAt?.toMillis?.() || b.statusUpdatedAt?.toMillis?.() || Date.parse(b.scheduledAtText || "") || 0;
@@ -6638,7 +6646,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=742", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=743", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
