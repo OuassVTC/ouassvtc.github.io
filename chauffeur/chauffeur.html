@@ -1441,7 +1441,7 @@ body.partner-authenticated .action.partner-back{
         <div class="finance-tabs" role="tablist" aria-label="Suivi financier"><button class="finance-tab active" type="button" data-finance-tab="revenue">Revenus</button><button class="finance-tab" type="button" data-finance-tab="expenses">Dépenses</button><button class="finance-tab" type="button" data-finance-tab="net">Revenu net</button></div>
         <div class="finance-view" id="financeRevenueView">
         <article class="finance-revenue-hero"><div class="finance-hero-label"><span class="finance-hero-icon">▣</span><span>Ce mois-ci</span></div><strong class="finance-hero-amount" id="financeHeroRevenue">0 €</strong><span class="finance-hero-trips" id="financeHeroTrips">0 course terminée</span><span class="finance-trend neutral" id="financeMonthTrend">— vs mois dernier</span></article>
-        <section class="finance-chart-card"><div class="finance-chart-head"><strong class="finance-chart-title">▥ Évolution du chiffre d’affaires</strong><div class="finance-chart-periods"><button class="finance-chart-period" type="button" data-revenue-chart="7d">7 jours</button><button class="finance-chart-period active" type="button" data-revenue-chart="30d">30 jours</button><button class="finance-chart-period" type="button" data-revenue-chart="12m">12 mois</button></div></div><div id="financeRevenueChart"></div></section>
+        <section class="finance-chart-card"><div class="finance-chart-head"><strong class="finance-chart-title">▥ Évolution du chiffre d’affaires</strong><div class="finance-chart-periods"><button class="finance-chart-period active" type="button" data-revenue-chart="7d">7 jours</button><button class="finance-chart-period" type="button" data-revenue-chart="30d">30 jours</button><button class="finance-chart-period" type="button" data-revenue-chart="12m">12 mois</button></div></div><div id="financeRevenueChart"></div></section>
         <div class="finance-kpis">
           <button class="finance-kpi" id="toggleWeekBreakdown" type="button" aria-expanded="false" aria-controls="weekBreakdown"><small>Cette semaine</small><strong id="weekRevenue">0 €</strong><span id="weekTrips">0 course terminée · Voir le détail</span></button>
           <article class="finance-kpi"><small>Ce mois</small><strong id="monthRevenue">0 €</strong><span id="monthTrips">0 course terminée</span></article>
@@ -1928,7 +1928,7 @@ body.partner-authenticated .action.partner-back{
     let selectedMileagePeriod = "week";
     let selectedTransferStatus = "transferred";
     let selectedPaymentPeriod = "week";
-    let selectedRevenueChartPeriod = "30d";
+    let selectedRevenueChartPeriod = "7d";
     let paymentChoiceResolver = null;
     let currentPaymentTotal = 0;
     const WAITING_RATE_PER_MINUTE = 0.34;
@@ -7297,7 +7297,7 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
 function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
-function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="30d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
+function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="7d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
 </script>
@@ -7824,5 +7824,112 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 /* Navigation basse toujours lisible */
 #partnerBottomNav button,#partnerBottomNav .nav-ico{opacity:1!important}#partnerBottomNav button:not(.active){color:#c4cfdd!important}#partnerBottomNav button:not(.active) .nav-ico{color:#e3e9f1!important}
 </style>
+
+
+<!-- ===== OUASSVTC V76.4 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<style id="ouass-v764-premium">
+:root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
+html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
+html[data-theme="light"] .partner-menu-page,html[data-theme="light"] #reportPanel,html[data-theme="light"] #estimatePanel{color:var(--pro-text)!important}
+html[data-theme="light"] .pm-page-head h2,html[data-theme="light"] .section-title{color:#0b1728!important}
+html[data-theme="light"] .pm-page-head p,html[data-theme="light"] .pm-grow small,html[data-theme="light"] .pm-setting-copy small{color:#59687a!important}
+.pm-back{display:grid!important;place-items:center!important;width:46px!important;height:46px!important;margin:4px 0 14px!important;padding:0!important;border:1px solid #d7e0eb!important;border-radius:15px!important;background:#fff!important;color:#10233e!important;font-size:31px!important;font-weight:900!important;line-height:1!important;box-shadow:0 8px 22px rgba(16,40,75,.10)!important;opacity:1!important}
+.pm-back:focus-visible{outline:3px solid #8dbbff!important;outline-offset:2px}
+html[data-theme="dark"] .pm-back{background:#172334!important;border-color:#33445b!important;color:#fff!important;box-shadow:0 8px 24px #0006!important}
+html[data-theme="light"] .pm-item,html[data-theme="light"] .pm-setting-card,html[data-theme="light"] .pm-card,html[data-theme="light"] .pm-client-card,html[data-theme="light"] .pm-history-card{background:#fff!important;border:1px solid #e0e7f0!important;color:#101828!important;box-shadow:0 8px 24px rgba(17,42,77,.055)!important}
+html[data-theme="light"] .pm-icon,html[data-theme="light"] .pm-setting-icon{background:#eaf2ff!important;color:#0d5fc7!important;border:1px solid #d5e5ff!important}
+html[data-theme="light"] .pm-arrow,html[data-theme="light"] .pm-setting-action{color:#145fbd!important}
+html[data-theme="light"] .pm-logout{background:#fff1f0!important;color:#8f1f17!important;border:1px solid #ffc9c4!important}
+html[data-theme="dark"] .pm-logout{background:#351719!important;color:#ffb7b0!important;border:1px solid #6d3032!important}
+html[data-theme="light"] .finance-chart-card,html[data-theme="light"] .finance-kpi,html[data-theme="light"] .finance-revenue-hero{border-color:#dfe6ef!important;box-shadow:0 9px 28px rgba(17,42,77,.06)!important}
+.client-route-card{overflow:hidden!important;padding:18px!important;background:var(--pro-card)!important}
+.client-route-map{display:block!important;width:100%!important;height:300px!important;min-height:300px!important;margin-top:14px!important;border-radius:18px!important;border:1px solid #dce4ee!important;background:#e9eef5!important;overflow:hidden!important}
+html[data-theme="dark"] .client-route-card{background:#111925!important;border-color:#2a3545!important}.client-route-card h3{color:inherit!important}
+#locateDriver{min-height:52px!important;border-radius:15px!important;background:linear-gradient(135deg,#1268e8,#0b55c2)!important;color:#fff!important;border:0!important;box-shadow:0 8px 22px rgba(18,104,232,.24)!important}
+/* L'ancien message de pull-to-refresh ne doit jamais être visible. */
+#pullRefreshIndicator,#ptrText{display:none!important}
+.ptr-indicator{min-width:44px!important;width:44px!important;height:44px!important;padding:0!important;border-radius:50%!important;justify-content:center!important;font-size:0!important}
+.ptr-indicator::before{content:"↻";font-size:20px;font-weight:900}
+/* Navigation et panneaux : les commandes restent nettes dans les deux thèmes. */
+html[data-theme="dark"] .pm-page-head small{color:#67a9ff!important}html[data-theme="dark"] .pm-page-head h2{color:#f7f9fc!important}html[data-theme="dark"] .pm-page-head p{color:#b6c1d0!important}
+html[data-theme="dark"] .pm-setting-action,html[data-theme="dark"] .pm-arrow{color:#7db5ff!important}
+</style>
+<script id="ouass-v764-runtime">
+(()=>{
+  /* CA : 7 jours est désormais la période d'ouverture officielle. */
+  try{ selectedRevenueChartPeriod="7d"; }catch(_){}
+  const activateSevenDays=()=>{
+    try{ selectedRevenueChartPeriod="7d"; }catch(_){}
+    document.querySelectorAll('[data-revenue-chart]').forEach(b=>b.classList.toggle('active',b.dataset.revenueChart==='7d'));
+    try{ if(typeof renderReport==='function') renderReport(); }catch(_){}
+    try{ if(typeof renderFinanceReports==='function') renderFinanceReports(); }catch(_){}
+  };
+
+  /* Carte d'approche : affichage immédiat de Perpignan, comme dans l'app Admin. */
+  const showPerpignanMap=()=>{
+    const node=document.getElementById('driverLiveMap');
+    if(!node)return;
+    const boot=()=>{
+      if(!window.google?.maps)return false;
+      try{
+        if(typeof ensureDriverLiveMap==='function') ensureDriverLiveMap();
+        if(window.driverLiveMap){
+          window.driverLiveMap.setCenter({lat:42.6887,lng:2.8948});
+          window.driverLiveMap.setZoom(11);
+          google.maps.event.trigger(window.driverLiveMap,'resize');
+        }else if(typeof driverLiveMap!=='undefined' && driverLiveMap){
+          driverLiveMap.setCenter({lat:42.6887,lng:2.8948});driverLiveMap.setZoom(11);google.maps.event.trigger(driverLiveMap,'resize');
+        }
+        return true;
+      }catch(e){console.warn('Aperçu Maps Perpignan',e);return false}
+    };
+    if(boot())return;
+    let n=0;const t=setInterval(()=>{n++;if(boot()||n>30)clearInterval(t)},250);
+  };
+
+  /* Navigation partenaire prioritaire + hooks d'ouverture. */
+  const originalShow=window.showPartnerPage;
+  if(typeof originalShow==='function'){
+    window.showPartnerPage=function(id){
+      const ok=originalShow.apply(this,arguments);
+      if(id==='reportPanel')setTimeout(activateSevenDays,0);
+      if(id==='estimatePanel')setTimeout(showPerpignanMap,60);
+      return ok;
+    };
+  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#partnerBottomNav [data-target]');
+    if(!b)return;
+    if(b.dataset.target==='reportPanel')setTimeout(activateSevenDays,0);
+    if(b.dataset.target==='estimatePanel')setTimeout(showPerpignanMap,60);
+  },true);
+
+  /* Pull-to-refresh : uniquement Accueil, aucun texte permanent. */
+  let startY=null,armed=false;
+  const onHome=()=>document.body.dataset.partnerPage==='home'||(!document.body.dataset.partnerPage && !document.getElementById('dashboardHome')?.classList.contains('partner-view-hidden'));
+  const indicator=()=>document.getElementById('ptrIndicator');
+  window.addEventListener('touchstart',e=>{
+    if(!onHome()||window.scrollY>2||e.touches.length!==1){startY=null;armed=false;indicator()?.classList.remove('show');return}
+    startY=e.touches[0].clientY;armed=false;
+  },{passive:true,capture:true});
+  window.addEventListener('touchmove',e=>{
+    if(startY===null||!onHome())return;
+    const d=Math.max(0,e.touches[0].clientY-startY);armed=d>78;
+    if(d>26)indicator()?.classList.add('show');else indicator()?.classList.remove('show');
+  },{passive:true,capture:true});
+  window.addEventListener('touchend',()=>{
+    if(startY!==null&&armed&&onHome()&&typeof refreshPartnerDashboard==='function')refreshPartnerDashboard();
+    else indicator()?.classList.remove('show');
+    startY=null;armed=false;
+  },{passive:true,capture:true});
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('pullRefreshIndicator')?.remove();
+    document.getElementById('ptrText')?.remove();
+    if(document.body.dataset.partnerPage==='home')indicator()?.classList.remove('show');
+  });
+})();
+</script>
+
 </body>
 </html>
