@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=730">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=731">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1161,6 +1161,37 @@ body.partner-authenticated .partner-menu-page input:disabled{
 .pm-doc-actions .pm-doc-add{background:#1677ff!important;border-color:#1677ff!important;color:white!important}
 .pm-doc-actions .pm-doc-delete{color:#fecaca!important;border-color:#60303a!important;background:#26151b!important}
 .pm-doc-error{padding:16px!important;border-radius:14px!important;background:#26151b!important;color:#fecaca!important}
+</style>
+
+
+<style id="partner-v731-request-workflow">
+body.partner-authenticated #newRequestStat.request-alert{
+  position:relative!important;
+  border:2px solid #2f8cff!important;
+  background:linear-gradient(145deg,#112844,#0b1727)!important;
+  animation:partnerNewRequestBlink 1s ease-in-out infinite!important;
+}
+body.partner-authenticated #newRequestStat.request-alert strong{color:#66aaff!important}
+body.partner-authenticated #newRequestStat.request-alert span{color:#f8fbff!important;font-weight:800!important}
+body.partner-authenticated #newRequestStat.request-alert::before{
+  content:"NOUVELLE DEMANDE";position:absolute;right:10px;top:8px;
+  padding:4px 7px;border-radius:999px;background:#1677ff;color:#fff;
+  font-size:8px;font-weight:900;letter-spacing:.08em;
+  animation:partnerNewRequestBadge .75s ease-in-out infinite alternate;
+}
+body.partner-authenticated .action.partner-back{
+  display:block!important;width:100%!important;margin-top:9px!important;
+  background:#182536!important;color:#dbe7f7!important;border:1px solid #40536b!important;
+}
+@keyframes partnerNewRequestBlink{
+  0%,100%{box-shadow:0 0 0 0 rgba(47,140,255,.10),0 8px 28px rgba(0,0,0,.15)}
+  50%{box-shadow:0 0 0 6px rgba(47,140,255,.20),0 0 24px rgba(47,140,255,.42)}
+}
+@keyframes partnerNewRequestBadge{from{opacity:.55;transform:scale(.96)}to{opacity:1;transform:scale(1.03)}}
+@media(prefers-reduced-motion:reduce){
+ body.partner-authenticated #newRequestStat.request-alert,
+ body.partner-authenticated #newRequestStat.request-alert::before{animation:none!important}
+}
 </style>
 
 </head>
@@ -3711,7 +3742,7 @@ body.partner-authenticated .partner-menu-page input:disabled{
         const ms = item.partnerMissionStatus || "proposed";
         if (ms === "proposed") return `<button class="action accept" data-status="accepted" data-id="${item.id}">Accepter la course</button><button class="action reject" data-status="refused" data-id="${item.id}">Refuser</button>`;
         if (ms === "accepted") return `<button class="action accept" data-status="en_route" data-id="${item.id}">🚗 Je pars vers le client</button>`;
-        if (ms === "en_route") return `<button class="action accept" data-status="arrived" data-id="${item.id}">📍 Je suis arrivé</button>`;
+        if (ms === "en_route") return `<button class="action accept" data-status="arrived" data-id="${item.id}">📍 Je suis arrivé</button><button class="action partner-back" data-status="accepted" data-id="${item.id}">← Retour arrière</button>`;
         if (ms === "arrived") return `<button class="action accept" data-status="passenger_onboard" data-id="${item.id}">👤 Client à bord</button><button class="action reject" data-status="no_show" data-id="${item.id}">Client absent</button>`;
         if (ms === "passenger_onboard") return `<button class="action finish" data-status="completed" data-id="${item.id}">✓ Course terminée</button>`;
         return "";
@@ -4825,6 +4856,10 @@ body.partner-authenticated .partner-menu-page input:disabled{
             statusUpdatedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
+          if (status === "accepted" || status === "refused") {
+            if (typeof closeBooking === "function") closeBooking();
+            openPanel("dashboardHome");
+          }
           return true;
         } catch (error) {
           console.error("Mise à jour mission partenaire", error);
@@ -6540,7 +6575,7 @@ body.partner-authenticated .partner-menu-page input:disabled{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=730", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=731", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
