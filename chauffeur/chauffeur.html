@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=757">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=758">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -4989,7 +4989,37 @@ body.partner-authenticated .action.partner-back{
  });
 }
 async function handleStatusAction(id, status) {
-      const currentMissionItem = state.bookings.find(item => item.id === id);
+      let currentMissionItem = state.bookings.find(item => item.id === id);
+
+      // A transferred Admin booking must NEVER be updated as a normal chauffeur booking.
+      // If the mission snapshot arrived a fraction later, resolve it directly from Firestore first.
+      if (currentMissionItem && currentMissionItem.isPartnerMission !== true
+          && currentMissionItem.status === "transferred"
+          && String(currentMissionItem.transferredDriverEmail||"").trim().toLowerCase() === String(auth?.currentUser?.email||"").trim().toLowerCase()) {
+        try{
+          const profileMail=String(window.currentPartnerProfile?.email||auth?.currentUser?.email||"").trim();
+          const snap=await getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",profileMail),limit(1000)));
+          const candidates=snap.docs.map(d=>({id:d.id,...d.data()})).filter(m=>m.active!==false && m.bookingId===id);
+          candidates.sort((a,b)=>(b.updatedAt?.toMillis?.()||b.createdAt?.toMillis?.()||0)-(a.updatedAt?.toMillis?.()||a.createdAt?.toMillis?.()||0));
+          const mission=candidates[0];
+          if(mission){
+            Object.assign(currentMissionItem,mission,{
+              id,
+              missionId:mission.id,
+              partnerMissionToken:mission.token||mission.id,
+              partnerMissionStatus:mission.status||"proposed",
+              status:missionUiStatus(mission.status||"proposed"),
+              isPartnerMission:true
+            });
+          }
+        }catch(resolveError){console.warn("Résolution mission transférée",resolveError)}
+        if(currentMissionItem.isPartnerMission!==true){
+          console.warn("Mission transférée non encore synchronisée",id);
+          alert("La mission est en cours de synchronisation. Réessayez dans une seconde.");
+          return false;
+        }
+      }
+
       if (currentMissionItem?.isPartnerMission && currentMissionItem?.missionId) {
         const missionRef = doc(db, "driverMissions", currentMissionItem.missionId);
         let partnerPayment = {};
@@ -5383,8 +5413,11 @@ async function handleStatusAction(id, status) {
       if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
       if (state.driverMissionsUnsubscribe) state.driverMissionsUnsubscribe();
 
-      const email = String(auth?.currentUser?.email || "").trim().toLowerCase();
-      if (!email) return;
+      const authEmailExact = String(auth?.currentUser?.email || "").trim();
+      const profileEmailExact = String(window.currentPartnerProfile?.email || "").trim();
+      const queryEmail = profileEmailExact || authEmailExact;
+      const email = queryEmail.toLowerCase();
+      if (!queryEmail) return;
 
       const own = new Map();
       const transferred = new Map();
@@ -5456,9 +5489,11 @@ async function handleStatusAction(id, status) {
         $("manualSync")?.classList.remove("syncing");
       };
 
-      const ownQuery = query(collection(db, "bookings"), where("partnerOwnerEmail", "==", email), limit(1000));
-      const transferQuery = query(collection(db, "bookings"), where("transferredDriverEmail", "==", email), limit(1000));
-      const missionQuery = query(collection(db, "driverMissions"), where("driverEmail", "==", email), limit(1000));
+      // Firestore equality is case-sensitive. Admin creates transfers with the e-mail
+      // stored in partnerDrivers, so queries must use that exact value.
+      const ownQuery = query(collection(db, "bookings"), where("partnerOwnerEmail", "==", queryEmail), limit(1000));
+      const transferQuery = query(collection(db, "bookings"), where("transferredDriverEmail", "==", queryEmail), limit(1000));
+      const missionQuery = query(collection(db, "driverMissions"), where("driverEmail", "==", queryEmail), limit(1000));
 
       state.unsubscribe = onSnapshot(ownQuery, snapshot => {
         own.clear();
@@ -6784,7 +6819,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=757", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=758", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6810,7 +6845,7 @@ async function handleStatusAction(id, status) {
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "75.7.20261004.01";
+    const HEALTH_VERSION = "75.8.20261004.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
@@ -7312,12 +7347,12 @@ function pmEnsure(){
  pmFillProfile();pmListenDocuments();
 }
 async function pmLoadOwnedBookings(){
- const email=String(auth?.currentUser?.email||"").trim();
- if(!db||!email)return [];
+ const authMail=String(auth?.currentUser?.email||"").trim();
+ const profileMail=String(window.currentPartnerProfile?.email||"").trim();
+ const candidates=[...new Set([profileMail,authMail,profileMail.toLowerCase(),authMail.toLowerCase()].filter(Boolean))];
+ if(!db||!candidates.length)return [];
  try{
-  const attempts=[email];
-  if(email.toLowerCase()!==email)attempts.push(email.toLowerCase());
-  const batches=await Promise.all(attempts.map(value=>getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",value),limit(1000))).catch(()=>null)));
+  const batches=await Promise.all(candidates.map(value=>getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",value),limit(1000))).catch(error=>{console.warn("Lecture fichier clients",value,error?.code||error);return null})));
   const rows=new Map();
   batches.filter(Boolean).forEach(snap=>snap.docs.forEach(d=>rows.set(d.id,{id:d.id,...d.data()})));
   return Array.from(rows.values());
@@ -7354,15 +7389,19 @@ async function pmRenderCustomers(){
 async function pmRenderHistory(){
  const box=document.getElementById("pmHistoryList");if(!box)return;
  box.innerHTML='<div class="pm-loading-card"><b>Chargement de l’historique…</b><small>Courses et missions du chauffeur.</small></div>';
- const email=String(auth?.currentUser?.email||"").trim();
+ const authMail=String(auth?.currentUser?.email||"").trim();
+ const profileMail=String(window.currentPartnerProfile?.email||"").trim();
+ const missionEmails=[...new Set([profileMail,authMail,profileMail.toLowerCase(),authMail.toLowerCase()].filter(Boolean))];
  let owned=[],missions=[];
  try{
-  const [ownRows,missionSnap]=await Promise.all([
+  const [ownRows,missionSnaps]=await Promise.all([
    pmLoadOwnedBookings(),
-   getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",email),limit(1000)))
+   Promise.all(missionEmails.map(value=>getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",value),limit(1000))).catch(()=>null)))
   ]);
   owned=ownRows.map(x=>({...x,historyOrigin:"owned"}));
-  missions=missionSnap.docs.map(d=>({id:d.data().bookingId||d.id,missionId:d.id,...d.data(),historyOrigin:"mission"})).filter(x=>x.status==="completed");
+  const missionMap=new Map();
+  missionSnaps.filter(Boolean).forEach(snap=>snap.docs.forEach(d=>missionMap.set(d.id,{id:d.data().bookingId||d.id,missionId:d.id,...d.data(),historyOrigin:"mission"})));
+  missions=Array.from(missionMap.values()).filter(x=>x.status==="completed");
  }catch(error){console.error("Historique chauffeur",error)}
  const ownOn=document.getElementById("pmHistOwn")?.checked!==false,missionOn=document.getElementById("pmHistMissions")?.checked!==false;
  const payAllowed=new Set();
@@ -7555,6 +7594,28 @@ document.addEventListener("click", event => {
 .pm-history-card{display:grid;grid-template-columns:62px 1fr;gap:11px}.pm-history-date{border-right:1px solid #eef1f5;padding-right:10px}.pm-history-date b,.pm-history-date small{display:block}.pm-history-date small{color:#667085;margin-top:3px}.pm-history-main{min-width:0}.pm-history-main>div:first-child{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.pm-history-main>small{display:block;color:#667085;margin:5px 0 9px}.pm-history-pay span{font-size:11px;font-weight:800;color:#475467}.pm-history-pay strong{font-size:16px}
 .pm-empty-state,.pm-loading-card{background:#fff;border:1px dashed #cfd6e2;border-radius:18px;padding:28px 18px;text-align:center;color:#667085}.pm-empty-state>div{font-size:32px;margin-bottom:8px}.pm-empty-state b,.pm-loading-card b{display:block;color:#0b1627;font-size:16px}.pm-empty-state p,.pm-loading-card small{display:block;margin:7px auto 0;max-width:360px;line-height:1.45}
 @media(max-width:390px){.pm-crm-kpis{grid-template-columns:1fr 1fr}.pm-crm-kpis article:last-child{grid-column:1/-1}.pm-filter-grid{grid-template-columns:1fr}.pm-client-card{grid-template-columns:38px 1fr}.pm-client-avatar{width:38px;height:38px}.pm-history-card{grid-template-columns:54px 1fr}}
+</style>
+
+<style id="v758-mobile-crm-fix">
+#partnerCustomersPanel,#partnerHistoryPanel{padding-bottom:110px!important;background:#f7f9fc!important;color:#101828!important}
+#partnerCustomersPanel .pm-page-head h2,#partnerHistoryPanel .pm-page-head h2{display:block!important;color:#101828!important;font-size:26px!important;line-height:1.15!important;margin:4px 0 7px!important;opacity:1!important}
+#partnerCustomersPanel .pm-page-head p,#partnerHistoryPanel .pm-page-head p{color:#475467!important;opacity:1!important}
+#partnerCustomersPanel .pm-crm-kpis,#partnerHistoryPanel .pm-crm-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#partnerCustomersPanel .pm-crm-kpis article,#partnerHistoryPanel .pm-crm-kpis article{min-height:66px!important;padding:11px 8px!important;background:#fff!important}
+#partnerCustomersPanel .pm-crm-kpis b,#partnerHistoryPanel .pm-crm-kpis b{color:#101828!important;opacity:1!important;font-size:19px!important}
+#partnerCustomersPanel .pm-crm-kpis small,#partnerHistoryPanel .pm-crm-kpis small{color:#667085!important;opacity:1!important}
+#partnerCustomersPanel .pm-card,#partnerHistoryPanel .pm-card{background:#fff!important;color:#101828!important;border:1px solid #e4e7ec!important;box-shadow:0 4px 16px rgba(16,24,40,.05)!important}
+#partnerCustomersPanel .pm-search{background:#fff!important;color:#101828!important;border:1px solid #cfd6df!important}
+#partnerCustomersPanel .pm-filter-row label,#partnerHistoryPanel .pm-filter-grid label{background:#fff!important;color:#344054!important;border:1px solid #dfe3e8!important;min-height:42px!important;box-sizing:border-box!important}
+#partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr 1fr!important;gap:7px!important}
+#partnerHistoryPanel .pm-history-filters{background:#0e1a31!important;color:#fff!important;border:0!important}
+#partnerHistoryPanel .pm-history-filters>b{color:#fff!important}
+#partnerCustomersPanel .pm-empty-state,#partnerHistoryPanel .pm-empty-state{background:#fff!important;color:#667085!important;margin-top:10px!important}
+@media(max-width:390px){
+ #partnerCustomersPanel .pm-crm-kpis,#partnerHistoryPanel .pm-crm-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #partnerCustomersPanel .pm-crm-kpis article:last-child,#partnerHistoryPanel .pm-crm-kpis article:last-child{grid-column:auto!important}
+ #partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr 1fr!important}
+}
 </style>
 </body>
 </html>
