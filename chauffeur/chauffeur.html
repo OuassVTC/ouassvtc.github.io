@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=740">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=742">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -4301,7 +4301,7 @@ body.partner-authenticated .action.partner-back{
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         ${stagedWazeActions(item)}
-        <div class="status-actions">${actionButtons(item)}${item.partnerOwnerEmail && !item.isPartnerMission && item.dispatchStatus !== "pending" ? `<button class="action partner-admin-transfer" type="button" data-transfer-to-admin="${item.id}">↗ Transférer à l’administrateur</button>` : ""}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
+        <div class="status-actions">${actionButtons(item)}${item.partnerOwnerEmail && !item.isPartnerMission ? (item.dispatchStatus === "pending" ? `<button class="action" type="button" disabled>✓ Transfert envoyé à l’administrateur</button>` : `<button class="action partner-admin-transfer" type="button" data-transfer-to-admin="${item.id}">↗ Transférer à l’administrateur</button>`) : ""}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
           <div class="actions-screen-head"><button class="actions-back" type="button" data-close-more-actions aria-label="Retour au détail de la course">←</button><div><small>Gestion de la course</small><strong>Autres actions</strong></div></div>
           <div class="actions-screen-grid">
@@ -5325,11 +5325,6 @@ body.partner-authenticated .action.partner-back{
             item.status === "transferred" &&
             !activeByBooking.has(bookingId)
           ) merged.delete(bookingId);
-        }
-
-        // Une course personnelle envoyée à l'Admin sort du planning chauffeur.
-        for (const [bookingId, item] of merged) {
-          if (item.partnerOwnerEmail === email && item.dispatchStatus === "pending") merged.delete(bookingId);
         }
 
         state.bookings = Array.from(merged.values()).sort((a,b) => {
@@ -6643,7 +6638,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=740", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=742", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
