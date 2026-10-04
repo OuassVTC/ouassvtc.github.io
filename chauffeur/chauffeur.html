@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=726">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=727">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1086,6 +1086,40 @@ body:not(.partner-authenticated) #loginError{
 }
 </style>
 
+
+<style id="partner-v727-final-fixes">
+body.partner-authenticated #partnerBottomNav{
+  display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+}
+body.partner-authenticated{padding-bottom:96px!important;overflow-x:hidden!important}
+body.partner-authenticated #loginView,
+body.partner-authenticated #activationView{display:none!important}
+body.partner-signed-out #partnerBottomNav{display:none!important}
+
+body.partner-signed-out #loginView:not(.hidden){
+  position:fixed!important;inset:0!important;z-index:40000!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;padding:20px!important;box-sizing:border-box!important;
+  background:linear-gradient(180deg,#07111f 0%,#0c1b30 100%)!important;overflow:auto!important;
+}
+body.partner-signed-out #loginView .login-card{
+  display:block!important;width:100%!important;max-width:410px!important;margin:auto!important;
+  padding:28px 24px 22px!important;border-radius:28px!important;background:#fff!important;
+  box-sizing:border-box!important;overflow:hidden!important;box-shadow:0 24px 70px rgba(0,0,0,.38)!important;
+}
+body.partner-signed-out #loginView form{display:block!important;width:100%!important;margin:0!important}
+body.partner-signed-out #loginView input{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+body.partner-signed-out #loginView .primary{
+  width:100%!important;display:block!important;position:static!important;float:none!important;transform:none!important;
+}
+body.partner-signed-out #openPartnerActivation,
+body.partner-signed-out #partnerForgotPassword{
+  width:100%!important;display:block!important;position:static!important;float:none!important;transform:none!important;
+  margin:4px 0!important;padding:9px 8px!important;border:0!important;background:transparent!important;
+  color:#087fc9!important;text-align:center!important;font-size:14px!important;font-weight:800!important;line-height:1.25!important;
+}
+body.partner-signed-out #partnerForgotPassword{color:#64748b!important}
+</style>
+
 </head>
  
 <body>
@@ -1143,6 +1177,7 @@ body:not(.partner-authenticated) #loginError{
           <input id="partnerLoginPassword" type="password" autocomplete="current-password" required>
           <button class="primary" type="submit">Se connecter</button>
         </form>
+        <button class="link-button" id="openPartnerActivation" type="button">Première connexion / Activer mon compte</button>
         <button class="secondary" id="partnerForgotPassword" type="button">Mot de passe oublié</button>
         <p class="login-error hidden" id="loginError"></p>
       </div>
@@ -5167,39 +5202,39 @@ body:not(.partner-authenticated) #loginError{
  
 
       async function loadPartnerIdentityAndPresence() {
-        const user = auth?.currentUser;
+        const user = auth.currentUser;
         if (!user?.email) return false;
 
         const rawEmail = String(user.email).trim();
         const email = rawEmail.toLowerCase();
-        let profileDoc = null;
-
-        const tryEmailQuery = async candidate => {
-          const snap = await getDocs(query(
-            collection(db, "partnerDrivers"),
-            where("email", "==", candidate),
-            limit(1)
-          ));
-          return snap.empty ? null : snap.docs[0];
-        };
 
         try {
-          profileDoc = await tryEmailQuery(email);
+          let profileDoc = null;
+
+          const exact = await getDocs(query(
+            collection(db, "partnerDrivers"),
+            where("email", "==", email),
+            limit(1)
+          ));
+          if (!exact.empty) profileDoc = exact.docs[0];
 
           if (!profileDoc && rawEmail !== email) {
-            profileDoc = await tryEmailQuery(rawEmail);
+            const originalCase = await getDocs(query(
+              collection(db, "partnerDrivers"),
+              where("email", "==", rawEmail),
+              limit(1)
+            ));
+            if (!originalCase.empty) profileDoc = originalCase.docs[0];
           }
 
           if (!profileDoc) {
             window.currentPartnerProfile = null;
             $("partnerDashboardName").textContent = "Chauffeur.";
-            $("loginError").textContent =
-              "Votre compte est connecté, mais aucune fiche chauffeur active n’est associée à cette adresse e-mail.";
+            showLoginError("Aucune fiche chauffeur n’est associée à " + rawEmail + ".");
             return false;
           }
 
           const profile = { id: profileDoc.id, ...profileDoc.data() };
-
           if (profile.active === false) {
             await signOut(auth);
             showLoginError("Ce compte chauffeur est désactivé.");
@@ -5207,44 +5242,32 @@ body:not(.partner-authenticated) #loginError{
           }
 
           window.currentPartnerProfile = profile;
-
-          if (profile.authActivated === true && user.emailVerified !== true) {
-            await sendEmailVerification(user).catch(() => {});
-            await signOut(auth);
-            showLoginError("Validez d’abord l’e-mail de vérification envoyé à " + email + ", puis reconnectez-vous.");
-            return false;
-          }
-
-          const fullName = String(
-            profile.displayName ||
-            profile.firstName ||
-            profile.companyName ||
-            "Chauffeur"
-          ).trim();
-
+          const fullName = String(profile.displayName || profile.firstName || profile.companyName || "Chauffeur").trim();
           const firstName = fullName.split(/\s+/)[0] || "Chauffeur";
           $("partnerDashboardName").textContent = firstName + ".";
 
-          await updateDoc(profileDoc.ref, {
-            online: true,
-            availability: "online",
-            lastLoginAt: serverTimestamp(),
-            lastSeenAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          });
+          // La présence est indépendante du chargement du profil :
+          // un refus d'écriture ne doit jamais faire disparaître le prénom.
+          try {
+            await updateDoc(profileDoc.ref, {
+              online: true,
+              lastLoginAt: serverTimestamp(),
+              lastSeenAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
+          } catch (presenceError) {
+            console.warn("Présence initiale chauffeur", presenceError);
+          }
 
           startPartnerPresence(profileDoc.id);
           return true;
         } catch (error) {
           console.error("Chargement profil chauffeur", error);
-          window.currentPartnerProfile = null;
           $("partnerDashboardName").textContent = "Chauffeur.";
-          $("loginError").textContent =
-            "Impossible de charger votre profil chauffeur. Vérifiez la connexion puis réessayez.";
+          showLoginError("Impossible de charger votre fiche chauffeur.");
           return false;
         }
       }
-
 
       let partnerPresenceTimer = null;
       let partnerPresenceId = null;
@@ -5254,7 +5277,6 @@ body:not(.partner-authenticated) #loginError{
         try {
           await updateDoc(doc(db, "partnerDrivers", partnerPresenceId), {
             online: true,
-            availability: "online",
             lastSeenAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
@@ -5281,7 +5303,6 @@ body:not(.partner-authenticated) #loginError{
           if (p?.id && auth?.currentUser) {
             await updateDoc(doc(db, "partnerDrivers", p.id), {
               online: false,
-              availability: "offline",
               lastSeenAt: serverTimestamp(),
               updatedAt: serverTimestamp()
             });
@@ -5302,16 +5323,7 @@ body:not(.partner-authenticated) #loginError{
 
 
       function ensureFirstActivationButton() {
-        const view = $("loginView");
-        if (!view || $("openPartnerActivation")) return;
-        const forgot = $("forgotPassword");
-        const btn = document.createElement("button");
-        btn.id = "openPartnerActivation";
-        btn.type = "button";
-        btn.className = "link-button";
-        btn.textContent = "Première connexion / Activer mon compte";
-        if (forgot?.parentNode) forgot.parentNode.insertBefore(btn, forgot);
-        else view.appendChild(btn);
+        // V72.7 : le bouton est maintenant directement dans la carte HTML.
       }
 
       function polishPartnerLogin() {
@@ -5448,6 +5460,7 @@ body:not(.partner-authenticated) #loginError{
         $("logout").classList.toggle("hidden", !connected);
         $("openMenu").classList.toggle("hidden", !connected);
         document.body.classList.toggle("partner-signed-out", !connected);
+        document.body.classList.toggle("partner-authenticated", connected);
         setTimeout(() => {
           document.getElementById("partnerBottomNav")?.classList.toggle("auth-hidden", !connected);
           document.getElementById("appBottomNav")?.classList.toggle("auth-hidden", !connected);
@@ -6379,7 +6392,7 @@ body:not(.partner-authenticated) #loginError{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=726", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=727", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
