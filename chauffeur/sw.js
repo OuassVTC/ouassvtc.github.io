@@ -12,8 +12,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const SW_VERSION = "76.2.20261004.01";
-const CACHE_NAME = "ouassvtc-chauffeur-v76.2-20261004-01";
+const SW_VERSION = "76.3.20261004.01";
+const CACHE_NAME = "ouassvtc-chauffeur-v76.3-20261004-01";
 
 const APP_SHELL = [
   "/chauffeur/chauffeur.html",
@@ -149,3 +149,5 @@ self.addEventListener("message", event => {
   };
   if (event.ports?.[0]) event.ports[0].postMessage(response);
 });
+
+
