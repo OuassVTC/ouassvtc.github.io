@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=759">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=760">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -6857,7 +6857,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=759", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=760", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6883,7 +6883,7 @@ async function handleStatusAction(id, status) {
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "75.9.20261004.01";
+    const HEALTH_VERSION = "76.0.20261004.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
@@ -7654,6 +7654,52 @@ document.addEventListener("click", event => {
  #partnerCustomersPanel .pm-crm-kpis article:last-child,#partnerHistoryPanel .pm-crm-kpis article:last-child{grid-column:auto!important}
  #partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr 1fr!important}
 }
+</style>
+
+<style id="v760-chauffeur-theme-audit">
+html[data-theme="dark"] #partnerCustomersPanel,
+html[data-theme="dark"] #partnerHistoryPanel,
+html[data-theme="dark"] #partnerCostPanel,
+html[data-theme="dark"] #partnerDocumentsPanel,
+html[data-theme="dark"] #partnerProfilePanel,
+html[data-theme="dark"] #partnerSettingsPanel{background:#080d14!important;color:#f4f7fb!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-page-head h2,
+html[data-theme="dark"] #partnerHistoryPanel .pm-page-head h2{color:#f4f7fb!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-page-head p,
+html[data-theme="dark"] #partnerHistoryPanel .pm-page-head p{color:#aeb8c8!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-crm-kpis article,
+html[data-theme="dark"] #partnerHistoryPanel .pm-crm-kpis article,
+html[data-theme="dark"] #partnerCustomersPanel .pm-card,
+html[data-theme="dark"] #partnerHistoryPanel .pm-card,
+html[data-theme="dark"] .pm-client-card,
+html[data-theme="dark"] .pm-history-card,
+html[data-theme="dark"] .pm-empty-state,
+html[data-theme="dark"] .pm-loading-card,
+html[data-theme="dark"] .v755-pay-card{
+  background:#111925!important;color:#f4f7fb!important;border-color:#2a3545!important;
+}
+html[data-theme="dark"] #partnerCustomersPanel .pm-crm-kpis b,
+html[data-theme="dark"] #partnerHistoryPanel .pm-crm-kpis b,
+html[data-theme="dark"] .pm-empty-state b,
+html[data-theme="dark"] .pm-loading-card b,
+html[data-theme="dark"] .v755-pay-card h3{color:#f4f7fb!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-crm-kpis small,
+html[data-theme="dark"] #partnerHistoryPanel .pm-crm-kpis small,
+html[data-theme="dark"] .pm-client-head small,
+html[data-theme="dark"] .pm-client-meta small,
+html[data-theme="dark"] .pm-history-main>small,
+html[data-theme="dark"] .v755-pay-card p{color:#aeb8c8!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-search,
+html[data-theme="dark"] #partnerCustomersPanel .pm-filter-row label,
+html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label,
+html[data-theme="dark"] #v755MixedFields input{
+  background:#0d1520!important;color:#f4f7fb!important;border-color:#344155!important;
+}
+html[data-theme="dark"] .v755-pay-choice{background:#172130!important;color:#f4f7fb!important;border-color:#344155!important}
+html[data-theme="dark"] .v755-pay-choice.active{background:#17365f!important;color:#fff!important;border-color:#4d98ff!important}
+html[data-theme="dark"] .v755-pay-cancel{background:#263244!important;color:#f4f7fb!important}
+html[data-theme="dark"] .pm-client-card details{border-color:#2a3545!important}
+html[data-theme="dark"] .pm-history-date{border-color:#2a3545!important}
 </style>
 </body>
 </html>
