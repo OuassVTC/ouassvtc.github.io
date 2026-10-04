@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=734">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=740">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1668,7 +1668,7 @@ body.partner-authenticated .action.partner-back{
             <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
           </div>
           <button class="primary" id="estimateDriverBooking" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer cette course</button>
-          <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer et envoyer sur Zoho</button>
+          <button class="primary" id="saveDriverBooking" type="submit" style="margin-top:10px">Enregistrer dans mon application</button>
           <div class="sim-result hidden" id="driverBookingSuccess"><strong style="font-size:21px">Réservation enregistrée</strong><span>Elle est enregistrée dans l’application. Vous pouvez maintenant envoyer la confirmation par SMS.</span></div>
         </form>
         <section class="client-route-card">
@@ -4301,7 +4301,7 @@ body.partner-authenticated .action.partner-back{
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         ${stagedWazeActions(item)}
-        <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
+        <div class="status-actions">${actionButtons(item)}${item.partnerOwnerEmail && !item.isPartnerMission && item.dispatchStatus !== "pending" ? `<button class="action partner-admin-transfer" type="button" data-transfer-to-admin="${item.id}">↗ Transférer à l’administrateur</button>` : ""}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
           <div class="actions-screen-head"><button class="actions-back" type="button" data-close-more-actions aria-label="Retour au détail de la course">←</button><div><small>Gestion de la course</small><strong>Autres actions</strong></div></div>
           <div class="actions-screen-grid">
@@ -4367,6 +4367,9 @@ body.partner-authenticated .action.partner-back{
       $("detailBody").querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", async () => {
         await handleStatusAction(button.dataset.id, button.dataset.status);
       }));
+      $("detailBody").querySelector("[data-transfer-to-admin]")?.addEventListener("click", async event => {
+        await transferOwnBookingToAdmin(event.currentTarget.dataset.transferToAdmin);
+      });
       $("detailBody").querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", async () => {
         const deleted = await refuseAndDelete(button.dataset.delete);
         if (deleted) closeBooking();
@@ -4393,6 +4396,48 @@ body.partner-authenticated .action.partner-back{
       setTimeout(() => $("driverDateTime").focus(), 150);
     }
  
+    async function transferOwnBookingToAdmin(id) {
+      const item = state.bookings.find(booking => booking.id === id);
+      if (!item || !auth?.currentUser) return false;
+      if (!confirm("Transférer cette course à l’administrateur OuassVTC ?")) return false;
+      try {
+        const email = auth.currentUser.email.toLowerCase();
+        const profile = window.currentPartnerProfile || {};
+        await addDoc(collection(db, "dispatchRequests"), {
+          bookingId: item.id,
+          requesterEmail: email,
+          partnerId: profile.id || auth.currentUser.uid,
+          driverName: profile.displayName || profile.companyName || auth.currentUser.email,
+          customerName: item.customerName || "Client",
+          customerPhone: item.customerPhone || "",
+          pickup: item.pickup || "",
+          destination: item.destination || "",
+          scheduledAtText: item.scheduledAtText || "",
+          passengers: item.passengers || "Non précisé",
+          paymentMethod: item.paymentMethod || "Non précisé",
+          customerMessage: item.customerMessage || "",
+          estimatedPrice: item.estimatedPrice || "",
+          status: "pending",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        await updateDoc(doc(db, "bookings", item.id), {
+          dispatchStatus: "pending",
+          dispatchRequestedAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        item.dispatchStatus = "pending";
+        closeBooking();
+        openPanel("dashboardHome");
+        alert("Course envoyée à l’administrateur.");
+        return true;
+      } catch (error) {
+        console.error("Transfert administrateur", error);
+        alert("La course n’a pas pu être transférée à l’administrateur.");
+        return false;
+      }
+    }
+
     function openReturnBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
@@ -5280,6 +5325,11 @@ body.partner-authenticated .action.partner-back{
             item.status === "transferred" &&
             !activeByBooking.has(bookingId)
           ) merged.delete(bookingId);
+        }
+
+        // Une course personnelle envoyée à l'Admin sort du planning chauffeur.
+        for (const [bookingId, item] of merged) {
+          if (item.partnerOwnerEmail === email && item.dispatchStatus === "pending") merged.delete(bookingId);
         }
 
         state.bookings = Array.from(merged.values()).sort((a,b) => {
@@ -6456,7 +6506,9 @@ body.partner-authenticated .action.partner-back{
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
-          source: "website",
+          source: "partner_app",
+          sourcePartnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          sourcePartnerName: window.currentPartnerProfile?.displayName || window.currentPartnerProfile?.companyName || auth?.currentUser?.email || "Chauffeur partenaire",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
@@ -6519,7 +6571,7 @@ body.partner-authenticated .action.partner-back{
           console.error(fareError);
           alert("Le tarif n’a pas pu être calculé. Vérifiez les deux adresses et votre connexion Google Maps.");
           button.disabled = false;
-          button.textContent = "Enregistrer et envoyer sur Zoho";
+          button.textContent = "Enregistrer dans mon application";
           return;
         }
       }
@@ -6563,12 +6615,6 @@ body.partner-authenticated .action.partner-back{
         localSaveInProgress = false;
         $("driverPrice").value = params.prix;
         $("driverBookingSuccess").classList.remove("hidden");
-        try {
-          await window.emailjs.send("service_kdvgh9f", "template_5xt5vlv", params);
-        } catch (emailError) {
-          console.error(emailError);
-          alert("La réservation est bien enregistrée dans l’application, mais l’e-mail Zoho n’a pas pu être envoyé.");
-        }
       } catch (error) {
         localSaveInProgress = false;
         console.error(error);
@@ -6577,7 +6623,7 @@ body.partner-authenticated .action.partner-back{
           : "La réservation n’a pas pu être enregistrée. Réessayez.");
       } finally {
         button.disabled = false;
-        button.textContent = "Enregistrer et envoyer sur Zoho";
+        button.textContent = "Enregistrer dans mon application";
       }
     });
  
@@ -6597,7 +6643,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=734", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=740", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
