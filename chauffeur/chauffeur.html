@@ -7284,7 +7284,7 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
 function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
-function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
+function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="30d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
 </script>
@@ -7367,7 +7367,7 @@ function pmEnsure(){
  }
  if(!document.getElementById("partnerSettingsPanel")){
    const s=document.createElement("section");s.id="partnerSettingsPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><div class="pm-page-head"><div><small>PRÉFÉRENCES</small><h2>Réglages</h2><p>Gérez les fonctions utiles de votre application chauffeur.</p></div></div><div class="pm-settings-list"><button type="button" class="pm-setting-card" id="pmNotifications"><span class="pm-setting-icon">🔔</span><span class="pm-setting-copy"><b>Notifications</b><small>Recevoir les nouvelles missions et alertes OuassVTC</small></span><span class="pm-setting-action">Activer ›</span></button><button type="button" class="pm-setting-card" id="pmInterpreter"><span class="pm-setting-icon">🌐</span><span class="pm-setting-copy"><b>Interprète</b><small>Ouvrir la traduction vocale pour vos passagers</small></span><span class="pm-setting-action">Ouvrir ›</span></button><button type="button" class="pm-setting-card" id="pmInstall"><span class="pm-setting-icon">📲</span><span class="pm-setting-copy"><b>Installation de l’application</b><small>Ajouter OuassVTC sur l’écran d’accueil du téléphone</small></span><span class="pm-setting-action">Installer ›</span></button></div><div class="pm-settings-security"><small>SESSION</small><button class="pm-logout" id="pmLogout" type="button"><span>↪</span><span><b>Déconnexion</b><small>Fermer la session sur cet appareil</small></span></button></div>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><div class="pm-page-head"><div><small>PRÉFÉRENCES</small><h2>Réglages</h2><p>Gérez les fonctions utiles de votre application chauffeur.</p></div></div><div class="pm-settings-list"><div class="pm-setting-card pm-theme-setting"><span class="pm-setting-icon">◐</span><span class="pm-setting-copy"><b>Mode d’affichage</b><small>Choisissez le mode jour, nuit ou automatique</small><span class="pm-theme-buttons"><button type="button" data-pm-theme="light">☀ Jour</button><button type="button" data-pm-theme="dark">☾ Nuit</button><button type="button" data-pm-theme="auto">Auto</button></span></span><span class="pm-setting-action">Affichage</span></div><button type="button" class="pm-setting-card" id="pmNotifications"><span class="pm-setting-icon">🔔</span><span class="pm-setting-copy"><b>Notifications</b><small>Recevoir les nouvelles missions et alertes OuassVTC</small></span><span class="pm-setting-action">Activer ›</span></button><button type="button" class="pm-setting-card" id="pmInterpreter"><span class="pm-setting-icon">🌐</span><span class="pm-setting-copy"><b>Interprète</b><small>Ouvrir la traduction vocale pour vos passagers</small></span><span class="pm-setting-action">Ouvrir ›</span></button><button type="button" class="pm-setting-card" id="pmInstall"><span class="pm-setting-icon">📲</span><span class="pm-setting-copy"><b>Installation de l’application</b><small>Ajouter OuassVTC sur l’écran d’accueil du téléphone</small></span><span class="pm-setting-action">Installer ›</span></button></div><div class="pm-settings-security"><small>SESSION</small><button class="pm-logout" id="pmLogout" type="button"><span>↪</span><span><b>Déconnexion</b><small>Fermer la session sur cet appareil</small></span></button></div>';
    main.appendChild(s);
  }
  document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>{const target=b.dataset.pm;showPartnerPage(target);if(target==="partnerCustomersPanel")pmRenderCustomers();if(target==="partnerHistoryPanel")pmRenderHistory();});
@@ -7390,6 +7390,7 @@ function pmEnsure(){
    pmCostCalc();alert("Coût kilométrique enregistré.");}catch(err){console.error(err);alert("Impossible d’enregistrer le coût kilométrique.");}
  };
 
+ document.querySelectorAll("[data-pm-theme]").forEach(button=>button.addEventListener("click",()=>{const choice=button.dataset.pmTheme;const existing=document.querySelector(`[data-theme-choice="${choice}"]`);if(existing){existing.click()}else{document.documentElement.dataset.theme=choice==="dark"?"dark":"light";localStorage.setItem("ouassvtcResolvedTheme",choice==="dark"?"dark":"light")};document.querySelectorAll("[data-pm-theme]").forEach(b=>b.classList.toggle("active",b===button));}));
  document.getElementById("pmLogout").onclick=()=>document.getElementById("logout")?.click();
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
@@ -7516,7 +7517,7 @@ function pmRenderDocuments(docs){
     <div class="pm-doc-copy"><b>${pme(label)}</b><small>${ok?pme(d.fileName||"Document enregistré"):"Aucun document enregistré"}</small>${ok?`<small>${pme(pmDocExpiryState(d))}</small>`:""}</div>
     <div class="pm-doc-actions">
       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
-      <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
+      <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" data-existing="${ok?"1":"0"}" hidden></label>
       ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
@@ -7532,14 +7533,15 @@ function pmRenderDocuments(docs){
 async function pmUploadDocument(event){
  const input=event.currentTarget,file=input.files?.[0],type=input.dataset.partnerDocUpload;
  if(!file||!type||!auth?.currentUser)return;
- if(file.size>12*1024*1024){alert("Le document dépasse 12 Mo.");input.value="";return}
+ if(file.size>10*1024*1024){alert("Le document dépasse 10 Mo.");input.value="";return}
  const email=auth.currentUser.email.toLowerCase();
  const profileId=window.currentPartnerProfile?.id||auth.currentUser.uid;
  const safeName=file.name.replace(/[^a-zA-Z0-9._-]+/g,"-");
- const path=`partner-documents/${auth.currentUser.uid}/${type}-${Date.now()}-${safeName}`;
+ const path=`${auth.currentUser.uid}/partner-documents/${type}-${Date.now()}-${safeName}`;
  const ref=storageRef(storage,path);
  try{
    input.disabled=true;
+   const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
    await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
@@ -7553,8 +7555,8 @@ async function pmUploadDocument(event){
      await updateDoc(existing.docs[0].ref,payload);
      if(old.storagePath&&old.storagePath!==path) deleteObject(storageRef(storage,old.storagePath)).catch(()=>{});
    }
- }catch(e){console.error(e);alert("Impossible d’enregistrer ce document.")}
- finally{input.disabled=false;input.value=""}
+ }catch(e){console.error("Upload document chauffeur",e);const code=String(e?.code||"");alert(code.includes("unauthorized")?"Envoi refusé par Firebase Storage. Vérifiez que vous êtes bien connecté puis réessayez.":"Impossible d’enregistrer ce document : "+(e?.message||"erreur inconnue"))}
+ finally{input.disabled=false;input.value="";const addLabel=input.closest(".pm-doc-add");if(addLabel?.childNodes?.[0])addLabel.childNodes[0].textContent=addLabel.querySelector("input")?.dataset?.existing==="1"?"Remplacer":"Ajouter"}
 }
 async function pmDeleteDocument(event){
  const b=event.currentTarget,id=b.dataset.partnerDocDelete,path=b.dataset.partnerDocPath;
@@ -7750,6 +7752,30 @@ html[data-theme="dark"] #partnerCustomersPanel .pm-page-head p,html[data-theme="
 html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label,html[data-theme="dark"] #partnerCustomersPanel .pm-filter-row label{background:#172130!important;color:#f4f7fb!important;border-color:#344155!important}
 html[data-theme="dark"] #partnerHistoryPanel .pm-filter-grid label *{color:#f4f7fb!important}
 html[data-theme="dark"] .pm-setting-card{background:#111925!important;border-color:#2a3545!important}html[data-theme="dark"] .pm-setting-icon{background:#172b47!important}html[data-theme="dark"] .pm-setting-copy b{color:#f4f7fb!important}html[data-theme="dark"] .pm-setting-copy small{color:#aeb8c8!important}html[data-theme="dark"] .pm-settings-security>small{color:#aeb8c8!important}
+</style>
+
+<style id="ouass-v762-final-ui">
+/* V76.2 - finition mobile chauffeur */
+#partnerCustomersPanel .pm-filter-row{display:flex!important;justify-content:center!important;align-items:center!important;width:100%!important}
+#partnerCustomersPanel .pm-filter-row label{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:8px!important;min-height:46px!important;width:min(100%,360px)!important;margin:0 auto!important;line-height:1.25!important}
+#partnerCustomersPanel .pm-loading-card,#partnerCustomersPanel .pm-empty-state{color:#475467!important;background:#fff!important}
+#partnerCustomersPanel .pm-loading-card b,#partnerCustomersPanel .pm-empty-state b{color:#101828!important}
+#partnerCustomersPanel .pm-loading-card small,#partnerCustomersPanel .pm-empty-state p{color:#475467!important;opacity:1!important}
+#partnerHistoryPanel .pm-filter-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+#partnerHistoryPanel .pm-filter-grid label{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;min-width:0!important;min-height:48px!important;padding:9px 10px!important;line-height:1.2!important;white-space:normal!important;overflow:hidden!important}
+#partnerHistoryPanel .pm-filter-grid label input{flex:0 0 auto!important;margin:0!important}
+#partnerHistoryPanel .pm-filter-grid label{font-size:11px!important}
+#partnerCostPanel>h2,#partnerCostPanel .pm-card,#partnerCostPanel label,#partnerCostPanel .pm-cost-title,#partnerCostPanel .pm-cost-result{color:#101828!important}
+#partnerCostPanel .pm-cost-result{background:#f4f7fb!important;border:1px solid #dfe4ea!important;padding:13px!important;border-radius:14px!important}
+#partnerCostPanel .pm-cost-result strong{color:#176ef4!important}
+.pm-icon{font-size:17px!important;font-family:Arial,system-ui,sans-serif!important;overflow:visible!important}
+.pm-theme-setting{cursor:default!important}.pm-theme-buttons{display:flex!important;gap:6px!important;margin-top:9px!important;flex-wrap:wrap!important}.pm-theme-buttons button{min-height:36px!important;border:1px solid #d0d5dd!important;border-radius:10px!important;background:#f8fafc!important;color:#344054!important;padding:7px 9px!important;font-weight:850!important}.pm-theme-buttons button.active{background:#176ef4!important;color:#fff!important;border-color:#176ef4!important}
+.pm-settings-security .pm-logout{width:100%!important;min-height:64px!important;background:#b42318!important;border:2px solid #8f1b13!important;color:#fff!important;border-radius:18px!important;padding:12px 14px!important;box-shadow:0 8px 22px rgba(180,35,24,.18)!important}.pm-settings-security .pm-logout b{color:#fff!important;font-size:15px!important}.pm-settings-security .pm-logout small{color:#ffe5e2!important;opacity:1!important}.pm-settings-security .pm-logout>span:first-child{font-size:23px!important;color:#fff!important}
+.pm-doc-add{position:relative}.pm-doc-add input{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+html[data-theme="dark"] #partnerCustomersPanel .pm-loading-card,html[data-theme="dark"] #partnerCustomersPanel .pm-empty-state{background:#111925!important;color:#aeb8c8!important;border-color:#344155!important}html[data-theme="dark"] #partnerCustomersPanel .pm-loading-card b,html[data-theme="dark"] #partnerCustomersPanel .pm-empty-state b{color:#f4f7fb!important}html[data-theme="dark"] #partnerCustomersPanel .pm-loading-card small,html[data-theme="dark"] #partnerCustomersPanel .pm-empty-state p{color:#aeb8c8!important}
+html[data-theme="dark"] #partnerCostPanel>h2,html[data-theme="dark"] #partnerCostPanel .pm-card,html[data-theme="dark"] #partnerCostPanel label,html[data-theme="dark"] #partnerCostPanel .pm-cost-title,html[data-theme="dark"] #partnerCostPanel .pm-cost-result{color:#f4f7fb!important}html[data-theme="dark"] #partnerCostPanel .pm-cost-result{background:#172130!important;border-color:#344155!important}
+html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;color:#e7edf6!important;border-color:#344155!important}
+@media(max-width:360px){#partnerHistoryPanel .pm-filter-grid{grid-template-columns:1fr!important}#partnerHistoryPanel .pm-filter-grid label{font-size:12px!important}}
 </style>
 </body>
 </html>
