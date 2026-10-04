@@ -3195,8 +3195,26 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       return `Bonjour ${driverName},\n\nUne course OuassVTC vous est proposée. Ouvrez votre mission sécurisée pour consulter les informations et mettre à jour son avancement :\n${missionUrl}\n\nOuassini – OuassVTC`;
     }
 
+    function partnerMissionsForBooking(bookingId) {
+      return state.driverMissions.filter(mission => mission.bookingId === bookingId);
+    }
+
     function partnerMissionForBooking(bookingId) {
-      return state.driverMissions.find(mission => mission.bookingId === bookingId) || null;
+      const missions = partnerMissionsForBooking(bookingId);
+      return missions.find(mission => mission.active !== false) || missions[0] || null;
+    }
+
+    async function deactivatePartnerMissionsForBooking(bookingId, finalStatus = "cancelled") {
+      const missions = partnerMissionsForBooking(bookingId);
+      if (!missions.length) return;
+      await Promise.all(missions.map(mission => updateDoc(doc(db, "driverMissions", mission.id), {
+        active: false,
+        status: finalStatus,
+        statusUpdatedAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }).catch(error => {
+        console.warn("Désactivation mission", mission.id, error);
+      })));
     }
 
     function partnerMissionStatusLabel(status) {
@@ -3255,6 +3273,9 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         const missionUrl = `${window.location.origin}/chauffeur/mission.html?token=${encodeURIComponent(token)}`;
         const date = bookingDate(item);
         try {
+          // Une course ne doit avoir qu'une seule mission partenaire active.
+          // Un retransfert invalide toutes les anciennes missions avant d'en créer une nouvelle.
+          await deactivatePartnerMissionsForBooking(id, "cancelled");
           await setDoc(doc(db, "driverMissions", token), {
             bookingId:id,
             driverName,
@@ -4533,15 +4554,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
           changes.transferredDriverEmail = null;
           changes.transferredDriverPhone = null;
           changes.transferredAt = null;
-          const mission = partnerMissionForBooking(id);
-          if (mission) {
-            await updateDoc(doc(db, "driverMissions", mission.id), {
-              active: false,
-              status: "cancelled",
-              statusUpdatedAt: serverTimestamp(),
-              updatedAt: serverTimestamp()
-            });
-          }
+          await deactivatePartnerMissionsForBooking(id, "cancelled");
         }
         if (status === "transfer_performed") changes.transferPerformedAt = serverTimestamp();
         if (status === "transfer_closed") changes.transferClosedAt = serverTimestamp();
