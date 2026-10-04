@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=758">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=759">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5086,42 +5086,80 @@ async function handleStatusAction(id, status) {
     }
 
     async function updateStatus(id, status, extraChanges = {}) {
-      if (!db) return;
+      if (!db) return false;
       const button = document.querySelector(`[data-id="${id}"][data-status="${status}"]`);
       if (button) button.disabled = true;
-      try {
-        const current = state.bookings.find(item => item.id === id);
-        const automaticWaitingChanges = status === "completed" && ["running", "paused"].includes(current?.waitingStatus) && !extraChanges.waitingStatus
-          ? waitingTimerChanges(current, "stopped")
-          : {};
-        const changes = { status, updatedAt: serverTimestamp(), ...automaticWaitingChanges, ...extraChanges };
-        if (["transferred", "transfer_performed", "transfer_closed"].includes(current?.status) && !["transferred", "transfer_performed", "transfer_closed"].includes(status)) {
-          changes.transferredDriverName = null;
-          changes.transferredAt = null;
-        }
-        if (status === "transfer_performed") changes.transferPerformedAt = serverTimestamp();
-        if (status === "transfer_closed") changes.transferClosedAt = serverTimestamp();
-        if (status === "en_route") changes.enRouteAt = serverTimestamp();
-        if (status === "on_board") changes.onBoardAt = serverTimestamp();
-        if (status === "completed") { changes.completedAt = serverTimestamp(); }
-        await updateDoc(doc(db, "bookings", id), changes);
-        if (current) Object.assign(current, changes);
-        render();
-        if (status === "completed") {
-          closeBooking();
-          openPanel("dashboardHome");
-        } else if (!$("detailOverlay").classList.contains("hidden")) {
-          openBooking(id);
-        }
-        return true;
-      } catch (error) {
-        console.error(error);
-        alert("La modification n’a pas pu être enregistrée.");
+
+      const current = state.bookings.find(item => item.id === id);
+      if (!current) {
         if (button) button.disabled = false;
+        console.error("Course introuvable dans l'état local", id);
         return false;
       }
+
+      const previous = { ...current };
+      const automaticWaitingChanges = status === "completed" && ["running", "paused"].includes(current?.waitingStatus) && !extraChanges.waitingStatus
+        ? waitingTimerChanges(current, "stopped")
+        : {};
+      const changes = { status, updatedAt: serverTimestamp(), ...automaticWaitingChanges, ...extraChanges };
+
+      if (["transferred", "transfer_performed", "transfer_closed"].includes(current?.status) && !["transferred", "transfer_performed", "transfer_closed"].includes(status)) {
+        changes.transferredDriverName = null;
+        changes.transferredAt = null;
+      }
+      if (status === "transfer_performed") changes.transferPerformedAt = serverTimestamp();
+      if (status === "transfer_closed") changes.transferClosedAt = serverTimestamp();
+      if (status === "en_route") changes.enRouteAt = serverTimestamp();
+      if (status === "on_board") changes.onBoardAt = serverTimestamp();
+      if (status === "completed") changes.completedAt = serverTimestamp();
+
+      // Affichage immédiat pour TOUS les chauffeurs et toutes les courses.
+      Object.assign(current, changes);
+      try {
+        if (status !== "completed") openBooking(id);
+      } catch (uiError) {
+        console.warn("Progression locale course", uiError);
+      }
+
+      // Seule cette écriture Firestore peut produire une erreur d'enregistrement.
+      try {
+        await updateDoc(doc(db, "bookings", id), changes);
+      } catch (error) {
+        Object.keys(current).forEach(k => { if (!(k in previous)) delete current[k]; });
+        Object.assign(current, previous);
+        try { openBooking(id); } catch (_) {}
+        console.error("Écriture statut booking", {
+          code: error?.code || "",
+          message: error?.message || String(error),
+          bookingId: id,
+          status,
+          authEmail: auth?.currentUser?.email || "",
+          partnerOwnerEmail: previous.partnerOwnerEmail || "",
+          transferredDriverEmail: previous.transferredDriverEmail || ""
+        });
+        if (button) button.disabled = false;
+        alert(error?.code === "permission-denied"
+          ? "Action refusée par Firebase pour cette course."
+          : "La course n’a pas pu être mise à jour.");
+        return false;
+      }
+
+      // Après succès serveur, une erreur d'affichage ne doit JAMAIS devenir une fausse erreur d'enregistrement.
+      try {
+        current.updatedAt = new Date();
+        if (typeof render === "function") render();
+        if (status === "completed") {
+          if (typeof closeBooking === "function") closeBooking();
+          openPanel("dashboardHome");
+        } else if (!$("detailOverlay").classList.contains("hidden")) {
+          requestAnimationFrame(() => { try { openBooking(id); } catch (_) {} });
+        }
+      } catch (uiError) {
+        console.warn("Course enregistrée, rafraîchissement visuel différé", uiError);
+      }
+      return true;
     }
- 
+
     function prepareAlertSound() {
       if (!audioContext) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -6819,7 +6857,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=758", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=759", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6845,7 +6883,7 @@ async function handleStatusAction(id, status) {
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "75.8.20261004.01";
+    const HEALTH_VERSION = "75.9.20261004.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
