@@ -1,9 +1,9 @@
 {
   "id": "/chauffeur/chauffeur.html",
-  "name": "OuassVTC Chauffeur Partenaire",
+  "name": "OuassVTC",
   "short_name": "OuassVTC",
   "description": "Application chauffeur partenaire OuassVTC",
-  "start_url": "/chauffeur/chauffeur.html?source=pwa&v=730",
+  "start_url": "/chauffeur/chauffeur.html?source=pwa&v=731",
   "scope": "/chauffeur/",
   "display": "standalone",
   "orientation": "portrait",
