@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=729">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=730">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5177,13 +5177,30 @@ body.partner-authenticated .partner-menu-page input:disabled{
       })[missionStatus] || "new";
 
       const publish = () => {
-        const merged = new Map([...own, ...transferred]);
+        const merged = new Map(own);
 
-        // Les missions sont la source la plus fiable pour une course transférée.
-        // Si la lecture du booking est retardée/bloquée, on affiche quand même la mission.
+        // Un booking transféré n'est visible que si son affectation est encore réellement active.
+        transferred.forEach((booking, bookingId) => {
+          if (
+            booking.status === "transferred" &&
+            String(booking.transferredDriverEmail || "").trim().toLowerCase() === email
+          ) merged.set(bookingId, booking);
+        });
+
+        // Plusieurs anciens tokens peuvent exister après d'anciens retransferts.
+        // On garde uniquement la mission ACTIVE la plus récente pour chaque booking.
+        const activeByBooking = new Map();
         missions.forEach(mission => {
           if (mission.active === false) return;
+          if (String(mission.driverEmail || "").trim().toLowerCase() !== email) return;
           const bookingId = mission.bookingId || mission.id;
+          const previous = activeByBooking.get(bookingId);
+          const time = mission.updatedAt?.toMillis?.() || mission.createdAt?.toMillis?.() || 0;
+          const previousTime = previous?.updatedAt?.toMillis?.() || previous?.createdAt?.toMillis?.() || 0;
+          if (!previous || time >= previousTime) activeByBooking.set(bookingId, mission);
+        });
+
+        activeByBooking.forEach((mission, bookingId) => {
           const existing = merged.get(bookingId) || {};
           const missionStatus = mission.status || "proposed";
           merged.set(bookingId, {
@@ -5194,10 +5211,19 @@ body.partner-authenticated .partner-menu-page input:disabled{
             partnerMissionToken: mission.token || mission.id,
             partnerMissionStatus: missionStatus,
             status: missionUiStatus(missionStatus),
-            transferredDriverEmail: mission.driverEmail || existing.transferredDriverEmail || email,
+            transferredDriverEmail: mission.driverEmail || email,
             isPartnerMission: true
           });
         });
+
+        // Une reprise Admin retire immédiatement le booking dès qu'il n'a plus de mission active.
+        for (const [bookingId, item] of merged) {
+          if (
+            item.isPartnerMission !== true &&
+            item.status === "transferred" &&
+            !activeByBooking.has(bookingId)
+          ) merged.delete(bookingId);
+        }
 
         state.bookings = Array.from(merged.values()).sort((a,b) => {
           const da = a.createdAt?.toMillis?.() || a.statusUpdatedAt?.toMillis?.() || Date.parse(a.scheduledAtText || "") || 0;
@@ -6514,7 +6540,7 @@ body.partner-authenticated .partner-menu-page input:disabled{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=729", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=730", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
