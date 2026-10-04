@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=756">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=757">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -4114,6 +4114,7 @@ body.partner-authenticated .action.partner-back{
       }).join("");
  
       document.querySelectorAll("[data-status]").forEach(button => {
+        if (button.closest("#detailBody")) return;
         button.addEventListener("click", () => handleStatusAction(button.dataset.id, button.dataset.status));
       });
       document.querySelectorAll("[data-delete]").forEach(button => {
@@ -4997,6 +4998,19 @@ async function handleStatusAction(id, status) {
           if(!chosen)return false;
           partnerPayment=chosen;
         }
+
+        // Progression instantanée : l'étape suivante s'affiche immédiatement.
+        const previousMissionStatus=currentMissionItem.partnerMissionStatus;
+        const previousUiStatus=currentMissionItem.status;
+        currentMissionItem.partnerMissionStatus=status;
+        currentMissionItem.status=missionUiStatus(status);
+        Object.assign(currentMissionItem,partnerPayment);
+        try{
+          if(status!=="completed" && status!=="refused"){
+            openBooking(id);
+          }
+        }catch(uiError){console.warn("Progression locale mission",uiError)}
+
         try {
           await updateDoc(missionRef, {
             status,
@@ -5005,31 +5019,31 @@ async function handleStatusAction(id, status) {
             updatedAt: serverTimestamp()
           });
         } catch (error) {
+          // Uniquement une vraie erreur Firebase fait revenir à l'étape précédente.
+          currentMissionItem.partnerMissionStatus=previousMissionStatus;
+          currentMissionItem.status=previousUiStatus;
+          try{openBooking(id)}catch(_){}
           console.error("Écriture statut mission partenaire", {code:error?.code||"",message:error?.message||String(error),missionId:currentMissionItem.missionId,status});
-          alert(error?.code === "permission-denied" ? "Action refusée pour cette mission." : "La mission n’a pas pu être mise à jour.");
+          alert(error?.code === "permission-denied" ? "Action refusée par Firebase pour cette mission." : "La mission n’a pas pu être mise à jour.");
           return false;
         }
 
-        // L'écriture serveur est validée : les opérations d'affichage ne doivent jamais transformer
-        // un succès Firebase en faux message d'erreur.
         try {
-          currentMissionItem.partnerMissionStatus = status;
-          currentMissionItem.status = missionUiStatus(status);
           currentMissionItem.updatedAt = new Date();
-          render();
-          if (status === "accepted" || status === "refused") {
+          if (status === "accepted" || status === "refused" || status === "completed") {
             if (typeof closeBooking === "function") closeBooking();
             openPanel("dashboardHome");
           } else {
-            requestAnimationFrame(() => {
-              try { openBooking(id); } catch (uiError) { console.warn("Rafraîchissement fiche mission", uiError); }
-            });
+            // La fiche est déjà à jour ; aucun retour arrière / réouverture n'est nécessaire.
+            requestAnimationFrame(()=>{try{openBooking(id)}catch(_){}});
           }
+          if(typeof render==="function") requestAnimationFrame(()=>{try{render()}catch(_){}});
         } catch (uiError) {
-          console.warn("Mission enregistrée, rafraîchissement visuel différé", uiError);
+          console.warn("Mission enregistrée, affichage déjà avancé", uiError);
         }
         return true;
       }
+
       let extraChanges = {};
       if (status === "completed") {
         const current = state.bookings.find(item => item.id === id);
@@ -6770,7 +6784,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=756", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=757", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6796,7 +6810,7 @@ async function handleStatusAction(id, status) {
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "75.0.20261004.01";
+    const HEALTH_VERSION = "75.7.20261004.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
@@ -7241,12 +7255,12 @@ function pmEnsure(){
  }
  if(!document.getElementById("partnerCustomersPanel")){
    const s=document.createElement("section");s.id="partnerCustomersPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Fichier clients</h2><div class="pm-card"><input id="pmCustomerSearch" class="pm-search" type="search" placeholder="Rechercher un client, téléphone ou adresse"><div id="pmCustomersList"></div></div>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><div class="pm-page-head"><div><small>MON ACTIVITÉ</small><h2>Fichier clients</h2><p>Les clients créés depuis votre profil restent dans votre fichier, même après un transfert.</p></div></div><div class="pm-crm-kpis"><article><b id="pmCustomerCount">0</b><small>Clients</small></article><article><b id="pmCustomerRideCount">0</b><small>Courses</small></article><article><b id="pmCustomerRevenue">0 €</b><small>CA créé</small></article></div><div class="pm-card pm-crm-tools"><input id="pmCustomerSearch" class="pm-search" type="search" placeholder="🔎 Rechercher nom, téléphone ou adresse"><div class="pm-filter-row"><label><input id="pmCustomerRegularOnly" type="checkbox"> Clients réguliers (2+ courses)</label></div></div><div id="pmCustomersList" class="pm-crm-list"></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerHistoryPanel")){
    const s=document.createElement("section");s.id="partnerHistoryPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Historique</h2><div class="pm-card"><div id="pmHistoryList"></div></div>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><div class="pm-page-head"><div><small>MON ACTIVITÉ</small><h2>Historique</h2><p>Vos courses créées et les missions que vous avez réellement effectuées.</p></div></div><div class="pm-crm-kpis"><article><b id="pmHistoryCount">0</b><small>Courses</small></article><article><b id="pmHistoryRevenue">0 €</b><small>CA affiché</small></article><article><b id="pmHistoryPaid">0</b><small>Réglées</small></article></div><div class="pm-card pm-history-filters"><b>Afficher</b><div class="pm-filter-grid"><label><input id="pmHistOwn" type="checkbox" checked> Mes courses</label><label><input id="pmHistMissions" type="checkbox" checked> Missions effectuées</label><label><input id="pmHistCard" type="checkbox" checked> Carte</label><label><input id="pmHistCash" type="checkbox" checked> Espèces</label><label><input id="pmHistMixed" type="checkbox" checked> Mixte</label><label><input id="pmHistUnknown" type="checkbox" checked> Non renseigné</label></div></div><div id="pmHistoryList" class="pm-history-list"></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerCostPanel")){
@@ -7273,6 +7287,8 @@ function pmEnsure(){
  }
  document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>{const target=b.dataset.pm;showPartnerPage(target);if(target==="partnerCustomersPanel")pmRenderCustomers();if(target==="partnerHistoryPanel")pmRenderHistory();});
  document.getElementById("pmCustomerSearch")?.addEventListener("input",pmRenderCustomers);
+ document.getElementById("pmCustomerRegularOnly")?.addEventListener("change",pmRenderCustomers);
+ ["pmHistOwn","pmHistMissions","pmHistCard","pmHistCash","pmHistMixed","pmHistUnknown"].forEach(id=>document.getElementById(id)?.addEventListener("change",pmRenderHistory));
  document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
  const pmCostCalc=()=>{
    const fc=Number(document.getElementById("pmCostFuelConsumption")?.value||0),fp=Number(document.getElementById("pmCostFuelPrice")?.value||0),fkm=Number(document.getElementById("pmCostFuelKm")?.value||100);
@@ -7299,8 +7315,12 @@ async function pmLoadOwnedBookings(){
  const email=String(auth?.currentUser?.email||"").trim();
  if(!db||!email)return [];
  try{
-  const snap=await getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",email),limit(1000)));
-  return snap.docs.map(d=>({id:d.id,...d.data()}));
+  const attempts=[email];
+  if(email.toLowerCase()!==email)attempts.push(email.toLowerCase());
+  const batches=await Promise.all(attempts.map(value=>getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",value),limit(1000))).catch(()=>null)));
+  const rows=new Map();
+  batches.filter(Boolean).forEach(snap=>snap.docs.forEach(d=>rows.set(d.id,{id:d.id,...d.data()})));
+  return Array.from(rows.values());
  }catch(error){console.error("Fichier clients chauffeur",error);return []}
 }
 function pmCustomerKey(item){
@@ -7309,9 +7329,10 @@ function pmCustomerKey(item){
 }
 async function pmRenderCustomers(){
  const box=document.getElementById("pmCustomersList");if(!box)return;
- box.innerHTML='<div class="pm-empty">Chargement du fichier clients…</div>';
+ box.innerHTML='<div class="pm-loading-card"><b>Chargement du fichier clients…</b><small>Synchronisation avec votre profil chauffeur.</small></div>';
  const owned=await pmLoadOwnedBookings();
  const q=normalizeSearch(document.getElementById("pmCustomerSearch")?.value||"");
+ const regularOnly=!!document.getElementById("pmCustomerRegularOnly")?.checked;
  const map=new Map();
  owned.forEach(item=>{
    const key=pmCustomerKey(item);if(!key)return;
@@ -7320,27 +7341,45 @@ async function pmRenderCustomers(){
    if(!current.last||d>current.last)current.last=d;
    current.ca+=moneyValue(item.estimatedPrice);map.set(key,current);
  });
- const rows=Array.from(map.values()).sort((a,b)=>(b.last?.getTime?.()||0)-(a.last?.getTime?.()||0)).filter(x=>!q||normalizeSearch([x.name,x.phone,...x.addresses].join(" ")).includes(q));
- box.innerHTML=rows.length?rows.map(x=>`<article class="pm-customer"><div><b>${pme(x.name)}</b><small>${pme(x.phone||"Téléphone non renseigné")}</small></div><div class="pm-customer-stats"><strong>${x.courses.length}</strong><small>course${x.courses.length>1?"s":""}</small><strong>${x.ca.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €</strong></div><details><summary>Voir la fiche client</summary><div class="pm-customer-detail"><b>Adresses utilisées</b>${Array.from(x.addresses).map(a=>`<small>• ${pme(a)}</small>`).join("")||"<small>Aucune adresse</small>"}<b>Historique</b>${x.courses.sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0)).map(i=>`<small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")} · ${pme(i.pickup||"")} → ${pme(i.destination||"")} · ${pme(i.estimatedPrice||"")}</small>`).join("")}</div></details></article>`).join(""):'<div class="pm-empty">Aucun client dans votre fichier.</div>';
+ const all=Array.from(map.values());
+ document.getElementById("pmCustomerCount").textContent=String(all.length);
+ document.getElementById("pmCustomerRideCount").textContent=String(owned.length);
+ document.getElementById("pmCustomerRevenue").textContent=`${owned.reduce((sum,x)=>sum+moneyValue(x.estimatedPrice),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
+ const rows=all.sort((a,b)=>(b.last?.getTime?.()||0)-(a.last?.getTime?.()||0)).filter(x=>(!regularOnly||x.courses.length>=2)&&(!q||normalizeSearch([x.name,x.phone,...x.addresses].join(" ")).includes(q)));
+ box.innerHTML=rows.length?rows.map(x=>{
+   const last=x.last?.toLocaleDateString?.("fr-FR")||"—";
+   return `<article class="pm-client-card"><div class="pm-client-avatar">${pme((x.name||"C").trim().charAt(0).toUpperCase())}</div><div class="pm-client-main"><div class="pm-client-head"><div><b>${pme(x.name)}</b><small>${pme(x.phone||"Téléphone non renseigné")}</small></div><span>${x.courses.length} course${x.courses.length>1?"s":""}</span></div><div class="pm-client-meta"><small>Dernière course : ${pme(last)}</small><strong>${x.ca.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €</strong></div><details><summary>Ouvrir la fiche client</summary><div class="pm-client-detail"><div><b>Coordonnées</b>${x.phone?`<a href="tel:${pme(x.phone)}">☎ ${pme(x.phone)}</a>`:"<small>Téléphone non renseigné</small>"}</div><div><b>Adresses utilisées</b>${Array.from(x.addresses).map(a=>`<small>• ${pme(a)}</small>`).join("")||"<small>Aucune adresse</small>"}</div><div><b>Historique du client</b>${x.courses.sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0)).map(i=>`<small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")} · ${pme(i.pickup||"")} → ${pme(i.destination||"")} · ${pme(i.estimatedPrice||"—")}</small>`).join("")}</div></div></details></div></article>`;
+ }).join(""):`<div class="pm-empty-state"><div>👥</div><b>${q||regularOnly?"Aucun client ne correspond aux filtres.":"Votre fichier clients est prêt."}</b><p>${q||regularOnly?"Modifiez la recherche ou décochez le filtre clients réguliers.":"Dès qu’une course est créée depuis ce profil chauffeur, le client apparaîtra ici et restera rattaché à ce chauffeur même si la course est ensuite transférée."}</p></div>`;
 }
 async function pmRenderHistory(){
  const box=document.getElementById("pmHistoryList");if(!box)return;
- box.innerHTML='<div class="pm-empty">Chargement de l’historique…</div>';
+ box.innerHTML='<div class="pm-loading-card"><b>Chargement de l’historique…</b><small>Courses et missions du chauffeur.</small></div>';
  const email=String(auth?.currentUser?.email||"").trim();
  let owned=[],missions=[];
  try{
-  const [bookSnap,missionSnap]=await Promise.all([
-   getDocs(query(collection(db,"bookings"),where("partnerOwnerEmail","==",email),limit(1000))),
+  const [ownRows,missionSnap]=await Promise.all([
+   pmLoadOwnedBookings(),
    getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",email),limit(1000)))
   ]);
-  owned=bookSnap.docs.map(d=>({id:d.id,...d.data(),historyOrigin:"owned"}));
+  owned=ownRows.map(x=>({...x,historyOrigin:"owned"}));
   missions=missionSnap.docs.map(d=>({id:d.data().bookingId||d.id,missionId:d.id,...d.data(),historyOrigin:"mission"})).filter(x=>x.status==="completed");
  }catch(error){console.error("Historique chauffeur",error)}
+ const ownOn=document.getElementById("pmHistOwn")?.checked!==false,missionOn=document.getElementById("pmHistMissions")?.checked!==false;
+ const payAllowed=new Set();
+ if(document.getElementById("pmHistCard")?.checked!==false)payAllowed.add("card");
+ if(document.getElementById("pmHistCash")?.checked!==false)payAllowed.add("cash");
+ if(document.getElementById("pmHistMixed")?.checked!==false)payAllowed.add("mixed");
+ if(document.getElementById("pmHistUnknown")?.checked!==false)payAllowed.add("unknown");
+ const keyPay=x=>{const p=normalizeSearch(x.paymentMethod||"");if(p.includes("mix"))return"mixed";if(p.includes("carte")||p==="cb")return"card";if(p.includes("espece"))return"cash";return"unknown"};
  const merged=new Map();
- owned.forEach(x=>merged.set(`owned:${x.id}`,x));
- missions.forEach(x=>merged.set(`mission:${x.missionId}`,x));
- const rows=Array.from(merged.values()).sort((a,b)=>(bookingDate(b)?.getTime?.()||b.statusUpdatedAt?.toMillis?.()||0)-(bookingDate(a)?.getTime?.()||a.statusUpdatedAt?.toMillis?.()||0));
- box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-row"><div><b>${pme(i.customerName||"Client")}</b><small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")}</small><small>${pme(i.pickup||"")} → ${pme(i.destination||"")}</small></div><div><strong>${pme(i.estimatedPrice||"—")}</strong><small>${pme(i.paymentMethod||"Règlement non renseigné")}</small></div></article>`).join(""):'<div class="pm-empty">Aucune course dans votre historique.</div>';
+ if(ownOn)owned.forEach(x=>merged.set(`owned:${x.id}`,x));
+ if(missionOn)missions.forEach(x=>merged.set(`mission:${x.missionId}`,x));
+ const all=Array.from(merged.values()).sort((a,b)=>(bookingDate(b)?.getTime?.()||b.statusUpdatedAt?.toMillis?.()||0)-(bookingDate(a)?.getTime?.()||a.statusUpdatedAt?.toMillis?.()||0));
+ const rows=all.filter(x=>payAllowed.has(keyPay(x)));
+ document.getElementById("pmHistoryCount").textContent=String(rows.length);
+ document.getElementById("pmHistoryRevenue").textContent=`${rows.reduce((sum,x)=>sum+moneyValue(x.estimatedPrice),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
+ document.getElementById("pmHistoryPaid").textContent=String(rows.filter(x=>keyPay(x)!=="unknown").length);
+ box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-card"><div class="pm-history-date"><b>${pme(bookingDate(i)?.toLocaleDateString("fr-FR")||"—")}</b><small>${pme(bookingDate(i)?.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})||"")}</small></div><div class="pm-history-main"><div><b>${pme(i.customerName||"Client")}</b><span class="pm-origin">${i.historyOrigin==="mission"?"Mission effectuée":"Ma course"}</span></div><small>${pme(i.pickup||"Départ")} → ${pme(i.destination||"Destination")}</small><div class="pm-history-pay"><span>${pme(i.paymentMethod||"Règlement non renseigné")}</span><strong>${pme(i.estimatedPrice||"—")}</strong></div></div></article>`).join(""):'<div class="pm-empty-state"><div>🕘</div><b>Aucune course avec ces filtres.</b><p>Cochez les catégories que vous souhaitez afficher. Les courses terminées apparaissent automatiquement ici.</p></div>';
 }
 function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
@@ -7470,16 +7509,6 @@ document.addEventListener("click", event => {
 }, true);
 </script>
 
-<script id="v754-status-feedback">
-document.addEventListener("click", event => {
- const b=event.target.closest("button[data-status]");
- if(!b||b.disabled)return;
- const original=b.textContent;
- b.dataset.v754Label=original;
- b.textContent="Validation…";
- setTimeout(()=>{if(document.body.contains(b)&&b.textContent==="Validation…"){b.textContent=b.dataset.v754Label||original;}},2200);
-}, true);
-</script>
 <script id="v75-runtime-stability">
 (() => {
   const locks = new WeakMap();
@@ -7516,5 +7545,16 @@ document.addEventListener("click", event => {
  <div id="v755MixedFields" class="hidden"><label>Montant CB (€)<input id="v755CardAmount" type="number" min="0" step="0.01"></label><label>Montant espèces (€)<input id="v755CashAmount" type="number" min="0" step="0.01"></label></div>
  <div class="v755-pay-actions"><button type="button" class="v755-pay-cancel" id="v755PayCancel">Annuler</button><button type="button" class="v755-pay-confirm" id="v755PayConfirm">Valider et terminer</button></div></div>
 </div>
+
+<style id="v757-crm-polish">
+.pm-page-head{margin:4px 0 14px}.pm-page-head small{font-size:11px;font-weight:900;letter-spacing:.08em;color:#176ef4}.pm-page-head h2{margin:3px 0 4px;font-size:27px}.pm-page-head p{margin:0;color:#667085;font-size:13px;line-height:1.45}
+.pm-crm-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}.pm-crm-kpis article{background:#fff;border:1px solid #e4e8ef;border-radius:16px;padding:13px 10px;box-shadow:0 5px 18px rgba(15,23,42,.04)}.pm-crm-kpis b,.pm-crm-kpis small{display:block}.pm-crm-kpis b{font-size:21px;color:#0b1627}.pm-crm-kpis small{font-size:10px;color:#667085;margin-top:3px}
+.pm-crm-tools,.pm-history-filters{margin-bottom:12px}.pm-filter-row,.pm-filter-grid{display:flex;flex-wrap:wrap;gap:8px}.pm-filter-row label,.pm-filter-grid label{display:flex;align-items:center;gap:7px;background:#f6f8fb;border:1px solid #e4e8ef;border-radius:11px;padding:9px 10px;font-size:12px;font-weight:800}.pm-filter-grid{display:grid;grid-template-columns:1fr 1fr;margin-top:10px}
+.pm-crm-list,.pm-history-list{display:grid;gap:10px}.pm-client-card,.pm-history-card{background:#fff;border:1px solid #e4e8ef;border-radius:18px;padding:14px;box-shadow:0 6px 20px rgba(15,23,42,.05)}
+.pm-client-card{display:grid;grid-template-columns:44px 1fr;gap:11px}.pm-client-avatar{width:44px;height:44px;border-radius:14px;background:#0b1627;color:#fff;display:grid;place-items:center;font-weight:950;font-size:18px}.pm-client-main{min-width:0}.pm-client-head,.pm-client-meta,.pm-history-pay{display:flex;justify-content:space-between;gap:10px;align-items:center}.pm-client-head b,.pm-client-head small{display:block}.pm-client-head small,.pm-client-meta small{color:#667085;margin-top:2px}.pm-client-head>span,.pm-origin{font-size:10px;font-weight:900;background:#edf4ff;color:#176ef4;padding:5px 7px;border-radius:999px;white-space:nowrap}.pm-client-meta{margin-top:9px}.pm-client-meta strong{color:#0b1627}.pm-client-card details{margin-top:10px;border-top:1px solid #eef1f5;padding-top:9px}.pm-client-card summary{font-weight:900;color:#176ef4;cursor:pointer}.pm-client-detail{display:grid;gap:12px;padding-top:12px}.pm-client-detail>div{display:grid;gap:5px}.pm-client-detail a{color:#176ef4;text-decoration:none;font-weight:800}
+.pm-history-card{display:grid;grid-template-columns:62px 1fr;gap:11px}.pm-history-date{border-right:1px solid #eef1f5;padding-right:10px}.pm-history-date b,.pm-history-date small{display:block}.pm-history-date small{color:#667085;margin-top:3px}.pm-history-main{min-width:0}.pm-history-main>div:first-child{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.pm-history-main>small{display:block;color:#667085;margin:5px 0 9px}.pm-history-pay span{font-size:11px;font-weight:800;color:#475467}.pm-history-pay strong{font-size:16px}
+.pm-empty-state,.pm-loading-card{background:#fff;border:1px dashed #cfd6e2;border-radius:18px;padding:28px 18px;text-align:center;color:#667085}.pm-empty-state>div{font-size:32px;margin-bottom:8px}.pm-empty-state b,.pm-loading-card b{display:block;color:#0b1627;font-size:16px}.pm-empty-state p,.pm-loading-card small{display:block;margin:7px auto 0;max-width:360px;line-height:1.45}
+@media(max-width:390px){.pm-crm-kpis{grid-template-columns:1fr 1fr}.pm-crm-kpis article:last-child{grid-column:1/-1}.pm-filter-grid{grid-template-columns:1fr}.pm-client-card{grid-template-columns:38px 1fr}.pm-client-avatar{width:38px;height:38px}.pm-history-card{grid-template-columns:54px 1fr}}
+</style>
 </body>
 </html>
