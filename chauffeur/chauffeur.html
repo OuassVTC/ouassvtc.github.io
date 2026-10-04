@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=754">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=755">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -4969,13 +4969,38 @@ body.partner-authenticated .action.partner-back{
       }
     }
  
-    async function handleStatusAction(id, status) {
+    async function v755AskPartnerPayment(item){
+ return new Promise(resolve=>{
+  const modal=document.getElementById("partnerPaymentModal"),mixed=document.getElementById("v755MixedFields"),total=moneyValue(item?.estimatedPrice);
+  let method="";
+  document.getElementById("v755PayTotal").textContent=total>0?`Montant de la course : ${total.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €`:"Choisissez comment le client a réglé.";
+  document.getElementById("v755CardAmount").value="";document.getElementById("v755CashAmount").value="";
+  document.querySelectorAll("[data-v755-pay]").forEach(b=>{b.classList.remove("active");b.onclick=()=>{method=b.dataset.v755Pay;document.querySelectorAll("[data-v755-pay]").forEach(x=>x.classList.toggle("active",x===b));mixed.classList.toggle("hidden",method!=="mixed")}});
+  const done=value=>{modal.classList.add("hidden");resolve(value)};
+  document.getElementById("v755PayCancel").onclick=()=>done(null);
+  document.getElementById("v755PayConfirm").onclick=()=>{
+   if(!method)return alert("Choisissez le mode de règlement.");
+   let card=method==="card"?total:0,cash=method==="cash"?total:0;
+   if(method==="mixed"){card=Number(document.getElementById("v755CardAmount").value||0);cash=Number(document.getElementById("v755CashAmount").value||0);if(card<=0||cash<=0)return alert("Renseignez les deux montants.");if(total>0&&Math.abs(card+cash-total)>0.02)return alert(`Le total CB + espèces doit être égal à ${total.toFixed(2)} €.`)}
+   done({paymentMethod:method==="card"?"Carte bancaire":method==="cash"?"Espèces":"Mixte",paymentCardAmount:Math.round(card*100)/100,paymentCashAmount:Math.round(cash*100)/100,paidAmount:Math.round((card+cash)*100)/100});
+  };
+  modal.classList.remove("hidden");
+ });
+}
+async function handleStatusAction(id, status) {
       const currentMissionItem = state.bookings.find(item => item.id === id);
       if (currentMissionItem?.isPartnerMission && currentMissionItem?.missionId) {
         const missionRef = doc(db, "driverMissions", currentMissionItem.missionId);
+        let partnerPayment = {};
+        if(status==="completed"){
+          const chosen=await v755AskPartnerPayment(currentMissionItem);
+          if(!chosen)return false;
+          partnerPayment=chosen;
+        }
         try {
           await updateDoc(missionRef, {
             status,
+            ...partnerPayment,
             statusUpdatedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
@@ -6745,7 +6770,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=754", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=755", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7159,7 +7184,7 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -7201,7 +7226,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7212,6 +7237,16 @@ function pmEnsure(){
  if(!document.getElementById("partnerDocumentsPanel")){
    const s=document.createElement("section");s.id="partnerDocumentsPanel";s.className="partner-menu-page partner-view-hidden";
    s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mes documents</h2><div class="pm-card"><div id="pmDocumentsList">Chargement…</div></div>';
+   main.appendChild(s);
+ }
+ if(!document.getElementById("partnerCustomersPanel")){
+   const s=document.createElement("section");s.id="partnerCustomersPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Fichier clients</h2><div class="pm-card"><input id="pmCustomerSearch" class="pm-search" type="search" placeholder="Rechercher un client, téléphone ou adresse"><div id="pmCustomersList"></div></div>';
+   main.appendChild(s);
+ }
+ if(!document.getElementById("partnerHistoryPanel")){
+   const s=document.createElement("section");s.id="partnerHistoryPanel";s.className="partner-menu-page partner-view-hidden";
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Historique</h2><div class="pm-card"><div id="pmHistoryList"></div></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerCostPanel")){
@@ -7236,7 +7271,8 @@ function pmEnsure(){
    s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Réglages</h2><div class="pm-card"><div class="pm-setting"><span>Notifications</span><button type="button" id="pmNotifications">Activer</button></div><div class="pm-setting"><span>Interprète</span><button type="button" id="pmInterpreter">Ouvrir</button></div><div class="pm-setting"><span>Installation de l’application</span><button type="button" id="pmInstall">Installer</button></div></div><button class="pm-logout" id="pmLogout" type="button">Déconnexion</button>';
    main.appendChild(s);
  }
- document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>showPartnerPage(b.dataset.pm));
+ document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>{const target=b.dataset.pm;showPartnerPage(target);if(target==="partnerCustomersPanel")pmRenderCustomers();if(target==="partnerHistoryPanel")pmRenderHistory();});
+ document.getElementById("pmCustomerSearch")?.addEventListener("input",pmRenderCustomers);
  document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
  const pmCostCalc=()=>{
    const fc=Number(document.getElementById("pmCostFuelConsumption")?.value||0),fp=Number(document.getElementById("pmCostFuelPrice")?.value||0),fkm=Number(document.getElementById("pmCostFuelKm")?.value||100);
@@ -7258,6 +7294,34 @@ function pmEnsure(){
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
  pmFillProfile();pmListenDocuments();
+}
+function pmOwnedBookings(){
+ const email=String(auth?.currentUser?.email||"").trim().toLowerCase();
+ return (state.bookings||[]).filter(x=>String(x.partnerOwnerEmail||"").trim().toLowerCase()===email);
+}
+function pmCustomerKey(item){
+ const phone=String(item.customerPhone||"").replace(/\D/g,"");
+ return phone || normalizeSearch(item.customerName||"client");
+}
+function pmRenderCustomers(){
+ const box=document.getElementById("pmCustomersList");if(!box)return;
+ const q=normalizeSearch(document.getElementById("pmCustomerSearch")?.value||"");
+ const map=new Map();
+ pmOwnedBookings().forEach(item=>{
+   const key=pmCustomerKey(item);if(!key)return;
+   const d=bookingDate(item),current=map.get(key)||{name:item.customerName||"Client",phone:item.customerPhone||"",courses:[],addresses:new Set(),last:null,ca:0};
+   current.courses.push(item);if(item.pickup)current.addresses.add(item.pickup);if(item.destination)current.addresses.add(item.destination);
+   if(!current.last||d>current.last)current.last=d;
+   current.ca+=moneyValue(item.estimatedPrice);map.set(key,current);
+ });
+ const rows=Array.from(map.values()).sort((a,b)=>(b.last?.getTime?.()||0)-(a.last?.getTime?.()||0)).filter(x=>!q||normalizeSearch([x.name,x.phone,...x.addresses].join(" ")).includes(q));
+ box.innerHTML=rows.length?rows.map(x=>`<article class="pm-customer"><div><b>${pme(x.name)}</b><small>${pme(x.phone||"Téléphone non renseigné")}</small></div><div class="pm-customer-stats"><strong>${x.courses.length}</strong><small>course${x.courses.length>1?"s":""}</small><strong>${x.ca.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €</strong></div><details><summary>Voir la fiche client</summary><div class="pm-customer-detail"><b>Adresses utilisées</b>${Array.from(x.addresses).map(a=>`<small>• ${pme(a)}</small>`).join("")||"<small>Aucune adresse</small>"}<b>Historique</b>${x.courses.sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0)).map(i=>`<small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")} · ${pme(i.pickup||"")} → ${pme(i.destination||"")} · ${pme(i.estimatedPrice||"")}</small>`).join("")}</div></details></article>`).join(""):'<div class="pm-empty">Aucun client dans votre fichier.</div>';
+}
+function pmRenderHistory(){
+ const box=document.getElementById("pmHistoryList");if(!box)return;
+ const email=String(auth?.currentUser?.email||"").trim().toLowerCase();
+ const rows=(state.bookings||[]).filter(x=>String(x.partnerOwnerEmail||"").trim().toLowerCase()===email || (x.isPartnerMission===true && ["completed","transfer_performed","transfer_closed"].includes(x.status))).sort((a,b)=>(bookingDate(b)?.getTime?.()||0)-(bookingDate(a)?.getTime?.()||0));
+ box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-row"><div><b>${pme(i.customerName||"Client")}</b><small>${pme(bookingDate(i)?.toLocaleString("fr-FR")||"Date inconnue")}</small><small>${pme(i.pickup||"")} → ${pme(i.destination||"")}</small></div><div><strong>${pme(i.estimatedPrice||"—")}</strong><small>${pme(i.paymentMethod||i.partnerPaymentMethod||"Règlement non renseigné")}</small></div></article>`).join(""):'<div class="pm-empty">Aucune course dans votre historique.</div>';
 }
 function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
@@ -7416,5 +7480,22 @@ document.addEventListener("click", event => {
   });
 })();
 </script>
+
+<style id="v755-crm-payment-style">
+.pm-search{width:100%;box-sizing:border-box;border:1px solid #d0d5dd;border-radius:13px;padding:12px;margin-bottom:12px}
+.pm-customer,.pm-history-row{border-bottom:1px solid #e8edf3;padding:14px 0;display:grid;gap:9px}.pm-customer small,.pm-history-row small{display:block;color:#667085;margin-top:3px}
+.pm-customer-stats{display:flex;gap:12px;align-items:center}.pm-customer-stats small{margin:0}.pm-customer-detail{display:grid;gap:5px;padding:10px 0}.pm-history-row{grid-template-columns:1fr auto}.pm-history-row>div:last-child{text-align:right}.pm-empty{padding:22px;text-align:center;color:#667085}
+#partnerPaymentModal{position:fixed;inset:0;z-index:10080;background:rgba(3,10,20,.72);display:grid;place-items:center;padding:18px}#partnerPaymentModal.hidden{display:none!important}
+.v755-pay-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:18px;box-sizing:border-box}.v755-pay-card h3{margin:0 0 6px}.v755-pay-card p{color:#667085}
+.v755-pay-choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}.v755-pay-choice{border:1px solid #d0d5dd;background:#fff;border-radius:14px;padding:13px;font-weight:850}.v755-pay-choice.active{border-color:#2563eb;background:#eff6ff}
+#v755MixedFields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}#v755MixedFields.hidden{display:none!important}#v755MixedFields label{font-size:12px;font-weight:800}#v755MixedFields input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #d0d5dd;border-radius:11px;margin-top:5px}
+.v755-pay-actions{display:flex;gap:9px;margin-top:16px}.v755-pay-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:900}.v755-pay-cancel{background:#eef2f6}.v755-pay-confirm{background:#0b1627;color:#fff}
+</style>
+<div id="partnerPaymentModal" class="hidden" aria-modal="true" role="dialog">
+ <div class="v755-pay-card"><h3>Règlement de la course</h3><p id="v755PayTotal">Choisissez comment le client a réglé.</p>
+ <div class="v755-pay-choices"><button type="button" class="v755-pay-choice" data-v755-pay="card">💳 Carte bancaire</button><button type="button" class="v755-pay-choice" data-v755-pay="cash">💶 Espèces</button><button type="button" class="v755-pay-choice" data-v755-pay="mixed">💳 + 💶 Mixte</button></div>
+ <div id="v755MixedFields" class="hidden"><label>Montant CB (€)<input id="v755CardAmount" type="number" min="0" step="0.01"></label><label>Montant espèces (€)<input id="v755CashAmount" type="number" min="0" step="0.01"></label></div>
+ <div class="v755-pay-actions"><button type="button" class="v755-pay-cancel" id="v755PayCancel">Annuler</button><button type="button" class="v755-pay-confirm" id="v755PayConfirm">Valider et terminer</button></div></div>
+</div>
 </body>
 </html>
