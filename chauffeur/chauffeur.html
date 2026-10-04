@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=725">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=726">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5109,6 +5109,15 @@ body:not(.partner-authenticated) #loginError{
       storage = getStorage(app);
       aiCopilotCallable = httpsCallable(getFunctions(app, "europe-west1"), "aiCopilot", { timeout:45000 });
       messaging = await isSupported() ? getMessaging(app) : null;
+
+      // V72.6 — compatibilité des modules historiques placés hors du <script type="module">.
+      // On expose uniquement les références Firebase déjà initialisées dont ces modules ont besoin.
+      Object.assign(window, {
+        auth, db, storage, messaging,
+        doc, collection, query, where, limit, getDocs,
+        setDoc, updateDoc, deleteDoc, onSnapshot,
+        serverTimestamp
+      });
       if (messaging) {
         onMessage(messaging, async payload => {
           if (Notification.permission !== "granted" || !notificationsOptedIn() || !("serviceWorker" in navigator)) return;
@@ -6370,7 +6379,7 @@ body:not(.partner-authenticated) #loginError{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=725", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=726", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
