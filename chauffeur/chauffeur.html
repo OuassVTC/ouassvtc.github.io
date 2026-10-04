@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=746">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=750">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1485,7 +1485,7 @@ body.partner-authenticated .action.partner-back{
         <form class="cost-settings-card compact-hidden" id="missionCostSettingsForm">
           <div class="cost-card-head"><div><small>Réglages mémorisés</small><h3>Votre véhicule</h3></div><span class="cost-icon">⚙</span></div>
           <div class="simulator-grid single-column-form">
-            <div class="sim-field full"><label for="costHomeAddress">Adresse de référence</label><input id="costHomeAddress" autocomplete="off" value="10 rue Claude Monet, 66000 Perpignan"></div>
+            <div class="sim-field full"><label for="costHomeAddress">Adresse de référence</label><input id="costHomeAddress" autocomplete="off" value=""></div>
             <div class="sim-field"><label for="costFuelPrice">Prix du carburant au litre</label><input id="costFuelPrice" type="number" min="0" step="0.001" inputmode="decimal" placeholder="Exemple : 1,800"></div>
             <div class="sim-field"><label for="costConsumption">Consommation moyenne (L/100 km)</label><input id="costConsumption" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 6,0"></div>
           </div>
@@ -1870,12 +1870,31 @@ body.partner-authenticated .action.partner-back{
     function notificationsOptedIn() {
       return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
     }
-    const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV1";
-    const DEFAULT_MISSION_COST_SETTINGS = {
-      homeAddress: "10 rue Claude Monet, 66000 Perpignan",
-      fuelPrice: 1.8,
-      consumption: 6
-    };
+    const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV2";
+    const DEFAULT_MISSION_COST_SETTINGS = { homeAddress: "", fuelPrice: 1.8, consumption: 6 };
+    function missionCostStorageKey() {
+      const owner = String(auth?.currentUser?.email || auth?.currentUser?.uid || "guest").trim().toLowerCase();
+      return `${MISSION_COST_SETTINGS_KEY}:${owner}`;
+    }
+    function currentDriverIdentity() {
+      const p = window.currentPartnerProfile || {};
+      const displayName = String(p.displayName || p.firstName || p.companyName || "Chauffeur").trim();
+      return {
+        displayName,
+        firstName: displayName.split(/\s+/)[0] || "Chauffeur",
+        companyName: String(p.companyName || "OuassVTC").trim(),
+        phone: String(p.phone || "").trim(),
+        address: String(p.address || "").trim(),
+        homeAddress: String(p.homeAddress || p.referenceAddress || p.address || "").trim(),
+        vehicle: String(p.vehicle || "").trim(),
+        registration: String(p.registration || "").trim(),
+        siret: String(p.siret || "").trim(),
+        vtcRegistry: String(p.vtcRegistry || p.evtc || p.vtcNumber || "").trim(),
+        reviewUrl: String(p.reviewUrl || "https://g.page/r/CR7Mtdp00GhhEBM/review").trim(),
+        fuelPrice: Number(p.fuelPrice),
+        consumption: Number(p.consumption)
+      };
+    }
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
@@ -2032,12 +2051,16 @@ body.partner-authenticated .action.partner-back{
       const priceText = priceAmount > 0
         ? `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
         : (item.estimatedPrice || "Non renseigné");
+      const driver = currentDriverIdentity();
+      const signature = `${driver.displayName} – ${driver.companyName || "OuassVTC"}`;
+      const vehicleText = driver.vehicle || "mon véhicule VTC";
+      const registrationText = driver.registration ? ` immatriculé ${driver.registration}` : "";
       const messages = {
-        confirmation:`Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`,
-        reminder:`Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`,
-        arrived:`Bonjour ${name},\n\nJe vous informe que je suis arrivé à l’adresse de prise en charge. Je vous attends à bord de mon véhicule.\n\nÀ tout de suite.\n\nOuassini – OuassVTC`,
-        security:`Bonjour ${name},\n\nJe suis Ouassini, votre chauffeur VTC. Mon véhicule est une Toyota Auris break immatriculée GB-580-NS. Je serai en charge de vous transporter pour votre trajet.\n\nCordialement,\nOuassini – OuassVTC`,
-        review:`Bonjour ${name},\n\nMerci d’avoir fait confiance à OuassVTC pour votre trajet. Si vous avez été satisfait de mon service, vous pouvez partager votre expérience en laissant un avis Google grâce au lien ci-dessous :\n\nhttps://g.page/r/CR7Mtdp00GhhEBM/review\n\nVotre avis est précieux et m’aide à faire connaître mon activité.\n\nMerci encore et à bientôt.\n\nOuassini – OuassVTC`
+        confirmation:`Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\n${signature}`,
+        reminder:`Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\n${signature}`,
+        arrived:`Bonjour ${name},\n\nJe vous informe que je suis arrivé à l’adresse de prise en charge. Je vous attends à bord de mon véhicule.\n\nÀ tout de suite.\n\n${signature}`,
+        security:`Bonjour ${name},\n\nJe suis ${driver.displayName}, votre chauffeur VTC. Mon véhicule est ${vehicleText}${registrationText}. Je serai en charge de vous transporter pour votre trajet.\n\nCordialement,\n${signature}`,
+        review:`Bonjour ${name},\n\nMerci d’avoir fait confiance à OuassVTC pour votre trajet. Si vous avez été satisfait de mon service, vous pouvez partager votre expérience en laissant un avis Google grâce au lien ci-dessous :\n\n${driver.reviewUrl}\n\nVotre avis est précieux et m’aide à faire connaître mon activité.\n\nMerci encore et à bientôt.\n\n${signature}`
       };
       const message = messages[type] || messages.confirmation;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
@@ -2183,20 +2206,27 @@ body.partner-authenticated .action.partner-back{
     }
 
     function readMissionCostSettings() {
+      const driver = currentDriverIdentity();
       try {
-        const stored = JSON.parse(localStorage.getItem(MISSION_COST_SETTINGS_KEY) || "null");
+        const stored = JSON.parse(localStorage.getItem(missionCostStorageKey()) || "null");
         return {
-          homeAddress: String(stored?.homeAddress || DEFAULT_MISSION_COST_SETTINGS.homeAddress),
-          fuelPrice: Number(stored?.fuelPrice) > 0 ? Number(stored.fuelPrice) : DEFAULT_MISSION_COST_SETTINGS.fuelPrice,
-          consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : DEFAULT_MISSION_COST_SETTINGS.consumption
+          homeAddress: String(stored?.homeAddress || driver.homeAddress || DEFAULT_MISSION_COST_SETTINGS.homeAddress),
+          fuelPrice: Number(stored?.fuelPrice) > 0 ? Number(stored.fuelPrice) : (driver.fuelPrice > 0 ? driver.fuelPrice : DEFAULT_MISSION_COST_SETTINGS.fuelPrice),
+          consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : (driver.consumption > 0 ? driver.consumption : DEFAULT_MISSION_COST_SETTINGS.consumption)
         };
-      } catch (error) {
-        return { ...DEFAULT_MISSION_COST_SETTINGS };
-      }
+      } catch (error) { return { ...DEFAULT_MISSION_COST_SETTINGS, homeAddress:driver.homeAddress }; }
     }
 
-    function saveMissionCostSettings(settings) {
-      localStorage.setItem(MISSION_COST_SETTINGS_KEY, JSON.stringify(settings));
+    async function saveMissionCostSettings(settings) {
+      localStorage.setItem(missionCostStorageKey(), JSON.stringify(settings));
+      if (window.currentPartnerProfile?.id && db) {
+        try {
+          await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id), {
+            homeAddress:settings.homeAddress, fuelPrice:settings.fuelPrice, consumption:settings.consumption, updatedAt:serverTimestamp()
+          });
+          Object.assign(window.currentPartnerProfile, settings);
+        } catch (error) { console.warn("Synchronisation paramètres mission", error); }
+      }
     }
 
     function euroAmount(value) {
@@ -2904,7 +2934,7 @@ body.partner-authenticated .action.partner-back{
       $("voiceAssistant").classList.remove("hidden", "minimized");
       document.body.style.overflow = "hidden";
       $("voiceTranscript").textContent = "Dites par exemple : « Quelles sont mes courses de demain ? »";
-      voiceSpeak("Bonjour Ouassini. Appuyez sur le micro et dites-moi ce que vous souhaitez faire.");
+      voiceSpeak(`Bonjour ${currentDriverIdentity().firstName}. Appuyez sur le micro et dites-moi ce que vous souhaitez faire.`);
     }
 
     function closeVoiceAssistant() {
@@ -3442,19 +3472,22 @@ body.partner-authenticated .action.partner-back{
       renderMileageReports();
     }
 
+    function financeSettingsStorageKey() {
+      return `ouassvtcFinanceSettingsV2:${String(auth?.currentUser?.email || auth?.currentUser?.uid || "guest").toLowerCase()}`;
+    }
     async function saveFinanceSettings(values = {}) {
       state.financeSettings = { ...state.financeSettings, ...values };
-      await setDoc(doc(db, "counters", "financeSettings"), { ...state.financeSettings, updatedAt:serverTimestamp() }, { merge:true });
+      localStorage.setItem(financeSettingsStorageKey(), JSON.stringify(state.financeSettings));
+      renderFinanceReports();
     }
 
     function listenFinanceSettings() {
-      if (state.financeUnsubscribe) state.financeUnsubscribe();
-      const reference = doc(db, "counters", "financeSettings");
-      state.financeUnsubscribe = onSnapshot(reference, snapshot => {
-        if (snapshot.exists()) state.financeSettings = { ...state.financeSettings, ...snapshot.data(), adExpenses:Array.isArray(snapshot.data().adExpenses) ? snapshot.data().adExpenses : [], monthlyEntries:Array.isArray(snapshot.data().monthlyEntries)?snapshot.data().monthlyEntries:[] };
-        else void setDoc(reference, { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[], updatedAt:serverTimestamp() });
-        renderFinanceReports();
-      }, error => console.error("Réglages financiers indisponibles", error));
+      if (state.financeUnsubscribe) { try { state.financeUnsubscribe(); } catch (_) {} state.financeUnsubscribe = null; }
+      try {
+        const saved = JSON.parse(localStorage.getItem(financeSettingsStorageKey()) || "null");
+        if (saved) state.financeSettings = { ...state.financeSettings, ...saved, adExpenses:Array.isArray(saved.adExpenses)?saved.adExpenses:[], monthlyEntries:Array.isArray(saved.monthlyEntries)?saved.monthlyEntries:[] };
+      } catch (error) { console.warn("Réglages financiers locaux", error); }
+      renderFinanceReports();
     }
 
     async function completeHistoricCosts() {
@@ -3532,7 +3565,7 @@ body.partner-authenticated .action.partner-back{
     }
 
     function transferSmsText(driverName, missionUrl) {
-      return `Bonjour ${driverName},\n\nUne course OuassVTC vous est proposée. Ouvrez votre mission sécurisée pour consulter les informations et mettre à jour son avancement :\n${missionUrl}\n\nOuassini – OuassVTC`;
+      return `Bonjour ${driverName},\n\nUne course OuassVTC vous est proposée. Ouvrez votre mission sécurisée pour consulter les informations et mettre à jour son avancement :\n${missionUrl}\n\n${currentDriverIdentity().displayName} – ${currentDriverIdentity().companyName}`;
     }
 
     function partnerMissionForBooking(bookingId) {
@@ -5074,7 +5107,7 @@ body.partner-authenticated .action.partner-back{
     }
 
     function renderDocumentCard(key,label) {
-      const item=state.documents.find(document=>document.id===key), status=documentStatus(item);
+      const item=state.documents.find(document=>document.key===key || document.id===`${auth?.currentUser?.uid || ""}_${key}`), status=documentStatus(item);
       const dateText=item?.expiryDate ? `Échéance : ${new Date(`${item.expiryDate}T12:00:00`).toLocaleDateString("fr-FR")}` : "Aucune date d’expiration";
       return `<button class="document-card" type="button" data-edit-document="${escapeHtml(key)}"><span class="document-card-icon">${item?.downloadUrl?"✓":"＋"}</span><span><strong>${escapeHtml(label)}</strong><small>${escapeHtml(dateText)}</small><small class="document-status ${status.kind}">${escapeHtml(status.label)}</small></span><span class="document-card-arrow">›</span></button>`;
     }
@@ -5143,7 +5176,7 @@ body.partner-authenticated .action.partner-back{
         let downloadUrl=existing?.downloadUrl||"", storagePath=existing?.storagePath||"", fileName=existing?.fileName||"";
         if(file){ storagePath=`driverDocuments/${auth.currentUser.uid}/${key}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`; const target=storageRef(storage,storagePath); await uploadDocumentWithProgress(target,file); downloadUrl=await getDownloadURL(target); fileName=file.name; if(existing?.storagePath&&existing.storagePath!==storagePath) deleteObject(storageRef(storage,existing.storagePath)).catch(()=>{}); }
         $("documentUploadProgressText").textContent="Finalisation sécurisée…";
-        await setDoc(doc(db,"driverDocuments",key),{ ownerUid:auth.currentUser.uid,key,label:definition.label,category:definition.category,downloadUrl,storagePath,fileName,expiryDate:expiryDate||"",updatedAt:serverTimestamp(),expiryReminderLastSent:null },{merge:true});
+        await setDoc(doc(db,"driverDocuments",`${auth.currentUser.uid}_${key}`),{ ownerUid:auth.currentUser.uid,key,label:definition.label,category:definition.category,downloadUrl,storagePath,fileName,expiryDate:expiryDate||"",updatedAt:serverTimestamp(),expiryReminderLastSent:null },{merge:true});
         closeDocumentEditor();
         alert(`${definition.label} a bien été enregistré.`);
       } catch(error){ console.error(error); const detail=error?.code==="storage/unauthorized"?"Accès Firebase refusé. Fermez puis reconnectez-vous à l’application.":error?.code==="storage/canceled"?"L’envoi a été interrompu. Vérifiez la connexion puis réessayez.":(error?.message||"Vérifiez votre connexion et réessayez."); $("documentEditorError").textContent=`Échec de l’enregistrement : ${detail}`; $("documentEditorError").classList.remove("hidden"); }
@@ -5526,6 +5559,11 @@ body.partner-authenticated .action.partner-back{
           }
 
           startPartnerPresence(profileDoc.id);
+          const missionSettings = readMissionCostSettings();
+          if ($("costHomeAddress")) $("costHomeAddress").value = missionSettings.homeAddress;
+          if ($("costFuelPrice")) $("costFuelPrice").value = String(missionSettings.fuelPrice);
+          if ($("costConsumption")) $("costConsumption").value = String(missionSettings.consumption);
+          if ($("costProfileSummary")) $("costProfileSummary").textContent = `${missionSettings.fuelPrice.toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:3 })} €/L · ${missionSettings.consumption.toLocaleString("fr-FR")} L/100 km`;
           return true;
         } catch (error) {
           console.error("Chargement profil chauffeur", error);
@@ -5737,32 +5775,42 @@ body.partner-authenticated .action.partner-back{
         }
       });
 
-      onAuthStateChanged(auth, user => {
+      onAuthStateChanged(auth, async user => {
         const connected = Boolean(user);
-        $("authLoadingView").classList.add("hidden");
-        if (!connected && !$("activationView").classList.contains("hidden")) {
-          $("loginView").classList.add("hidden");
-        } else {
-          $("loginView").classList.toggle("hidden", connected);
-        }
-        $("dashboardView").classList.toggle("hidden", !connected);
-        $("logout").classList.toggle("hidden", !connected);
-        $("openMenu").classList.toggle("hidden", !connected);
-        document.body.classList.toggle("partner-signed-out", !connected);
-        document.body.classList.toggle("partner-authenticated", connected);
-        setTimeout(() => {
-          document.getElementById("partnerBottomNav")?.classList.toggle("auth-hidden", !connected);
-          document.getElementById("appBottomNav")?.classList.toggle("auth-hidden", !connected);
-        }, 0);
-        if (connected) {
-          listenToBookings();
-          loadPartnerIdentityAndPresence();
-          if (new URLSearchParams(window.location.search).has("documents")) { openPanel("documentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
-        } else {
+        $("authLoadingView").classList.remove("hidden");
+        $("loginView").classList.add("hidden");
+        $("dashboardView").classList.add("hidden");
+        document.getElementById("partnerBottomNav")?.classList.add("auth-hidden");
+        document.getElementById("appBottomNav")?.classList.add("auth-hidden");
+        if (!connected) {
+          $("authLoadingView").classList.add("hidden");
+          if (!$("activationView").classList.contains("hidden")) $("loginView").classList.add("hidden");
+          else $("loginView").classList.remove("hidden");
+          $("logout").classList.add("hidden"); $("openMenu").classList.add("hidden");
+          document.body.classList.add("partner-signed-out"); document.body.classList.remove("partner-authenticated");
           if (state.unsubscribe) state.unsubscribe();
           if (state.partnerTransferUnsubscribe) state.partnerTransferUnsubscribe();
           if (state.partnerPresenceUnsubscribe) state.partnerPresenceUnsubscribe();
+          return;
         }
+        const profileReady = await loadPartnerIdentityAndPresence();
+        if (!profileReady) {
+          $("authLoadingView").classList.add("hidden");
+          $("loginView").classList.remove("hidden");
+          $("dashboardView").classList.add("hidden");
+          return;
+        }
+        listenToBookings();
+        listenFinanceSettings();
+        $("authLoadingView").classList.add("hidden");
+        $("loginView").classList.add("hidden"); $("dashboardView").classList.remove("hidden");
+        $("logout").classList.remove("hidden"); $("openMenu").classList.remove("hidden");
+        document.body.classList.remove("partner-signed-out"); document.body.classList.add("partner-authenticated");
+        document.getElementById("partnerBottomNav")?.classList.remove("auth-hidden");
+        document.getElementById("appBottomNav")?.classList.remove("auth-hidden");
+        if (typeof pmFillProfile === "function") pmFillProfile();
+        if (typeof pmListenDocuments === "function") pmListenDocuments();
+        if (new URLSearchParams(window.location.search).has("documents")) { if (typeof showPartnerPage === "function") showPartnerPage("partnerDocumentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
       });
     }
 
@@ -6195,7 +6243,7 @@ body.partner-authenticated .action.partner-back{
       $("toggleCostSettings").textContent = $("missionCostSettingsForm").classList.contains("compact-hidden") ? "⚙ Réglages" : "Fermer";
     });
 
-    $("missionCostSettingsForm").addEventListener("submit", event => {
+    $("missionCostSettingsForm").addEventListener("submit", async event => {
       event.preventDefault();
       const settings = {
         homeAddress: $("costHomeAddress").value.trim(),
@@ -6206,7 +6254,7 @@ body.partner-authenticated .action.partner-back{
         alert("Renseignez une adresse, un prix au litre et une consommation valides.");
         return;
       }
-      saveMissionCostSettings(settings);
+      await saveMissionCostSettings(settings);
       $("costProfileSummary").textContent = `${settings.fuelPrice.toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:3 })} €/L · ${settings.consumption.toLocaleString("fr-FR")} L/100 km`;
       $("costSettingsSaved").classList.remove("hidden");
       setTimeout(() => $("costSettingsSaved").classList.add("hidden"), 2500);
@@ -6371,7 +6419,7 @@ body.partner-authenticated .action.partner-back{
       const dateText = scheduledDate.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
       const timeText = scheduledDate.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
       const priceText = `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`;
-      const message = `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${pickup}\n\n🏁 Adresse d’arrivée :\n${destination}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`;
+      const message = `Bonjour ${name},\n\n🚘 Je vous confirme votre réservation OuassVTC.\n\n📍 Adresse de départ :\n${pickup}\n\n🏁 Adresse d’arrivée :\n${destination}\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n💶 Montant du trajet :\n${priceText}\n\nMerci pour votre confiance.\n\n${currentDriverIdentity().displayName} – ${currentDriverIdentity().companyName}`;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     });
  
@@ -6677,7 +6725,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=746", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=750", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -6703,7 +6751,7 @@ body.partner-authenticated .action.partner-back{
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "67.0.20260927.01";
+    const HEALTH_VERSION = "75.0.20261004.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
@@ -7123,7 +7171,7 @@ function pmEnsure(){
  }
  if(!document.getElementById("partnerProfilePanel")){
    const s=document.createElement("section");s.id="partnerProfilePanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse<input id="pmAddress"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse société / personnelle<input id="pmAddress"></label><label>Adresse de référence des courses<input id="pmHomeAddress" placeholder="Départ et retour du bilan"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>Registre VTC<input id="pmVtcRegistry" placeholder="EVTC..."></label><label>Prix carburant €/L<input id="pmFuelPrice" type="number" min="0" step="0.001"></label><label>Consommation L/100 km<input id="pmConsumption" type="number" min="0" step="0.1"></label><label>Lien avis client<input id="pmReviewUrl" type="url" placeholder="https://..."></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerDocumentsPanel")){
@@ -7147,12 +7195,12 @@ function pmEnsure(){
 function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
  document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
- [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
+ [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmHomeAddress","homeAddress"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmVtcRegistry","vtcRegistry"],["pmFuelPrice","fuelPrice"],["pmConsumption","consumption"],["pmReviewUrl","reviewUrl"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
 }
 async function pmSaveProfile(e){
  e.preventDefault();if(!window.currentPartnerProfile?.id)return;
- const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),updatedAt:serverTimestamp()};
- try{await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
+ const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),homeAddress:pmHomeAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),vtcRegistry:pmVtcRegistry.value.trim(),fuelPrice:Number(pmFuelPrice.value)||null,consumption:Number(pmConsumption.value)||null,reviewUrl:pmReviewUrl.value.trim(),updatedAt:serverTimestamp()};
+ try{await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);Object.assign(window.currentPartnerProfile,data);localStorage.removeItem(missionCostStorageKey());alert("Profil mis à jour.")}catch(err){console.error(err);alert("Impossible de modifier le profil.")}
 }
 function pmListenDocuments(){
  if(!auth?.currentUser)return;if(partnerDocsUnsub)partnerDocsUnsub();
@@ -7220,5 +7268,25 @@ async function pmRecordLogin(){
 document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
 </script>
 </div>
+
+<script id="v75-runtime-stability">
+(() => {
+  const locks = new WeakMap();
+  document.addEventListener("click", event => {
+    const button = event.target.closest("button[data-status],button[data-transfer-to-admin],button[data-more-transfer-admin],button[data-purchase-order]");
+    if (!button || button.disabled) return;
+    const now = Date.now(), last = locks.get(button) || 0;
+    if (now - last < 900) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+    locks.set(button, now);
+  }, true);
+  window.addEventListener("unhandledrejection", event => {
+    console.error("OuassVTC V75 erreur asynchrone", event.reason);
+    try { if (typeof healthWrite === "function") healthWrite("error","Application",event.reason?.message || "Erreur asynchrone"); } catch (_) {}
+  });
+  window.addEventListener("error", event => {
+    try { if (typeof healthWrite === "function") healthWrite("error","Application",event.message || "Erreur JavaScript"); } catch (_) {}
+  });
+})();
+</script>
 </body>
 </html>
