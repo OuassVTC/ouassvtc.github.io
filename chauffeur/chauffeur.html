@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=745">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=746">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -5695,14 +5695,25 @@ body.partner-authenticated .action.partner-back{
             updatedAt: serverTimestamp()
           });
 
-          // Verify ownership of the mailbox before allowing normal dashboard access.
-          await sendEmailVerification(createdUser);
-          await signOut(auth);
+          // L'activation est terminée : le compte reste connecté.
+          // L'e-mail de vérification est envoyé en complément, sans bloquer l'ouverture de l'application.
+          try {
+            await sendEmailVerification(createdUser);
+          } catch (verificationError) {
+            console.warn("E-mail de vérification non envoyé", verificationError);
+          }
 
+          // Important : à partir d'ici le compte est valide et ne doit plus être supprimé
+          // par le bloc catch si un élément d'interface rencontre un problème.
+          createdUser = null;
           $("activationView").classList.add("hidden");
-          $("loginView").classList.remove("hidden");
-          $("email").value = email;
-          showLoginError("Compte activé. Un e-mail de vérification vient de vous être envoyé. Validez-le puis connectez-vous.");
+          $("loginView").classList.add("hidden");
+          $("partnerLoginEmail").value = email;
+          $("dashboardView").classList.remove("hidden");
+          document.body.classList.remove("partner-signed-out");
+          document.body.classList.add("partner-authenticated");
+          await loadPartnerIdentityAndPresence();
+          openPanel("dashboardHome");
         } catch (error) {
           console.error("Activation chauffeur", error);
           if (createdUser && error?.code !== "auth/requires-recent-login") {
@@ -6666,7 +6677,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=745", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=746", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
