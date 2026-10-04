@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=751">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=752">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -1309,7 +1309,7 @@ body.partner-authenticated .action.partner-back{
         <div class="dashboard-mission">
           <div class="dashboard-mission-head">
             <div><div class="eyebrow">Prochaine course</div><h2>Votre prochain trajet</h2></div>
-            <button class="mission-arrow" type="button" data-open-tab="agendaPanel" aria-label="Ouvrir l’agenda">›</button>
+            <button class="mission-arrow" type="button" id="partnerNextTripAgenda" aria-label="Ouvrir l’agenda">›</button>
           </div>
           <div class="agenda-items" id="todayAgendaList"></div>
           <div class="empty hidden" id="todayAgendaEmpty">Aucune course restante aujourd’hui.</div>
@@ -6727,7 +6727,7 @@ body.partner-authenticated .action.partner-back{
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=751", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=752", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -7141,7 +7141,7 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -7250,8 +7250,7 @@ function pmRenderDocuments(docs){
     <div class="pm-doc-actions">
       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" hidden></label>
-      ${ok&&!noExpiry?`<label class="pm-doc-expiry">Validité <input type="date" value="${pme(d.expiryDate||"")}" data-partner-doc-expiry="${pme(d.id)}"></label>`:""}
-      ${ok&&noExpiry?`<span class="pm-doc-no-expiry">Sans date de fin</span>`:""}
+      ${ok?`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d.expiryDate||"")}" data-partner-doc-expiry="${pme(d.id)}"></label>`:""}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
    </div>`;
@@ -7259,7 +7258,7 @@ function pmRenderDocuments(docs){
  h.querySelectorAll("[data-partner-doc-upload]").forEach(input=>input.addEventListener("change",pmUploadDocument));
  h.querySelectorAll("[data-partner-doc-delete]").forEach(button=>button.addEventListener("click",pmDeleteDocument));
  h.querySelectorAll("[data-partner-doc-expiry]").forEach(input=>input.addEventListener("change",async event=>{
-   try{await updateDoc(doc(db,"partnerDocuments",event.currentTarget.dataset.partnerDocExpiry),{expiryDate:event.currentTarget.value||null,noExpiry:false,updatedAt:serverTimestamp()})}
+   try{await updateDoc(doc(db,"partnerDocuments",event.currentTarget.dataset.partnerDocExpiry),{expiryDate:event.currentTarget.value||null,updatedAt:serverTimestamp()})}
    catch(e){console.error(e);alert("La date de validité n’a pas pu être enregistrée.")}
  }));
 }
@@ -7278,7 +7277,7 @@ async function pmUploadDocument(event){
    await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
-   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,noExpiry:PARTNER_DOC_NO_EXPIRY.has(type),updatedAt:serverTimestamp()};
+   const payload={ownerEmail:email,partnerId:profileId,type,fileName:file.name,contentType:file.type||"",downloadUrl,storagePath:path,updatedAt:serverTimestamp()};
    if(existing.empty) await addDoc(collection(db,"partnerDocuments"),{...payload,createdAt:serverTimestamp()});
    else {
      const old=existing.docs[0].data();
@@ -7307,6 +7306,14 @@ document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecord
 </script>
 </div>
 
+<script id="v752-partner-navigation-fixes">
+document.addEventListener("click", event => {
+  const agendaArrow=event.target.closest("#partnerNextTripAgenda");
+  if(agendaArrow){event.preventDefault();event.stopPropagation();if(typeof showPartnerPage==="function")showPartnerPage("agendaPanel");return;}
+  const costButton=event.target.closest('[data-pm="partnerCostPanel"]');
+  if(costButton){event.preventDefault();event.stopPropagation();if(typeof showPartnerPage==="function")showPartnerPage("partnerCostPanel");return;}
+},true);
+</script>
 <script id="v751-home-navigation">
 document.addEventListener("click", event => {
   const homeButton = event.target.closest('#partnerBottomNav [data-target="dashboardHome"]');
