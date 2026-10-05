@@ -5198,12 +5198,42 @@ async function handleStatusAction(id, status) {
         }catch(uiError){console.warn("Progression locale mission",uiError)}
 
         try {
-          await updateDoc(missionRef, {
+          const statusChanges = {
             status,
             ...partnerPayment,
             statusUpdatedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
-          });
+          };
+
+          // Au moment où le chauffeur accepte une mission transférée, les coûts hérités
+          // du créateur précédent ne sont plus valables. On les neutralise immédiatement.
+          // Le calcul qui suit les remplace exclusivement par les paramètres du chauffeur exécutant.
+          if (status === "accepted") {
+            Object.assign(statusChanges, {
+              missionExecutorEmail: String(auth?.currentUser?.email || "").trim().toLowerCase(),
+              missionExecutorName: currentDriverIdentity().displayName || "Chauffeur",
+              missionExecutorProfileId: String(window.currentPartnerProfile?.id || ""),
+              missionHomeAddress: "",
+              missionEnergyType: "",
+              missionFuelPrice: 0,
+              missionConsumption: 0,
+              missionEvConsumption: 0,
+              missionKwhPrice: 0,
+              missionApproachKm: 0,
+              missionClientKm: 0,
+              missionReturnKm: 0,
+              missionTotalKm: 0,
+              missionClientFuelCost: 0,
+              missionFuelCost: 0,
+              missionTotalCost: Math.max(0, moneyValue(currentMissionItem.missionTolls)),
+              missionMargin: moneyValue(currentMissionItem.estimatedPrice) - Math.max(0, moneyValue(currentMissionItem.missionTolls)),
+              missionCostStatus: "recalculating",
+              missionCostUpdatedAt: serverTimestamp()
+            });
+            Object.assign(currentMissionItem, statusChanges, { missionCostStatus: "recalculating" });
+          }
+
+          await updateDoc(missionRef, statusChanges);
         } catch (error) {
           // Uniquement une vraie erreur Firebase fait revenir à l'étape précédente.
           currentMissionItem.partnerMissionStatus=previousMissionStatus;
@@ -5217,8 +5247,14 @@ async function handleStatusAction(id, status) {
         // Une mission transférée acceptée est recalculée avec LE profil du chauffeur
         // qui l'exécute : adresse d'approche + motorisation + prix/consommation personnels.
         if (status === "accepted") {
-          // Aucun bouton : le bilan du chauffeur exécutant se calcule automatiquement.
-          scheduleExecutingDriverMissionCost(currentMissionItem, 0);
+          // IMPORTANT : on force le recalcul même si la mission contenait déjà un bilan
+          // "calculated" provenant de l'Admin ou d'un autre chauffeur.
+          // Le chauffeur n'a rien à déclencher dans le Bilan de course.
+          const calculated = await calculateExecutingDriverMissionCost(currentMissionItem, missionRef);
+          if (!calculated) {
+            currentMissionItem.missionCostStatus = "pending_retry";
+            scheduleExecutingDriverMissionCost(currentMissionItem, 2500);
+          }
         }
 
         try {
@@ -7991,7 +8027,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.8 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V76.9 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
