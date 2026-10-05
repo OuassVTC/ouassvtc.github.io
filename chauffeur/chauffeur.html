@@ -2293,6 +2293,55 @@ body.partner-authenticated .action.partner-back{
       });
     }
 
+    async function recalculateTransferredMissionCostForExecutingDriver(item) {
+      const bookingId = String(item?.bookingId || item?.id || "").trim();
+      if (!bookingId || !db) return false;
+      const settings = readMissionCostSettings();
+      const driver = currentDriverIdentity();
+      const bookingRef = doc(db, "bookings", bookingId);
+
+      // Dès l'acceptation, les anciens coûts (administrateur / chauffeur précédent)
+      // ne doivent plus être utilisés. Le chauffeur exécutant devient la référence.
+      try {
+        await updateDoc(bookingRef, {
+          missionExecutorEmail: String(auth?.currentUser?.email || "").trim().toLowerCase(),
+          missionExecutorName: driver.displayName || "Chauffeur",
+          missionExecutorProfileId: String(window.currentPartnerProfile?.id || ""),
+          missionHomeAddress: settings.homeAddress || null,
+          missionEnergyType: settings.vehicleType || "thermal",
+          missionFuelPrice: settings.vehicleType === "electric" ? null : settings.fuelPrice,
+          missionConsumption: settings.vehicleType === "electric" ? null : settings.consumption,
+          missionEvConsumption: settings.vehicleType === "electric" ? settings.evConsumption : null,
+          missionKwhPrice: settings.vehicleType === "electric" ? settings.kwhPrice : null,
+          missionApproachKm: null,
+          missionClientKm: null,
+          missionReturnKm: null,
+          missionTotalKm: null,
+          missionClientFuelCost: null,
+          missionFuelCost: null,
+          missionTotalCost: null,
+          missionMargin: null,
+          missionCostStatus: "recalculating_for_executor",
+          missionCostUpdatedAt: serverTimestamp()
+        });
+      } catch (error) {
+        console.error("Initialisation coût chauffeur exécutant", error);
+        return false;
+      }
+
+      const source = { ...item, missionTolls: Number(item?.missionTolls || 0) };
+      const calculated = await automaticallyCalculateMissionCost(bookingRef, source);
+      if (calculated) {
+        try {
+          const refreshed = await getDoc(bookingRef);
+          if (refreshed.exists()) Object.assign(item, refreshed.data());
+        } catch (refreshError) {
+          console.warn("Rafraîchissement coût chauffeur exécutant", refreshError);
+        }
+      }
+      return calculated;
+    }
+
     async function automaticallyCalculateMissionCost(reference, booking) {
       if (reference?.id) automaticCostAttemptIds.add(reference.id);
       const pickup = String(booking.pickup || "").trim();
@@ -5086,6 +5135,16 @@ async function handleStatusAction(id, status) {
           return false;
         }
 
+        // Une mission transférée acceptée est recalculée avec LE profil du chauffeur
+        // qui l'exécute : adresse d'approche + motorisation + prix/consommation personnels.
+        if (status === "accepted") {
+          try {
+            await recalculateTransferredMissionCostForExecutingDriver(currentMissionItem);
+          } catch (costError) {
+            console.warn("Recalcul coût chauffeur exécutant", costError);
+          }
+        }
+
         try {
           currentMissionItem.updatedAt = new Date();
           if (status === "accepted" || status === "refused" || status === "completed") {
@@ -7855,7 +7914,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.6 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V76.7 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
