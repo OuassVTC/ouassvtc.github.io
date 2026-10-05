@@ -7358,7 +7358,7 @@ function pmEnsure(){
  }
  if(!document.getElementById("partnerProfilePanel")){
    const s=document.createElement("section");s.id="partnerProfilePanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse société / personnelle<input id="pmAddress"></label><label>Adresse de référence des courses<input id="pmHomeAddress" placeholder="Départ et retour du bilan"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>Registre VTC<input id="pmVtcRegistry" placeholder="EVTC..."></label><label>Prix carburant €/L<input id="pmFuelPrice" type="number" min="0" step="0.001"></label><label>Consommation L/100 km<input id="pmConsumption" type="number" min="0" step="0.1"></label><label>Lien avis client<input id="pmReviewUrl" type="url" placeholder="https://..."></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
+   s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse société / personnelle<input id="pmAddress"></label><label>Adresse de référence des courses<input id="pmHomeAddress" placeholder="Départ et retour du bilan"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>Registre VTC<input id="pmVtcRegistry" placeholder="EVTC..."></label><div class="pm-energy-choice"><span class="pm-energy-title">Motorisation enregistrée</span><div class="pm-energy-options"><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeThermal" value="thermal"><span>⛽ Thermique / hybride</span></label><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeElectric" value="electric"><span>⚡ 100 % électrique</span></label></div><small>Le bilan de course utilisera uniquement la motorisation cochée et enregistrée.</small></div><label data-pm-energy="thermal">Prix carburant €/L<input id="pmFuelPrice" type="number" min="0" step="0.001"></label><label data-pm-energy="thermal">Consommation L/100 km<input id="pmConsumption" type="number" min="0" step="0.1"></label><label data-pm-energy="electric">Prix électricité €/kWh<input id="pmProfileKwhPrice" type="number" min="0" step="0.001"></label><label data-pm-energy="electric">Consommation kWh/100 km<input id="pmProfileEvConsumption" type="number" min="0" step="0.1"></label><label>Lien avis client<input id="pmReviewUrl" type="url" placeholder="https://..."></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerDocumentsPanel")){
@@ -7421,6 +7421,7 @@ function pmEnsure(){
    const data={homeAddress:document.getElementById("pmCostHome").value.trim(),fuelPrice:Number(document.getElementById("pmCostFuelPrice").value)||null,consumption:Number(document.getElementById("pmCostFuelConsumption").value)||null,evConsumption:Number(document.getElementById("pmCostEvConsumption").value)||null,kwhPrice:Number(document.getElementById("pmCostKwhPrice").value)||null,updatedAt:serverTimestamp()};
    try{const cached=readMissionCostSettings();localStorage.setItem(missionCostStorageKey(),JSON.stringify({...cached,...data,vehicleType}));}catch(_){}
    try{await updateDoc(doc(db,"partnerDrivers",p.id),data);Object.assign(p,data,{vehicleType});
+   try{await updateDoc(doc(db,"partnerDrivers",p.id),{vehicleType,updatedAt:serverTimestamp()});}catch(typeSyncError){console.warn("Motorisation conservée localement",typeSyncError?.code||typeSyncError)}
    pmCostCalc();alert("Coût kilométrique enregistré.");}catch(err){console.error(err);alert("Impossible d’enregistrer le coût kilométrique.");}
  };
 
@@ -7508,7 +7509,10 @@ async function pmRenderHistory(){
 function pmFillProfile(){
  const p=window.currentPartnerProfile;if(!p)return;
  document.getElementById("pmName").textContent=p.displayName||p.companyName||"Mon espace";
- [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmHomeAddress","homeAddress"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmVtcRegistry","vtcRegistry"],["pmFuelPrice","fuelPrice"],["pmConsumption","consumption"],["pmReviewUrl","reviewUrl"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
+ [["pmDisplayName","displayName"],["pmCompany","companyName"],["pmSiret","siret"],["pmPhone","phone"],["pmAddress","address"],["pmHomeAddress","homeAddress"],["pmVehicle","vehicle"],["pmRegistration","registration"],["pmVtcRegistry","vtcRegistry"],["pmFuelPrice","fuelPrice"],["pmConsumption","consumption"],["pmProfileKwhPrice","kwhPrice"],["pmProfileEvConsumption","evConsumption"],["pmReviewUrl","reviewUrl"],["pmEmail","email"]].forEach(([id,k])=>{const e=document.getElementById(id);if(e)e.value=p[k]||""});
+ const savedVehicleType=String(p.vehicleType||(Number(p.evConsumption)>0&&!Number(p.consumption)?"electric":"thermal"));
+ const radio=document.querySelector(`input[name="pmVehicleType"][value="${savedVehicleType}"]`);if(radio)radio.checked=true;
+ if(typeof pmApplyProfileEnergyChoice==="function")pmApplyProfileEnergyChoice();
 
  const cp=window.currentPartnerProfile||{};
  const setv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??""};
@@ -7518,10 +7522,13 @@ function pmFillProfile(){
 }
 async function pmSaveProfile(e){
  e.preventDefault();if(!window.currentPartnerProfile?.id)return;
- const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),homeAddress:pmHomeAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),vtcRegistry:pmVtcRegistry.value.trim(),fuelPrice:Number(pmFuelPrice.value)||null,consumption:Number(pmConsumption.value)||null,reviewUrl:pmReviewUrl.value.trim(),updatedAt:serverTimestamp()};
+ const vehicleType=document.querySelector('input[name="pmVehicleType"]:checked')?.value||"thermal";
+ const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),homeAddress:pmHomeAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),vtcRegistry:pmVtcRegistry.value.trim(),fuelPrice:Number(pmFuelPrice.value)||null,consumption:Number(pmConsumption.value)||null,kwhPrice:Number(document.getElementById("pmProfileKwhPrice")?.value)||null,evConsumption:Number(document.getElementById("pmProfileEvConsumption")?.value)||null,reviewUrl:pmReviewUrl.value.trim(),updatedAt:serverTimestamp()};
  try{
   await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);
-  Object.assign(window.currentPartnerProfile,data);
+  Object.assign(window.currentPartnerProfile,data,{vehicleType});
+  try{const cached=readMissionCostSettings();localStorage.setItem(missionCostStorageKey(),JSON.stringify({...cached,...data,vehicleType}));}catch(_){}
+  try{await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),{vehicleType,updatedAt:serverTimestamp()});}catch(typeSyncError){console.warn("Motorisation conservée localement",typeSyncError?.code||typeSyncError)}
   try{ if(typeof missionCostStorageKey==="function") localStorage.removeItem(missionCostStorageKey()); }catch(cacheError){console.warn("Cache coût mission",cacheError)}
   pmFillProfile();
   alert("Profil mis à jour.");
@@ -7848,7 +7855,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.5 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V76.6 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
@@ -7870,8 +7877,8 @@ html[data-theme="dark"] .client-route-card{background:#111925!important;border-c
 #locateDriver{min-height:52px!important;border-radius:15px!important;background:linear-gradient(135deg,#1268e8,#0b55c2)!important;color:#fff!important;border:0!important;box-shadow:0 8px 22px rgba(18,104,232,.24)!important}
 /* L'ancien message de pull-to-refresh ne doit jamais être visible. */
 #pullRefreshIndicator,#ptrText{display:none!important}
-.ptr-indicator{min-width:44px!important;width:44px!important;height:44px!important;padding:0!important;border-radius:50%!important;justify-content:center!important;font-size:0!important}
-.ptr-indicator::before{content:"↻";font-size:20px;font-weight:900}
+.ptr-indicator,#ptrIndicator,#pullRefreshIndicator{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+.ptr-indicator::before{content:none!important}
 /* Navigation et panneaux : les commandes restent nettes dans les deux thèmes. */
 html[data-theme="dark"] .pm-page-head small{color:#67a9ff!important}html[data-theme="dark"] .pm-page-head h2{color:#f7f9fc!important}html[data-theme="dark"] .pm-page-head p{color:#b6c1d0!important}
 html[data-theme="dark"] .pm-setting-action,html[data-theme="dark"] .pm-arrow{color:#7db5ff!important}
@@ -7960,5 +7967,64 @@ html[data-theme="dark"] .pm-setting-action,html[data-theme="dark"] .pm-arrow{col
 #driverLiveMap{display:block!important;width:100%!important;height:290px!important;min-height:290px!important;border-radius:20px!important;overflow:hidden;background:#e8eef5!important;box-shadow:0 12px 32px rgba(15,23,42,.12)}
 [data-theme="dark"] #driverLiveMap{background:#172033!important;box-shadow:0 14px 36px rgba(0,0,0,.32)}
 </style>
+
+<style id="ouass-v766-final">
+/* Actualisation invisible : le geste reste actif uniquement sur Accueil. */
+#ptrIndicator,#ptrText,#pullRefreshIndicator{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;overflow:hidden!important}
+.pm-energy-choice{grid-column:1/-1;padding:16px;border:1px solid #dce5f0;border-radius:18px;background:#f7faff}.pm-energy-title{display:block;font-weight:850;margin-bottom:11px;color:#14213d}.pm-energy-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pm-energy-options label{position:relative;margin:0}.pm-energy-options input{position:absolute;opacity:0;pointer-events:none}.pm-energy-options span{display:flex;align-items:center;justify-content:center;min-height:54px;padding:10px;border:1px solid #d8e1ed;border-radius:14px;background:#fff;color:#25324a;font-weight:800;text-align:center}.pm-energy-options input:checked+span{border-color:#1268e8;background:#eaf3ff;color:#0755b7;box-shadow:0 0 0 2px rgba(18,104,232,.12)}
+html[data-theme="dark"] .pm-energy-choice{background:#111a28;border-color:#2d3b50}html[data-theme="dark"] .pm-energy-title{color:#f7f9fc}html[data-theme="dark"] .pm-energy-options span{background:#182334;border-color:#33445b;color:#dce7f6}html[data-theme="dark"] .pm-energy-options input:checked+span{background:#12345f;border-color:#55a0ff;color:#fff}
+[data-pm-energy].pm-energy-disabled{opacity:.42}.pm-energy-options+small{display:block;margin-top:10px;line-height:1.45;color:#667085}
+#driverLiveMap{position:relative!important;display:block!important;width:100%!important;height:310px!important;min-height:310px!important;background:#dce6f1!important}
+#driverLiveMap .gm-style{width:100%!important;height:100%!important}
+@media(max-width:520px){.pm-energy-options{grid-template-columns:1fr}.pm-energy-options span{justify-content:flex-start;padding-left:16px}}
+</style>
+<script id="ouass-v766-runtime">
+(()=>{
+  const PERPIGNAN={lat:42.6887,lng:2.8948};
+  window.pmApplyProfileEnergyChoice=()=>{
+    const type=document.querySelector('input[name="pmVehicleType"]:checked')?.value||'thermal';
+    document.querySelectorAll('[data-pm-energy]').forEach(el=>el.classList.toggle('pm-energy-disabled',el.dataset.pmEnergy!==type));
+  };
+  document.addEventListener('change',e=>{if(e.target?.name==='pmVehicleType')window.pmApplyProfileEnergyChoice()},true);
+
+  // Aucun visuel de pull-to-refresh, même pendant le rafraîchissement.
+  const hideRefresh=()=>{document.getElementById('ptrIndicator')?.remove();document.getElementById('pullRefreshIndicator')?.remove()};
+  document.addEventListener('DOMContentLoaded',hideRefresh,{once:true});
+  setTimeout(hideRefresh,1000);
+
+  // Carte Nouvelle course : initialisation indépendante de la visibilité du panneau.
+  let v766Map=null,v766Renderer=null,v766Loading=null;
+  const mapsReady=()=>!!window.google?.maps?.Map;
+  const loadMaps=()=>{
+    if(mapsReady())return Promise.resolve();
+    if(v766Loading)return v766Loading;
+    v766Loading=new Promise((resolve,reject)=>{
+      const existing=[...document.scripts].find(x=>x.src&&x.src.includes('maps.googleapis.com/maps/api/js'));
+      if(existing){let n=0;const t=setInterval(()=>{if(mapsReady()){clearInterval(t);resolve()}else if(++n>80){clearInterval(t);reject(new Error('Google Maps timeout'))}},125);return}
+      const cb='initOuassV766Maps';window[cb]=()=>{delete window[cb];resolve()};
+      const sc=document.createElement('script');sc.async=true;sc.defer=true;sc.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&libraries=places&loading=async&callback='+cb;sc.onerror=reject;document.head.appendChild(sc);
+    });
+    return v766Loading;
+  };
+  window.ensureV766NewCourseMap=async()=>{
+    const node=document.getElementById('driverLiveMap');if(!node)return;
+    try{
+      await loadMaps();
+      if(!v766Map){
+        v766Map=new google.maps.Map(node,{center:PERPIGNAN,zoom:11,disableDefaultUI:true,zoomControl:true,gestureHandling:'cooperative',mapTypeControl:false,streetViewControl:false,fullscreenControl:false});
+        v766Renderer=new google.maps.DirectionsRenderer({map:v766Map});
+      }
+      requestAnimationFrame(()=>setTimeout(()=>{try{google.maps.event.trigger(v766Map,'resize');v766Map.setCenter(PERPIGNAN);if(!v766Renderer?.getDirections())v766Map.setZoom(11)}catch(_){}},80));
+    }catch(err){console.error('Carte Nouvelle course',err);node.innerHTML='<div style="height:100%;display:grid;place-items:center;padding:24px;text-align:center;color:#667085;font-weight:700">Google Maps est momentanément indisponible.</div>'}
+  };
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#partnerNewCourse,#partnerBottomNav [data-target="estimatePanel"],[data-target="estimatePanel"],[data-open-tab="estimatePanel"]');
+    if(b)setTimeout(window.ensureV766NewCourseMap,120);
+  },true);
+  const obs=new MutationObserver(()=>{const panel=document.getElementById('estimatePanel');if(panel&&!panel.classList.contains('hidden')&&!panel.classList.contains('partner-view-hidden'))window.ensureV766NewCourseMap()});
+  document.addEventListener('DOMContentLoaded',()=>{const panel=document.getElementById('estimatePanel');if(panel)obs.observe(panel,{attributes:true,attributeFilter:['class']});window.pmApplyProfileEnergyChoice();},{once:true});
+})();
+</script>
+
 </body>
 </html>
