@@ -1882,7 +1882,7 @@ body.partner-authenticated .action.partner-back{
       return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
     }
     const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV2";
-    const DEFAULT_MISSION_COST_SETTINGS = { homeAddress: "", fuelPrice: 1.8, consumption: 6 };
+    const DEFAULT_MISSION_COST_SETTINGS = { homeAddress: "", vehicleType:"thermal", fuelPrice: 1.8, consumption: 6, evConsumption:18, kwhPrice:0.25 };
     function missionCostStorageKey() {
       const owner = String(auth?.currentUser?.email || auth?.currentUser?.uid || "guest").trim().toLowerCase();
       return `${MISSION_COST_SETTINGS_KEY}:${owner}`;
@@ -1902,8 +1902,11 @@ body.partner-authenticated .action.partner-back{
         siret: String(p.siret || "").trim(),
         vtcRegistry: String(p.vtcRegistry || p.evtc || p.vtcNumber || "").trim(),
         reviewUrl: String(p.reviewUrl || "https://g.page/r/CR7Mtdp00GhhEBM/review").trim(),
+        vehicleType: String(p.vehicleType || "").trim(),
         fuelPrice: Number(p.fuelPrice),
-        consumption: Number(p.consumption)
+        consumption: Number(p.consumption),
+        evConsumption: Number(p.evConsumption),
+        kwhPrice: Number(p.kwhPrice)
       };
     }
     let deferredInstallPrompt = null;
@@ -2222,10 +2225,13 @@ body.partner-authenticated .action.partner-back{
         const stored = JSON.parse(localStorage.getItem(missionCostStorageKey()) || "null");
         return {
           homeAddress: String(stored?.homeAddress || driver.homeAddress || DEFAULT_MISSION_COST_SETTINGS.homeAddress),
+          vehicleType: String(stored?.vehicleType || driver.vehicleType || (driver.evConsumption>0 && !(driver.consumption>0) ? "electric" : "thermal")),
           fuelPrice: Number(stored?.fuelPrice) > 0 ? Number(stored.fuelPrice) : (driver.fuelPrice > 0 ? driver.fuelPrice : DEFAULT_MISSION_COST_SETTINGS.fuelPrice),
-          consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : (driver.consumption > 0 ? driver.consumption : DEFAULT_MISSION_COST_SETTINGS.consumption)
+          consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : (driver.consumption > 0 ? driver.consumption : DEFAULT_MISSION_COST_SETTINGS.consumption),
+          evConsumption: Number(stored?.evConsumption) > 0 ? Number(stored.evConsumption) : (driver.evConsumption > 0 ? driver.evConsumption : DEFAULT_MISSION_COST_SETTINGS.evConsumption),
+          kwhPrice: Number(stored?.kwhPrice) > 0 ? Number(stored.kwhPrice) : (driver.kwhPrice > 0 ? driver.kwhPrice : DEFAULT_MISSION_COST_SETTINGS.kwhPrice)
         };
-      } catch (error) { return { ...DEFAULT_MISSION_COST_SETTINGS, homeAddress:driver.homeAddress }; }
+      } catch (error) { return { ...DEFAULT_MISSION_COST_SETTINGS, homeAddress:driver.homeAddress, vehicleType:driver.vehicleType || "thermal", evConsumption:driver.evConsumption || DEFAULT_MISSION_COST_SETTINGS.evConsumption, kwhPrice:driver.kwhPrice || DEFAULT_MISSION_COST_SETTINGS.kwhPrice }; }
     }
 
     async function saveMissionCostSettings(settings) {
@@ -2233,7 +2239,7 @@ body.partner-authenticated .action.partner-back{
       if (window.currentPartnerProfile?.id && db) {
         try {
           await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id), {
-            homeAddress:settings.homeAddress, fuelPrice:settings.fuelPrice, consumption:settings.consumption, updatedAt:serverTimestamp()
+            homeAddress:settings.homeAddress, fuelPrice:settings.fuelPrice, consumption:settings.consumption, evConsumption:settings.evConsumption, kwhPrice:settings.kwhPrice, updatedAt:serverTimestamp()
           });
           Object.assign(window.currentPartnerProfile, settings);
         } catch (error) { console.warn("Synchronisation paramètres mission", error); }
@@ -2253,8 +2259,8 @@ body.partner-authenticated .action.partner-back{
         <div class="mission-profit-row"><span>Trajet avec le client</span><strong>${Number(values.missionClientKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
         <div class="mission-profit-row"><span>Retour au domicile</span><strong>${Number(values.missionReturnKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
         <div class="mission-profit-row"><span>Kilométrage total</span><strong>${Number(values.missionTotalKm || 0).toFixed(1).replace(".", ",")} km</strong></div>
-        <div class="mission-profit-row"><span>Carburant du trajet client</span><strong>${euroAmount(values.missionClientFuelCost)}</strong></div>
-        <div class="mission-profit-row"><span>Carburant de la mission réelle</span><strong>${euroAmount(values.missionFuelCost)}</strong></div>
+        <div class="mission-profit-row"><span>${values.missionEnergyType==="electric"?"Électricité du trajet client":"Carburant du trajet client"}</span><strong>${euroAmount(values.missionClientFuelCost)}</strong></div>
+        <div class="mission-profit-row"><span>${values.missionEnergyType==="electric"?"Électricité de la mission réelle":"Carburant de la mission réelle"}</span><strong>${euroAmount(values.missionFuelCost)}</strong></div>
         <div class="mission-profit-row"><span>Péages</span><strong>${euroAmount(values.missionTolls)}</strong></div>
         <div class="mission-profit-row total"><span>Coût réel de la mission</span><strong>${euroAmount(values.missionTotalCost)}</strong></div>
         <div class="mission-profit-row margin"><span>Marge estimée</span><strong>${euroAmount(values.missionMargin)}</strong></div>`;
@@ -2296,12 +2302,15 @@ body.partner-authenticated .action.partner-back{
       try {
         const route = await calculateMissionRoute(settings.homeAddress, pickup, destination);
         const totalKm = route.approachKm + route.clientKm + route.returnKm;
-        const clientFuelCost = route.clientKm / 100 * settings.consumption * settings.fuelPrice;
-        const fuelCost = totalKm / 100 * settings.consumption * settings.fuelPrice;
+        const isElectric=settings.vehicleType==="electric";
+        const unitConsumption=isElectric?settings.evConsumption:settings.consumption;
+        const unitPrice=isElectric?settings.kwhPrice:settings.fuelPrice;
+        const clientFuelCost = route.clientKm / 100 * unitConsumption * unitPrice;
+        const fuelCost = totalKm / 100 * unitConsumption * unitPrice;
         const tolls = Math.max(0, moneyValue(booking.missionTolls));
         const totalCost = fuelCost + tolls;
         await updateDoc(reference, {
-          missionHomeAddress:settings.homeAddress, missionFuelPrice:settings.fuelPrice, missionConsumption:settings.consumption,
+          missionHomeAddress:settings.homeAddress, missionEnergyType:settings.vehicleType, missionFuelPrice:settings.fuelPrice, missionConsumption:settings.consumption, missionEvConsumption:settings.evConsumption, missionKwhPrice:settings.kwhPrice,
           missionApproachKm:route.approachKm, missionClientKm:route.clientKm, missionReturnKm:route.returnKm, missionTotalKm:totalKm,
           missionClientFuelCost:clientFuelCost, missionFuelCost:fuelCost, missionTolls:tolls, missionTotalCost:totalCost,
           missionMargin:moneyValue(booking.estimatedPrice) - totalCost, missionCostStatus:"calculated", missionCostUpdatedAt:serverTimestamp()
@@ -2324,12 +2333,18 @@ body.partner-authenticated .action.partner-back{
       try {
         const route = await calculateMissionRoute(settings.homeAddress, item.pickup, item.destination);
         const totalKm = route.approachKm + route.clientKm + route.returnKm;
-        const clientFuelCost = route.clientKm / 100 * settings.consumption * settings.fuelPrice;
-        const fuelCost = totalKm / 100 * settings.consumption * settings.fuelPrice;
+        const isElectric=settings.vehicleType==="electric";
+        const unitConsumption=isElectric?settings.evConsumption:settings.consumption;
+        const unitPrice=isElectric?settings.kwhPrice:settings.fuelPrice;
+        const clientFuelCost = route.clientKm / 100 * unitConsumption * unitPrice;
+        const fuelCost = totalKm / 100 * unitConsumption * unitPrice;
         const totalCost = fuelCost + tolls;
         const margin = moneyValue(item.estimatedPrice) - totalCost;
         const values = {
           missionHomeAddress: settings.homeAddress,
+          missionEnergyType: settings.vehicleType,
+          missionEvConsumption: settings.evConsumption,
+          missionKwhPrice: settings.kwhPrice,
           missionFuelPrice: settings.fuelPrice,
           missionConsumption: settings.consumption,
           missionApproachKm: route.approachKm,
@@ -7364,13 +7379,14 @@ function pmEnsure(){
  if(!document.getElementById("partnerCostPanel")){
    const s=document.createElement("section");s.id="partnerCostPanel";s.className="partner-menu-page partner-view-hidden";
    s.innerHTML=`<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Coût kilométrique</h2><div class="pm-card"><form id="pmCostForm" class="pm-grid">
-   <label>Adresse de référence<input id="pmCostHome" autocomplete="street-address" placeholder="Départ / retour des bilans"></label>
-   <div class="pm-cost-title"><small>THERMIQUE / HYBRIDE</small><b>Carburant</b></div>
+   <label>Adresse d’approche<input id="pmCostHome" autocomplete="street-address" placeholder="Ex. 12 rue..., Perpignan"><small class="pm-field-help">Utilisée automatiquement pour calculer l’approche et le retour de chaque bilan.</small></label>
+   <label>Motorisation<select id="pmCostVehicleType"><option value="thermal">Thermique / hybride</option><option value="electric">100 % électrique</option></select></label>
+   <div class="pm-cost-title" id="pmThermalTitle"><small>THERMIQUE / HYBRIDE</small><b>Carburant</b></div>
    <label>Consommation moyenne (L/100 km)<input id="pmCostFuelConsumption" type="number" min="0" step="0.1"></label>
    <label>Prix carburant (€/L)<input id="pmCostFuelPrice" type="number" min="0" step="0.001"></label>
    <label>Kilomètres à calculer<input id="pmCostFuelKm" type="number" min="0" step="1" value="100"></label>
    <div class="pm-cost-result">Coût : <strong id="pmCostFuelResult">—</strong></div>
-   <div class="pm-cost-title"><small>100 % ÉLECTRIQUE</small><b>Électricité</b></div>
+   <div class="pm-cost-title" id="pmElectricTitle"><small>100 % ÉLECTRIQUE</small><b>Électricité</b></div>
    <label>Consommation moyenne (kWh/100 km)<input id="pmCostEvConsumption" type="number" min="0" step="0.1"></label>
    <label>Prix électricité (€/kWh)<input id="pmCostKwhPrice" type="number" min="0" step="0.001"></label>
    <label>Kilomètres à calculer<input id="pmCostEvKm" type="number" min="0" step="1" value="100"></label>
@@ -7389,17 +7405,22 @@ function pmEnsure(){
  ["pmHistOwn","pmHistMissions","pmHistCard","pmHistCash","pmHistMixed","pmHistUnknown"].forEach(id=>document.getElementById(id)?.addEventListener("change",pmRenderHistory));
  document.getElementById("pmProfileForm").onsubmit=pmSaveProfile;
  const pmCostCalc=()=>{
+   const type=document.getElementById("pmCostVehicleType")?.value||"thermal";
+   document.getElementById("pmThermalTitle")?.classList.toggle("pm-cost-inactive",type!=="thermal");
+   document.getElementById("pmElectricTitle")?.classList.toggle("pm-cost-inactive",type!=="electric");
    const fc=Number(document.getElementById("pmCostFuelConsumption")?.value||0),fp=Number(document.getElementById("pmCostFuelPrice")?.value||0),fkm=Number(document.getElementById("pmCostFuelKm")?.value||100);
    const ec=Number(document.getElementById("pmCostEvConsumption")?.value||0),kp=Number(document.getElementById("pmCostKwhPrice")?.value||0),ekm=Number(document.getElementById("pmCostEvKm")?.value||100);
    const fr=document.getElementById("pmCostFuelResult"),er=document.getElementById("pmCostEvResult");
    if(fr)fr.textContent=fc>0&&fp>0?`${(fkm/100*fc*fp).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} € / ${fkm} km`:"—";
    if(er)er.textContent=ec>0&&kp>0?`${(ekm/100*ec*kp).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} € / ${ekm} km`:"—";
  };
- ["pmCostFuelConsumption","pmCostFuelPrice","pmCostFuelKm","pmCostEvConsumption","pmCostKwhPrice","pmCostEvKm"].forEach(id=>document.getElementById(id)?.addEventListener("input",pmCostCalc));
+ ["pmCostVehicleType","pmCostFuelConsumption","pmCostFuelPrice","pmCostFuelKm","pmCostEvConsumption","pmCostKwhPrice","pmCostEvKm"].forEach(id=>document.getElementById(id)?.addEventListener("input",pmCostCalc));
  document.getElementById("pmCostForm").onsubmit=async event=>{
    event.preventDefault();const p=window.currentPartnerProfile;if(!p?.id)return alert("Profil chauffeur indisponible.");
+   const vehicleType=document.getElementById("pmCostVehicleType").value;
    const data={homeAddress:document.getElementById("pmCostHome").value.trim(),fuelPrice:Number(document.getElementById("pmCostFuelPrice").value)||null,consumption:Number(document.getElementById("pmCostFuelConsumption").value)||null,evConsumption:Number(document.getElementById("pmCostEvConsumption").value)||null,kwhPrice:Number(document.getElementById("pmCostKwhPrice").value)||null,updatedAt:serverTimestamp()};
-   try{await updateDoc(doc(db,"partnerDrivers",p.id),data);Object.assign(p,data);try{localStorage.removeItem(missionCostStorageKey())}catch(_){}
+   try{const cached=readMissionCostSettings();localStorage.setItem(missionCostStorageKey(),JSON.stringify({...cached,...data,vehicleType}));}catch(_){}
+   try{await updateDoc(doc(db,"partnerDrivers",p.id),data);Object.assign(p,data,{vehicleType});
    pmCostCalc();alert("Coût kilométrique enregistré.");}catch(err){console.error(err);alert("Impossible d’enregistrer le coût kilométrique.");}
  };
 
@@ -7492,7 +7513,8 @@ function pmFillProfile(){
  const cp=window.currentPartnerProfile||{};
  const setv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??""};
  setv("pmCostHome",cp.homeAddress||cp.address||"");setv("pmCostFuelConsumption",cp.fuelConsumption||cp.consumption||"");setv("pmCostFuelPrice",cp.fuelPrice||"");setv("pmCostEvConsumption",cp.evConsumption||"");setv("pmCostKwhPrice",cp.kwhPrice||"");
- ["pmCostFuelConsumption","pmCostFuelPrice","pmCostEvConsumption","pmCostKwhPrice"].forEach(id=>document.getElementById(id)?.dispatchEvent(new Event("input")));
+ try{const cached=JSON.parse(localStorage.getItem(missionCostStorageKey())||"null");setv("pmCostVehicleType",cached?.vehicleType||cp.vehicleType||(Number(cp.evConsumption)>0&&!Number(cp.consumption)?"electric":"thermal"));}catch(_){setv("pmCostVehicleType",cp.vehicleType||"thermal");}
+ ["pmCostVehicleType","pmCostFuelConsumption","pmCostFuelPrice","pmCostEvConsumption","pmCostKwhPrice"].forEach(id=>document.getElementById(id)?.dispatchEvent(new Event("input")));
 }
 async function pmSaveProfile(e){
  e.preventDefault();if(!window.currentPartnerProfile?.id)return;
@@ -7826,7 +7848,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.4 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V76.5 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
@@ -7931,5 +7953,12 @@ html[data-theme="dark"] .pm-setting-action,html[data-theme="dark"] .pm-arrow{col
 })();
 </script>
 
+
+<style id="ouass-v765-cost-map">
+#pmCostVehicleType{width:100%;min-height:50px;border-radius:14px;border:1px solid var(--line,#dbe3ef);padding:0 14px;font:inherit;font-weight:750;background:var(--card,#fff);color:var(--text,#111827)}
+.pm-field-help{display:block;margin-top:7px;font-size:12px;line-height:1.4;opacity:.72}.pm-cost-inactive{opacity:.38;filter:saturate(.35)}
+#driverLiveMap{display:block!important;width:100%!important;height:290px!important;min-height:290px!important;border-radius:20px!important;overflow:hidden;background:#e8eef5!important;box-shadow:0 12px 32px rgba(15,23,42,.12)}
+[data-theme="dark"] #driverLiveMap{background:#172033!important;box-shadow:0 14px 36px rgba(0,0,0,.32)}
+</style>
 </body>
 </html>
