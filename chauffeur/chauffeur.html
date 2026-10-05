@@ -2293,53 +2293,129 @@ body.partner-authenticated .action.partner-back{
       });
     }
 
-    async function recalculateTransferredMissionCostForExecutingDriver(item) {
-      const bookingId = String(item?.bookingId || item?.id || "").trim();
-      if (!bookingId || !db) return false;
-      const settings = readMissionCostSettings();
-      const driver = currentDriverIdentity();
-      const bookingRef = doc(db, "bookings", bookingId);
+    const automaticExecutorCostInFlight = new Set();
 
-      // Dès l'acceptation, les anciens coûts (administrateur / chauffeur précédent)
-      // ne doivent plus être utilisés. Le chauffeur exécutant devient la référence.
-      try {
-        await updateDoc(bookingRef, {
-          missionExecutorEmail: String(auth?.currentUser?.email || "").trim().toLowerCase(),
-          missionExecutorName: driver.displayName || "Chauffeur",
-          missionExecutorProfileId: String(window.currentPartnerProfile?.id || ""),
-          missionHomeAddress: settings.homeAddress || null,
-          missionEnergyType: settings.vehicleType || "thermal",
-          missionFuelPrice: settings.vehicleType === "electric" ? null : settings.fuelPrice,
-          missionConsumption: settings.vehicleType === "electric" ? null : settings.consumption,
-          missionEvConsumption: settings.vehicleType === "electric" ? settings.evConsumption : null,
-          missionKwhPrice: settings.vehicleType === "electric" ? settings.kwhPrice : null,
-          missionApproachKm: null,
-          missionClientKm: null,
-          missionReturnKm: null,
-          missionTotalKm: null,
-          missionClientFuelCost: null,
-          missionFuelCost: null,
-          missionTotalCost: null,
-          missionMargin: null,
-          missionCostStatus: "recalculating_for_executor",
-          missionCostUpdatedAt: serverTimestamp()
-        });
-      } catch (error) {
-        console.error("Initialisation coût chauffeur exécutant", error);
-        return false;
-      }
+    function executingDriverCostSettings() {
+      const p = window.currentPartnerProfile || {};
+      const vehicleType = String(p.vehicleType || (Number(p.evConsumption)>0 && !Number(p.consumption) ? "electric" : "thermal")).trim() === "electric" ? "electric" : "thermal";
+      return {
+        homeAddress: String(p.homeAddress || p.address || "").trim(),
+        vehicleType,
+        fuelPrice: Number(p.fuelPrice || 0),
+        consumption: Number(p.consumption || p.fuelConsumption || 0),
+        evConsumption: Number(p.evConsumption || 0),
+        kwhPrice: Number(p.kwhPrice || 0)
+      };
+    }
 
-      const source = { ...item, missionTolls: Number(item?.missionTolls || 0) };
-      const calculated = await automaticallyCalculateMissionCost(bookingRef, source);
-      if (calculated) {
+    async function waitForDriverDirectionsService(timeoutMs = 15000) {
+      const started = Date.now();
+      while (Date.now() - started < timeoutMs) {
+        if (driverDirectionsService && window.google?.maps?.TravelMode) return true;
         try {
-          const refreshed = await getDoc(bookingRef);
-          if (refreshed.exists()) Object.assign(item, refreshed.data());
-        } catch (refreshError) {
-          console.warn("Rafraîchissement coût chauffeur exécutant", refreshError);
-        }
+          if (!window.google?.maps && typeof loadGoogleMaps === "function") await loadGoogleMaps();
+          if (!driverDirectionsService && window.google?.maps) driverDirectionsService = new google.maps.DirectionsService();
+        } catch (_) {}
+        if (driverDirectionsService) return true;
+        await new Promise(resolve => setTimeout(resolve, 350));
       }
-      return calculated;
+      return false;
+    }
+
+    async function calculateExecutingDriverMissionCost(item, missionRef) {
+      const missionId = String(item?.missionId || missionRef?.id || "").trim();
+      if (!missionId || automaticExecutorCostInFlight.has(missionId)) return false;
+      automaticExecutorCostInFlight.add(missionId);
+      try {
+        const settings = executingDriverCostSettings();
+        const pickup = String(item?.pickup || "").trim();
+        const destination = String(item?.destination || "").trim();
+        const isElectric = settings.vehicleType === "electric";
+        const unitConsumption = isElectric ? settings.evConsumption : settings.consumption;
+        const unitPrice = isElectric ? settings.kwhPrice : settings.fuelPrice;
+
+        if (!settings.homeAddress || !pickup || !destination || !(unitConsumption > 0) || !(unitPrice > 0)) {
+          await updateDoc(missionRef, {
+            missionCostStatus:"profile_incomplete",
+            missionCostUpdatedAt:serverTimestamp()
+          });
+          return false;
+        }
+
+        await updateDoc(missionRef, {
+          missionExecutorEmail:String(auth?.currentUser?.email || "").trim().toLowerCase(),
+          missionExecutorName:currentDriverIdentity().displayName || "Chauffeur",
+          missionExecutorProfileId:String(window.currentPartnerProfile?.id || ""),
+          missionHomeAddress:settings.homeAddress,
+          missionEnergyType:settings.vehicleType,
+          missionFuelPrice:isElectric ? null : settings.fuelPrice,
+          missionConsumption:isElectric ? null : settings.consumption,
+          missionEvConsumption:isElectric ? settings.evConsumption : null,
+          missionKwhPrice:isElectric ? settings.kwhPrice : null,
+          missionCostStatus:"calculating",
+          missionCostUpdatedAt:serverTimestamp()
+        });
+
+        if (!(await waitForDriverDirectionsService())) {
+          await updateDoc(missionRef, { missionCostStatus:"pending_maps", missionCostUpdatedAt:serverTimestamp() });
+          return false;
+        }
+
+        const route = await calculateMissionRoute(settings.homeAddress, pickup, destination);
+        const totalKm = route.approachKm + route.clientKm + route.returnKm;
+        const clientEnergyCost = route.clientKm / 100 * unitConsumption * unitPrice;
+        const energyCost = totalKm / 100 * unitConsumption * unitPrice;
+        const tolls = Math.max(0, moneyValue(item?.missionTolls));
+        const totalCost = energyCost + tolls;
+        const values = {
+          missionExecutorEmail:String(auth?.currentUser?.email || "").trim().toLowerCase(),
+          missionExecutorName:currentDriverIdentity().displayName || "Chauffeur",
+          missionExecutorProfileId:String(window.currentPartnerProfile?.id || ""),
+          missionHomeAddress:settings.homeAddress,
+          missionEnergyType:settings.vehicleType,
+          missionFuelPrice:isElectric ? null : settings.fuelPrice,
+          missionConsumption:isElectric ? null : settings.consumption,
+          missionEvConsumption:isElectric ? settings.evConsumption : null,
+          missionKwhPrice:isElectric ? settings.kwhPrice : null,
+          missionApproachKm:route.approachKm,
+          missionClientKm:route.clientKm,
+          missionReturnKm:route.returnKm,
+          missionTotalKm:totalKm,
+          missionClientFuelCost:clientEnergyCost,
+          missionFuelCost:energyCost,
+          missionTolls:tolls,
+          missionTotalCost:totalCost,
+          missionMargin:moneyValue(item?.estimatedPrice) - totalCost,
+          missionCostStatus:"calculated",
+          missionCostUpdatedAt:serverTimestamp(),
+          updatedAt:serverTimestamp()
+        };
+        await updateDoc(missionRef, values);
+        Object.assign(item, values);
+
+        // Copie de confort vers le booking pour l'Admin, sans jamais bloquer le chauffeur.
+        const bookingId = String(item?.bookingId || item?.id || "").trim();
+        if (bookingId) {
+          updateDoc(doc(db,"bookings",bookingId), values).catch(error => console.warn("Copie bilan vers booking non bloquante", error?.code || error));
+        }
+        return true;
+      } catch (error) {
+        console.warn("Calcul automatique bilan chauffeur", error);
+        try { await updateDoc(missionRef, { missionCostStatus:"pending_retry", missionCostUpdatedAt:serverTimestamp() }); } catch (_) {}
+        return false;
+      } finally {
+        automaticExecutorCostInFlight.delete(missionId);
+      }
+    }
+
+    function scheduleExecutingDriverMissionCost(item, delay = 0) {
+      if (!item?.isPartnerMission || !item?.missionId || item?.partnerMissionStatus !== "accepted" || item?.missionCostStatus === "calculated") return;
+      setTimeout(async () => {
+        const ok = await calculateExecutingDriverMissionCost(item, doc(db,"driverMissions",item.missionId));
+        if (!ok && item?.partnerMissionStatus === "accepted") {
+          setTimeout(() => calculateExecutingDriverMissionCost(item, doc(db,"driverMissions",item.missionId)), 4000);
+        }
+      }, delay);
     }
 
     async function automaticallyCalculateMissionCost(reference, booking) {
@@ -4447,7 +4523,7 @@ body.partner-authenticated .action.partner-back{
             <div class="mission-screen-head"><button type="button" data-close-mission-profit aria-label="Retour aux autres actions">←</button><strong>Bilan de course</strong></div>
             <div class="mission-profit-intro">Calcul privé : domicile → client → destination → domicile. Cette information n’apparaît pas sur le bon de commande.</div>
             <div class="sim-field"><label>Péages de cette mission</label><input type="number" min="0" step="0.01" inputmode="decimal" value="${Number(item.missionTolls || 0)}" data-mission-tolls></div>
-            <button class="mission-profit-action" type="button" data-calculate-mission-cost>Calculer et enregistrer le coût réel</button>
+            ${item.isPartnerMission ? `<div class="mission-profit-intro" data-auto-cost-status>${item.missionCostStatus === "calculated" ? "Bilan calculé automatiquement avec vos paramètres chauffeur enregistrés." : "Calcul automatique du bilan en cours…"}</div>` : `<button class="mission-profit-action" type="button" data-calculate-mission-cost>Calculer et enregistrer le coût réel</button>`}
             <div class="mission-profit-results" data-mission-profit-results>${missionCostResultsMarkup(item)}</div>
           </div>
         </div>`;
@@ -4485,6 +4561,9 @@ body.partner-authenticated .action.partner-back{
       $("detailBody").querySelector("[data-toggle-mission-profit]")?.addEventListener("click", event => {
         const panel = $("detailBody").querySelector("[data-mission-profit-panel]");
         panel.classList.remove("hidden");
+        if (item.isPartnerMission && item.partnerMissionStatus === "accepted" && item.missionCostStatus !== "calculated") {
+          scheduleExecutingDriverMissionCost(item, 0);
+        }
       });
       $("detailBody").querySelector("[data-close-mission-profit]")?.addEventListener("click", () => $("detailBody").querySelector("[data-mission-profit-panel]")?.classList.add("hidden"));
       $("detailBody").querySelector("[data-calculate-mission-cost]")?.addEventListener("click", event => {
@@ -5138,11 +5217,8 @@ async function handleStatusAction(id, status) {
         // Une mission transférée acceptée est recalculée avec LE profil du chauffeur
         // qui l'exécute : adresse d'approche + motorisation + prix/consommation personnels.
         if (status === "accepted") {
-          try {
-            await recalculateTransferredMissionCostForExecutingDriver(currentMissionItem);
-          } catch (costError) {
-            console.warn("Recalcul coût chauffeur exécutant", costError);
-          }
+          // Aucun bouton : le bilan du chauffeur exécutant se calcule automatiquement.
+          scheduleExecutingDriverMissionCost(currentMissionItem, 0);
         }
 
         try {
@@ -5623,6 +5699,7 @@ async function handleStatusAction(id, status) {
           return dbv - da;
         });
         render();
+        state.bookings.forEach(item => scheduleExecutingDriverMissionCost(item, 250));
         $("manualSync")?.classList.remove("syncing");
       };
 
@@ -7914,7 +7991,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.7 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V76.8 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
