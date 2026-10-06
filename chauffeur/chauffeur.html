@@ -3968,10 +3968,10 @@ body.partner-authenticated .action.partner-back{
       const pickupUnlocked = ["en_route", "on_board", "completed"].includes(item.status);
       const destinationUnlocked = ["on_board", "completed"].includes(item.status);
       const pickup = pickupUnlocked
-        ? `<a class="gps-stage-link pickup" href="${wazeHref(item.pickup)}" target="_blank" rel="noopener">GPS vers le client<small>Ouvrir dans Waze</small></a>`
+        ? `<button class="gps-stage-link pickup" type="button" data-gps-choice="pickup">GPS vers le client<small>Choisir Waze ou Google Maps</small></button>`
         : `<button class="gps-stage-link pickup" type="button" disabled>GPS vers le client<small>Disponible après « En route »</small></button>`;
       const destination = destinationUnlocked
-        ? `<a class="gps-stage-link destination" href="${wazeHref(item.destination)}" target="_blank" rel="noopener">GPS vers la destination<small>Ouvrir dans Waze</small></a>`
+        ? `<button class="gps-stage-link destination" type="button" data-gps-choice="destination">GPS vers la destination<small>Choisir Waze ou Google Maps</small></button>`
         : `<button class="gps-stage-link destination" type="button" disabled>GPS vers la destination<small>Disponible après « Client à bord »</small></button>`;
       return `<div class="waze-actions">${pickup}${destination}</div>`;
     }
@@ -4341,8 +4341,7 @@ body.partner-authenticated .action.partner-back{
         const original = tripOriginalFare(item);
         const waitingFee = waitingPriceData(item).fee;
         const changes = { tripStops:stops, tripOriginalFare:original, tripOriginalDistanceKm:directKm, tripRouteDistanceKm:routeKm, tripExtraKm:extraKm, tripExtraFare:extraFare, waitingBasePrice:original + extraFare, estimatedPrice:`${roundedCourseTotal(original + extraFare + waitingFee)} €`, updatedAt:serverTimestamp() };
-        await updateDoc(doc(db, "bookings", item.id), changes);
-        Object.assign(item, changes);
+        await saveOperationalCourseChanges(item, changes);
         openBooking(item.id);
       } catch (error) {
         console.error(error); alert("Le nouvel itinéraire n’a pas pu être calculé. Vérifiez les adresses des arrêts.");
@@ -4465,6 +4464,40 @@ body.partner-authenticated .action.partner-back{
       if (item.waitingStatus === "running") waitingTimerInterval = setInterval(() => refreshWaitingTimerDisplay(item), 1000);
     }
 
+    function operationalCourseRef(item) {
+      if (!db || !item) return null;
+      if (item.isPartnerMission && item.missionId) return doc(db, "driverMissions", item.missionId);
+      return doc(db, "bookings", item.id);
+    }
+
+    async function saveOperationalCourseChanges(item, changes) {
+      const reference = operationalCourseRef(item);
+      if (!reference) throw new Error("Référence de course indisponible");
+      await updateDoc(reference, changes);
+      Object.assign(item, changes);
+      return reference;
+    }
+
+    function googleMapsHref(address) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(String(address || "").trim())}&travelmode=driving`;
+    }
+
+    function openGpsChoice(address, label = "destination") {
+      const clean = String(address || "").trim();
+      if (!clean) return alert("Adresse GPS indisponible.");
+      document.querySelector("#gpsChoiceOverlay")?.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "gpsChoiceOverlay";
+      overlay.style.cssText = "position:fixed;inset:0;z-index:99999;background:#000b;display:grid;place-items:end center;padding:18px";
+      overlay.innerHTML = `<div style="width:min(520px,100%);background:#101722;color:#fff;border:1px solid #334155;border-radius:22px;padding:18px;box-shadow:0 20px 70px #0009"><div style="font-weight:950;font-size:18px;margin-bottom:5px">Choisir le GPS</div><div style="color:#aab6c7;font-size:12px;margin-bottom:14px">${escapeHtml(label)} · ${escapeHtml(clean)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button type="button" data-gps-waze style="min-height:58px;border:0;border-radius:15px;background:#19c5c9;color:#06171a;font-weight:950;font-size:15px">Waze</button><button type="button" data-gps-maps style="min-height:58px;border:0;border-radius:15px;background:#fff;color:#111827;font-weight:950;font-size:15px">Google Maps</button></div><button type="button" data-gps-cancel style="width:100%;margin-top:10px;min-height:46px;border:1px solid #475569;border-radius:13px;background:transparent;color:#fff;font-weight:850">Annuler</button></div>`;
+      document.body.appendChild(overlay);
+      const launch = href => { overlay.remove(); window.location.href = href; };
+      overlay.querySelector("[data-gps-waze]").onclick = () => launch(wazeHref(clean));
+      overlay.querySelector("[data-gps-maps]").onclick = () => launch(googleMapsHref(clean));
+      overlay.querySelector("[data-gps-cancel]").onclick = () => overlay.remove();
+      overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+    }
+
     async function saveWaitingTimerAction(bookingId, action, button) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item || !db) return;
@@ -4473,8 +4506,7 @@ body.partner-authenticated .action.partner-back{
       const status = action === "start" ? "running" : action === "pause" ? "paused" : action === "reset" ? null : "stopped";
       try {
         const changes = action === "reset" ? { waitingStatus:null, waitingStartedAtText:null, waitingAccumulatedSeconds:0, waitingMinutes:0, waitingFee:0, estimatedPrice:`${roundedCourseTotal(waitingPriceData(item).base)} €`, updatedAt:serverTimestamp() } : { ...waitingTimerChanges(item, status), updatedAt:serverTimestamp() };
-        await updateDoc(doc(db, "bookings", bookingId), changes);
-        Object.assign(item, changes);
+        await saveOperationalCourseChanges(item, changes);
         openBooking(bookingId);
       } catch (error) {
         console.error(error);
@@ -4538,7 +4570,7 @@ body.partner-authenticated .action.partner-back{
         const freeMinutes = Math.max(0, Math.min(180, Math.floor(Number($("waitingFreeMinutesInput")?.value) || 0)));
         const draft = { ...item, waitingFreeEnabled:enabled, waitingFreeMinutes:freeMinutes };
         const data = waitingPriceData(draft); event.currentTarget.disabled = true;
-        try { const changes={waitingFreeEnabled:enabled,waitingFreeMinutes:freeMinutes,waitingMinutes:data.minutes,waitingFee:data.fee,estimatedPrice:`${data.total} €`,updatedAt:serverTimestamp()}; await updateDoc(doc(db,"bookings",item.id),changes); Object.assign(item,changes); openBooking(item.id); }
+        try { const changes={waitingFreeEnabled:enabled,waitingFreeMinutes:freeMinutes,waitingMinutes:data.minutes,waitingFee:data.fee,estimatedPrice:`${data.total} €`,updatedAt:serverTimestamp()}; await saveOperationalCourseChanges(item,changes); openBooking(item.id); }
         catch(error){ console.error(error); alert("Le temps d’attente gratuit n’a pas pu être enregistré."); event.currentTarget.disabled=false; }
       });
       $("detailBody").querySelector("[data-add-trip-stop]")?.addEventListener("click", () => addTripStopField());
@@ -4547,6 +4579,7 @@ body.partner-authenticated .action.partner-back{
       $("detailBody").querySelectorAll("[data-remove-trip-stop]").forEach(button => button.addEventListener("click", () => button.closest('.trip-stop-row')?.remove()));
       $("detailBody").querySelectorAll("[data-trip-stop]").forEach(input => { if (window.google?.maps?.places) createAddressAutocomplete(input); });
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
+      $("detailBody").querySelectorAll("[data-gps-choice]").forEach(button => button.addEventListener("click", () => { const destination = button.dataset.gpsChoice === "pickup" ? item.pickup : item.destination; openGpsChoice(destination, button.dataset.gpsChoice === "pickup" ? "Vers le client" : "Vers la destination"); }));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
       $("detailBody").querySelector("[data-transfer-booking]")?.addEventListener("click", () => openTransferBooking(item.id));
       $("detailBody").querySelector("[data-toggle-sms-menu]")?.addEventListener("click", () => {
@@ -4791,10 +4824,14 @@ body.partner-authenticated .action.partner-back{
             missionCostStatus: "recalculating",
             updatedAt: serverTimestamp()
           };
-          const bookingReference = doc(db, "bookings", id);
-          await updateDoc(bookingReference, updatedBooking);
+          const courseReference = await saveOperationalCourseChanges(item, updatedBooking);
           button.textContent = "Calcul automatique du coût…";
-          await automaticallyCalculateMissionCost(bookingReference, { ...item, ...updatedBooking });
+          if (item.isPartnerMission && item.missionId) {
+            item.missionCostStatus = "recalculating";
+            await calculateExecutingDriverMissionCost(item, courseReference);
+          } else {
+            await automaticallyCalculateMissionCost(courseReference, { ...item, ...updatedBooking });
+          }
           closeBooking();
         } catch (error) {
           console.error(error);
@@ -7069,7 +7106,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=760", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=770", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -8027,7 +8064,7 @@ html[data-theme="dark"] .pm-theme-buttons button{background:#172130!important;co
 </style>
 
 
-<!-- ===== OUASSVTC V76.9 PREMIUM UI / MAPS / HOME REFRESH ===== -->
+<!-- ===== OUASSVTC V77.0 PREMIUM UI / MAPS / HOME REFRESH ===== -->
 <style id="ouass-v764-premium">
 :root{--pro-bg:#f4f7fb;--pro-card:#ffffff;--pro-text:#101828;--pro-muted:#5f6c7b;--pro-line:#dfe6ef;--pro-blue:#1268e8;--pro-blue2:#0a4fb5;--pro-soft:#eaf2ff;--pro-danger:#b42318}
 html[data-theme="light"] body{background:linear-gradient(180deg,#f8fafc 0,#f2f6fb 100%)!important;color:var(--pro-text)!important}
