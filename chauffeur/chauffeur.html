@@ -8265,9 +8265,9 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.7.20261008.01";
+const V79_VERSION="79.9.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false;
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="";
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
@@ -8346,11 +8346,72 @@ function startTracking(showError=false){
    try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{authUid:v79Auth.currentUser.uid,locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()});await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:true,status:v79ForcedMission?"mission":"online",lat:c.latitude,lng:c.longitude,accuracy:Number(c.accuracy||0),heading:Number.isFinite(Number(c.heading))?Number(c.heading):0,updatedAt:serverTimestamp()},{merge:true})}catch(e){console.warn("Position V79.3",e?.code||e)}
  },err=>{console.warn("Géolocalisation V79.1",err?.code||err);if(showError&&!geoErrorShown){geoErrorShown=true;alert("Vous êtes bien en ligne, mais la position GPS n’est pas partagée. Autorisez la localisation pour apparaître sur la carte Admin.")}}, {enableHighAccuracy:true,maximumAge:8000,timeout:15000});
 }
+
+function v79TaskStage(task){
+ const s=String(task?.status||"");
+ if(["en_route","arrived"].includes(s))return "pickup";
+ if(["passenger_onboard","on_board"].includes(s))return "destination";
+ return "";
+}
+function v79ClearRoute(){
+ v79LastRouteKey="";
+ if(v79RouteRenderer)try{v79RouteRenderer.setDirections({routes:[]})}catch(_){}
+}
+function v79RouteTarget(task){
+ const stage=v79TaskStage(task);
+ if(stage==="pickup")return String(task?.pickup||"").trim();
+ if(stage==="destination")return String(task?.destination||"").trim();
+ return "";
+}
+function v79RefreshRoute(force=false){
+ if(!v79Map||!window.google?.maps||!v79Marker||!v79ActiveTask){v79ClearRoute();return}
+ const target=v79RouteTarget(v79ActiveTask);
+ if(!target){v79ClearRoute();return}
+ const pos=v79Marker.getPosition(); if(!pos)return;
+ const key=[v79ActiveTask.id||v79ActiveTask.missionId||"",v79TaskStage(v79ActiveTask),target].join("|");
+ if(!force&&key===v79LastRouteKey)return;
+ v79LastRouteKey=key;
+ if(!v79RouteService)v79RouteService=new google.maps.DirectionsService();
+ if(!v79RouteRenderer)v79RouteRenderer=new google.maps.DirectionsRenderer({map:v79Map,suppressMarkers:true,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.92,strokeWeight:6}});
+ v79RouteRenderer.setMap(v79Map);
+ v79RouteService.route({origin:pos,destination:target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
+   if(status==="OK"){
+     v79RouteRenderer.setDirections(res);
+     if(force){
+       const b=res.routes?.[0]?.bounds;
+       if(b)v79Map.fitBounds(b,56);
+     }
+   }else console.warn("Itinéraire chauffeur",status);
+ });
+}
+function v79ChooseActiveTask(){
+ const candidates=[...(window.__v79Missions||[]),...(window.__v79Bookings||[])];
+ const rank={passenger_onboard:5,on_board:5,en_route:4,arrived:4,accepted:2};
+ const active=candidates.filter(x=>rank[String(x.status||"")]&&x.active!==false).sort((x,y)=>(rank[String(y.status||"")]||0)-(rank[String(x.status||"")]||0))[0]||null;
+ const oldKey=v79ActiveTask?[v79ActiveTask.id||v79ActiveTask.missionId,v79ActiveTask.status].join("|"):"";
+ v79ActiveTask=active;
+ const newKey=active?[active.id||active.missionId,active.status].join("|"):"";
+ if(oldKey!==newKey)v79RefreshRoute(true); else v79RefreshRoute(false);
+}
+
 async function listenMissions(user){
- if(v79MissionUnsub){v79MissionUnsub();v79MissionUnsub=null} if(!user||!v79Db)return;
+ if(v79MissionUnsub){v79MissionUnsub();v79MissionUnsub=null}
+ if(v79BookingUnsub){v79BookingUnsub();v79BookingUnsub=null}
+ if(!user||!v79Db)return;
  const email=String(v79Profile?.email||user.email||"").trim(); if(!email)return;
  const mq=query(collection(v79Db,"driverMissions"),where("driverEmail","==",email),limit(100));
- v79MissionUnsub=onSnapshot(mq,s=>{const missions=s.docs.map(d=>d.data());const forced=missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));const was=v79ForcedMission;v79ForcedMission=forced;if(forced){if(!was||!v79Profile?.online)setAvailability(true,true);else startTracking()}paint()});
+ v79MissionUnsub=onSnapshot(mq,s=>{
+   window.__v79Missions=s.docs.map(d=>({id:d.id,missionId:d.id,...d.data()}));
+   const forced=window.__v79Missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));
+   const was=v79ForcedMission;v79ForcedMission=forced;
+   if(forced){if(!was||!v79Profile?.online)setAvailability(true,true);else startTracking()}
+   paint();v79ChooseActiveTask();
+ },e=>console.warn("Missions trajet",e?.code||e));
+ const bq=query(collection(v79Db,"bookings"),where("partnerOwnerEmail","==",email.toLowerCase()),limit(100));
+ v79BookingUnsub=onSnapshot(bq,s=>{
+   window.__v79Bookings=s.docs.map(d=>({id:d.id,...d.data()}));
+   v79ChooseActiveTask();
+ },e=>console.warn("Courses trajet",e?.code||e));
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
 async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});["dragstart","zoom_changed"].forEach(evt=>v79Map.addListener(evt,()=>{v79MapFocused=true}));renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
@@ -8374,7 +8435,7 @@ function carIcon(color="#111827",own=false,heading=0){
  return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new google.maps.Size(42,42),anchor:new google.maps.Point(21,21)}
 }
 function smoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
-function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}}
+function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}v79RefreshRoute(false)}
 function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker){obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#5b6470",false,Number(obj.data.heading||0)),clickable:false,zIndex:30,title:""})}else{smoothMove(obj.marker,pos);obj.marker.setIcon(carIcon("#5b6470",false,Number(obj.data.heading||0)));obj.marker.setMap(v79Map)}}}
 function listenPresence(){if(v79PresenceUnsub){v79PresenceUnsub();v79PresenceUnsub=null}v79PresenceUnsub=onSnapshot(query(collection(v79Db,"driverPresence"),limit(200)),snap=>{const seen=new Set();snap.docs.forEach(d=>{seen.add(d.id);const old=v79Peers.get(d.id)||{marker:null};old.data=d.data();v79Peers.set(d.id,old)});for(const [uid,obj] of v79Peers)if(!seen.has(uid)){obj.marker?.setMap(null);v79Peers.delete(uid)}renderPeers()},e=>console.warn("Présences chauffeurs",e?.code||e))}
 async function waitForMainFirebase(timeoutMs=15000){
@@ -8396,7 +8457,7 @@ async function boot(){
  v79Auth=window.auth;
  v79Db=window.db;
  onAuthStateChanged(v79Auth,async user=>{
-   stopTracking();v79Profile=null;v79ForcedMission=false;
+   stopTracking();v79Profile=null;v79ForcedMission=false;v79ActiveTask=null;window.__v79Missions=[];window.__v79Bookings=[];v79ClearRoute();
    if(!user){paint();return}
    try{
      v79Profile=await resolveProfile(user);
