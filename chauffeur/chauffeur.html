@@ -8265,9 +8265,9 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.4.20261008.01";
+const V79_VERSION="79.5.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map();
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false;
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
@@ -8316,7 +8316,7 @@ async function setAvailability(online,forced){
    await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:Boolean(online),status:v79ForcedMission?"mission":online?"online":"offline",updatedAt:serverTimestamp()},{merge:true});
    profile.online=Boolean(online);profile.availability=online?"online":"offline";profile.locationSharing=Boolean(online);
    paint();
-   if(online)startTracking(true);else stopTracking();
+   if(online){v79MapFocused=false;startTracking(true)}else{stopTracking();v79MapFocused=false;}
  }catch(e){
    console.error("Disponibilité V79.1",e);
    paint();
@@ -8344,9 +8344,10 @@ async function listenMissions(user){
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
 async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,gestureHandling:"cooperative",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
-function carIcon(color="#1478ff"){return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="19" fill="white" fill-opacity=".96"/><path d="M11 24v-6l3-7h14l3 7v6h-2v4h-4v-3H17v3h-4v-4h-2Zm5-10-2 5h14l-2-5H16Zm0 7a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" fill="${color}"/></svg>`)}`,scaledSize:new google.maps.Size(38,38),anchor:new google.maps.Point(19,19)}}
-function updateMap(lat,lng){if(!v79Map)return;const p={lat:Number(lat),lng:Number(lng)};v79Map.panTo(p);v79Map.setZoom(14);if(!v79Marker)v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#1478ff"),title:"Ma position",zIndex:50});else v79Marker.setPosition(p)}
-function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker)obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#8fa5bd"),clickable:false,zIndex:20});else{obj.marker.setPosition(pos);obj.marker.setMap(v79Map)}}}
+function carIcon(color="#1478ff",own=false){return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><ellipse cx="32" cy="34" rx="24" ry="25" fill="white" fill-opacity=".96"/><path d="M22 8h20c4 0 7 3 8 7l5 25c1 6-3 11-9 11H18c-6 0-10-5-9-11l5-25c1-4 4-7 8-7Z" fill="${color}" stroke="#142033" stroke-width="2.5"/><path d="M22 14h20l4 14H18l4-14Z" fill="#9edcff" stroke="#142033" stroke-width="2"/><path d="M17 34h30" stroke="#142033" stroke-width="2"/><rect x="15" y="37" width="8" height="6" rx="2" fill="#ffe47a"/><rect x="41" y="37" width="8" height="6" rx="2" fill="#ffe47a"/><path d="M32 3l6 8H26z" fill="${own?'#1478ff':'#64748b'}"/></svg>`)}`,scaledSize:new google.maps.Size(44,44),anchor:new google.maps.Point(22,22)}}
+function smoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
+function updateMap(lat,lng){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#1478ff",true),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.panTo(p);v79Map.setZoom(17);v79MapFocused=true}}
+function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker){obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#8fa5bd",false),clickable:false,zIndex:30,title:""})}else{smoothMove(obj.marker,pos);obj.marker.setMap(v79Map)}}}
 function listenPresence(){if(v79PresenceUnsub){v79PresenceUnsub();v79PresenceUnsub=null}v79PresenceUnsub=onSnapshot(query(collection(v79Db,"driverPresence"),limit(200)),snap=>{const seen=new Set();snap.docs.forEach(d=>{seen.add(d.id);const old=v79Peers.get(d.id)||{marker:null};old.data=d.data();v79Peers.set(d.id,old)});for(const [uid,obj] of v79Peers)if(!seen.has(uid)){obj.marker?.setMap(null);v79Peers.delete(uid)}renderPeers()},e=>console.warn("Présences chauffeurs",e?.code||e))}
 async function waitForMainFirebase(timeoutMs=15000){
  const started=Date.now();
@@ -8383,103 +8384,6 @@ document.documentElement.dataset.ouassVtcVersion=V79_VERSION;
 if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 </script>
 
-
-<!-- V79.4 UBER CAR TRACKING -->
-<style>
-#partnerLiveMap .ouass-car-marker{width:34px;height:34px;transform-origin:50% 50%;transition:transform .55s linear,filter .25s ease}
-#partnerLiveMap .ouass-car-marker.own{filter:drop-shadow(0 0 8px rgba(38,160,255,.95))}
-#partnerLiveMap .ouass-car-marker.peer{filter:drop-shadow(0 0 5px rgba(255,255,255,.45));pointer-events:none}
-</style>
-<script>
-(function(){
-  "use strict";
-  const ZOOM_ONLINE = 16;
-  let ownMarker = null;
-  let peerMarkers = new Map();
-  let autoFocused = false;
-
-  function carSvg(fill="#ffffff", stroke="#101827"){
-    return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-       <path d="M17 12h30l7 18v19c0 3-2 5-5 5h-4c-3 0-5-2-5-5H24c0 3-2 5-5 5h-4c-3 0-5-2-5-5V30l7-18z" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
-       <path d="M21 18h22l4 11H17l4-11z" fill="#8ed7ff" stroke="${stroke}" stroke-width="3"/>
-       <circle cx="20" cy="40" r="5" fill="#172033"/><circle cx="44" cy="40" r="5" fill="#172033"/>
-       <path d="M32 3l7 9H25z" fill="#2f9cff"/></svg>`
-    );
-  }
-
-  function iconFor(own, heading){
-    return {
-      url: carSvg(own ? "#ffffff" : "#e8edf4", own ? "#147cff" : "#202938"),
-      scaledSize: new google.maps.Size(38,38),
-      anchor: new google.maps.Point(19,19)
-    };
-  }
-
-  function animateMarker(marker, from, to){
-    if(!marker || !to) return;
-    if(!from){ marker.setPosition(to); return; }
-    const frames=18, duration=720, start=performance.now();
-    function tick(now){
-      const p=Math.min(1,(now-start)/duration);
-      const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
-      marker.setPosition({
-        lat: from.lat+(to.lat-from.lat)*e,
-        lng: from.lng+(to.lng-from.lng)*e
-      });
-      if(p<1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  function getMap(){
-    return window.partnerLiveMap || window.driverLiveMap || null;
-  }
-
-  window.ouassUpdateOwnCar = function(pos){
-    const map=getMap();
-    if(!map || !window.google?.maps || !pos) return;
-    const ll={lat:Number(pos.lat ?? pos.latitude),lng:Number(pos.lng ?? pos.longitude)};
-    if(!Number.isFinite(ll.lat)||!Number.isFinite(ll.lng)) return;
-    const heading=Number(pos.heading||0);
-    if(!ownMarker){
-      ownMarker=new google.maps.Marker({map,position:ll,icon:iconFor(true,heading),zIndex:999,clickable:false,title:"Votre position"});
-    }else{
-      const old=ownMarker.getPosition();
-      animateMarker(ownMarker,old?{lat:old.lat(),lng:old.lng()}:null,ll);
-      ownMarker.setIcon(iconFor(true,heading));
-    }
-    if(!autoFocused){
-      map.panTo(ll); map.setZoom(ZOOM_ONLINE); autoFocused=true;
-    }
-  };
-
-  window.ouassUpdateAnonymousCars = function(rows){
-    const map=getMap();
-    if(!map || !window.google?.maps) return;
-    const keep=new Set();
-    (rows||[]).forEach((r,i)=>{
-      const id=String(r.id||r.uid||r.driverId||("peer-"+i));
-      if(r.isSelf) return;
-      const ll={lat:Number(r.lat??r.latitude),lng:Number(r.lng??r.longitude)};
-      if(!Number.isFinite(ll.lat)||!Number.isFinite(ll.lng)) return;
-      keep.add(id);
-      let m=peerMarkers.get(id);
-      if(!m){
-        m=new google.maps.Marker({map,position:ll,icon:iconFor(false,Number(r.heading||0)),zIndex:400,clickable:false});
-        peerMarkers.set(id,m);
-      }else{
-        const old=m.getPosition();
-        animateMarker(m,old?{lat:old.lat(),lng:old.lng()}:null,ll);
-        m.setIcon(iconFor(false,Number(r.heading||0)));
-      }
-    });
-    for(const [id,m] of peerMarkers){ if(!keep.has(id)){m.setMap(null);peerMarkers.delete(id);} }
-  };
-
-  window.ouassResetOnlineFocus=function(){autoFocused=false;};
-})();
-</script>
 
 </body>
 </html>
