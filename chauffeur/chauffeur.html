@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#07090d">
   <title>OuassVTC Chauffeur</title>
-  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=790">
+  <link rel="manifest" href="/chauffeur/manifest-chauffeur.json?v=791">
   <link rel="icon" href="/ouassvtc-app.png" type="image/png">
   <link rel="apple-touch-icon" href="/ouassvtc-app.png">
   <script>
@@ -7112,7 +7112,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=790", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=791", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -8265,7 +8265,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.0.20261008.01";
+const V79_VERSION="79.1.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false;
 const q=id=>document.getElementById(id);
@@ -8297,19 +8297,45 @@ async function resolveProfile(user){
  if(!hit){const all=await getDocs(query(collection(v79Db,"partnerDrivers"),limit(100)));hit=all.docs.find(d=>normalize(d.data().email)===normalize(email))}
  return hit?{id:hit.id,...hit.data()}:null;
 }
+async function ensureV79Profile(){
+ if(v79Profile?.id)return v79Profile;
+ if(!v79Auth||!v79Db)throw new Error("Firebase chauffeur non initialisé");
+ const user=v79Auth.currentUser;
+ if(!user)throw new Error("Chauffeur non connecté");
+ const profile=await resolveProfile(user);
+ if(!profile)throw new Error("Profil chauffeur introuvable pour "+String(user.email||"ce compte"));
+ v79Profile=profile;
+ return profile;
+}
 async function setAvailability(online,forced){
- if(!v79Profile?.id||!v79Db)return;
+ const go=q("v79GoOnline"),pill=q("v79StatusPill");
  if(!online&&v79ForcedMission&&!forced){alert("Une course est en cours. Le mode mission maintient automatiquement le chauffeur en ligne.");return}
- try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});v79Profile.online=Boolean(online);v79Profile.availability=online?"online":"offline";paint();if(online)startTracking();else stopTracking()}catch(e){console.error("Disponibilité V79",e);alert("La disponibilité n’a pas pu être mise à jour.")}
+ try{
+   if(go){go.disabled=true;go.style.opacity=".72";if(online)go.innerHTML='CONNEXION<small>Patientez…</small>'}
+   if(pill&&online)pill.textContent="CONNEXION…";
+   const profile=await ensureV79Profile();
+   await updateDoc(doc(v79Db,"partnerDrivers",profile.id),{online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   profile.online=Boolean(online);profile.availability=online?"online":"offline";profile.locationSharing=Boolean(online);
+   paint();
+   if(online)startTracking(true);else stopTracking();
+ }catch(e){
+   console.error("Disponibilité V79.1",e);
+   paint();
+   alert(e?.message?"Impossible de passer en ligne : "+e.message:"La disponibilité n’a pas pu être mise à jour.");
+ }finally{
+   if(go){go.disabled=false;go.style.opacity="";if(!Boolean(v79Profile?.online||v79Profile?.availability==="online"||v79ForcedMission))go.innerHTML='EN LIGNE<small>Commencer</small>'}
+ }
 }
 function stopTracking(){if(v79GeoWatch!==null&&navigator.geolocation){navigator.geolocation.clearWatch(v79GeoWatch);v79GeoWatch=null}}
-function startTracking(){
- if(!navigator.geolocation||v79GeoWatch!==null||!v79Profile?.id)return;
+function startTracking(showError=false){
+ if(!navigator.geolocation){if(showError)alert("Vous êtes en ligne, mais la géolocalisation n’est pas disponible sur ce téléphone.");return}
+ if(v79GeoWatch!==null||!v79Profile?.id)return;
+ let geoErrorShown=false;
  v79GeoWatch=navigator.geolocation.watchPosition(async pos=>{
    const now=Date.now(); const c=pos.coords; updateMap(c.latitude,c.longitude);
    if(now-v79LastWrite<12000)return;v79LastWrite=now;
-   try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()})}catch(e){console.warn("Position V79",e?.code||e)}
- },err=>console.warn("Géolocalisation V79",err?.code||err),{enableHighAccuracy:true,maximumAge:8000,timeout:15000});
+   try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()})}catch(e){console.warn("Position V79.1",e?.code||e)}
+ },err=>{console.warn("Géolocalisation V79.1",err?.code||err);if(showError&&!geoErrorShown){geoErrorShown=true;alert("Vous êtes bien en ligne, mais la position GPS n’est pas partagée. Autorisez la localisation pour apparaître sur la carte Admin.")}}, {enableHighAccuracy:true,maximumAge:8000,timeout:15000});
 }
 async function listenMissions(user){
  if(v79MissionUnsub){v79MissionUnsub();v79MissionUnsub=null} if(!user||!v79Db)return;
@@ -8324,7 +8350,8 @@ async function boot(){
  ensureHero(); if(!firebaseReady)return; v79App=getApps().length?getApp():initializeApp(firebaseConfig);v79Auth=getAuth(v79App);v79Db=getFirestore(v79App);
  onAuthStateChanged(v79Auth,async user=>{stopTracking();v79Profile=null;v79ForcedMission=false;if(!user){paint();return}try{v79Profile=await resolveProfile(user);paint();if(v79Profile?.online||v79Profile?.availability==="online")startTracking();await listenMissions(user)}catch(e){console.error("Initialisation pilotage chauffeur V79",e)}})
 }
-document.documentElement.dataset.ouassVtcVersion=V79_VERSION;window.addEventListener("DOMContentLoaded",boot,{once:true});
+document.documentElement.dataset.ouassVtcVersion=V79_VERSION;
+if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 </script>
 
 </body>
