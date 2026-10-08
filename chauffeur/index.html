@@ -6370,7 +6370,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.12.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.13.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div>
@@ -6384,22 +6384,43 @@ function toMs(v){if(!v)return 0;if(v.toDate)return v.toDate().getTime();if(v.sec
 function renderLive(){updateMarkers();v7912RenderActiveDrivers()}
 function clearAdminRoute(){if(adminRouteRenderer){adminRouteRenderer.setMap(null);adminRouteRenderer=null}}
 function drawAdminRoute(d,m){clearAdminRoute();if(!map||!m)return;const s=String(m.status||""),target=["en_route","arrived"].includes(s)?String(m.pickup||"").trim():["passenger_onboard","on_board"].includes(s)?String(m.destination||"").trim():"";const pr=presence.find(x=>x.id===d.authUid),lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);if(!target||!Number.isFinite(lat)||!Number.isFinite(lng))return;if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();adminRouteRenderer=new google.maps.DirectionsRenderer({map,suppressMarkers:true,preserveViewport:false,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}});adminRouteService.route({origin:{lat,lng},destination:target,travelMode:google.maps.TravelMode.DRIVING},(r,st)=>{if(st==="OK")adminRouteRenderer.setDirections(r);else clearAdminRoute()})}
-function selectDriver(id){const d=drivers.find(x=>x.id===id);if(!d)return;selectedDriverId=id;const s=statusOf(d),m=s.mission;const box=q("v79DriverDetail");box.classList.remove('v79-hidden');box.innerHTML=`<h3>${esc(d.displayName||'Chauffeur')} · ${s.label}</h3><small>${esc(d.vehicle||'Véhicule non renseigné')} ${d.registration?'· '+esc(d.registration):''}</small>${m?`<p><strong>Course actuelle</strong><br>${esc(m.customerName||'Client')} · ${esc(m.pickup||'Départ')} → ${esc(m.destination||'Destination')} · ${money(m.estimatedPrice||m.price)}</p>`:'<p>Aucune course active.</p>'}`;const pr=presence.find(x=>x.id===d.authUid);const plat=Number(pr?.lat??d.locationLat),plng=Number(pr?.lng??d.locationLng);if(map&&Number.isFinite(plat)&&Number.isFinite(plng))map.panTo({lat:plat,lng:plng});if(m)drawAdminRoute(d,m);else clearAdminRoute()}
+function selectDriver(id){const d=drivers.find(x=>x.id===id);if(!d)return;selectedDriverId=id;const s=statusOf(d),m=s.mission;const box=q("v79DriverDetail");box.classList.remove('v79-hidden');box.innerHTML=`<h3>${esc(d.displayName||'Chauffeur')} · ${s.label}</h3><small>${esc(d.vehicle||'Véhicule non renseigné')} ${d.registration?'· '+esc(d.registration):''}</small>${m?`<p><strong>Course actuelle</strong><br>${esc(m.customerName||'Client')} · ${esc(m.pickup||'Départ')} → ${esc(m.destination||'Destination')}${Number.isFinite(Number(m.estimatedPrice||m.price))?' · '+money(Number(m.estimatedPrice||m.price)):''}</p>`:'<p>Aucune course active.</p>'}`;const pr=presence.find(x=>x.id===d.authUid);const plat=Number(pr?.lat??d.locationLat),plng=Number(pr?.lng??d.locationLng);if(map&&Number.isFinite(plat)&&Number.isFinite(plng))map.panTo({lat:plat,lng:plng});if(m)drawAdminRoute(d,m);else clearAdminRoute()}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 function v7912ClearRoute(){if(adminRouteRenderer){try{adminRouteRenderer.setMap(null)}catch(_){}adminRouteRenderer=null}}
+function v7913Directions(origin,target,cb){
+ if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();
+ adminRouteService.route({origin,destination:target,travelMode:google.maps.TravelMode.DRIVING},(r,s)=>{
+   if(s==="OK")return cb(r,s);
+   const geocoder=new google.maps.Geocoder();
+   geocoder.geocode({address:target},(res,gs)=>{
+     const loc=res?.[0]?.geometry?.location;
+     if(gs!=="OK"||!loc)return cb(r,s);
+     adminRouteService.route({origin,destination:loc,travelMode:google.maps.TravelMode.DRIVING},cb);
+   });
+ });
+}
 function v7912DrawRoute(d,m){
  v7912ClearRoute();if(!map||!m||!window.google?.maps)return;
- const st=String(m.status||""),target=["en_route","arrived"].includes(st)?String(m.pickup||"").trim():["passenger_onboard","on_board"].includes(st)?String(m.destination||"").trim():"";
+ const st=String(m.status||""),target=["accepted","en_route","arrived"].includes(st)?String(m.pickup||"").trim():["passenger_onboard","on_board"].includes(st)?String(m.destination||"").trim():"";
  const pr=presence.find(x=>x.id===d.authUid),lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);
  if(!target||!Number.isFinite(lat)||!Number.isFinite(lng))return;
  if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();
  adminRouteRenderer=new google.maps.DirectionsRenderer({map,suppressMarkers:true,preserveViewport:false,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}});
- adminRouteService.route({origin:{lat,lng},destination:target,travelMode:google.maps.TravelMode.DRIVING},(r,s)=>{
-  if(s!=="OK"){v7912ClearRoute();return}
+ v7913Directions({lat,lng},target,(r,s)=>{
+  if(s!=="OK"){
+   v7912ClearRoute();
+   const info=document.querySelector("[data-v7912-route-info]");
+   if(info)info.textContent="Itinéraire indisponible ("+s+")";
+   console.warn("Directions Admin",s,target,{lat,lng});
+   return
+ }
   adminRouteRenderer.setDirections(r);
   const leg=r.routes?.[0]?.legs?.[0], info=document.querySelector("[data-v7912-route-info]");
-  if(info)info.innerHTML=`<strong>${esc(leg?.distance?.text||"—")}</strong> restants · <strong>${esc(leg?.duration?.text||"—")}</strong> estimées`;
+  if(info){
+   const dist=leg?.distance?.text||"—", dur=leg?.duration?.text||"—";
+   info.innerHTML=`<strong>${esc(dist)}</strong> restants · <strong>${esc(dur)}</strong> pour arriver`;
+ }
  });
 }
 function v7912SelectDriver(id){
