@@ -6370,7 +6370,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.9.20261008.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null,adminRouteKey="";
+const V79="79.10.20261008.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null,adminRouteKey="";
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79DriverDetail" class="v79-driver-detail v79-hidden"></div></div><div id="v79ViewActivity" class="v79-admin-view"><div class="v79-filter" id="v79DriverFilter"></div><div class="v79-week-head"><button id="v79PrevWeek">←</button><strong id="v79WeekLabel"></strong><button id="v79NextWeek">→</button></div><div class="v79-week-kpis" id="v79WeekKpis"></div><div class="v79-chart" id="v79WeekChart"></div><div class="v79-trip-list" id="v79TripList"></div></div><div id="v79ViewDrivers" class="v79-admin-view"><div class="v79-trip-list" id="v79DriversList"></div></div><div id="v79ViewFinance" class="v79-admin-view"><div class="v79-filter" id="v79FinanceFilter"></div><div class="v79-week-head"><button id="v79PrevWeek2">←</button><strong id="v79WeekLabel2"></strong><button id="v79NextWeek2">→</button></div><div class="v79-week-kpis" id="v79FinanceKpis"></div><div class="v79-pay" id="v79PaymentBreakdown"></div><div class="v79-trip-list" id="v79FinanceTrips"></div></div></div>`;document.body.appendChild(root);
@@ -6378,69 +6378,13 @@ function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if
 }
 function openCockpit(){q("v79AdminCockpit")?.classList.remove("v79-hidden");document.body.style.overflow="hidden";renderAll();setTimeout(initMap,80)}function closeCockpit(){q("v79AdminCockpit")?.classList.add("v79-hidden");document.body.style.overflow=""}
 function showTab(name){document.querySelectorAll('[data-v79tab]').forEach(b=>b.classList.toggle('active',b.dataset.v79tab===name));document.querySelectorAll('.v79-admin-view').forEach(v=>v.classList.remove('active'));q('v79View'+name[0].toUpperCase()+name.slice(1))?.classList.add('active');if(name==='live')setTimeout(initMap,50)}
-function statusOf(d){
- const age=Date.now()-toMs(d.locationUpdatedAt||d.lastSeenAt);
- const online=(d.online||d.availability==='online')&&age<180000;
- const m=missions.find(x=>norm(x.driverEmail)===norm(d.email)&&x.active!==false&&['accepted','en_route','arrived','passenger_onboard'].includes(String(x.status||'')));
- if(m){if(['accepted','en_route','arrived'].includes(m.status))return{key:'approach',label:'En approche',mission:m};return{key:'mission',label:'En course',mission:m}}
- const b=bookings.find(x=>norm(x.partnerOwnerEmail)===norm(d.email)&&['accepted','en_route','on_board'].includes(String(x.status||'')));
- if(b){if(['accepted','en_route'].includes(b.status))return{key:'approach',label:b.status==='en_route'?'En direction du client':'Course acceptée',mission:b};return{key:'mission',label:'Client à bord',mission:b}}
- return online?{key:'online',label:'En ligne'}:{key:'offline',label:'Hors ligne'}
-}
+function statusOf(d){const age=Date.now()-toMs(d.locationUpdatedAt||d.lastSeenAt);const online=(d.online||d.availability==='online')&&age<180000;const m=missions.find(x=>norm(x.driverEmail)===norm(d.email)&&x.active!==false&&['accepted','en_route','arrived','passenger_onboard'].includes(String(x.status||'')));if(m){if(['accepted','en_route','arrived'].includes(m.status))return{key:'approach',label:'En approche',mission:m};return{key:'mission',label:'En course',mission:m}}return online?{key:'online',label:'En ligne'}:{key:'offline',label:'Hors ligne'}}
 function toMs(v){if(!v)return 0;if(v.toDate)return v.toDate().getTime();if(v.seconds)return v.seconds*1000;const d=new Date(v);return isNaN(d)?0:d.getTime()}
 function renderLive(){updateMarkers()}
-
-function adminRouteStage(task){
- const s=String(task?.status||"");
- if(["en_route","arrived"].includes(s))return "pickup";
- if(["passenger_onboard","on_board"].includes(s))return "destination";
- return "";
-}
-function clearAdminRoute(){
- adminRouteKey="";
- if(adminRouteRenderer)try{adminRouteRenderer.setDirections({routes:[]})}catch(_){}
-}
-function drawAdminRoute(d,task,force=false){
- if(!map||!task){clearAdminRoute();return}
- const stage=adminRouteStage(task);
- const target=stage==="pickup"?String(task.pickup||"").trim():stage==="destination"?String(task.destination||"").trim():"";
- const pr=presence.find(x=>x.id===d.authUid);
- const lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);
- if(!target||!Number.isFinite(lat)||!Number.isFinite(lng)){clearAdminRoute();return}
- const key=[d.id,task.id||task.missionId||"",stage,target].join("|");
- if(!force&&key===adminRouteKey)return;
- adminRouteKey=key;
- if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();
- if(!adminRouteRenderer)adminRouteRenderer=new google.maps.DirectionsRenderer({map,suppressMarkers:true,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}});
- adminRouteRenderer.setMap(map);
- adminRouteService.route({origin:{lat,lng},destination:target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-   if(status==="OK"){
-     adminRouteRenderer.setDirections(res);
-     if(force&&res.routes?.[0]?.bounds)map.fitBounds(res.routes[0].bounds,70);
-   }else console.warn("Itinéraire Admin",status);
- });
-}
-
-function selectDriver(id){
- const d=drivers.find(x=>x.id===id);if(!d)return;
- selectedDriverId=id;
- const s=statusOf(d),m=s.mission;
- const box=q("v79DriverDetail");box.classList.remove('v79-hidden');
- const stage=m?adminRouteStage(m):"";
- const follow=stage==="pickup"?"Trajet affiché : voiture → client":stage==="destination"?"Trajet affiché : client → destination":"Aucun trajet actif à afficher";
- box.innerHTML=`<h3>${esc(d.displayName||'Chauffeur')} · ${s.label}</h3><small>${esc(d.vehicle||'Véhicule non renseigné')} ${d.registration?'· '+esc(d.registration):''}</small>${m?`<p><strong>Course actuelle</strong><br>${esc(m.customerName||'Client')} · ${esc(m.pickup||'Départ')} → ${esc(m.destination||'Destination')} · ${money(m.estimatedPrice||m.price)}</p><p><strong>${esc(follow)}</strong></p>`:'<p>Aucune course active.</p>'}`;
- const pr=presence.find(x=>x.id===d.authUid),plat=Number(pr?.lat??d.locationLat),plng=Number(pr?.lng??d.locationLng);
- if(map&&Number.isFinite(plat)&&Number.isFinite(plng))map.panTo({lat:plat,lng:plng});
- if(m)drawAdminRoute(d,m,true);else clearAdminRoute();
-}
-function loadMaps(){return new Promise(r=>{if(window.google?.maps)return r();let s=document.querySelector('script[data-v79-admin-maps]');if(s){s.addEventListener('load',r,{once:true});return}window.v79AdminMapsReady=r;s=document.createElement('script');s.dataset.v79AdminMaps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79AdminMapsReady';document.head.appendChild(s)})}
-async function initMap(){try{await loadMaps();if(!map){map=new google.maps.Map(q("v79AdminMap"),{center:{lat:42.6887,lng:2.8948},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:'greedy'})}updateMarkers()}catch(e){console.warn('Carte Admin V79',e)}}
-function adminCarIcon(status,heading=0){
- const h=Number.isFinite(Number(heading))?Number(heading):0;
- const body="#ffffff",glass="#25384a";
- const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><filter id="shadow" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#000" flood-opacity=".48"/></filter></defs><g transform="rotate(${h} 32 32)" filter="url(#shadow)"><path d="M25 5h14c5.8 0 9.5 5.2 10.7 12.7l3.1 26.8c.9 8.1-4.1 13.5-11.8 13.5H23c-7.7 0-12.7-5.4-11.8-13.5l3.1-26.8C15.5 10.2 19.2 5 25 5z" fill="${body}" stroke="#101418" stroke-width="1.8"/><path d="M21 18.5c2.2-6 5.1-8.5 11-8.5s8.8 2.5 11 8.5l2 9.5H19z" fill="${glass}"/><path d="M19.5 32h25L42 46H22z" fill="${glass}" opacity=".9"/><path d="M18 30h-4.5c-1.7 0-2.5-1.2-2.2-2.8l.7-3.3c.3-1.4 1.2-2.1 2.6-2.1h2.6M46 30h4.5c1.7 0 2.5-1.2 2.2-2.8l-.7-3.3c-.3-1.4-1.2-2.1-2.6-2.1h-2.6" fill="${body}" stroke="#101418" stroke-width="1.5"/><rect x="15" y="17" width="4" height="11" rx="2" fill="#111"/><rect x="45" y="17" width="4" height="11" rx="2" fill="#111"/><rect x="14" y="39" width="4" height="11" rx="2" fill="#111"/><rect x="46" y="39" width="4" height="11" rx="2" fill="#111"/><path d="M21 7.5h22" stroke="#d9f1ff" stroke-width="2.5" stroke-linecap="round"/><path d="M21 53h22" stroke="#ff4b4b" stroke-width="2.4" stroke-linecap="round"/></g></svg>`;
- return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new google.maps.Size(42,42),anchor:new google.maps.Point(21,21)}
-}
+function adminRouteStage(t){const s=String(t?.status||"");return ["en_route","arrived"].includes(s)?"pickup":["passenger_onboard","on_board"].includes(s)?"destination":""}
+function clearAdminRoute(){adminRouteKey="";if(adminRouteRenderer){try{adminRouteRenderer.setMap(null)}catch(_){}adminRouteRenderer=null}}
+function drawAdminRoute(d,t,fit=false){if(!map||!window.google?.maps||!d||!t){clearAdminRoute();return}const stage=adminRouteStage(t),target=stage==="pickup"?String(t.pickup||"").trim():stage==="destination"?String(t.destination||"").trim():"",pr=presence.find(x=>x.id===d.authUid),lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);if(!target||!Number.isFinite(lat)||!Number.isFinite(lng)){clearAdminRoute();return}const key=[d.id,t.id||t.missionId||"",stage,target].join("|");if(!fit&&key===adminRouteKey)return;adminRouteKey=key;if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();if(!adminRouteRenderer)adminRouteRenderer=new google.maps.DirectionsRenderer({map,suppressMarkers:true,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}});else adminRouteRenderer.setMap(map);adminRouteService.route({origin:{lat,lng},destination:target,travelMode:google.maps.TravelMode.DRIVING},(r,s)=>{if(s==="OK"){adminRouteRenderer.setDirections(r);if(fit&&r.routes?.[0]?.bounds)map.fitBounds(r.routes[0].bounds,70)}else clearAdminRoute()})}
+function selectDriver(id){const d=drivers.find(x=>x.id===id);if(!d)return;selectedDriverId=id;const s=statusOf(d),mission=s.mission,box=q("v79DriverDetail");box.classList.remove("v79-hidden");const stage=mission?adminRouteStage(mission):"",routeLabel=stage==="pickup"?"Trajet affiché : voiture → client":stage==="destination"?"Trajet affiché : voiture → destination":"Aucun trajet actif à afficher";box.innerHTML=`<h3>${esc(d.displayName||"Chauffeur")} · ${s.label}</h3><small>${esc(d.vehicle||"Véhicule non renseigné")} ${d.registration?"· "+esc(d.registration):""}</small>${mission?`<p><strong>Course actuelle</strong><br>${esc(mission.customerName||"Client")} · ${esc(mission.pickup||"Départ")} → ${esc(mission.destination||"Destination")} · ${money(mission.estimatedPrice||mission.price)}</p><p><strong>${esc(routeLabel)}</strong></p>`:"<p>Aucune course active.</p>"}`;const pr=presence.find(x=>x.id===d.authUid),lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);if(map&&Number.isFinite(lat)&&Number.isFinite(lng))map.panTo({lat,lng});if(mission)drawAdminRoute(d,mission,true);else clearAdminRoute()}
 function adminSmoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
 function updateMarkers(){if(!map||!window.google?.maps)return;const alive=new Set();drivers.forEach(d=>{const pr=presence.find(x=>x.id===d.authUid);if(!pr||pr.online===false)return;const lat=Number(pr.lat),lng=Number(pr.lng);if(!Number.isFinite(lat)||!Number.isFinite(lng))return;const updated=toMs(pr.updatedAt);if(updated&&Date.now()-updated>180000)return;const st=statusOf(d),pos={lat,lng};alive.add(d.id);let mk=markers.get(d.id);if(!mk){mk=new google.maps.Marker({map,position:pos,title:d.displayName||'Chauffeur',icon:adminCarIcon(st.key,Number(pr.heading||0)),zIndex:30});mk.addListener('click',()=>selectDriver(d.id));markers.set(d.id,mk)}else{adminSmoothMove(mk,pos);mk.setIcon(adminCarIcon(st.key,Number(pr.heading||0)))}mk.setMap(map)});for(const [id,m] of markers)if(!alive.has(id)){m.setMap(null);markers.delete(id)}}
 function dateOf(x){for(const v of [x.completedAt,x.statusUpdatedAt,x.scheduledAt,x.createdAt,x.updatedAt]){const ms=toMs(v);if(ms)return new Date(ms)}const t=String(x.scheduledAtText||'');const d=new Date(t);return isNaN(d)?null:d}
