@@ -1,26 +1,15 @@
 {
-  "id": "/chauffeur/chauffeur.html",
   "name": "OuassVTC",
   "short_name": "OuassVTC",
-  "description": "Application chauffeur partenaire OuassVTC",
-  "start_url": "/chauffeur/chauffeur.html",
+  "start_url": "/chauffeur/chauffeur.html?v=780",
   "scope": "/chauffeur/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#f4f7fb",
-  "theme_color": "#0b1627",
+  "background_color": "#080b10",
+  "theme_color": "#080b10",
   "icons": [
-    {
-      "src": "/ouassvtc-app.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/ouassvtc-app.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    {"src": "/ouassvtc-app.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/ouassvtc-app.png", "sizes": "512x512", "type": "image/png"}
   ]
 }
+
+
