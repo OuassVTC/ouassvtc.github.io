@@ -8265,7 +8265,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.3.20261008.01";
+const V79_VERSION="79.4.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map();
 const q=id=>document.getElementById(id);
@@ -8381,6 +8381,104 @@ async function boot(){
 }
 document.documentElement.dataset.ouassVtcVersion=V79_VERSION;
 if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+</script>
+
+
+<!-- V79.4 UBER CAR TRACKING -->
+<style>
+#partnerLiveMap .ouass-car-marker{width:34px;height:34px;transform-origin:50% 50%;transition:transform .55s linear,filter .25s ease}
+#partnerLiveMap .ouass-car-marker.own{filter:drop-shadow(0 0 8px rgba(38,160,255,.95))}
+#partnerLiveMap .ouass-car-marker.peer{filter:drop-shadow(0 0 5px rgba(255,255,255,.45));pointer-events:none}
+</style>
+<script>
+(function(){
+  "use strict";
+  const ZOOM_ONLINE = 16;
+  let ownMarker = null;
+  let peerMarkers = new Map();
+  let autoFocused = false;
+
+  function carSvg(fill="#ffffff", stroke="#101827"){
+    return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+       <path d="M17 12h30l7 18v19c0 3-2 5-5 5h-4c-3 0-5-2-5-5H24c0 3-2 5-5 5h-4c-3 0-5-2-5-5V30l7-18z" fill="${fill}" stroke="${stroke}" stroke-width="4"/>
+       <path d="M21 18h22l4 11H17l4-11z" fill="#8ed7ff" stroke="${stroke}" stroke-width="3"/>
+       <circle cx="20" cy="40" r="5" fill="#172033"/><circle cx="44" cy="40" r="5" fill="#172033"/>
+       <path d="M32 3l7 9H25z" fill="#2f9cff"/></svg>`
+    );
+  }
+
+  function iconFor(own, heading){
+    return {
+      url: carSvg(own ? "#ffffff" : "#e8edf4", own ? "#147cff" : "#202938"),
+      scaledSize: new google.maps.Size(38,38),
+      anchor: new google.maps.Point(19,19)
+    };
+  }
+
+  function animateMarker(marker, from, to){
+    if(!marker || !to) return;
+    if(!from){ marker.setPosition(to); return; }
+    const frames=18, duration=720, start=performance.now();
+    function tick(now){
+      const p=Math.min(1,(now-start)/duration);
+      const e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+      marker.setPosition({
+        lat: from.lat+(to.lat-from.lat)*e,
+        lng: from.lng+(to.lng-from.lng)*e
+      });
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function getMap(){
+    return window.partnerLiveMap || window.driverLiveMap || null;
+  }
+
+  window.ouassUpdateOwnCar = function(pos){
+    const map=getMap();
+    if(!map || !window.google?.maps || !pos) return;
+    const ll={lat:Number(pos.lat ?? pos.latitude),lng:Number(pos.lng ?? pos.longitude)};
+    if(!Number.isFinite(ll.lat)||!Number.isFinite(ll.lng)) return;
+    const heading=Number(pos.heading||0);
+    if(!ownMarker){
+      ownMarker=new google.maps.Marker({map,position:ll,icon:iconFor(true,heading),zIndex:999,clickable:false,title:"Votre position"});
+    }else{
+      const old=ownMarker.getPosition();
+      animateMarker(ownMarker,old?{lat:old.lat(),lng:old.lng()}:null,ll);
+      ownMarker.setIcon(iconFor(true,heading));
+    }
+    if(!autoFocused){
+      map.panTo(ll); map.setZoom(ZOOM_ONLINE); autoFocused=true;
+    }
+  };
+
+  window.ouassUpdateAnonymousCars = function(rows){
+    const map=getMap();
+    if(!map || !window.google?.maps) return;
+    const keep=new Set();
+    (rows||[]).forEach((r,i)=>{
+      const id=String(r.id||r.uid||r.driverId||("peer-"+i));
+      if(r.isSelf) return;
+      const ll={lat:Number(r.lat??r.latitude),lng:Number(r.lng??r.longitude)};
+      if(!Number.isFinite(ll.lat)||!Number.isFinite(ll.lng)) return;
+      keep.add(id);
+      let m=peerMarkers.get(id);
+      if(!m){
+        m=new google.maps.Marker({map,position:ll,icon:iconFor(false,Number(r.heading||0)),zIndex:400,clickable:false});
+        peerMarkers.set(id,m);
+      }else{
+        const old=m.getPosition();
+        animateMarker(m,old?{lat:old.lat(),lng:old.lng()}:null,ll);
+        m.setIcon(iconFor(false,Number(r.heading||0)));
+      }
+    });
+    for(const [id,m] of peerMarkers){ if(!keep.has(id)){m.setMap(null);peerMarkers.delete(id);} }
+  };
+
+  window.ouassResetOnlineFocus=function(){autoFocused=false;};
+})();
 </script>
 
 </body>
