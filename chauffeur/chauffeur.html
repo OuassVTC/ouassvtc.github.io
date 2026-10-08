@@ -1797,7 +1797,7 @@ body.partner-authenticated .action.partner-back{
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
     <script>
-    window.OUASSVTC_BUILD = "78.0.20261008.01";
+    window.OUASSVTC_BUILD = "79.2.20261008.01";
   </script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -7112,7 +7112,7 @@ async function handleStatusAction(id, status) {
  
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=791", { scope:"/chauffeur/", updateViaCache:"none" });
+        const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=792", { scope:"/chauffeur/", updateViaCache:"none" });
         registration.update();
       });
     }
@@ -8265,7 +8265,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.1.20261008.01";
+const V79_VERSION="79.2.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false;
 const q=id=>document.getElementById(id);
@@ -8346,9 +8346,34 @@ async function listenMissions(user){
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
 async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,gestureHandling:"cooperative",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]})}catch(e){console.warn("Carte chauffeur V79",e)}}
 function updateMap(lat,lng){if(!v79Map)return;const p={lat:Number(lat),lng:Number(lng)};v79Map.panTo(p);v79Map.setZoom(14);if(!v79Marker)v79Marker=new google.maps.Marker({map:v79Map,position:p,title:"Ma position"});else v79Marker.setPosition(p)}
+async function waitForMainFirebase(timeoutMs=15000){
+ const started=Date.now();
+ while(Date.now()-started<timeoutMs){
+   if(window.OUASSVTC_FIREBASE_READY && window.auth && window.db) return true;
+   await new Promise(r=>setTimeout(r,100));
+ }
+ return false;
+}
 async function boot(){
- ensureHero(); if(!firebaseReady)return; v79App=getApps().length?getApp():initializeApp(firebaseConfig);v79Auth=getAuth(v79App);v79Db=getFirestore(v79App);
- onAuthStateChanged(v79Auth,async user=>{stopTracking();v79Profile=null;v79ForcedMission=false;if(!user){paint();return}try{v79Profile=await resolveProfile(user);paint();if(v79Profile?.online||v79Profile?.availability==="online")startTracking();await listenMissions(user)}catch(e){console.error("Initialisation pilotage chauffeur V79",e)}})
+ ensureHero();
+ const ready=await waitForMainFirebase();
+ if(!ready){
+   console.error("Pilotage V79.2 : bridge Firebase principal indisponible");
+   return;
+ }
+ // Réutilise STRICTEMENT l'instance Firebase déjà authentifiée par l'application chauffeur.
+ v79Auth=window.auth;
+ v79Db=window.db;
+ onAuthStateChanged(v79Auth,async user=>{
+   stopTracking();v79Profile=null;v79ForcedMission=false;
+   if(!user){paint();return}
+   try{
+     v79Profile=await resolveProfile(user);
+     paint();
+     if(v79Profile?.online||v79Profile?.availability==="online")startTracking();
+     await listenMissions(user);
+   }catch(e){console.error("Initialisation pilotage chauffeur V79.2",e)}
+ });
 }
 document.documentElement.dataset.ouassVtcVersion=V79_VERSION;
 if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
