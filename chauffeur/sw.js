@@ -12,8 +12,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const SW_VERSION = "79.3.20261008.01";
-const CACHE_NAME = "ouassvtc-chauffeur-v79.3.20261008.01";
+const SW_VERSION = "79.4.20261008.01";
+const CACHE_NAME = "ouassvtc-chauffeur-v79.4.20261008.01";
 
 const APP_SHELL = [
   "/chauffeur/chauffeur.html",
