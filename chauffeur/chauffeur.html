@@ -1796,7 +1796,10 @@ body.partner-authenticated .action.partner-back{
  
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-  <script type="module">
+    <script>
+    window.OUASSVTC_BUILD = "78.0.20261008.01";
+  </script>
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import {
       browserLocalPersistence,
@@ -5829,10 +5832,13 @@ async function handleStatusAction(id, status) {
       // On expose uniquement les références Firebase déjà initialisées dont ces modules ont besoin.
       Object.assign(window, {
         auth, db, storage, messaging,
-        doc, collection, query, where, limit, getDocs,
-        setDoc, updateDoc, deleteDoc, onSnapshot,
-        serverTimestamp
+        doc, collection, query, where, limit, orderBy, getDocs,
+        addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, runTransaction,
+        serverTimestamp, storageRef, uploadBytesResumable,
+        getDownloadURL, deleteObject
       });
+      window.OUASSVTC_FIREBASE_READY = true;
+      window.dispatchEvent(new CustomEvent("ouassvtc:firebase-ready"));
       if (messaging) {
         onMessage(messaging, async payload => {
           if (Notification.permission !== "granted" || !notificationsOptedIn() || !("serviceWorker" in navigator)) return;
@@ -7132,8 +7138,9 @@ async function handleStatusAction(id, status) {
     });
 
     /* V64 — Tableau de contrôle définitif, isolé du fonctionnement métier */
-    const HEALTH_VERSION = "76.0.20261004.01";
+    const HEALTH_VERSION = "78.0.20261008.01";
     const HEALTH_KEY = "ouassvtcHealthHistoryV1";
+    window.OUASSVTC_APP_VERSION = HEALTH_VERSION;
     const HEALTH_RETENTION = 30 * 24 * 60 * 60 * 1000;
     let healthTimer = null;
 
@@ -7639,7 +7646,10 @@ function pmEnsure(){
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
- pmFillProfile();pmListenDocuments();
+ // Initialisation différée : le module Firebase doit avoir publié son bridge global.
+ const startPartnerModules=()=>{try{pmFillProfile();pmListenDocuments();}catch(error){console.error("Initialisation modules chauffeur",error)}};
+ if(window.OUASSVTC_FIREBASE_READY) startPartnerModules();
+ else window.addEventListener("ouassvtc:firebase-ready",startPartnerModules,{once:true});
 }
 async function pmLoadOwnedBookings(){
  const authMail=String(auth?.currentUser?.email||"").trim();
@@ -7824,7 +7834,11 @@ async function pmRecordLogin(){
   if(!s.empty)await updateDoc(doc(db,"partnerDrivers",s.docs[0].id),{lastLoginAt:serverTimestamp(),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
  }catch(e){console.warn("Dernière connexion",e)}
 }
-document.addEventListener("DOMContentLoaded",()=>{pmEnsure();setTimeout(pmRecordLogin,3000)});
+document.addEventListener("DOMContentLoaded",()=>{
+ const boot=()=>{try{pmEnsure();setTimeout(pmRecordLogin,3000)}catch(error){console.error("Démarrage espace chauffeur",error)}};
+ if(window.OUASSVTC_FIREBASE_READY) boot();
+ else window.addEventListener("ouassvtc:firebase-ready",boot,{once:true});
+});
 </script>
 </div>
 
