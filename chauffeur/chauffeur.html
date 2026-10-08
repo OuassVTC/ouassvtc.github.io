@@ -8253,9 +8253,9 @@ html[data-theme="dark"] .pm-energy-choice{background:#111a28;border-color:#2d3b5
 <style id="v79-driver-style">
 :root{--v79-navy:#07111f;--v79-panel:#0e1a29;--v79-line:#26364a;--v79-blue:#1478ff;--v79-green:#20d66b;--v79-red:#ff414d;--v79-white:#f7fbff}
 #v79DriverHero{position:relative;min-height:330px;margin:0 0 18px;border-radius:28px;overflow:hidden;background:linear-gradient(145deg,#07111f,#10263a);border:1px solid #24384e;box-shadow:0 18px 45px #07111f30;color:#fff;isolation:isolate}
-#v79DriverMap{position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 35% 40%,#163a55 0 2px,transparent 3px),linear-gradient(35deg,transparent 45%,#1e4560 46% 48%,transparent 49%),linear-gradient(145deg,#0a1b2b,#10283b);opacity:.82}
-#v79DriverHero:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#06101a20,#06101a10 45%,#06101acc)}
-.v79-driver-top,.v79-driver-center,.v79-driver-bottom{position:relative;z-index:2}.v79-driver-top{display:flex;justify-content:space-between;align-items:center;padding:16px}.v79-driver-brand{display:flex;align-items:center;gap:9px;font-weight:950}.v79-driver-brand img{width:34px;height:34px;object-fit:contain;border-radius:9px;display:block;overflow:hidden}.v79-status-pill{border:1px solid #ffffff35;background:#07111fbb;color:#fff;border-radius:999px;padding:9px 12px;font-weight:900;font-size:12px;backdrop-filter:blur(10px)}.v79-status-pill.online{border-color:#20d66b88;color:#8fffb7}.v79-status-pill.mission{border-color:#1478ff99;color:#8ec1ff}
+#v79DriverMap{position:absolute;inset:0;z-index:0;touch-action:none!important;pointer-events:auto!important;background:radial-gradient(circle at 35% 40%,#163a55 0 2px,transparent 3px),linear-gradient(35deg,transparent 45%,#1e4560 46% 48%,transparent 49%),linear-gradient(145deg,#0a1b2b,#10283b);opacity:.82}
+#v79DriverHero:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#06101a20,#06101a10 45%,#06101acc)}
+.v79-driver-top,.v79-driver-center,.v79-driver-bottom{position:relative;z-index:2;pointer-events:none}.v79-driver-top button,.v79-driver-center button,.v79-driver-bottom .v79-searchbar{pointer-events:auto}.v79-driver-top{display:flex;justify-content:space-between;align-items:center;padding:16px}.v79-driver-brand{display:flex;align-items:center;gap:9px;font-weight:950}.v79-driver-brand img{width:34px;height:34px;object-fit:contain;border-radius:9px;display:block;overflow:hidden}.v79-status-pill{border:1px solid #ffffff35;background:#07111fbb;color:#fff;border-radius:999px;padding:9px 12px;font-weight:900;font-size:12px;backdrop-filter:blur(10px)}.v79-status-pill.online{border-color:#20d66b88;color:#8fffb7}.v79-status-pill.mission{border-color:#1478ff99;color:#8ec1ff}
 .v79-driver-center{min-height:205px;display:grid;place-items:center;padding:10px}.v79-go-online{width:154px;height:154px;border-radius:50%;border:7px solid #fff;background:linear-gradient(145deg,#1689ff,#0065e8);color:#fff;box-shadow:0 0 0 7px #1689ff88,0 18px 45px #0008;font-size:24px;font-weight:1000;letter-spacing:-.03em;display:flex;flex-direction:column;align-items:center;justify-content:center}.v79-go-online small{font-size:12px;font-weight:750;margin-top:3px}.v79-driver-bottom{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:0 14px 12px;z-index:3}.v79-searchbar{width:min(430px,96%);min-height:44px;border:1px solid #ffffff2e;background:#07111fe8;color:#fff;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 14px;box-shadow:0 10px 28px #0006;backdrop-filter:blur(12px);font-size:12px;font-weight:850}.v79-searchdot{width:9px;height:9px;border-radius:50%;background:#20d66b;box-shadow:0 0 0 0 #20d66b88;animation:v79pulse 1.5s infinite}.v79-searchbar.mission .v79-searchdot{background:#1478ff}.v79-switch{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffffff35;background:#07111fdd;color:#fff;border-radius:999px;padding:6px 9px 6px 11px;font-weight:900;font-size:11px;backdrop-filter:blur(10px)}.v79-switch-track{width:34px;height:19px;border-radius:999px;background:#687789;position:relative;transition:.2s}.v79-switch-track:after{content:"";position:absolute;width:15px;height:15px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.v79-switch.online .v79-switch-track{background:#20d66b}.v79-switch.online .v79-switch-track:after{transform:translateX(15px)}.v79-switch.mission .v79-switch-track{background:#1478ff}.v79-switch.mission .v79-switch-track:after{transform:translateX(15px)}.v79-hidden{display:none!important}@keyframes v79pulse{0%{box-shadow:0 0 0 0 #20d66b88}70%{box-shadow:0 0 0 8px #20d66b00}100%{box-shadow:0 0 0 0 #20d66b00}}
 @media(max-width:520px){#v79DriverHero{margin-left:-2px;margin-right:-2px;min-height:315px;border-radius:24px}.v79-go-online{width:142px;height:142px;font-size:22px}}
 </style>
@@ -8265,9 +8265,9 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.6.20261008.01";
+const V79_VERSION="79.7.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false;
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false;
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
@@ -8306,23 +8306,33 @@ async function ensureV79Profile(){
  return profile;
 }
 async function setAvailability(online,forced){
- const go=q("v79GoOnline"),pill=q("v79StatusPill");
+ const go=q("v79GoOnline"),pill=q("v79StatusPill"),label=q("v79SwitchLabel");
+ if(v79AvailabilityBusy)return;
  if(!online&&v79ForcedMission&&!forced){alert("Une course est en cours. Le mode mission maintient automatiquement le chauffeur en ligne.");return}
+ v79AvailabilityBusy=true;
  try{
    if(go){go.disabled=true;go.style.opacity=".72";if(online)go.innerHTML='CONNEXION<small>Patientez…</small>'}
-   if(pill&&online)pill.textContent="CONNEXION…";
+   if(pill){pill.disabled=true;if(online&&label)label.textContent="CONNEXION…"}
    const profile=await ensureV79Profile();
-   await updateDoc(doc(v79Db,"partnerDrivers",profile.id),{authUid:v79Auth.currentUser.uid,online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
-   await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:Boolean(online),status:v79ForcedMission?"mission":online?"online":"offline",updatedAt:serverTimestamp()},{merge:true});
+   const user=v79Auth?.currentUser;
+   if(!user)throw new Error("Chauffeur non connecté");
+   await Promise.race([
+     Promise.all([
+       updateDoc(doc(v79Db,"partnerDrivers",profile.id),{authUid:user.uid,online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()}),
+       setDoc(doc(v79Db,"driverPresence",user.uid),{online:Boolean(online),status:v79ForcedMission?"mission":online?"online":"offline",updatedAt:serverTimestamp()},{merge:true})
+     ]),
+     new Promise((_,reject)=>setTimeout(()=>reject(new Error("La connexion prend trop de temps. Vérifiez Internet puis réessayez.")),12000))
+   ]);
    profile.online=Boolean(online);profile.availability=online?"online":"offline";profile.locationSharing=Boolean(online);
-   paint();
-   if(online){v79MapFocused=false;startTracking(true)}else{stopTracking();v79MapFocused=false;}
+   if(online){v79MapFocused=false;startTracking(true)}else{stopTracking();v79MapFocused=false}
  }catch(e){
-   console.error("Disponibilité V79.1",e);
-   paint();
-   alert(e?.message?"Impossible de passer en ligne : "+e.message:"La disponibilité n’a pas pu être mise à jour.");
+   console.error("Disponibilité V79.7",e);
+   alert(e?.message?"Impossible de changer le statut : "+e.message:"La disponibilité n’a pas pu être mise à jour.");
  }finally{
-   if(go){go.disabled=false;go.style.opacity="";if(!Boolean(v79Profile?.online||v79Profile?.availability==="online"||v79ForcedMission))go.innerHTML='EN LIGNE<small>Commencer</small>'}
+   v79AvailabilityBusy=false;
+   if(go){go.disabled=false;go.style.opacity="";go.innerHTML='EN LIGNE<small>Commencer</small>'}
+   if(pill)pill.disabled=false;
+   paint();
  }
 }
 function stopTracking(){if(v79GeoWatch!==null&&navigator.geolocation){navigator.geolocation.clearWatch(v79GeoWatch);v79GeoWatch=null}}
@@ -8343,24 +8353,25 @@ async function listenMissions(user){
  v79MissionUnsub=onSnapshot(mq,s=>{const missions=s.docs.map(d=>d.data());const forced=missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));const was=v79ForcedMission;v79ForcedMission=forced;if(forced){if(!was||!v79Profile?.online)setAvailability(true,true);else startTracking()}paint()});
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
-async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
+async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});["dragstart","zoom_changed"].forEach(evt=>v79Map.addListener(evt,()=>{v79MapFocused=true}));renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
 function carIcon(color="#111827",own=false,heading=0){
  const h=Number.isFinite(Number(heading))?Number(heading):0;
- const body=own?"#111111":"#5b6470", edge=own?"#f7f7f7":"#d7dde5";
- const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
- <defs><filter id="s" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".45"/></filter><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#34383d"/><stop offset=".55" stop-color="${body}"/><stop offset="1" stop-color="#050607"/></linearGradient></defs>
- <g transform="rotate(${h} 40 40)" filter="url(#s)">
-  <ellipse cx="40" cy="43" rx="19" ry="31" fill="#000" opacity=".22"/>
-  <rect x="18" y="25" width="6" height="15" rx="3" fill="#0b0c0e"/><rect x="56" y="25" width="6" height="15" rx="3" fill="#0b0c0e"/>
-  <rect x="18" y="48" width="6" height="15" rx="3" fill="#0b0c0e"/><rect x="56" y="48" width="6" height="15" rx="3" fill="#0b0c0e"/>
-  <path d="M31 7h18c7 0 12 7 14 18l4 29c1 11-6 19-16 19H29c-10 0-17-8-16-19l4-29C19 14 24 7 31 7z" fill="url(#g)" stroke="${edge}" stroke-width="2"/>
-  <path d="M27 19c3-5 7-7 13-7s10 2 13 7l4 14H23z" fill="#9bc6dc" stroke="#eaf6ff" stroke-width="1.5"/>
-  <path d="M24 38h32l-3 20H27z" fill="#53636d" stroke="#9fb3bf" stroke-width="1.2"/>
-  <path d="M27 61h26" stroke="#d9dde0" stroke-width="2" opacity=".7"/>
-  <rect x="23" y="14" width="7" height="3" rx="1.5" fill="#fff4bd"/><rect x="50" y="14" width="7" height="3" rx="1.5" fill="#fff4bd"/>
-  ${own?'<circle cx="40" cy="40" r="4" fill="#2f9cff" stroke="white" stroke-width="2"/>':''}
+ const body=own?"#ffffff":"#d8dde3";
+ const glass=own?"#25384a":"#5d6975";
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+ <defs><filter id="shadow" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#000" flood-opacity=".48"/></filter></defs>
+ <g transform="rotate(${h} 32 32)" filter="url(#shadow)">
+   <path d="M25 5h14c5.8 0 9.5 5.2 10.7 12.7l3.1 26.8c.9 8.1-4.1 13.5-11.8 13.5H23c-7.7 0-12.7-5.4-11.8-13.5l3.1-26.8C15.5 10.2 19.2 5 25 5z" fill="${body}" stroke="#101418" stroke-width="1.8"/>
+   <path d="M21 18.5c2.2-6 5.1-8.5 11-8.5s8.8 2.5 11 8.5l2 9.5H19z" fill="${glass}"/>
+   <path d="M19.5 32h25L42 46H22z" fill="${glass}" opacity=".9"/>
+   <path d="M18 30h-4.5c-1.7 0-2.5-1.2-2.2-2.8l.7-3.3c.3-1.4 1.2-2.1 2.6-2.1h2.6M46 30h4.5c1.7 0 2.5-1.2 2.2-2.8l-.7-3.3c-.3-1.4-1.2-2.1-2.6-2.1h-2.6" fill="${body}" stroke="#101418" stroke-width="1.5"/>
+   <rect x="15" y="17" width="4" height="11" rx="2" fill="#111"/><rect x="45" y="17" width="4" height="11" rx="2" fill="#111"/>
+   <rect x="14" y="39" width="4" height="11" rx="2" fill="#111"/><rect x="46" y="39" width="4" height="11" rx="2" fill="#111"/>
+   <path d="M21 7.5h22" stroke="#d9f1ff" stroke-width="2.5" stroke-linecap="round" opacity=".95"/>
+   <path d="M21 53h22" stroke="#ff4b4b" stroke-width="2.4" stroke-linecap="round" opacity=".9"/>
+   ${own?'<circle cx="32" cy="34" r="3.3" fill="#1677ff" stroke="#fff" stroke-width="1.6"/>':''}
  </g></svg>`;
- return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new google.maps.Size(52,52),anchor:new google.maps.Point(26,26)}
+ return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new google.maps.Size(42,42),anchor:new google.maps.Point(21,21)}
 }
 function smoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
 function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}}
