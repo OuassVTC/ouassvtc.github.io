@@ -8256,39 +8256,37 @@ html[data-theme="dark"] .pm-energy-choice{background:#111a28;border-color:#2d3b5
 #v79DriverMap{position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 35% 40%,#163a55 0 2px,transparent 3px),linear-gradient(35deg,transparent 45%,#1e4560 46% 48%,transparent 49%),linear-gradient(145deg,#0a1b2b,#10283b);opacity:.82}
 #v79DriverHero:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,#06101a20,#06101a10 45%,#06101acc)}
 .v79-driver-top,.v79-driver-center,.v79-driver-bottom{position:relative;z-index:2}.v79-driver-top{display:flex;justify-content:space-between;align-items:center;padding:16px}.v79-driver-brand{display:flex;align-items:center;gap:9px;font-weight:950}.v79-driver-brand img{width:34px;height:34px;object-fit:contain;border-radius:9px;display:block;overflow:hidden}.v79-status-pill{border:1px solid #ffffff35;background:#07111fbb;color:#fff;border-radius:999px;padding:9px 12px;font-weight:900;font-size:12px;backdrop-filter:blur(10px)}.v79-status-pill.online{border-color:#20d66b88;color:#8fffb7}.v79-status-pill.mission{border-color:#1478ff99;color:#8ec1ff}
-.v79-driver-center{min-height:205px;display:grid;place-items:center;padding:10px}.v79-go-online{width:154px;height:154px;border-radius:50%;border:7px solid #fff;background:linear-gradient(145deg,#1689ff,#0065e8);color:#fff;box-shadow:0 0 0 7px #1689ff88,0 18px 45px #0008;font-size:24px;font-weight:1000;letter-spacing:-.03em;display:flex;flex-direction:column;align-items:center;justify-content:center}.v79-go-online small{font-size:12px;font-weight:750;margin-top:3px}.v79-online-card{width:min(390px,92%);padding:17px;border:1px solid #ffffff24;background:#07111fdd;border-radius:22px;text-align:center;box-shadow:0 16px 35px #0005}.v79-online-card strong{display:block;font-size:20px;margin-bottom:4px}.v79-online-card small{color:#aebfd2}.v79-driver-bottom{display:flex;justify-content:center;padding:0 16px 16px}.v79-offline-btn{display:none!important;border:0;border-radius:15px;padding:12px 17px;background:#ff414d;color:#fff;font-weight:900}.v79-driver-note{font-size:11px;color:#b6c4d5;text-align:center;max-width:360px}.v79-hidden{display:none!important}
+.v79-driver-center{min-height:205px;display:grid;place-items:center;padding:10px}.v79-go-online{width:154px;height:154px;border-radius:50%;border:7px solid #fff;background:linear-gradient(145deg,#1689ff,#0065e8);color:#fff;box-shadow:0 0 0 7px #1689ff88,0 18px 45px #0008;font-size:24px;font-weight:1000;letter-spacing:-.03em;display:flex;flex-direction:column;align-items:center;justify-content:center}.v79-go-online small{font-size:12px;font-weight:750;margin-top:3px}.v79-driver-bottom{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:0 14px 12px;z-index:3}.v79-searchbar{width:min(430px,96%);min-height:44px;border:1px solid #ffffff2e;background:#07111fe8;color:#fff;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 14px;box-shadow:0 10px 28px #0006;backdrop-filter:blur(12px);font-size:12px;font-weight:850}.v79-searchdot{width:9px;height:9px;border-radius:50%;background:#20d66b;box-shadow:0 0 0 0 #20d66b88;animation:v79pulse 1.5s infinite}.v79-searchbar.mission .v79-searchdot{background:#1478ff}.v79-switch{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffffff35;background:#07111fdd;color:#fff;border-radius:999px;padding:6px 9px 6px 11px;font-weight:900;font-size:11px;backdrop-filter:blur(10px)}.v79-switch-track{width:34px;height:19px;border-radius:999px;background:#687789;position:relative;transition:.2s}.v79-switch-track:after{content:"";position:absolute;width:15px;height:15px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.v79-switch.online .v79-switch-track{background:#20d66b}.v79-switch.online .v79-switch-track:after{transform:translateX(15px)}.v79-switch.mission .v79-switch-track{background:#1478ff}.v79-switch.mission .v79-switch-track:after{transform:translateX(15px)}.v79-hidden{display:none!important}@keyframes v79pulse{0%{box-shadow:0 0 0 0 #20d66b88}70%{box-shadow:0 0 0 8px #20d66b00}100%{box-shadow:0 0 0 0 #20d66b00}}
 @media(max-width:520px){#v79DriverHero{margin-left:-2px;margin-right:-2px;min-height:315px;border-radius:24px}.v79-go-online{width:142px;height:142px;font-size:22px}}
 </style>
 <script type="module" id="v79-driver-module">
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.2.20261008.01";
+const V79_VERSION="79.3.20261008.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false;
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map();
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
  const home=q("dashboardHome"); if(!home||q("v79DriverHero"))return;
  const hero=document.createElement("section");hero.id="v79DriverHero";hero.setAttribute("aria-label","Disponibilité chauffeur");
- hero.innerHTML=`<div id="v79DriverMap"></div><div class="v79-driver-top"><div class="v79-driver-brand"><img src="/ouassvtc-app.png" alt=""><span>OuassVTC</span></div><button id="v79StatusPill" class="v79-status-pill" type="button">HORS LIGNE</button></div><div class="v79-driver-center"><button id="v79GoOnline" class="v79-go-online" type="button">EN LIGNE<small>Commencer</small></button><div id="v79OnlineCard" class="v79-online-card v79-hidden"><strong id="v79OnlineTitle">Vous êtes en ligne</strong><small id="v79OnlineText">En attente d’une course…</small></div></div><div class="v79-driver-bottom"><button id="v79GoOffline" class="v79-offline-btn v79-hidden" type="button">Passer hors ligne</button><div id="v79OfflineNote" class="v79-driver-note">Passez en ligne pour apparaître disponible dans le pilotage Admin.</div></div>`;
+ hero.innerHTML=`<div id="v79DriverMap"></div><div class="v79-driver-top"><div class="v79-driver-brand"><img src="/ouassvtc-app.png" alt=""><span>OuassVTC</span></div><button id="v79StatusPill" class="v79-switch" type="button"><span id="v79SwitchLabel">HORS LIGNE</span><span class="v79-switch-track"></span></button></div><div class="v79-driver-center"><button id="v79GoOnline" class="v79-go-online" type="button">EN LIGNE<small>Commencer</small></button></div><div class="v79-driver-bottom"><div id="v79SearchBar" class="v79-searchbar v79-hidden"><span class="v79-searchdot"></span><span id="v79SearchText">Recherche de courses en cours…</span></div></div>`;
  const hello=home.querySelector('.hello-row'); if(hello) hello.insertAdjacentElement('afterend',hero); else home.prepend(hero);
  q("v79GoOnline").addEventListener("click",()=>setAvailability(true,false));
- q("v79GoOffline").addEventListener("click",()=>setAvailability(false,false));
  q("v79StatusPill").addEventListener("click",()=>{if(v79ForcedMission)return; const online=Boolean(v79Profile?.online||v79Profile?.availability==="online"); setAvailability(!online,false)});
  initDriverMap();
 }
 function paint(){
  ensureHero(); if(!q("v79DriverHero"))return;
  const online=Boolean(v79Profile?.online||v79Profile?.availability==="online"||v79ForcedMission);
- const pill=q("v79StatusPill"), go=q("v79GoOnline"), card=q("v79OnlineCard"), off=q("v79GoOffline"), note=q("v79OfflineNote");
- pill.className="v79-status-pill "+(v79ForcedMission?"mission":online?"online":"");
- pill.textContent=v79ForcedMission?"● EN MISSION":online?"● EN LIGNE":"HORS LIGNE";
- go.classList.toggle("v79-hidden",online); card.classList.toggle("v79-hidden",!online); off.classList.toggle("v79-hidden",!online||v79ForcedMission); note.classList.toggle("v79-hidden",online);
- q("v79OnlineTitle").textContent=v79ForcedMission?"Mission en cours":"Vous êtes en ligne";
- q("v79OnlineText").textContent=v79ForcedMission?"Le suivi de position reste actif jusqu’à la fin de la course.":"Disponible — en attente d’une course…";
+ const pill=q("v79StatusPill"), go=q("v79GoOnline"), bar=q("v79SearchBar"), label=q("v79SwitchLabel");
+ pill.className="v79-switch "+(v79ForcedMission?"mission":online?"online":"");
+ label.textContent=v79ForcedMission?"EN MISSION":online?"EN LIGNE":"HORS LIGNE";
+ go.classList.toggle("v79-hidden",online); bar.classList.toggle("v79-hidden",!online); bar.classList.toggle("mission",v79ForcedMission);
+ q("v79SearchText").textContent=v79ForcedMission?"Mission en cours · suivi actif":"Recherche de courses en cours…";
 }
 async function resolveProfile(user){
  if(!user||!v79Db)return null; const email=String(user.email||"").trim(); if(!email)return null;
@@ -8314,7 +8312,8 @@ async function setAvailability(online,forced){
    if(go){go.disabled=true;go.style.opacity=".72";if(online)go.innerHTML='CONNEXION<small>Patientez…</small>'}
    if(pill&&online)pill.textContent="CONNEXION…";
    const profile=await ensureV79Profile();
-   await updateDoc(doc(v79Db,"partnerDrivers",profile.id),{online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   await updateDoc(doc(v79Db,"partnerDrivers",profile.id),{authUid:v79Auth.currentUser.uid,online:Boolean(online),availability:online?"online":"offline",locationSharing:Boolean(online),lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()});
+   await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:Boolean(online),status:v79ForcedMission?"mission":online?"online":"offline",updatedAt:serverTimestamp()},{merge:true});
    profile.online=Boolean(online);profile.availability=online?"online":"offline";profile.locationSharing=Boolean(online);
    paint();
    if(online)startTracking(true);else stopTracking();
@@ -8334,7 +8333,7 @@ function startTracking(showError=false){
  v79GeoWatch=navigator.geolocation.watchPosition(async pos=>{
    const now=Date.now(); const c=pos.coords; updateMap(c.latitude,c.longitude);
    if(now-v79LastWrite<12000)return;v79LastWrite=now;
-   try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()})}catch(e){console.warn("Position V79.1",e?.code||e)}
+   try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{authUid:v79Auth.currentUser.uid,locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()});await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:true,status:v79ForcedMission?"mission":"online",lat:c.latitude,lng:c.longitude,accuracy:Number(c.accuracy||0),heading:Number.isFinite(Number(c.heading))?Number(c.heading):0,updatedAt:serverTimestamp()},{merge:true})}catch(e){console.warn("Position V79.3",e?.code||e)}
  },err=>{console.warn("Géolocalisation V79.1",err?.code||err);if(showError&&!geoErrorShown){geoErrorShown=true;alert("Vous êtes bien en ligne, mais la position GPS n’est pas partagée. Autorisez la localisation pour apparaître sur la carte Admin.")}}, {enableHighAccuracy:true,maximumAge:8000,timeout:15000});
 }
 async function listenMissions(user){
@@ -8344,8 +8343,11 @@ async function listenMissions(user){
  v79MissionUnsub=onSnapshot(mq,s=>{const missions=s.docs.map(d=>d.data());const forced=missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));const was=v79ForcedMission;v79ForcedMission=forced;if(forced){if(!was||!v79Profile?.online)setAvailability(true,true);else startTracking()}paint()});
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
-async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,gestureHandling:"cooperative",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]})}catch(e){console.warn("Carte chauffeur V79",e)}}
-function updateMap(lat,lng){if(!v79Map)return;const p={lat:Number(lat),lng:Number(lng)};v79Map.panTo(p);v79Map.setZoom(14);if(!v79Marker)v79Marker=new google.maps.Marker({map:v79Map,position:p,title:"Ma position"});else v79Marker.setPosition(p)}
+async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,gestureHandling:"cooperative",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
+function carIcon(color="#1478ff"){return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42"><circle cx="21" cy="21" r="19" fill="white" fill-opacity=".96"/><path d="M11 24v-6l3-7h14l3 7v6h-2v4h-4v-3H17v3h-4v-4h-2Zm5-10-2 5h14l-2-5H16Zm0 7a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" fill="${color}"/></svg>`)}`,scaledSize:new google.maps.Size(38,38),anchor:new google.maps.Point(19,19)}}
+function updateMap(lat,lng){if(!v79Map)return;const p={lat:Number(lat),lng:Number(lng)};v79Map.panTo(p);v79Map.setZoom(14);if(!v79Marker)v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#1478ff"),title:"Ma position",zIndex:50});else v79Marker.setPosition(p)}
+function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker)obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#8fa5bd"),clickable:false,zIndex:20});else{obj.marker.setPosition(pos);obj.marker.setMap(v79Map)}}}
+function listenPresence(){if(v79PresenceUnsub){v79PresenceUnsub();v79PresenceUnsub=null}v79PresenceUnsub=onSnapshot(query(collection(v79Db,"driverPresence"),limit(200)),snap=>{const seen=new Set();snap.docs.forEach(d=>{seen.add(d.id);const old=v79Peers.get(d.id)||{marker:null};old.data=d.data();v79Peers.set(d.id,old)});for(const [uid,obj] of v79Peers)if(!seen.has(uid)){obj.marker?.setMap(null);v79Peers.delete(uid)}renderPeers()},e=>console.warn("Présences chauffeurs",e?.code||e))}
 async function waitForMainFirebase(timeoutMs=15000){
  const started=Date.now();
  while(Date.now()-started<timeoutMs){
@@ -8358,7 +8360,7 @@ async function boot(){
  ensureHero();
  const ready=await waitForMainFirebase();
  if(!ready){
-   console.error("Pilotage V79.2 : bridge Firebase principal indisponible");
+   console.error("Pilotage V79.3 : bridge Firebase principal indisponible");
    return;
  }
  // Réutilise STRICTEMENT l'instance Firebase déjà authentifiée par l'application chauffeur.
@@ -8369,10 +8371,12 @@ async function boot(){
    if(!user){paint();return}
    try{
      v79Profile=await resolveProfile(user);
+     if(v79Profile?.id)try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{authUid:user.uid,updatedAt:serverTimestamp()})}catch(e){console.warn("UID profil",e?.code||e)}
+     listenPresence();
      paint();
      if(v79Profile?.online||v79Profile?.availability==="online")startTracking();
      await listenMissions(user);
-   }catch(e){console.error("Initialisation pilotage chauffeur V79.2",e)}
+   }catch(e){console.error("Initialisation pilotage chauffeur V79.3",e)}
  });
 }
 document.documentElement.dataset.ouassVtcVersion=V79_VERSION;
