@@ -4035,11 +4035,21 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
     function v7920CleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
     function v7923Bearing(a,b){if(!a||!b)return 0;const y=Math.sin((b.lng-a.lng)*Math.PI/180)*Math.cos(b.lat*Math.PI/180),x=Math.cos(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180)-Math.sin(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos((b.lng-a.lng)*Math.PI/180);return(Math.atan2(y,x)*180/Math.PI+360)%360}
+    function v7927OffsetAhead(p,heading,meters){
+      const R=6378137,d=meters/R,br=heading*Math.PI/180,lat1=p.lat*Math.PI/180,lon1=p.lng*Math.PI/180;
+      const lat2=Math.asin(Math.sin(lat1)*Math.cos(d)+Math.cos(lat1)*Math.sin(d)*Math.cos(br));
+      const lon2=lon1+Math.atan2(Math.sin(br)*Math.sin(d)*Math.cos(lat1),Math.cos(d)-Math.sin(lat1)*Math.sin(lat2));
+      return{lat:lat2*180/Math.PI,lng:lon2*180/Math.PI};
+    }
     function v7923DriveCamera(p,active){
       const n=v7920AdminNav;if(!n.map||!p)return;
       if(active){
-        const heading=n.prevPos?v7923Bearing(n.prevPos,p):(n.map.getHeading?.()||0);
-        n.map.setTilt?.(67.5);n.map.setHeading?.(heading);if(n.map.getZoom()<18)n.map.setZoom(18);n.map.panTo(p);
+        const raw=n.prevPos?v7923Bearing(n.prevPos,p):(n.map.getHeading?.()||0);
+        const prev=Number(n.map.getHeading?.()||raw),delta=((raw-prev+540)%360)-180,heading=(prev+delta*.28+360)%360;
+        const speed=Math.max(0,Number(n.lastSpeed||0));
+        const zoom=speed>22?17.1:speed>12?17.5:speed>5?18.0:18.5;
+        n.map.setTilt?.(67.5);n.map.setHeading?.(heading);n.map.setZoom?.(zoom);
+        n.map.panTo(v7927OffsetAhead(p,heading,speed>12?85:55));
       }else{n.map.setTilt?.(0);n.map.setHeading?.(0)}
       n.prevPos=p;
     }
@@ -4101,7 +4111,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",renderingType:google.maps.RenderingType.VECTOR,tiltInteractionEnabled:true,headingInteractionEnabled:true,tilt:67.5,heading:0});
       google.maps.event.addListenerOnce(n.map,"tilesloaded",()=>{if(v7920AdminStage(n.item).target){n.map.setTilt(67.5);n.map.setHeading(n.map.getHeading()||0)}});
       if(!n.service)n.service=new google.maps.DirectionsService();
-      n.renderer=new google.maps.DirectionsRenderer({map:n.map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
+      n.renderer=new google.maps.DirectionsRenderer({map:n.map,suppressMarkers:true,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
       setTimeout(()=>{
         google.maps.event.trigger(n.map,"resize");
         if(n.lastPos){
@@ -6496,7 +6506,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.25.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.27.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div>
