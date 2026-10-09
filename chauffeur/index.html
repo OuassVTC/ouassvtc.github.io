@@ -4034,6 +4034,15 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       return{key:"",target:"",label:"Navigation prête"};
     }
     function v7920CleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
+    function v7923Bearing(a,b){if(!a||!b)return 0;const y=Math.sin((b.lng-a.lng)*Math.PI/180)*Math.cos(b.lat*Math.PI/180),x=Math.cos(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180)-Math.sin(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos((b.lng-a.lng)*Math.PI/180);return(Math.atan2(y,x)*180/Math.PI+360)%360}
+    function v7923DriveCamera(p,active){
+      const n=v7920AdminNav;if(!n.map||!p)return;
+      if(active){
+        const heading=n.prevPos?v7923Bearing(n.prevPos,p):(n.map.getHeading?.()||0);
+        n.map.setTilt?.(67.5);n.map.setHeading?.(heading);if(n.map.getZoom()<18)n.map.setZoom(18);n.map.panTo(p);
+      }else{n.map.setTilt?.(0);n.map.setHeading?.(0)}
+      n.prevPos=p;
+    }
     function v7920CarIcon(){
       return{url:'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="44" height="62" viewBox="0 0 44 62"><ellipse cx="22" cy="33" rx="18" ry="25" fill="#000" opacity=".18"/><rect x="8" y="5" width="28" height="50" rx="11" fill="#fff" stroke="#17202b" stroke-width="2"/><path d="M12 17h20l-3 13H15z" fill="#5fa7d8"/><path d="M14 35h16v10H14z" fill="#b7d7ea"/><rect x="5" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="5" y="38" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="38" width="4" height="12" rx="2" fill="#151b22"/><circle cx="15" cy="8" r="2" fill="#ffe274"/><circle cx="29" cy="8" r="2" fill="#ffe274"/></svg>`),scaledSize:new google.maps.Size(32,45),anchor:new google.maps.Point(16,30)}
     }
@@ -4059,7 +4068,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       if(!force&&key===n.lastRouteKey&&now-n.lastRouteAt<10000){if(n.lastResult)v7920RenderGuidance(n.lastResult,st);return}
       n.lastRouteKey=key;n.lastRouteAt=now;if(next)next.textContent="Calcul de l’itinéraire…";
       n.service.route({origin:n.lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-        if(status==="OK"){n.renderer.setDirections(res);v7920RenderGuidance(res,st);n.map.panTo(n.lastPos);if(n.map.getZoom()<16)n.map.setZoom(17)}
+        if(status==="OK"){n.renderer.setDirections(res);v7920RenderGuidance(res,st);v7923DriveCamera(n.lastPos,true)}
         else if(next)next.textContent="Itinéraire momentanément indisponible";
       });
     }
@@ -4067,6 +4076,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       const n=v7920AdminNav;n.lastPos=p;if(!n.map)return;
       if(!n.car)n.car=new google.maps.Marker({map:n.map,position:p,title:"Ma position",icon:v7920CarIcon(),zIndex:99});
       else n.car.setPosition(p);
+      const st=v7920AdminStage(n.item);v7923DriveCamera(p,!!st.target);
       v7920Route(false);
     }
     function v7920StartGps(){
@@ -4088,7 +4098,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       try{n.renderer?.setMap(null)}catch(_){}
       try{n.car?.setMap(null)}catch(_){}
       n.map=null;n.renderer=null;n.car=null;
-      n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:17,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:45});
+      n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:67.5});
       if(!n.service)n.service=new google.maps.DirectionsService();
       n.renderer=new google.maps.DirectionsRenderer({map:n.map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
       setTimeout(()=>{
@@ -4096,6 +4106,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         if(n.lastPos){
           n.car=new google.maps.Marker({map:n.map,position:n.lastPos,title:"Ma position",icon:v7920CarIcon(),zIndex:99});
           n.map.setCenter(n.lastPos);
+          v7923DriveCamera(n.lastPos,!!v7920AdminStage(n.item).target);
         }
         v7920Route(true);
       },120);
@@ -6484,7 +6495,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.21.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.23.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div>
