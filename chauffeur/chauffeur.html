@@ -1213,6 +1213,9 @@ body.partner-authenticated .action.partner-back{
 .pm-cost-title{margin-top:8px;padding:14px 0 4px;border-top:1px solid #263a55;display:flex;flex-direction:column;gap:3px}
 .pm-cost-title small{color:#60a5fa;font-weight:900;letter-spacing:.08em}.pm-cost-title b{font-size:18px}
 .pm-cost-result{padding:13px;border-radius:13px;background:#0d1725;color:#dbeafe}.pm-cost-result strong{font-size:18px;color:#fff}
+</style><style id="v7915-nav-style">
+.v7915-navcard{display:none;margin:12px 0 10px;padding:14px;border:1px solid rgba(80,145,220,.32);border-radius:17px;background:linear-gradient(145deg,#0d1c2c,#10263a)}
+.v7915-navcard.show{display:block}.v7915-navlabel{font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#8fa8c0;margin-bottom:5px}.v7915-address{font-size:16px;font-weight:850;line-height:1.3;color:#f5f9ff;margin-bottom:12px}.v7915-gps{display:grid;grid-template-columns:1fr 1fr;gap:9px}.v7915-gps button{border:0;border-radius:14px;padding:12px 9px;color:white;font-weight:900;font-size:14px;min-height:48px}.v7915-waze{background:linear-gradient(135deg,#20b8ff,#087be8)}.v7915-google{background:linear-gradient(135deg,#22a447,#0b7d34)}
 </style></head>
  
 <body>
@@ -8265,7 +8268,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.9.20261008.01";
+const V79_VERSION="79.15.20261009.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="";
 const q=id=>document.getElementById(id);
@@ -8474,5 +8477,12 @@ if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",bo
 </script>
 
 
-</body>
+<div id="v7915NavCard" class="v7915-navcard"><div id="v7915NavLabel" class="v7915-navlabel"></div><div id="v7915NavAddress" class="v7915-address"></div><div class="v7915-gps"><button id="v7915Waze" class="v7915-waze" type="button">Waze</button><button id="v7915Google" class="v7915-google" type="button">Google Maps</button></div></div>
+<script id="v7915-nav-script">
+(function(){"use strict";
+function currentTask(){const all=[...(window.__v79Missions||[]),...(window.__v79Bookings||[])];return all.find(x=>["accepted","en_route","arrived","passenger_onboard","on_board"].includes(String(x.status||"")))||null}
+function navData(t){const s=String(t?.status||"");if(["accepted","en_route","arrived"].includes(s))return{label:"Adresse de prise en charge",address:String(t?.pickup||"").trim()};if(["passenger_onboard","on_board"].includes(s))return{label:"Destination",address:String(t?.destination||"").trim()};return{label:"",address:""}}
+function paint(){const card=document.getElementById("v7915NavCard");if(!card)return;const d=navData(currentTask());card.classList.toggle("show",!!d.address);if(!d.address)return;document.getElementById("v7915NavLabel").textContent=d.label;document.getElementById("v7915NavAddress").textContent=d.address;document.getElementById("v7915Waze").onclick=()=>location.href="https://waze.com/ul?q="+encodeURIComponent(d.address)+"&navigate=yes";document.getElementById("v7915Google").onclick=()=>location.href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d.address)+"&travelmode=driving";const panel=document.querySelector(".v79-mission-card,.mission-card,[data-mission-card]");if(panel&&card.parentElement!==panel)panel.insertBefore(card,panel.firstChild)}
+document.addEventListener("DOMContentLoaded",()=>{paint();setInterval(paint,1000)});window.v7915PaintNav=paint})();
+</script></body>
 </html>
