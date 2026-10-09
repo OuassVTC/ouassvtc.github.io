@@ -8288,7 +8288,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.19.20261009.01";
+const V79_VERSION="79.24.20261009.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
@@ -8530,6 +8530,16 @@ function stage(i){const st=effectiveStatus(i);if(["en_route","arrived"].includes
 function cleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
 function distanceMeters(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat()*Math.PI/180,dp=(b.lat()-a.lat)*Math.PI/180,dl=(b.lng()-a.lng)*Math.PI/180;const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 function currentStep(leg){const steps=leg?.steps||[];if(!steps.length)return null;let best=steps[0],bestD=Infinity;for(const st of steps){const d=distanceMeters(lastPos,st.end_location);if(d<bestD){bestD=d;best=st}}return best}
+function v7922Bearing(a,b){if(!a||!b)return 0;const y=Math.sin((b.lng-a.lng)*Math.PI/180)*Math.cos(b.lat*Math.PI/180),x=Math.cos(a.lat*Math.PI/180)*Math.sin(b.lat*Math.PI/180)-Math.sin(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.cos((b.lng-a.lng)*Math.PI/180);return(Math.atan2(y,x)*180/Math.PI+360)%360}
+let v7922PrevPos=null;
+function v7922DriveCamera(p,active){
+ if(!map||!p)return;
+ if(active){
+   let heading=v7922PrevPos?v7922Bearing(v7922PrevPos,p):(map.getHeading?.()||0);
+   map.setTilt?.(67.5);map.setHeading?.(heading);if(map.getZoom()<18)map.setZoom(18);map.panTo(p);
+ }else{map.setTilt?.(0);map.setHeading?.(0)}
+ v7922PrevPos=p;
+}
 function carIcon(){return{url:'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="44" height="62" viewBox="0 0 44 62"><ellipse cx="22" cy="33" rx="18" ry="25" fill="#000" opacity=".18"/><rect x="8" y="5" width="28" height="50" rx="11" fill="#fff" stroke="#17202b" stroke-width="2"/><path d="M12 17h20l-3 13H15z" fill="#5fa7d8"/><path d="M14 35h16v10H14z" fill="#b7d7ea"/><rect x="5" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="5" y="38" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="38" width="4" height="12" rx="2" fill="#151b22"/><circle cx="15" cy="8" r="2" fill="#ffe274"/><circle cx="29" cy="8" r="2" fill="#ffe274"/></svg>`),scaledSize:new google.maps.Size(32,45),anchor:new google.maps.Point(16,30)}}
 function paintPosition(p){
  lastPos=p;
@@ -8537,6 +8547,7 @@ function paintPosition(p){
  if(!car)car=new google.maps.Marker({map,position:p,title:"Ma position",icon:carIcon(),zIndex:99});
  else car.setPosition(p);
  const st=stage(currentItem);
+ v7922DriveCamera(p,!!st.target);
  if(st.target)drawRoute(false); else {map.panTo(p);if(map.getZoom()<16)map.setZoom(17)}
 }
 function renderGuidance(result,st){
@@ -8563,7 +8574,7 @@ function drawRoute(force=false){
  lastRouteKey=key;lastRouteAt=now;
  if(next)next.textContent="Calcul de l’itinéraire…";
  service.route({origin:lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-   if(status==="OK"){renderer.setDirections(res);renderGuidance(res,st);map.panTo(lastPos);if(map.getZoom()<16)map.setZoom(17)}
+   if(status==="OK"){renderer.setDirections(res);renderGuidance(res,st);v7922DriveCamera(lastPos,true)}
    else if(next)next.textContent="Itinéraire momentanément indisponible";
  });
 }
@@ -8586,7 +8597,8 @@ window.v7917OpenClientNavigation=function(item){
    return;
  }
  if(!map){
-   map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:17,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:45});
+   map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",renderingType:google.maps.RenderingType.VECTOR,tiltInteractionEnabled:true,headingInteractionEnabled:true,tilt:67.5,heading:0});
+   google.maps.event.addListenerOnce(map,"tilesloaded",()=>{if(stage(currentItem).target){map.setTilt(67.5);map.setHeading(map.getHeading()||0)}});
    service=new google.maps.DirectionsService();
    renderer=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
  }
