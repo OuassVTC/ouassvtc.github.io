@@ -1213,7 +1213,12 @@ body.partner-authenticated .action.partner-back{
 .pm-cost-title{margin-top:8px;padding:14px 0 4px;border-top:1px solid #263a55;display:flex;flex-direction:column;gap:3px}
 .pm-cost-title small{color:#60a5fa;font-weight:900;letter-spacing:.08em}.pm-cost-title b{font-size:18px}
 .pm-cost-result{padding:13px;border-radius:13px;background:#0d1725;color:#dbeafe}.pm-cost-result strong{font-size:18px;color:#fff}
-</style></head>
+</style>
+<style id="v7917-nav-css">
+.v7917-client-nav{display:none;margin:14px 0;border:1px solid #dbe5ef;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+.v7917-client-nav.show{display:block}.v7917-client-map{height:300px;width:100%}.v7917-nav-head{padding:10px 12px;background:#0f172a;color:#fff}.v7917-nav-head strong{display:block;font-size:15px}.v7917-nav-head small{color:#cbd5e1}.v7917-next-step{padding:11px 12px;background:#eef6ff;color:#10243b;font-weight:850;font-size:14px;border-bottom:1px solid #dbe5ef}.v7917-nav-steps{max-height:155px;overflow:auto;padding:4px 12px 9px;background:#fff}.v7917-nav-step{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:start;padding:8px 0;border-bottom:1px solid #edf1f5;font-size:12px;line-height:1.35}.v7917-nav-step:last-child{border-bottom:0}.v7917-nav-step b{white-space:nowrap}.v7917-hidden-address{color:#7a8796;font-style:italic}
+</style>
+</head>
  
 <body>
   <header class="topbar">
@@ -4541,7 +4546,14 @@ body.partner-authenticated .action.partner-back{
       $("detailBody").innerHTML = `
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
-          <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
+          ${(() => {
+            const workflowStatus = item.isPartnerMission ? String(item.partnerMissionStatus || "proposed") : String(item.status || "");
+            const pickupVisible = ["en_route","arrived","passenger_onboard","on_board","completed"].includes(workflowStatus);
+            const destinationVisible = ["passenger_onboard","on_board","completed"].includes(workflowStatus);
+            const pickupText = pickupVisible ? escapeHtml(item.pickup || "Adresse non renseignée") : '<span class="v7917-hidden-address">Adresse masquée — passez « En route vers le client »</span>';
+            const destinationText = destinationVisible ? escapeHtml(item.destination || "Adresse non renseignée") : '<span class="v7917-hidden-address">Destination masquée — disponible lorsque le client est à bord</span>';
+            return `<div class="route"><div class="route-line"><span>●</span><strong>${pickupText}</strong></div><div class="route-line"><span>↓</span><strong>${destinationText}</strong></div></div>`;
+          })()}
           <div class="booking-meta"><span class="price-chip" data-detail-price>💶 Tarif : ${escapeHtml(item.estimatedPrice || "Non renseigné")}</span><span>👥 Nombre de passagers : ${escapeHtml(item.passengers || "Non précisé")}</span><span>💳 Paiement : ${escapeHtml(item.paymentMethod || "Non précisé")}</span><span>${escapeHtml(loyaltyLabel(item))}</span></div>
           ${item.customerMessage ? `<div class="message">${escapeHtml(item.customerMessage)}</div>` : ""}
           ${item.status === "transferred" ? `<div class="transfer-driver-badge">Transférée à ${escapeHtml(item.transferredDriverName || "Chauffeur")}</div>` : ""}
@@ -4551,6 +4563,7 @@ body.partner-authenticated .action.partner-back{
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
         <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
+        <div id="v7917ClientNav" class="v7917-client-nav"><div class="v7917-nav-head"><strong id="v7917NavTitle">Navigation OuassVTC</strong><small id="v7917NavSummary">Itinéraire en cours</small></div><div id="v7917ClientMap" class="v7917-client-map"></div><div id="v7917NextStep" class="v7917-next-step">Calcul de l’itinéraire…</div><div id="v7917NavSteps" class="v7917-nav-steps"></div></div>
         ${stagedWazeActions(item)}
         <div class="status-actions">${actionButtons(item)}${item.partnerOwnerEmail && !item.isPartnerMission ? (item.dispatchStatus === "pending" ? `<button class="action" type="button" disabled>✓ Transfert envoyé à l’administrateur</button>` : `<button class="action partner-admin-transfer" type="button" data-transfer-to-admin="${item.id}">↗ Transférer à l’administrateur</button>`) : ""}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
@@ -4571,6 +4584,7 @@ body.partner-authenticated .action.partner-back{
           </div>
         </div>`;
       $("detailOverlay").classList.remove("hidden");
+      setTimeout(() => { if (window.v7917OpenClientNavigation) window.v7917OpenClientNavigation(item); }, 80);
       startWaitingTimerDisplay(item);
       $("detailBody").querySelector("[data-toggle-trip-extras]")?.addEventListener("click", event => { const panel=$("detailBody").querySelector("[data-trip-extras]"); panel?.classList.toggle("module-collapsed"); event.currentTarget.classList.toggle("active", panel && !panel.classList.contains("module-collapsed")); });
       $("detailBody").querySelector("[data-toggle-waiting]")?.addEventListener("click", event => { const panel=$("detailBody").querySelector("[data-waiting-card]"); panel?.classList.toggle("module-collapsed"); event.currentTarget.classList.toggle("active", panel && !panel.classList.contains("module-collapsed")); });
@@ -8273,9 +8287,9 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.16.20261009.01";
+const V79_VERSION="79.17.20261009.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="";
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
@@ -8364,6 +8378,13 @@ function v79TaskStage(task){
 function v79ClearRoute(){
  v79LastRouteKey="";
  if(v79RouteRenderer)try{v79RouteRenderer.setDirections({routes:[]})}catch(_){}
+ if(v7917TargetMarker){v7917TargetMarker.setMap(null);v7917TargetMarker=null}
+}
+function v7917PlaceTargetMarker(res,stage){
+ const leg=res?.routes?.[0]?.legs?.[0];if(!leg||!v79Map)return;
+ const pos=leg.end_location;if(!pos)return;
+ if(v7917TargetMarker)v7917TargetMarker.setMap(null);
+ v7917TargetMarker=new google.maps.Marker({map:v79Map,position:pos,title:stage==="pickup"?"Client à récupérer":"Destination",label:{text:stage==="pickup"?"C":"D",color:"#fff",fontWeight:"900"},zIndex:70});
 }
 function v79RouteTarget(task){
  const stage=v79TaskStage(task);
@@ -8385,6 +8406,7 @@ function v79RefreshRoute(force=false){
  v79RouteService.route({origin:pos,destination:target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
    if(status==="OK"){
      v79RouteRenderer.setDirections(res);
+     v7917PlaceTargetMarker(res,v79TaskStage(v79ActiveTask));
      if(force){
        const b=res.routes?.[0]?.bounds;
        if(b)v79Map.fitBounds(b,56);
@@ -8422,7 +8444,9 @@ async function listenMissions(user){
  },e=>console.warn("Courses trajet",e?.code||e));
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
-async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});["dragstart","zoom_changed"].forEach(evt=>v79Map.addListener(evt,()=>{v79MapFocused=true}));renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
+let v7917ManualMapUntil=0,v7917InternalMapMove=false;
+function v7917PauseMapFollow(){if(!v7917InternalMapMove)v7917ManualMapUntil=Date.now()+30000}
+async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});v79Map.addListener("dragstart",v7917PauseMapFollow);v79Map.addListener("zoom_changed",v7917PauseMapFollow);renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
 function carIcon(color="#111827",own=false,heading=0){
  const h=Number.isFinite(Number(heading))?Number(heading):0;
  const body=own?"#ffffff":"#d8dde3";
@@ -8445,6 +8469,7 @@ function carIcon(color="#111827",own=false,heading=0){
 function smoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
 function v7916KeepCarVisible(p){
  if(!v79Map||!window.google?.maps)return;
+ if(Date.now()<v7917ManualMapUntil)return;
  const bounds=v79Map.getBounds?.();
  if(!bounds){v79Map.setCenter(p);return}
  const ne=bounds.getNorthEast(),sw=bounds.getSouthWest();
@@ -8453,9 +8478,9 @@ function v7916KeepCarVisible(p){
    {lat:sw.lat()+latPad,lng:sw.lng()+lngPad},
    {lat:ne.lat()-latPad,lng:ne.lng()-lngPad}
  );
- if(!safe.contains(p))v79Map.panTo(p);
+ if(!safe.contains(p)){v7917InternalMapMove=true;v79Map.panTo(p);setTimeout(()=>{v7917InternalMapMove=false},350)}
 }
-function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}else{v7916KeepCarVisible(p)}v79RefreshRoute(false)}
+function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v7917InternalMapMove=true;v79Map.setCenter(p);v79Map.setZoom(17);setTimeout(()=>{v7917InternalMapMove=false},350);v79MapFocused=true}else{v7916KeepCarVisible(p)}v79RefreshRoute(false);if(window.v7917UpdateClientNavPosition)window.v7917UpdateClientNavPosition(p.lat,p.lng)}
 function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker){obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#5b6470",false,Number(obj.data.heading||0)),clickable:false,zIndex:30,title:""})}else{smoothMove(obj.marker,pos);obj.marker.setIcon(carIcon("#5b6470",false,Number(obj.data.heading||0)));obj.marker.setMap(v79Map)}}}
 function listenPresence(){if(v79PresenceUnsub){v79PresenceUnsub();v79PresenceUnsub=null}v79PresenceUnsub=onSnapshot(query(collection(v79Db,"driverPresence"),limit(200)),snap=>{const seen=new Set();snap.docs.forEach(d=>{seen.add(d.id);const old=v79Peers.get(d.id)||{marker:null};old.data=d.data();v79Peers.set(d.id,old)});for(const [uid,obj] of v79Peers)if(!seen.has(uid)){obj.marker?.setMap(null);v79Peers.delete(uid)}renderPeers()},e=>console.warn("Présences chauffeurs",e?.code||e))}
 async function waitForMainFirebase(timeoutMs=15000){
@@ -8494,5 +8519,20 @@ if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",bo
 </script>
 
 
+
+<script id="v7917-client-nav-script">
+(function(){
+"use strict";
+let map=null,service=null,renderer=null,car=null,currentItem=null,lastRouteKey="",lastPos=null;
+function effectiveStatus(i){return String(i?.isPartnerMission?(i.partnerMissionStatus||"proposed"):(i?.status||""))}
+function stage(i){const s=effectiveStatus(i);if(["en_route","arrived"].includes(s))return{key:"pickup",target:String(i?.pickup||"").trim(),label:"Vers le client"};if(["passenger_onboard","on_board"].includes(s))return{key:"destination",target:String(i?.destination||"").trim(),label:"Vers la destination"};return{key:"",target:"",label:""}}
+function cleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
+function renderSteps(result,st){const leg=result?.routes?.[0]?.legs?.[0];if(!leg)return;const summary=document.getElementById("v7917NavSummary"),next=document.getElementById("v7917NextStep"),box=document.getElementById("v7917NavSteps");if(summary)summary.textContent=`${leg.distance?.text||""} · ${leg.duration?.text||""}`;const steps=leg.steps||[];if(next)next.textContent=steps[0]?`${cleanInstruction(steps[0].instructions)} · ${steps[0].distance?.text||""}`:"Suivez l’itinéraire affiché";if(box)box.innerHTML=steps.map((s,n)=>`<div class="v7917-nav-step"><span>${n+1}</span><span>${cleanInstruction(s.instructions)}</span><b>${s.distance?.text||""}</b></div>`).join("");const title=document.getElementById("v7917NavTitle");if(title)title.textContent=st.label}
+function drawRoute(force=false){if(!map||!service||!renderer||!lastPos||!currentItem)return;const st=stage(currentItem);const card=document.getElementById("v7917ClientNav");if(!st.target){card?.classList.remove("show");renderer.setDirections({routes:[]});return}card?.classList.add("show");const key=[currentItem.id||currentItem.missionId||"",st.key,st.target,Math.round(lastPos.lat*1000),Math.round(lastPos.lng*1000)].join("|");if(!force&&key===lastRouteKey)return;lastRouteKey=key;service.route({origin:lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){renderer.setDirections(res);renderSteps(res,st)}else{const next=document.getElementById("v7917NextStep");if(next)next.textContent="Itinéraire momentanément indisponible"}})}
+window.v7917OpenClientNavigation=function(item){currentItem=item;const st=stage(item),card=document.getElementById("v7917ClientNav"),el=document.getElementById("v7917ClientMap");if(!card||!el||!st.target||!window.google?.maps){card?.classList.remove("show");return}card.classList.add("show");if(!map){map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:16,zoomControl:true,streetViewControl:false,mapTypeControl:false,fullscreenControl:true,gestureHandling:"greedy"});service=new google.maps.DirectionsService();renderer=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,preserveViewport:false,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}})}drawRoute(true)};
+window.v7917UpdateClientNavPosition=function(lat,lng){lastPos={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(lastPos.lat)||!Number.isFinite(lastPos.lng))return;if(map){if(!car)car=new google.maps.Marker({map,position:lastPos,title:"Ma position"});else car.setPosition(lastPos);drawRoute(false)}};
+window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
+})();
+</script>
 </body>
 </html>
