@@ -4098,7 +4098,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       try{n.renderer?.setMap(null)}catch(_){}
       try{n.car?.setMap(null)}catch(_){}
       n.map=null;n.renderer=null;n.car=null;
-      n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:67.5});
+      n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",renderingType:google.maps.RenderingType.VECTOR,tiltInteractionEnabled:true,headingInteractionEnabled:true,tilt:67.5,heading:0});
+      google.maps.event.addListenerOnce(n.map,"tilesloaded",()=>{if(v7920AdminStage(n.item).target){n.map.setTilt(67.5);n.map.setHeading(n.map.getHeading()||0)}});
       if(!n.service)n.service=new google.maps.DirectionsService();
       n.renderer=new google.maps.DirectionsRenderer({map:n.map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
       setTimeout(()=>{
@@ -6495,7 +6496,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.23.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.25.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div>
