@@ -1215,7 +1215,7 @@ body.partner-authenticated .action.partner-back{
 .pm-cost-result{padding:13px;border-radius:13px;background:#0d1725;color:#dbeafe}.pm-cost-result strong{font-size:18px;color:#fff}
 </style>
 <style id="v7917-nav-css">
-.v7917-client-nav{display:none;position:relative;margin:0 0 14px;border:0;border-radius:0 0 20px 20px;overflow:hidden;background:#0b1726;box-shadow:0 10px 26px rgba(15,23,42,.18)}
+.v7917-client-nav{display:block;position:relative;margin:0 0 14px;border:0;border-radius:0 0 20px 20px;overflow:hidden;background:#0b1726;box-shadow:0 10px 26px rgba(15,23,42,.18)}
 .v7917-client-nav.show{display:block}.v7917-client-map{height:390px;width:100%}.v7917-nav-head{position:absolute;z-index:6;top:10px;left:10px;right:10px;padding:12px 14px;background:rgba(10,24,40,.94);color:#fff;border-radius:15px;box-shadow:0 5px 18px #0005}.v7917-nav-head strong{display:block;font-size:18px}.v7917-nav-head small{color:#d7e4f1;font-weight:800}.v7917-next-step{position:absolute;z-index:6;left:10px;right:10px;bottom:12px;padding:12px 14px;background:rgba(255,255,255,.96);color:#10243b;font-weight:950;font-size:15px;border-radius:15px;box-shadow:0 5px 18px #0004}.v7917-nav-steps{display:none!important}.v7917-hidden-address{color:#7a8796;font-style:italic}
 </style>
 </head>
@@ -4545,6 +4545,7 @@ body.partner-authenticated .action.partner-back{
       $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : ["transferred", "transfer_performed", "transfer_closed"].includes(item.status) ? "Suivi du transfert" : "Détail de la réservation";
       const phone = phoneHref(item.customerPhone);
       $("detailBody").innerHTML = `
+        <div id="v7917ClientNav" class="v7917-client-nav"><div class="v7917-nav-head"><strong id="v7917NavTitle">Navigation OuassVTC</strong><small id="v7917NavSummary">Position actuelle</small></div><div id="v7917ClientMap" class="v7917-client-map"></div><div id="v7917NextStep" class="v7917-next-step">Passez « En route vers le client » pour démarrer la navigation</div><div id="v7917NavSteps" class="v7917-nav-steps"></div></div>
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           ${(() => {
@@ -8287,7 +8288,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.18.20261009.01";
+const V79_VERSION="79.19.20261009.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
@@ -8523,17 +8524,80 @@ if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",bo
 <script id="v7917-client-nav-script">
 (function(){
 "use strict";
-let map=null,service=null,renderer=null,car=null,currentItem=null,lastRouteKey="",lastPos=null,lastResult=null,lastRouteAt=0;
+let map=null,service=null,renderer=null,car=null,currentItem=null,lastRouteKey="",lastPos=null,lastResult=null,lastRouteAt=0,watchId=null;
 function effectiveStatus(i){return String(i?.isPartnerMission?(i.partnerMissionStatus||"proposed"):(i?.status||""))}
-function stage(i){const st=effectiveStatus(i);if(["en_route","arrived"].includes(st))return{key:"pickup",target:String(i?.pickup||"").trim(),label:"Vers le client"};if(["passenger_onboard","on_board"].includes(st))return{key:"destination",target:String(i?.destination||"").trim(),label:"Vers la destination"};return{key:"",target:"",label:""}}
+function stage(i){const st=effectiveStatus(i);if(["en_route","arrived"].includes(st))return{key:"pickup",target:String(i?.pickup||"").trim(),label:"Vers le client"};if(["passenger_onboard","on_board"].includes(st))return{key:"destination",target:String(i?.destination||"").trim(),label:"Vers la destination"};return{key:"",target:"",label:"Navigation prête"}}
 function cleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
 function distanceMeters(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat()*Math.PI/180,dp=(b.lat()-a.lat)*Math.PI/180,dl=(b.lng()-a.lng)*Math.PI/180;const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 function currentStep(leg){const steps=leg?.steps||[];if(!steps.length)return null;let best=steps[0],bestD=Infinity;for(const st of steps){const d=distanceMeters(lastPos,st.end_location);if(d<bestD){bestD=d;best=st}}return best}
-function renderGuidance(result,st){const leg=result?.routes?.[0]?.legs?.[0];if(!leg)return;lastResult=result;const summary=document.getElementById("v7917NavSummary"),next=document.getElementById("v7917NextStep"),title=document.getElementById("v7917NavTitle");if(summary)summary.textContent=`${leg.duration?.text||""} · ${leg.distance?.text||""} · arrivée ${new Date(Date.now()+(leg.duration?.value||0)*1000).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}`;const step=currentStep(leg);if(next)next.textContent=step?`${cleanInstruction(step.instructions)} · ${step.distance?.text||""}`:"Suivez l’itinéraire";if(title)title.textContent=st.label}
 function carIcon(){return{url:'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="44" height="62" viewBox="0 0 44 62"><ellipse cx="22" cy="33" rx="18" ry="25" fill="#000" opacity=".18"/><rect x="8" y="5" width="28" height="50" rx="11" fill="#fff" stroke="#17202b" stroke-width="2"/><path d="M12 17h20l-3 13H15z" fill="#5fa7d8"/><path d="M14 35h16v10H14z" fill="#b7d7ea"/><rect x="5" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="5" y="38" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="38" width="4" height="12" rx="2" fill="#151b22"/><circle cx="15" cy="8" r="2" fill="#ffe274"/><circle cx="29" cy="8" r="2" fill="#ffe274"/></svg>`),scaledSize:new google.maps.Size(32,45),anchor:new google.maps.Point(16,30)}}
-function drawRoute(force=false){if(!map||!service||!renderer||!lastPos||!currentItem)return;const st=stage(currentItem),card=document.getElementById("v7917ClientNav");if(!st.target){card?.classList.remove("show");return}card?.classList.add("show");const now=Date.now(),key=[currentItem.id||currentItem.missionId||"",st.key,st.target,Math.round(lastPos.lat*500),Math.round(lastPos.lng*500)].join("|");if(!force&&key===lastRouteKey&&now-lastRouteAt<12000){if(lastResult)renderGuidance(lastResult,st);return}lastRouteKey=key;lastRouteAt=now;service.route({origin:lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{if(status==="OK"){renderer.setDirections(res);renderGuidance(res,st);map.panTo(lastPos);if(map.getZoom()<16)map.setZoom(17)}else{const next=document.getElementById("v7917NextStep");if(next)next.textContent="Itinéraire momentanément indisponible"}})}
-window.v7917OpenClientNavigation=function(item){currentItem=item;const st=stage(item),card=document.getElementById("v7917ClientNav"),el=document.getElementById("v7917ClientMap");if(!card||!el||!st.target||!window.google?.maps){card?.classList.remove("show");return}card.classList.add("show");if(!map){map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:17,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:45});service=new google.maps.DirectionsService();renderer=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}})}setTimeout(()=>google.maps.event.trigger(map,"resize"),80);drawRoute(true)};
-window.v7917UpdateClientNavPosition=function(lat,lng){lastPos={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(lastPos.lat)||!Number.isFinite(lastPos.lng))return;if(map){if(!car)car=new google.maps.Marker({map,position:lastPos,title:"Ma position",icon:carIcon(),zIndex:99});else{car.setPosition(lastPos);car.setIcon(carIcon())}map.panTo(lastPos);if(lastResult)renderGuidance(lastResult,stage(currentItem));drawRoute(false)}};
+function paintPosition(p){
+ lastPos=p;
+ if(!map)return;
+ if(!car)car=new google.maps.Marker({map,position:p,title:"Ma position",icon:carIcon(),zIndex:99});
+ else car.setPosition(p);
+ const st=stage(currentItem);
+ if(st.target)drawRoute(false); else {map.panTo(p);if(map.getZoom()<16)map.setZoom(17)}
+}
+function renderGuidance(result,st){
+ const leg=result?.routes?.[0]?.legs?.[0];if(!leg)return;lastResult=result;
+ const summary=document.getElementById("v7917NavSummary"),next=document.getElementById("v7917NextStep"),title=document.getElementById("v7917NavTitle");
+ if(summary)summary.textContent=`${leg.duration?.text||""} · ${leg.distance?.text||""} · arrivée ${new Date(Date.now()+(leg.duration?.value||0)*1000).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}`;
+ const step=currentStep(leg);if(next)next.textContent=step?`${cleanInstruction(step.instructions)} · ${step.distance?.text||""}`:"Suivez l’itinéraire";
+ if(title)title.textContent=st.label;
+}
+function drawRoute(force=false){
+ if(!map||!service||!renderer||!lastPos||!currentItem)return;
+ const st=stage(currentItem),card=document.getElementById("v7917ClientNav"),next=document.getElementById("v7917NextStep"),title=document.getElementById("v7917NavTitle"),summary=document.getElementById("v7917NavSummary");
+ card?.classList.add("show");
+ if(!st.target){
+   renderer?.setDirections({routes:[]});lastResult=null;lastRouteKey="";
+   if(title)title.textContent="Navigation prête";
+   if(summary)summary.textContent="Position actuelle";
+   if(next)next.textContent="Passez « En route vers le client » pour démarrer la navigation";
+   if(lastPos){map.panTo(lastPos);if(map.getZoom()<16)map.setZoom(17)}
+   return;
+ }
+ const now=Date.now(),key=[currentItem.id||currentItem.missionId||"",st.key,st.target,Math.round(lastPos.lat*500),Math.round(lastPos.lng*500)].join("|");
+ if(!force&&key===lastRouteKey&&now-lastRouteAt<10000){if(lastResult)renderGuidance(lastResult,st);return}
+ lastRouteKey=key;lastRouteAt=now;
+ if(next)next.textContent="Calcul de l’itinéraire…";
+ service.route({origin:lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
+   if(status==="OK"){renderer.setDirections(res);renderGuidance(res,st);map.panTo(lastPos);if(map.getZoom()<16)map.setZoom(17)}
+   else if(next)next.textContent="Itinéraire momentanément indisponible";
+ });
+}
+function startOwnGps(){
+ if(watchId!==null||!navigator.geolocation)return;
+ watchId=navigator.geolocation.watchPosition(
+   pos=>paintPosition({lat:pos.coords.latitude,lng:pos.coords.longitude}),
+   ()=>{const n=document.getElementById("v7917NextStep");if(n&&!lastPos)n.textContent="Autorisez la localisation pour afficher votre position";},
+   {enableHighAccuracy:true,maximumAge:2500,timeout:12000}
+ );
+}
+window.v7917OpenClientNavigation=function(item){
+ currentItem=item;
+ const card=document.getElementById("v7917ClientNav"),el=document.getElementById("v7917ClientMap");
+ if(!card||!el)return;
+ card.classList.add("show");
+ if(!window.google?.maps){
+   const n=document.getElementById("v7917NextStep");if(n)n.textContent="Chargement de Google Maps…";
+   setTimeout(()=>window.v7917OpenClientNavigation(currentItem),500);
+   return;
+ }
+ if(!map){
+   map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:17,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:45});
+   service=new google.maps.DirectionsService();
+   renderer=new google.maps.DirectionsRenderer({map:map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
+ }
+ setTimeout(()=>google.maps.event.trigger(map,"resize"),80);
+ startOwnGps();
+ if(lastPos)paintPosition(lastPos);
+ drawRoute(true);
+};
+window.v7917UpdateClientNavPosition=function(lat,lng){
+ const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;paintPosition(p);
+};
 window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
 })();
 </script>
