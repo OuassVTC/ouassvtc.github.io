@@ -758,7 +758,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .active-trip-status{display:inline-flex!important;width:max-content;margin-top:7px;padding:5px 8px;border-radius:999px;font-size:10px!important;font-weight:950;letter-spacing:.03em}.active-trip-status.accepted{background:#e9f1ff;color:#155fc2}.active-trip-status.en_route{background:#fff0d8;color:#9a5600}.active-trip-status.on_board{background:#eee7ff;color:#6236b5}.agenda-item.en_route{border-left:5px solid #ff9f0a}.agenda-item.on_board{border-left:5px solid #7c4dff}
 /* V65 — navigation mobile, GPS progressif et actualisation tactile */
 body{padding-bottom:calc(86px + env(safe-area-inset-bottom))}.panel-home-row,.home-icon-btn,#openMenu{display:none!important}.dashboard-priority-actions{grid-template-columns:1fr!important}.dashboard-priority-actions .priority-voice{grid-column:1/-1}.app-bottom-nav{position:fixed;z-index:1050;left:0;right:0;bottom:0;height:calc(72px + env(safe-area-inset-bottom));padding:7px max(10px,env(safe-area-inset-left)) env(safe-area-inset-bottom) max(10px,env(safe-area-inset-right));display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#fff;border-top:1px solid #e1e6ee;box-shadow:0 -10px 30px #15213a12}.app-bottom-nav button{min-width:0;height:58px;border:0;background:transparent;color:#667385;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px;font-weight:850}.app-bottom-nav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.app-bottom-nav button.active{color:#176ef4}.app-bottom-nav .bottom-add{width:58px;height:58px;justify-self:center;margin-top:-24px;border-radius:50%;background:#176ef4;color:#fff;box-shadow:0 10px 24px #176ef455}.app-bottom-nav .bottom-add svg{width:27px;height:27px}.app-bottom-nav .bottom-add span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.waze-actions .gps-stage-link{min-height:54px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:13px;font-size:12px!important;font-weight:950;text-align:center}.waze-actions .gps-stage-link::after{display:none!important}.waze-actions .gps-stage-link small{font-size:9px;font-weight:750;opacity:.72}.waze-actions button.gps-stage-link{width:100%;border:1px solid #dfe5ef;background:#edf0f4;color:#8791a0;cursor:not-allowed}.waze-actions a.gps-stage-link{background:#176ef4!important;color:#fff!important;border-color:#176ef4!important}.waze-actions a.gps-stage-link.destination{background:#101722!important;border-color:#101722!important}.pull-refresh{position:fixed;z-index:1600;left:50%;top:8px;transform:translate(-50%,-80px);min-height:42px;padding:0 15px;border-radius:999px;background:#101722;color:#fff;display:flex;align-items:center;gap:8px;box-shadow:0 9px 28px #0003;font-size:12px;font-weight:900;transition:transform .2s ease}.pull-refresh.visible{transform:translate(-50%,0)}.pull-refresh.refreshing .pull-refresh-icon{animation:pull-spin .8s linear infinite}@keyframes pull-spin{to{transform:rotate(360deg)}}
+.waze-actions .gps-stage-link{min-height:54px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:13px;font-size:12px!important;font-weight:950;text-align:center}.waze-actions .gps-stage-link::after{display:none!important}.waze-actions .gps-stage-link small{font-size:9px;font-weight:750;opacity:.72}.waze-actions button.gps-stage-link{width:100%;border:1px solid #dfe5ef;background:#edf0f4;color:#8791a0;cursor:not-allowed}.waze-actions button.gps-stage-link:not(:disabled){cursor:pointer;background:#176ef4;color:#fff;border-color:#176ef4;box-shadow:0 7px 18px rgba(23,110,244,.24)}.waze-actions button.gps-stage-link.destination:not(:disabled){background:#16a05d;color:#fff;border-color:#16a05d;box-shadow:0 7px 18px rgba(22,160,93,.22)}.waze-actions a.gps-stage-link{background:#176ef4!important;color:#fff!important;border-color:#176ef4!important}.waze-actions a.gps-stage-link.destination{background:#101722!important;border-color:#101722!important}.pull-refresh{position:fixed;z-index:1600;left:50%;top:8px;transform:translate(-50%,-80px);min-height:42px;padding:0 15px;border-radius:999px;background:#101722;color:#fff;display:flex;align-items:center;gap:8px;box-shadow:0 9px 28px #0003;font-size:12px;font-weight:900;transition:transform .2s ease}.pull-refresh.visible{transform:translate(-50%,0)}.pull-refresh.refreshing .pull-refresh-icon{animation:pull-spin .8s linear infinite}@keyframes pull-spin{to{transform:rotate(360deg)}}
 @media(min-width:760px){.app-bottom-nav{left:50%;right:auto;bottom:14px;width:min(620px,calc(100% - 32px));transform:translateX(-50%);border:1px solid #e1e6ee;border-radius:24px;padding-bottom:7px}.app-bottom-nav .bottom-add{margin-top:-20px}}
 .brand{cursor:default}.detail-overlay{z-index:1300}.detail-card{min-height:0}.detail-body{-webkit-overflow-scrolling:touch}
 @media(max-width:600px){.detail-card{display:flex;flex-direction:column;height:100dvh;overflow:hidden!important}.detail-head{flex:0 0 auto}.detail-body{flex:1 1 auto;min-height:0;overflow-y:auto!important;overscroll-behavior-y:contain;touch-action:pan-y;padding-bottom:calc(28px + env(safe-area-inset-bottom))}}
@@ -1213,9 +1213,6 @@ body.partner-authenticated .action.partner-back{
 .pm-cost-title{margin-top:8px;padding:14px 0 4px;border-top:1px solid #263a55;display:flex;flex-direction:column;gap:3px}
 .pm-cost-title small{color:#60a5fa;font-weight:900;letter-spacing:.08em}.pm-cost-title b{font-size:18px}
 .pm-cost-result{padding:13px;border-radius:13px;background:#0d1725;color:#dbeafe}.pm-cost-result strong{font-size:18px;color:#fff}
-</style><style id="v7915-nav-style">
-.v7915-navcard{display:none;margin:12px 0 10px;padding:14px;border:1px solid rgba(80,145,220,.32);border-radius:17px;background:linear-gradient(145deg,#0d1c2c,#10263a)}
-.v7915-navcard.show{display:block}.v7915-navlabel{font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#8fa8c0;margin-bottom:5px}.v7915-address{font-size:16px;font-weight:850;line-height:1.3;color:#f5f9ff;margin-bottom:12px}.v7915-gps{display:grid;grid-template-columns:1fr 1fr;gap:9px}.v7915-gps button{border:0;border-radius:14px;padding:12px 9px;color:white;font-weight:900;font-size:14px;min-height:48px}.v7915-waze{background:linear-gradient(135deg,#20b8ff,#087be8)}.v7915-google{background:linear-gradient(135deg,#22a447,#0b7d34)}
 </style></head>
  
 <body>
@@ -3767,7 +3764,14 @@ body.partner-authenticated .action.partner-back{
       $("detailBody").innerHTML = `
         <div class="booking-main">
           <div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div>
-          <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
+          ${(() => {
+            const workflowStatus = item.isPartnerMission ? String(item.partnerMissionStatus || "proposed") : String(item.status || "");
+            const pickupVisible = ["en_route","arrived","passenger_onboard","on_board","completed"].includes(workflowStatus);
+            const destinationVisible = ["passenger_onboard","on_board","completed"].includes(workflowStatus);
+            const pickupText = pickupVisible ? escapeHtml(item.pickup || "Adresse non renseignée") : "Adresse masquée — passez « En route vers le client »";
+            const destinationText = destinationVisible ? escapeHtml(item.destination || "Adresse non renseignée") : "Destination masquée — disponible lorsque le client est à bord";
+            return `<div class="route"><div class="route-line"><span>●</span><strong>${pickupText}</strong></div><div class="route-line"><span>↓</span><strong>${destinationText}</strong></div></div>`;
+          })()}
           <div class="booking-meta"><span class="price-chip">💶 ${escapeHtml(item.estimatedPrice || "Tarif non renseigné")}</span></div>
         </div>
         <form class="transfer-form" id="transferBookingForm">
@@ -3971,8 +3975,9 @@ body.partner-authenticated .action.partner-back{
     }
 
     function stagedWazeActions(item) {
-      const pickupUnlocked = ["en_route", "on_board", "completed"].includes(item.status);
-      const destinationUnlocked = ["on_board", "completed"].includes(item.status);
+      const workflowStatus = item.isPartnerMission ? String(item.partnerMissionStatus || "proposed") : String(item.status || "");
+      const pickupUnlocked = ["en_route", "arrived", "passenger_onboard", "on_board", "completed"].includes(workflowStatus);
+      const destinationUnlocked = ["passenger_onboard", "on_board", "completed"].includes(workflowStatus);
       const pickup = pickupUnlocked
         ? `<button class="gps-stage-link pickup" type="button" data-gps-choice="pickup">GPS vers le client<small>Choisir Waze ou Google Maps</small></button>`
         : `<button class="gps-stage-link pickup" type="button" disabled>GPS vers le client<small>Disponible après « En route »</small></button>`;
@@ -8268,7 +8273,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.15.20261009.01";
+const V79_VERSION="79.16.20261009.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="";
 const q=id=>document.getElementById(id);
@@ -8438,7 +8443,19 @@ function carIcon(color="#111827",own=false,heading=0){
  return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new google.maps.Size(42,42),anchor:new google.maps.Point(21,21)}
 }
 function smoothMove(marker,next){if(!marker||!next)return;const cur=marker.getPosition();if(!cur){marker.setPosition(next);return}const a={lat:cur.lat(),lng:cur.lng()},start=performance.now(),dur=700;function frame(t){const x=Math.min(1,(t-start)/dur),e=1-Math.pow(1-x,3);marker.setPosition({lat:a.lat+(next.lat-a.lat)*e,lng:a.lng+(next.lng-a.lng)*e});if(x<1)requestAnimationFrame(frame)}requestAnimationFrame(frame)}
-function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}v79RefreshRoute(false)}
+function v7916KeepCarVisible(p){
+ if(!v79Map||!window.google?.maps)return;
+ const bounds=v79Map.getBounds?.();
+ if(!bounds){v79Map.setCenter(p);return}
+ const ne=bounds.getNorthEast(),sw=bounds.getSouthWest();
+ const latPad=(ne.lat()-sw.lat())*.22,lngPad=(ne.lng()-sw.lng())*.22;
+ const safe=new google.maps.LatLngBounds(
+   {lat:sw.lat()+latPad,lng:sw.lng()+lngPad},
+   {lat:ne.lat()-latPad,lng:ne.lng()-lngPad}
+ );
+ if(!safe.contains(p))v79Map.panTo(p);
+}
+function updateMap(lat,lng,heading=0){if(!v79Map||!window.google?.maps)return;const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;if(!v79Marker){v79Marker=new google.maps.Marker({map:v79Map,position:p,icon:carIcon("#111827",true,heading),title:"Ma position",zIndex:80,clickable:false});}else{smoothMove(v79Marker,p);v79Marker.setIcon(carIcon("#111827",true,heading));v79Marker.setMap(v79Map)}if(!v79MapFocused){v79Map.setCenter(p);v79Map.setZoom(17);v79MapFocused=true}else{v7916KeepCarVisible(p)}v79RefreshRoute(false)}
 function renderPeers(){if(!v79Map||!window.google?.maps)return;const myUid=v79Auth?.currentUser?.uid;for(const [uid,obj] of v79Peers){if(uid===myUid||!obj.data?.online||!Number.isFinite(Number(obj.data.lat))||!Number.isFinite(Number(obj.data.lng))){obj.marker?.setMap(null);obj.marker=null;continue}const pos={lat:Number(obj.data.lat),lng:Number(obj.data.lng)};if(!obj.marker){obj.marker=new google.maps.Marker({map:v79Map,position:pos,icon:carIcon("#5b6470",false,Number(obj.data.heading||0)),clickable:false,zIndex:30,title:""})}else{smoothMove(obj.marker,pos);obj.marker.setIcon(carIcon("#5b6470",false,Number(obj.data.heading||0)));obj.marker.setMap(v79Map)}}}
 function listenPresence(){if(v79PresenceUnsub){v79PresenceUnsub();v79PresenceUnsub=null}v79PresenceUnsub=onSnapshot(query(collection(v79Db,"driverPresence"),limit(200)),snap=>{const seen=new Set();snap.docs.forEach(d=>{seen.add(d.id);const old=v79Peers.get(d.id)||{marker:null};old.data=d.data();v79Peers.set(d.id,old)});for(const [uid,obj] of v79Peers)if(!seen.has(uid)){obj.marker?.setMap(null);v79Peers.delete(uid)}renderPeers()},e=>console.warn("Présences chauffeurs",e?.code||e))}
 async function waitForMainFirebase(timeoutMs=15000){
@@ -8477,12 +8494,5 @@ if(document.readyState==="loading")window.addEventListener("DOMContentLoaded",bo
 </script>
 
 
-<div id="v7915NavCard" class="v7915-navcard"><div id="v7915NavLabel" class="v7915-navlabel"></div><div id="v7915NavAddress" class="v7915-address"></div><div class="v7915-gps"><button id="v7915Waze" class="v7915-waze" type="button">Waze</button><button id="v7915Google" class="v7915-google" type="button">Google Maps</button></div></div>
-<script id="v7915-nav-script">
-(function(){"use strict";
-function currentTask(){const all=[...(window.__v79Missions||[]),...(window.__v79Bookings||[])];return all.find(x=>["accepted","en_route","arrived","passenger_onboard","on_board"].includes(String(x.status||"")))||null}
-function navData(t){const s=String(t?.status||"");if(["accepted","en_route","arrived"].includes(s))return{label:"Adresse de prise en charge",address:String(t?.pickup||"").trim()};if(["passenger_onboard","on_board"].includes(s))return{label:"Destination",address:String(t?.destination||"").trim()};return{label:"",address:""}}
-function paint(){const card=document.getElementById("v7915NavCard");if(!card)return;const d=navData(currentTask());card.classList.toggle("show",!!d.address);if(!d.address)return;document.getElementById("v7915NavLabel").textContent=d.label;document.getElementById("v7915NavAddress").textContent=d.address;document.getElementById("v7915Waze").onclick=()=>location.href="https://waze.com/ul?q="+encodeURIComponent(d.address)+"&navigate=yes";document.getElementById("v7915Google").onclick=()=>location.href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(d.address)+"&travelmode=driving";const panel=document.querySelector(".v79-mission-card,.mission-card,[data-mission-card]");if(panel&&card.parentElement!==panel)panel.insertBefore(card,panel.firstChild)}
-document.addEventListener("DOMContentLoaded",()=>{paint();setInterval(paint,1000)});window.v7915PaintNav=paint})();
-</script></body>
+</body>
 </html>
