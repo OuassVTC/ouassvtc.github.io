@@ -881,6 +881,32 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     .partner-detail{margin-top:16px;background:var(--card,#fff);border:1px solid rgba(127,127,127,.22);border-radius:18px;padding:16px}.partner-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.partner-revenue-nav{display:grid;gap:9px;margin-top:12px}.partner-revenue-item{width:100%;border:1px solid rgba(127,127,127,.22);background:transparent;color:inherit;border-radius:14px;padding:12px;text-align:left;display:flex;justify-content:space-between;gap:10px;align-items:center}.partner-revenue-item small{display:block;opacity:.7;margin-top:3px}.partner-revenue-item b{white-space:nowrap}.partner-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.partner-detail-grid div{padding:10px;border-radius:12px;background:rgba(127,127,127,.08)}
     @media(max-width:620px){.partner-form-row{grid-template-columns:1fr}}
 </style>
+
+<style id="v7914-refresh-lock">
+html.v7914-refresh-locked, html.v7914-refresh-locked body{
+  overscroll-behavior-y:none !important;
+}
+html.v7914-refresh-locked body{
+  touch-action:pan-x pan-y;
+}
+html.v7914-refresh-locked #v79AdminMap{
+  touch-action:auto !important;
+  overscroll-behavior:contain !important;
+}
+</style>
+
+
+<style id="v7920-admin-nav-css">
+.v7920-own-nav{margin:0 0 14px;border:1px solid #dbe5f0;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 10px 28px rgba(16,32,58,.10)}
+.v7920-own-nav.hidden{display:none}
+.v7920-nav-head{padding:12px 14px;background:#0a1018;color:#fff}
+.v7920-nav-head strong,.v7920-nav-head small{display:block}.v7920-nav-head strong{font-size:17px}.v7920-nav-head small{margin-top:3px;color:#aebdce;font-weight:750}
+#v7920OwnMap{width:100%;height:310px;background:#e9eef4}
+.v7920-next{padding:12px 14px;background:#f7f9fc;color:#101828;font-weight:900;line-height:1.35}
+html[data-theme="dark"] .v7920-own-nav{background:#111925;border-color:#2a3545}
+html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
+</style>
+
 </head>
  
 <body>
@@ -3990,12 +4016,90 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
       return `<div class="course-extra-launchers"><button class="course-extra-launcher" type="button" data-toggle-trip-extras><span>＋</span>Ajouter un arrêt</button><button class="course-extra-launcher" type="button" data-toggle-waiting ${waitingAvailable ? "" : "disabled"} title="${waitingAvailable ? "Ouvrir le minuteur" : "Disponible lorsque le client est à bord"}"><span>◷</span>Temps d’attente</button></div>`;
     }
 
+
+    function v7920IsOwnCourse(item){
+      if(!item)return false;
+      if(item.isPartnerDispatchRequest)return false;
+      if(["transferred","transfer_performed","transfer_closed"].includes(String(item.status||"")))return false;
+      if(item.transferredDriverName || item.transferredDriverEmail || item.partnerId || item.driverEmail)return false;
+      return true;
+    }
+
+    const v7920AdminNav={map:null,service:null,renderer:null,car:null,item:null,lastPos:null,watchId:null,lastRouteKey:"",lastRouteAt:0,lastResult:null};
+
+    function v7920AdminStage(item){
+      const s=String(item?.status||"");
+      if(s==="en_route")return{key:"pickup",target:String(item?.pickup||"").trim(),label:"Vers le client"};
+      if(s==="on_board")return{key:"destination",target:String(item?.destination||"").trim(),label:"Vers la destination"};
+      return{key:"",target:"",label:"Navigation prête"};
+    }
+    function v7920CleanInstruction(html){const d=document.createElement("div");d.innerHTML=html||"";return d.textContent||d.innerText||""}
+    function v7920CarIcon(){
+      return{url:'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="44" height="62" viewBox="0 0 44 62"><ellipse cx="22" cy="33" rx="18" ry="25" fill="#000" opacity=".18"/><rect x="8" y="5" width="28" height="50" rx="11" fill="#fff" stroke="#17202b" stroke-width="2"/><path d="M12 17h20l-3 13H15z" fill="#5fa7d8"/><path d="M14 35h16v10H14z" fill="#b7d7ea"/><rect x="5" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="15" width="4" height="12" rx="2" fill="#151b22"/><rect x="5" y="38" width="4" height="12" rx="2" fill="#151b22"/><rect x="35" y="38" width="4" height="12" rx="2" fill="#151b22"/><circle cx="15" cy="8" r="2" fill="#ffe274"/><circle cx="29" cy="8" r="2" fill="#ffe274"/></svg>`),scaledSize:new google.maps.Size(32,45),anchor:new google.maps.Point(16,30)}
+    }
+    function v7920RenderGuidance(result,st){
+      const leg=result?.routes?.[0]?.legs?.[0];if(!leg)return;
+      v7920AdminNav.lastResult=result;
+      const summary=$("v7920NavSummary"),next=$("v7920Next"),title=$("v7920NavTitle");
+      if(summary)summary.textContent=`${leg.duration?.text||""} · ${leg.distance?.text||""} · arrivée ${new Date(Date.now()+(leg.duration?.value||0)*1000).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}`;
+      const step=leg.steps?.[0];
+      if(next)next.textContent=step?`${v7920CleanInstruction(step.instructions)} · ${step.distance?.text||""}`:"Suivez l’itinéraire";
+      if(title)title.textContent=st.label;
+    }
+    function v7920Route(force=false){
+      const n=v7920AdminNav,item=n.item;if(!n.map||!n.service||!n.renderer||!n.lastPos||!item)return;
+      const st=v7920AdminStage(item),next=$("v7920Next"),title=$("v7920NavTitle"),summary=$("v7920NavSummary");
+      if(!st.target){
+        n.renderer.setDirections({routes:[]});n.lastRouteKey="";n.lastResult=null;
+        if(title)title.textContent="Navigation prête";if(summary)summary.textContent="Position actuelle";
+        if(next)next.textContent=item.status==="accepted"?'Passez « En route vers le client » pour démarrer la navigation':"Navigation disponible pendant votre course";
+        n.map.panTo(n.lastPos);if(n.map.getZoom()<16)n.map.setZoom(17);return;
+      }
+      const now=Date.now(),key=[item.id,st.key,st.target,Math.round(n.lastPos.lat*500),Math.round(n.lastPos.lng*500)].join("|");
+      if(!force&&key===n.lastRouteKey&&now-n.lastRouteAt<10000){if(n.lastResult)v7920RenderGuidance(n.lastResult,st);return}
+      n.lastRouteKey=key;n.lastRouteAt=now;if(next)next.textContent="Calcul de l’itinéraire…";
+      n.service.route({origin:n.lastPos,destination:st.target,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
+        if(status==="OK"){n.renderer.setDirections(res);v7920RenderGuidance(res,st);n.map.panTo(n.lastPos);if(n.map.getZoom()<16)n.map.setZoom(17)}
+        else if(next)next.textContent="Itinéraire momentanément indisponible";
+      });
+    }
+    function v7920Position(p){
+      const n=v7920AdminNav;n.lastPos=p;if(!n.map)return;
+      if(!n.car)n.car=new google.maps.Marker({map:n.map,position:p,title:"Ma position",icon:v7920CarIcon(),zIndex:99});
+      else n.car.setPosition(p);
+      v7920Route(false);
+    }
+    function v7920StartGps(){
+      const n=v7920AdminNav;if(n.watchId!==null||!navigator.geolocation)return;
+      n.watchId=navigator.geolocation.watchPosition(
+        pos=>v7920Position({lat:pos.coords.latitude,lng:pos.coords.longitude}),
+        ()=>{const x=$("v7920Next");if(x&&!n.lastPos)x.textContent="Autorisez la localisation pour afficher votre position";},
+        {enableHighAccuracy:true,maximumAge:2500,timeout:12000}
+      );
+    }
+    function v7920OpenAdminNavigation(item){
+      if(!v7920IsOwnCourse(item))return;
+      const el=$("v7920OwnMap");if(!el)return;
+      const n=v7920AdminNav;n.item=item;
+      if(!window.google?.maps){const x=$("v7920Next");if(x)x.textContent="Chargement de Google Maps…";setTimeout(()=>v7920OpenAdminNavigation(item),500);return}
+      if(!n.map){
+        n.map=new google.maps.Map(el,{center:n.lastPos||{lat:42.6887,lng:2.8948},zoom:17,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",tilt:45});
+        n.service=new google.maps.DirectionsService();
+        n.renderer=new google.maps.DirectionsRenderer({map:n.map,suppressMarkers:false,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
+      }else{
+        n.map.setDiv(el);
+      }
+      setTimeout(()=>google.maps.event.trigger(n.map,"resize"),80);
+      v7920StartGps();if(n.lastPos)v7920Position(n.lastPos);v7920Route(true);
+    }
+
     function openBooking(id) {
       const item = state.bookings.find(booking => booking.id === id);
       if (!item) return;
       $("detailTitle").textContent = item.status === "completed" ? "Course archivée" : ["transferred", "transfer_performed", "transfer_closed"].includes(item.status) ? "Suivi du transfert" : "Détail de la réservation";
       const phone = phoneHref(item.customerPhone);
       $("detailBody").innerHTML = `
+        ${v7920IsOwnCourse(item) ? `<div id="v7920OwnNav" class="v7920-own-nav"><div class="v7920-nav-head"><strong id="v7920NavTitle">Navigation OuassVTC</strong><small id="v7920NavSummary">Position actuelle</small></div><div id="v7920OwnMap"></div><div id="v7920Next" class="v7920-next">Passez « En route vers le client » pour démarrer la navigation</div></div>` : ""}
         <div class="booking-main">
           <div class="booking-top"><div><div class="booking-name">${escapeHtml(courseNumberLabel(item))} · ${escapeHtml(item.customerName)}</div><span class="booking-date">${escapeHtml(dateLabel(item))}</span></div><span class="status">${escapeHtml(statusLabels[item.status] || item.status)}</span></div>
           <div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup)}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination)}</strong></div></div>
@@ -4030,6 +4134,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
         </div>`;
       $("detailOverlay").classList.remove("hidden");
       startWaitingTimerDisplay(item);
+      if (v7920IsOwnCourse(item)) setTimeout(() => v7920OpenAdminNavigation(item), 0);
       $("detailBody").querySelector("[data-toggle-trip-extras]")?.addEventListener("click", event => { const panel=$("detailBody").querySelector("[data-trip-extras]"); panel?.classList.toggle("module-collapsed"); event.currentTarget.classList.toggle("active", panel && !panel.classList.contains("module-collapsed")); });
       $("detailBody").querySelector("[data-toggle-waiting]")?.addEventListener("click", event => { const panel=$("detailBody").querySelector("[data-waiting-card]"); panel?.classList.toggle("module-collapsed"); event.currentTarget.classList.toggle("active", panel && !panel.classList.contains("module-collapsed")); });
       $("detailBody").querySelectorAll("[data-waiting-action]").forEach(button => button.addEventListener("click", () => saveWaitingTimerAction(item.id, button.dataset.waitingAction, button)));
@@ -6370,7 +6475,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.13.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.20.20261009.01",q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],unsubs=[],map=null,markers=new Map(),weekOffset=0,driverFilter="all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Administration</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Carte</button><button data-v79tab="activity">Activité</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div>
@@ -6474,5 +6579,28 @@ document.documentElement.dataset.adminPilotVersion=V79;window.addEventListener('
 #v79ViewLive .v79-driver-detail{margin-top:12px}
 @media(max-width:700px){#v79ViewLive #v79AdminMap{height:72vh!important;min-height:480px!important;border-radius:18px!important}}
 </style>
+
+<script id="v7914-refresh-lock-script">
+(function(){
+ "use strict";
+ function adminIsOpen(){
+   const panel=document.getElementById("v79AdminPanel");
+   if(!panel)return false;
+   const cs=getComputedStyle(panel);
+   return !panel.classList.contains("v79-hidden") && cs.display!=="none" && cs.visibility!=="hidden";
+ }
+ function syncRefreshLock(){
+   document.documentElement.classList.toggle("v7914-refresh-locked",adminIsOpen());
+ }
+ document.addEventListener("DOMContentLoaded",()=>{
+   syncRefreshLock();
+   const panel=document.getElementById("v79AdminPanel");
+   if(panel)new MutationObserver(syncRefreshLock).observe(panel,{attributes:true,attributeFilter:["class","style","hidden"]});
+   document.addEventListener("click",()=>setTimeout(syncRefreshLock,0),true);
+ });
+ window.addEventListener("pageshow",syncRefreshLock);
+})();
+</script>
+
 </body>
 </html>
