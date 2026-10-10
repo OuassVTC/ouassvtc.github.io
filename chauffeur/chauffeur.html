@@ -1237,43 +1237,16 @@ body.partner-authenticated .action.partner-back{
 }
 html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
 </style>
-
-<style id="v7930-documents-light-progress">
-html[data-theme="light"] body.partner-authenticated .partner-menu-page{color:#101828!important}
-html[data-theme="light"] body.partner-authenticated .partner-menu-page h2,
-html[data-theme="light"] body.partner-authenticated .partner-menu-page h3,
-html[data-theme="light"] body.partner-authenticated .partner-menu-page b,
-html[data-theme="light"] body.partner-authenticated .partner-menu-page strong{color:#101828!important}
-html[data-theme="light"] body.partner-authenticated .partner-menu-page small,
-html[data-theme="light"] body.partner-authenticated .partner-menu-page label{color:#667085!important}
-html[data-theme="light"] body.partner-authenticated .pm-card,
-html[data-theme="light"] body.partner-authenticated .pm-list,
-html[data-theme="light"] body.partner-authenticated .pm-item,
-html[data-theme="light"] body.partner-authenticated .pm-doc-card{
- background:#fff!important;border-color:#dfe5ec!important;color:#101828!important
-}
-html[data-theme="light"] body.partner-authenticated .pm-doc-icon{background:#eef4ff!important;color:#176ef4!important}
-html[data-theme="light"] body.partner-authenticated .pm-doc-actions a,
-html[data-theme="light"] body.partner-authenticated .pm-doc-actions label,
-html[data-theme="light"] body.partner-authenticated .pm-doc-actions button{
- background:#f7f9fc!important;border-color:#d8e0ea!important;color:#174f9d!important
-}
-html[data-theme="light"] body.partner-authenticated .pm-doc-actions .pm-doc-add{background:#176ef4!important;border-color:#176ef4!important;color:#fff!important}
-html[data-theme="light"] body.partner-authenticated .pm-doc-actions .pm-doc-delete{background:#fff1f1!important;border-color:#f3c7c7!important;color:#b42323!important}
-html[data-theme="light"] body.partner-authenticated .pm-doc-expiry{color:#344054!important}
-html[data-theme="light"] body.partner-authenticated .pm-doc-no-expiry{background:#eaf8f0!important;color:#087442!important}
-.pm-upload-progress{grid-column:1/-1;display:grid;gap:6px;margin-top:2px}
-.pm-upload-progress.hidden{display:none!important}
-.pm-upload-track{height:9px;overflow:hidden;border-radius:999px;background:#26364b}
-html[data-theme="light"] .pm-upload-track{background:#e5eaf0}
-.pm-upload-bar{display:block;height:100%;width:0;border-radius:999px;background:#2f8cff;transition:width .18s ease}
-.pm-upload-progress small{font-weight:850!important;color:#9fb8dc!important}
-html[data-theme="light"] .pm-upload-progress small{color:#475467!important}
-.pm-upload-progress.done .pm-upload-bar{background:#16a065}
-.pm-upload-progress.done small{color:#86efac!important}
-html[data-theme="light"] .pm-upload-progress.done small{color:#087442!important}
-</style>
-</head>
+<style id="v7930-ui">
+.quick-course,.quick-course-tabs,.quick-tabs,.course-quick,.quick-actions,[data-section="quick-course"],#quickCourse,#quickCourseTabs,#quick-course,#quick-course-tabs{display:none!important}
+html:not([data-theme="dark"]) #documentsOverlay,html:not([data-theme="dark"]) #documentsPage,html:not([data-theme="dark"]) .documents-page{color:#172033!important}
+html:not([data-theme="dark"]) #documentsOverlay h1,html:not([data-theme="dark"]) #documentsOverlay h2,html:not([data-theme="dark"]) #documentsOverlay h3,html:not([data-theme="dark"]) #documentsOverlay label,html:not([data-theme="dark"]) #documentsOverlay strong,html:not([data-theme="dark"]) #documentsPage h1,html:not([data-theme="dark"]) #documentsPage h2,html:not([data-theme="dark"]) #documentsPage h3,html:not([data-theme="dark"]) #documentsPage label,html:not([data-theme="dark"]) .documents-page h1,html:not([data-theme="dark"]) .documents-page h2,html:not([data-theme="dark"]) .documents-page h3,html:not([data-theme="dark"]) .documents-page label{color:#172033!important}
+#v7930UploadProgress{display:none;margin:12px 0;padding:12px;border-radius:14px;background:var(--surface,#fff);border:1px solid rgba(120,130,150,.25)}
+#v7930UploadTrack{height:9px;border-radius:99px;overflow:hidden;background:rgba(120,130,150,.22)}#v7930UploadBar{height:100%;width:0;background:#1478ff;transition:width .18s;border-radius:99px}#v7930UploadLabel{margin-top:7px;font-size:12px;font-weight:800;color:var(--text,#172033)}
+#v7930GamesPage{position:fixed;inset:0;z-index:9998;background:var(--bg,#f4f7fb);color:var(--text,#172033);display:none;overflow:auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+.v7930-head{display:flex;align-items:center;gap:8px;position:sticky;top:0;padding:8px 0 14px;background:var(--bg,#f4f7fb);z-index:2}.v7930-head h2{flex:1;text-align:center;margin:0;font-size:20px}.v7930-head button{border:0;border-radius:12px;padding:10px;background:var(--surface,#fff);color:var(--text,#172033);font-weight:900;box-shadow:0 3px 12px #0001}
+.v7930-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:560px;margin:12px auto}.v7930-game{border:0;border-radius:18px;padding:22px 10px;background:var(--surface,#fff);color:var(--text,#172033);font-weight:900;box-shadow:0 5px 18px #0001}.v7930-game b{display:block;font-size:30px;margin-bottom:8px}#v7930Stage{display:none;max-width:560px;margin:12px auto}.v7930-card{background:var(--surface,#fff);color:var(--text,#172033);border-radius:18px;padding:18px;box-shadow:0 5px 18px #0001}
+</style></head>
  
 <body>
   <header class="topbar">
@@ -1715,6 +1688,22 @@ html[data-theme="light"] .pm-upload-progress.done small{color:#087442!important}
             </svg>
           </button>
         </div>
+        <h2 class="section-title">Course rapide</h2>
+        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
+          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
+          <div class="simulator-grid" style="margin-top:14px">
+            <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
+            <div class="sim-field"><label for="quickBookingPrice">Tarif estimé</label><input id="quickBookingPrice" readonly aria-readonly="true" placeholder="— €"></div>
+          </div>
+          <button class="primary" id="estimateQuickBookingFare" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer le tarif</button>
+          <div class="simulator-grid" style="margin-top:14px">
+            <div class="sim-field full"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
+            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" required placeholder="Écrivez votre note sur la course…"></textarea></div>
+          </div>
+          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
+          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
+        </form>
+ 
         <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid single-column-form">
@@ -6917,7 +6906,27 @@ async function handleStatusAction(id, status) {
     });
     $("driverName").addEventListener("input", () => delete $("driverName").dataset.customerAutofill);
     $("driverPickup").addEventListener("input", () => delete $("driverPickup").dataset.customerAutofill);
-function calculateAutomaticFare(origin, destination, tripDate) {
+ 
+    $("quickBookingKm").addEventListener("input", () => {
+      $("quickBookingPrice").value = "";
+      delete $("quickBookingPrice").dataset.amount;
+      $("quickBookingSuccess").classList.add("hidden");
+    });
+ 
+    $("estimateQuickBookingFare").addEventListener("click", () => {
+      const distance = $("quickBookingKm").valueAsNumber;
+      if (!Number.isFinite(distance) || distance < 0) {
+        alert("Indiquez le kilométrage du trajet pour estimer le tarif.");
+        return;
+      }
+      const rate = driverRate(new Date());
+      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
+      const price = Math.round(rawPrice / 5) * 5;
+      $("quickBookingPrice").value = `${price} €`;
+      $("quickBookingPrice").dataset.amount = String(price);
+    });
+ 
+    function calculateAutomaticFare(origin, destination, tripDate) {
       return new Promise((resolve, reject) => {
         if (!driverDirectionsService) {
           reject(new Error("Google Maps indisponible"));
@@ -6980,6 +6989,93 @@ function calculateAutomaticFare(origin, destination, tripDate) {
     $("driverPrice").addEventListener("input", () => {
       $("driverPrice").dataset.manualPrice = "true";
     });
+ 
+    $("quickBookingForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!db || !auth?.currentUser) {
+        alert("Vous devez être connecté pour enregistrer une course.");
+        return;
+      }
+      const phone = $("quickBookingPhone").value.trim();
+      const priceAmount = Number($("quickBookingPrice").dataset.amount || 0);
+      const distance = $("quickBookingKm").valueAsNumber;
+      const comment = $("quickBookingComment").value.trim();
+      if (priceAmount <= 0) {
+        alert("Estimez d’abord le tarif à partir du kilométrage.");
+        return;
+      }
+      if (!phone || !comment) {
+        alert("Indiquez le numéro du client et un commentaire pour enregistrer la course.");
+        return;
+      }
+      const payment = await askPaymentMethod("Règlement de la course rapide", priceAmount);
+      if (!payment) return;
+      const button = $("saveQuickBooking");
+      button.disabled = true;
+      button.textContent = "Enregistrement en cours…";
+      let quickBooking = null;
+      try {
+        localSaveInProgress = true;
+        const missionSettings = readMissionCostSettings();
+        const safeDistance = Number.isFinite(distance) ? distance : 0;
+        const quickFuelCost = safeDistance / 100 * missionSettings.consumption * missionSettings.fuelPrice;
+        const current = new Date();
+        const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
+        quickBooking = await addDoc(collection(db, "bookings"), {
+          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          customerName: "Course manuelle",
+          customerPhone: phone,
+          pickup: "Ajout manuel",
+          destination: "Trajet non renseigné",
+          scheduledAtText: currentLocal.toISOString().slice(0, 16),
+          passengers: "Non précisé",
+          paymentMethod: payment.paymentMethod,
+          customerMessage: comment,
+          estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
+          status: "new",
+          source: "partner_app",
+          sourcePartnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          sourcePartnerName: window.currentPartnerProfile?.displayName || window.currentPartnerProfile?.companyName || auth?.currentUser?.email || "Chauffeur partenaire",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        await updateDoc(quickBooking, {
+          paymentCardAmount: payment.paymentCardAmount,
+          paymentCashAmount: payment.paymentCashAmount,
+          missionHomeAddress: missionSettings.homeAddress,
+          missionFuelPrice: missionSettings.fuelPrice,
+          missionConsumption: missionSettings.consumption,
+          missionClientKm: safeDistance,
+          missionTotalKm: safeDistance,
+          missionClientFuelCost: quickFuelCost,
+          missionFuelCost: quickFuelCost,
+          missionTolls: 0,
+          missionTotalCost: quickFuelCost,
+          missionMargin: priceAmount - quickFuelCost,
+          missionCostStatus: "calculated-manually",
+          missionCostUpdatedAt: serverTimestamp(),
+          status: "completed",
+          source: "driver-quick",
+          completedAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        $("quickBookingForm").reset();
+        delete $("quickBookingPrice").dataset.amount;
+        $("quickBookingSuccess").classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        if (quickBooking) await deleteDoc(quickBooking).catch(cleanupError => console.error("Nettoyage de la course rapide incomplète impossible", cleanupError));
+        const detail = error?.code === "permission-denied"
+          ? "Firebase a refusé l’enregistrement. Vérifiez que vous êtes connecté avec le compte chauffeur autorisé."
+          : "La course rapide n’a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
+        alert(detail);
+      } finally {
+        localSaveInProgress = false;
+        button.disabled = false;
+        button.textContent = "Enregistrer dans l’application";
+      }
+    });
+ 
     $("driverBookingForm").addEventListener("submit", async event => {
       event.preventDefault();
       if (!db || !auth?.currentUser) {
@@ -7531,7 +7627,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" id="pmGames" type="button"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Accéder aux jeux de l’application</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7607,8 +7703,6 @@ function pmEnsure(){
  document.getElementById("pmLogout").onclick=()=>document.getElementById("logout")?.click();
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
- const pmGames=document.getElementById("pmGames");
- if(pmGames)pmGames.onclick=()=>{ if(typeof openPanel==="function") openPanel("gamePanel"); else document.querySelector('[data-menu-tab="gamePanel"]')?.click(); };
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
  // Initialisation différée : le module Firebase doit avoir publié son bridge global.
  const startPartnerModules=()=>{try{pmFillProfile();pmListenDocuments();}catch(error){console.error("Initialisation modules chauffeur",error)}};
@@ -7746,7 +7840,6 @@ function pmRenderDocuments(docs){
       ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
-    <div class="pm-upload-progress hidden" data-pm-upload-progress="${pme(type)}"><div class="pm-upload-track"><span class="pm-upload-bar"></span></div><small>Préparation de l’envoi…</small></div>
    </div>`;
  }).join("");
  h.querySelectorAll("[data-partner-doc-upload]").forEach(input=>input.addEventListener("change",pmUploadDocument));
@@ -7768,19 +7861,8 @@ async function pmUploadDocument(event){
  try{
    input.disabled=true;
    const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
-   const progress=input.closest(".pm-doc-card")?.querySelector(`[data-pm-upload-progress="${CSS.escape(type)}"]`);
-   const progressBar=progress?.querySelector(".pm-upload-bar"),progressText=progress?.querySelector("small");
-   progress?.classList.remove("hidden","done");
-   if(progressBar)progressBar.style.width="0%";
-   if(progressText)progressText.textContent="Envoi du document · 0 %";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
-   await new Promise((resolve,reject)=>{task.on("state_changed",snap=>{
-     const pct=snap.totalBytes?Math.round((snap.bytesTransferred/snap.totalBytes)*100):0;
-     if(progressBar)progressBar.style.width=`${pct}%`;
-     if(progressText)progressText.textContent=`Envoi du document · ${pct} %`;
-   },reject,resolve)});
-   if(progressBar)progressBar.style.width="100%";
-   if(progressText)progressText.textContent="Document envoyé · validation…";
+   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
    const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
@@ -7792,10 +7874,6 @@ async function pmUploadDocument(event){
      await updateDoc(existing.docs[0].ref,payload);
      if(old.storagePath&&old.storagePath!==path) deleteObject(storageRef(storage,old.storagePath)).catch(()=>{});
    }
-   if(progressBar)progressBar.style.width="100%";
-   progress?.classList.add("done");
-   if(progressText)progressText.textContent="✓ Document ajouté avec succès";
-   await new Promise(r=>setTimeout(r,900));
  }catch(e){console.error("Upload document chauffeur",e);const code=String(e?.code||"");alert(code.includes("unauthorized")?"Envoi refusé par Firebase Storage. Vérifiez que vous êtes bien connecté puis réessayez.":"Impossible d’enregistrer ce document : "+(e?.message||"erreur inconnue"))}
  finally{input.disabled=false;input.value="";const addLabel=input.closest(".pm-doc-add");if(addLabel?.childNodes?.[0])addLabel.childNodes[0].textContent=addLabel.querySelector("input")?.dataset?.existing==="1"?"Remplacer":"Ajouter"}
 }
@@ -8583,5 +8661,22 @@ window.v7917UpdateClientNavPosition=function(lat,lng){
 window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
 })();
 </script>
-</body>
+<div id="v7930GamesPage"><div class="v7930-head"><button onclick="v7930CloseGames()">← Menu</button><h2>Jeux OuassVTC</h2><button onclick="v7930Dashboard()">⌂ Tableau de bord</button></div><div id="v7930Grid" class="v7930-grid"><button class="v7930-game" onclick="v7930Game('reflexe')"><b>⚡</b>Réflexe chauffeur</button><button class="v7930-game" onclick="v7930Game('memoire')"><b>🧠</b>Mémoire</button><button class="v7930-game" onclick="v7930Game('calcul')"><b>🧮</b>Calcul express</button><button class="v7930-game" onclick="v7930Game('defi')"><b>🎯</b>Défi OuassVTC</button></div><div id="v7930Stage"></div></div><script id="v7930-features">
+(function(){
+function hideQuick(){document.querySelectorAll("h1,h2,h3,h4,.title,.section-title,.tab,button").forEach(function(e){if(/course\\s*rapide/i.test((e.textContent||"").trim())){var b=e.closest(".card,.section,.panel,.quick-course,.quick-course-tabs,.course-quick");(b||e).style.display="none"}})}
+function menu(){if(document.querySelector("[data-v7930-games]"))return;var list=[].slice.call(document.querySelectorAll("button,a,.menu-item,.drawer-item,.nav-item"));var a=list.find(function(x){return /documents|paramètres|profil/i.test(x.textContent||"")});if(!a)return;var b=document.createElement(a.tagName==="A"?"a":"button");b.type="button";b.className=a.className;b.setAttribute("data-v7930-games","1");b.innerHTML="🎮 <span>Jeux OuassVTC</span>";b.onclick=function(e){e.preventDefault();v7930OpenGames()};a.parentNode.insertBefore(b,a.nextSibling)}
+function progressHost(){if(document.getElementById("v7930UploadProgress"))return;var f=document.querySelector('#documentsOverlay input[type="file"],#documentsPage input[type="file"],.documents-page input[type="file"],input[type="file"][accept*="pdf"],input[type="file"][accept*="image"]');if(!f)return;var h=document.createElement("div");h.id="v7930UploadProgress";h.innerHTML='<div id="v7930UploadTrack"><div id="v7930UploadBar"></div></div><div id="v7930UploadLabel">Document prêt</div>';f.parentNode.appendChild(h);f.addEventListener("change",function(){if(f.files&&f.files[0])v7930Progress(3,"Document prêt à être envoyé")})}
+window.v7930Progress=function(p,t){var h=document.getElementById("v7930UploadProgress");if(!h)return;h.style.display="block";document.getElementById("v7930UploadBar").style.width=Math.max(0,Math.min(100,p))+"%";document.getElementById("v7930UploadLabel").textContent=t||("Envoi… "+Math.round(p)+" %")};
+function hook(){try{var fb=window.firebase;if(!fb||!fb.storage)return;var proto=Object.getPrototypeOf(fb.storage().ref());if(!proto||proto.__v7930||typeof proto.put!=="function")return;var original=proto.put;proto.put=function(){var task=original.apply(this,arguments);if(task&&task.on)task.on("state_changed",function(s){var p=s.totalBytes?100*s.bytesTransferred/s.totalBytes:0;v7930Progress(p,"Envoi du document… "+Math.round(p)+" %")},function(){v7930Progress(0,"Échec de l’envoi — réessayez")},function(){v7930Progress(100,"✓ Document ajouté")});return task};proto.__v7930=true}catch(e){}}
+window.v7930OpenGames=function(){document.getElementById("v7930GamesPage").style.display="block";document.getElementById("v7930Grid").style.display="grid";document.getElementById("v7930Stage").style.display="none"};
+window.v7930CloseGames=function(){document.getElementById("v7930GamesPage").style.display="none"};
+window.v7930Dashboard=function(){v7930CloseGames();try{if(window.closeMenu)closeMenu();if(window.showDashboard)showDashboard();if(window.openDashboard)openDashboard()}catch(e){}window.scrollTo(0,0)};
+window.v7930BackGames=function(){document.getElementById("v7930Stage").style.display="none";document.getElementById("v7930Grid").style.display="grid"};
+window.v7930Game=function(k){var g=document.getElementById("v7930Grid"),s=document.getElementById("v7930Stage");g.style.display="none";s.style.display="block";var back='<button onclick="v7930BackGames()" style="border:0;background:none;color:#1478ff;font-weight:900;margin-bottom:10px">← Retour aux jeux</button>';var body="";if(k==="reflexe")body='<div class="v7930-card"><h3>⚡ Réflexe chauffeur</h3><p id="vr">Appuie sur Démarrer puis STOP dès que le message change.</p><button onclick="vRef()">Démarrer</button> <button id="vs" onclick="vStop()" style="display:none">STOP</button></div>';else if(k==="memoire")body='<div class="v7930-card"><h3>🧠 Mémoire</h3><p id="vm">Prêt ?</p><button onclick="vMem()">Nouveau défi</button></div>';else if(k==="calcul")body='<div class="v7930-card"><h3>🧮 Calcul express</h3><p id="vcq"></p><input id="vca" inputmode="numeric"><button onclick="vCheck()">Valider</button><p id="vcr"></p></div>';else body='<div class="v7930-card"><h3>🎯 Défi OuassVTC</h3><p id="vd">Prêt ?</p><button onclick="vDefi()">Jouer</button></div>';s.innerHTML=back+body;if(k==="calcul")vCalc()};
+var rt=0,ready=false;window.vRef=function(){ready=false;document.getElementById("vs").style.display="inline-block";document.getElementById("vr").textContent="Attends…";setTimeout(function(){ready=true;rt=performance.now();document.getElementById("vr").textContent="MAINTENANT !"},900+Math.random()*2200)};window.vStop=function(){document.getElementById("vr").textContent=ready?"Réaction : "+Math.round(performance.now()-rt)+" ms":"Trop tôt !";ready=false};
+window.vMem=function(){var n=String(Math.floor(1000+Math.random()*9000));document.getElementById("vm").textContent="Retient : "+n;setTimeout(function(){document.getElementById("vm").textContent="••••";var a=prompt("Quel était le numéro ?");document.getElementById("vm").textContent=a===n?"✓ Bravo !":"C’était "+n},1800)};
+var ans=0;window.vCalc=function(){var a=Math.floor(5+Math.random()*35),b=Math.floor(2+Math.random()*18);ans=a+b;document.getElementById("vcq").textContent=a+" + "+b+" = ?"};window.vCheck=function(){var ok=Number(document.getElementById("vca").value)===ans;document.getElementById("vcr").textContent=ok?"✓ Bonne réponse":"Essaie encore";if(ok)setTimeout(vCalc,700)};window.vDefi=function(){var x=["Bravo !","Encore !","Défi réussi !"];document.getElementById("vd").textContent=x[Math.floor(Math.random()*x.length)]};
+var o=new MutationObserver(function(){hideQuick();menu();progressHost();hook()});document.addEventListener("DOMContentLoaded",function(){hideQuick();menu();progressHost();hook();o.observe(document.body,{childList:true,subtree:true})});
+})();
+</script></body>
 </html>
