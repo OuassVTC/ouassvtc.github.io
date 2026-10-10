@@ -1237,16 +1237,40 @@ body.partner-authenticated .action.partner-back{
 }
 html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
 </style>
-<style id="v7930-ui">
-.quick-course,.quick-course-tabs,.quick-tabs,.course-quick,.quick-actions,[data-section="quick-course"],#quickCourse,#quickCourseTabs,#quick-course,#quick-course-tabs{display:none!important}
-html:not([data-theme="dark"]) #documentsOverlay,html:not([data-theme="dark"]) #documentsPage,html:not([data-theme="dark"]) .documents-page{color:#172033!important}
-html:not([data-theme="dark"]) #documentsOverlay h1,html:not([data-theme="dark"]) #documentsOverlay h2,html:not([data-theme="dark"]) #documentsOverlay h3,html:not([data-theme="dark"]) #documentsOverlay label,html:not([data-theme="dark"]) #documentsOverlay strong,html:not([data-theme="dark"]) #documentsPage h1,html:not([data-theme="dark"]) #documentsPage h2,html:not([data-theme="dark"]) #documentsPage h3,html:not([data-theme="dark"]) #documentsPage label,html:not([data-theme="dark"]) .documents-page h1,html:not([data-theme="dark"]) .documents-page h2,html:not([data-theme="dark"]) .documents-page h3,html:not([data-theme="dark"]) .documents-page label{color:#172033!important}
-#v7930UploadProgress{display:none;margin:12px 0;padding:12px;border-radius:14px;background:var(--surface,#fff);border:1px solid rgba(120,130,150,.25)}
-#v7930UploadTrack{height:9px;border-radius:99px;overflow:hidden;background:rgba(120,130,150,.22)}#v7930UploadBar{height:100%;width:0;background:#1478ff;transition:width .18s;border-radius:99px}#v7930UploadLabel{margin-top:7px;font-size:12px;font-weight:800;color:var(--text,#172033)}
-#v7930GamesPage{position:fixed;inset:0;z-index:9998;background:var(--bg,#f4f7fb);color:var(--text,#172033);display:none;overflow:auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 24px)}
-.v7930-head{display:flex;align-items:center;gap:8px;position:sticky;top:0;padding:8px 0 14px;background:var(--bg,#f4f7fb);z-index:2}.v7930-head h2{flex:1;text-align:center;margin:0;font-size:20px}.v7930-head button{border:0;border-radius:12px;padding:10px;background:var(--surface,#fff);color:var(--text,#172033);font-weight:900;box-shadow:0 3px 12px #0001}
-.v7930-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:560px;margin:12px auto}.v7930-game{border:0;border-radius:18px;padding:22px 10px;background:var(--surface,#fff);color:var(--text,#172033);font-weight:900;box-shadow:0 5px 18px #0001}.v7930-game b{display:block;font-size:30px;margin-bottom:8px}#v7930Stage{display:none;max-width:560px;margin:12px auto}.v7930-card{background:var(--surface,#fff);color:var(--text,#172033);border-radius:18px;padding:18px;box-shadow:0 5px 18px #0001}
-</style></head>
+
+<style id="v7930-polish">
+/* Documents chauffeur : lisibilité complète en mode jour */
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel,
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel h2,
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel b,
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel strong{color:#101828!important}
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel small,
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel label{color:#475467!important}
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel .pm-card,
+html[data-theme="light"] body.partner-authenticated #partnerDocumentsPanel .pm-doc-card{background:#fff!important;color:#101828!important;border-color:#e4e7ec!important}
+.pm-upload-progress{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;margin-top:9px}
+.pm-upload-progress.hidden{display:none!important}
+.pm-upload-track{height:8px;border-radius:999px;background:#e4e7ec;overflow:hidden}
+.pm-upload-fill{height:100%;width:0;border-radius:999px;background:#176ef4;transition:width .16s linear}
+.pm-upload-value{min-width:42px;text-align:right;font-size:11px;font-weight:950;color:#176ef4}
+.pm-upload-progress.done .pm-upload-fill{background:#12b76a}
+.pm-upload-progress.done .pm-upload-value{color:#067647}
+
+/* Jeux OuassVTC : page interne plus propre */
+#gamePanel{padding-bottom:110px}
+#gamePanel .v7930-game-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+#gamePanel .v7930-game-nav{display:flex;gap:8px}
+#gamePanel .v7930-game-nav button{min-height:42px;padding:0 12px;border:1px solid var(--border);border-radius:13px;background:var(--card,#fff);color:var(--text);font-weight:900}
+#gamePanel .arcade-hero{border-radius:24px!important;padding:22px!important;background:linear-gradient(145deg,#07111f,#12366b)!important;color:#fff!important;box-shadow:0 16px 38px #07111f24}
+#gamePanel .arcade-hero p{color:#c8d8ef!important}
+#gamePanel .arcade-grid{gap:12px!important}
+#gamePanel .arcade-card{min-height:112px!important;border-radius:20px!important;border:1px solid var(--border)!important;background:var(--card,#fff)!important;color:var(--text)!important;box-shadow:0 8px 22px #1018280d!important}
+#gamePanel .arcade-card b{font-size:17px!important}
+#gamePanel .arcade-card span{color:var(--muted)!important}
+html[data-theme="dark"] #gamePanel .v7930-game-nav button,
+html[data-theme="dark"] #gamePanel .arcade-card{background:#111925!important;color:#f4f7fb!important;border-color:#2a3545!important}
+</style>
+</head>
  
 <body>
   <header class="topbar">
@@ -1587,8 +1611,12 @@ html:not([data-theme="dark"]) #documentsOverlay h1,html:not([data-theme="dark"])
       </section>
 
 <section class="tab-panel hidden" id="gamePanel">
-  <div class="panel-head">
-    <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
+  <div class="v7930-game-top">
+    <strong>Jeux OuassVTC</strong>
+    <div class="v7930-game-nav">
+      <button id="v7930GamesMenu" type="button">← Menu</button>
+      <button type="button" data-open-tab="dashboardHome">⌂ Tableau de bord</button>
+    </div>
   </div>
  
   <div id="arcadeHome">
@@ -1688,8 +1716,8 @@ html:not([data-theme="dark"]) #documentsOverlay h1,html:not([data-theme="dark"])
             </svg>
           </button>
         </div>
-        <h2 class="section-title">Course rapide</h2>
-        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
+        <h2 class="section-title" style="display:none">Course rapide</h2>
+        <form class="simulator" id="quickBookingForm" style="display:none!important;margin-bottom:0">
           <div class="eyebrow">Enregistrement dans l’application uniquement</div>
           <div class="simulator-grid" style="margin-top:14px">
             <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
@@ -7627,7 +7655,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" id="pmGamesButton" type="button"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Une pause entre deux courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7839,6 +7867,7 @@ function pmRenderDocuments(docs){
       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" data-existing="${ok?"1":"0"}" hidden></label>
       ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
+      <div class="pm-upload-progress hidden" data-partner-progress="${pme(type)}"><div class="pm-upload-track"><div class="pm-upload-fill"></div></div><span class="pm-upload-value">0 %</span></div>
     </div>
    </div>`;
  }).join("");
@@ -7861,8 +7890,16 @@ async function pmUploadDocument(event){
  try{
    input.disabled=true;
    const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
+   const progress=input.closest(".pm-doc-card")?.querySelector(`[data-partner-progress="${CSS.escape(type)}"]`);
+   const fill=progress?.querySelector(".pm-upload-fill"),value=progress?.querySelector(".pm-upload-value");
+   progress?.classList.remove("hidden","done");
+   if(fill)fill.style.width="0%";if(value)value.textContent="0 %";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
-   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
+   await new Promise((resolve,reject)=>{task.on("state_changed",snap=>{
+     const pct=snap.totalBytes?Math.round((snap.bytesTransferred/snap.totalBytes)*100):0;
+     if(fill)fill.style.width=`${pct}%`;if(value)value.textContent=`${pct} %`;
+   },reject,resolve)});
+   if(fill)fill.style.width="100%";if(value)value.textContent="Validé ✓";progress?.classList.add("done");
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
    const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
@@ -8661,22 +8698,24 @@ window.v7917UpdateClientNavPosition=function(lat,lng){
 window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
 })();
 </script>
-<div id="v7930GamesPage"><div class="v7930-head"><button onclick="v7930CloseGames()">← Menu</button><h2>Jeux OuassVTC</h2><button onclick="v7930Dashboard()">⌂ Tableau de bord</button></div><div id="v7930Grid" class="v7930-grid"><button class="v7930-game" onclick="v7930Game('reflexe')"><b>⚡</b>Réflexe chauffeur</button><button class="v7930-game" onclick="v7930Game('memoire')"><b>🧠</b>Mémoire</button><button class="v7930-game" onclick="v7930Game('calcul')"><b>🧮</b>Calcul express</button><button class="v7930-game" onclick="v7930Game('defi')"><b>🎯</b>Défi OuassVTC</button></div><div id="v7930Stage"></div></div><script id="v7930-features">
-(function(){
-function hideQuick(){document.querySelectorAll("h1,h2,h3,h4,.title,.section-title,.tab,button").forEach(function(e){if(/course\\s*rapide/i.test((e.textContent||"").trim())){var b=e.closest(".card,.section,.panel,.quick-course,.quick-course-tabs,.course-quick");(b||e).style.display="none"}})}
-function menu(){if(document.querySelector("[data-v7930-games]"))return;var list=[].slice.call(document.querySelectorAll("button,a,.menu-item,.drawer-item,.nav-item"));var a=list.find(function(x){return /documents|paramètres|profil/i.test(x.textContent||"")});if(!a)return;var b=document.createElement(a.tagName==="A"?"a":"button");b.type="button";b.className=a.className;b.setAttribute("data-v7930-games","1");b.innerHTML="🎮 <span>Jeux OuassVTC</span>";b.onclick=function(e){e.preventDefault();v7930OpenGames()};a.parentNode.insertBefore(b,a.nextSibling)}
-function progressHost(){if(document.getElementById("v7930UploadProgress"))return;var f=document.querySelector('#documentsOverlay input[type="file"],#documentsPage input[type="file"],.documents-page input[type="file"],input[type="file"][accept*="pdf"],input[type="file"][accept*="image"]');if(!f)return;var h=document.createElement("div");h.id="v7930UploadProgress";h.innerHTML='<div id="v7930UploadTrack"><div id="v7930UploadBar"></div></div><div id="v7930UploadLabel">Document prêt</div>';f.parentNode.appendChild(h);f.addEventListener("change",function(){if(f.files&&f.files[0])v7930Progress(3,"Document prêt à être envoyé")})}
-window.v7930Progress=function(p,t){var h=document.getElementById("v7930UploadProgress");if(!h)return;h.style.display="block";document.getElementById("v7930UploadBar").style.width=Math.max(0,Math.min(100,p))+"%";document.getElementById("v7930UploadLabel").textContent=t||("Envoi… "+Math.round(p)+" %")};
-function hook(){try{var fb=window.firebase;if(!fb||!fb.storage)return;var proto=Object.getPrototypeOf(fb.storage().ref());if(!proto||proto.__v7930||typeof proto.put!=="function")return;var original=proto.put;proto.put=function(){var task=original.apply(this,arguments);if(task&&task.on)task.on("state_changed",function(s){var p=s.totalBytes?100*s.bytesTransferred/s.totalBytes:0;v7930Progress(p,"Envoi du document… "+Math.round(p)+" %")},function(){v7930Progress(0,"Échec de l’envoi — réessayez")},function(){v7930Progress(100,"✓ Document ajouté")});return task};proto.__v7930=true}catch(e){}}
-window.v7930OpenGames=function(){document.getElementById("v7930GamesPage").style.display="block";document.getElementById("v7930Grid").style.display="grid";document.getElementById("v7930Stage").style.display="none"};
-window.v7930CloseGames=function(){document.getElementById("v7930GamesPage").style.display="none"};
-window.v7930Dashboard=function(){v7930CloseGames();try{if(window.closeMenu)closeMenu();if(window.showDashboard)showDashboard();if(window.openDashboard)openDashboard()}catch(e){}window.scrollTo(0,0)};
-window.v7930BackGames=function(){document.getElementById("v7930Stage").style.display="none";document.getElementById("v7930Grid").style.display="grid"};
-window.v7930Game=function(k){var g=document.getElementById("v7930Grid"),s=document.getElementById("v7930Stage");g.style.display="none";s.style.display="block";var back='<button onclick="v7930BackGames()" style="border:0;background:none;color:#1478ff;font-weight:900;margin-bottom:10px">← Retour aux jeux</button>';var body="";if(k==="reflexe")body='<div class="v7930-card"><h3>⚡ Réflexe chauffeur</h3><p id="vr">Appuie sur Démarrer puis STOP dès que le message change.</p><button onclick="vRef()">Démarrer</button> <button id="vs" onclick="vStop()" style="display:none">STOP</button></div>';else if(k==="memoire")body='<div class="v7930-card"><h3>🧠 Mémoire</h3><p id="vm">Prêt ?</p><button onclick="vMem()">Nouveau défi</button></div>';else if(k==="calcul")body='<div class="v7930-card"><h3>🧮 Calcul express</h3><p id="vcq"></p><input id="vca" inputmode="numeric"><button onclick="vCheck()">Valider</button><p id="vcr"></p></div>';else body='<div class="v7930-card"><h3>🎯 Défi OuassVTC</h3><p id="vd">Prêt ?</p><button onclick="vDefi()">Jouer</button></div>';s.innerHTML=back+body;if(k==="calcul")vCalc()};
-var rt=0,ready=false;window.vRef=function(){ready=false;document.getElementById("vs").style.display="inline-block";document.getElementById("vr").textContent="Attends…";setTimeout(function(){ready=true;rt=performance.now();document.getElementById("vr").textContent="MAINTENANT !"},900+Math.random()*2200)};window.vStop=function(){document.getElementById("vr").textContent=ready?"Réaction : "+Math.round(performance.now()-rt)+" ms":"Trop tôt !";ready=false};
-window.vMem=function(){var n=String(Math.floor(1000+Math.random()*9000));document.getElementById("vm").textContent="Retient : "+n;setTimeout(function(){document.getElementById("vm").textContent="••••";var a=prompt("Quel était le numéro ?");document.getElementById("vm").textContent=a===n?"✓ Bravo !":"C’était "+n},1800)};
-var ans=0;window.vCalc=function(){var a=Math.floor(5+Math.random()*35),b=Math.floor(2+Math.random()*18);ans=a+b;document.getElementById("vcq").textContent=a+" + "+b+" = ?"};window.vCheck=function(){var ok=Number(document.getElementById("vca").value)===ans;document.getElementById("vcr").textContent=ok?"✓ Bonne réponse":"Essaie encore";if(ok)setTimeout(vCalc,700)};window.vDefi=function(){var x=["Bravo !","Encore !","Défi réussi !"];document.getElementById("vd").textContent=x[Math.floor(Math.random()*x.length)]};
-var o=new MutationObserver(function(){hideQuick();menu();progressHost();hook()});document.addEventListener("DOMContentLoaded",function(){hideQuick();menu();progressHost();hook();o.observe(document.body,{childList:true,subtree:true})});
-})();
-</script></body>
+
+<script id="v7930-games-navigation">
+document.addEventListener("click",event=>{
+  const games=event.target.closest("#pmGamesButton");
+  if(games){
+    event.preventDefault();event.stopPropagation();
+    document.querySelectorAll(".partner-menu-page").forEach(p=>p.classList.add("partner-view-hidden"));
+    if(typeof openPanel==="function")openPanel("gamePanel");
+    window.scrollTo({top:0,behavior:"instant"});
+    return;
+  }
+  const menu=event.target.closest("#v7930GamesMenu");
+  if(menu){
+    event.preventDefault();event.stopPropagation();
+    if(typeof showPartnerPage==="function")showPartnerPage("partnerMenuPanel");
+    window.scrollTo({top:0,behavior:"instant"});
+  }
+},true);
+</script>
+</body>
 </html>
