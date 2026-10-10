@@ -1222,6 +1222,21 @@ body.partner-authenticated .action.partner-back{
 .v7917-client-nav{display:block;position:relative;margin:0 0 14px;border:0;border-radius:0 0 20px 20px;overflow:hidden;background:#0b1726;box-shadow:0 10px 26px rgba(15,23,42,.18)}
 .v7917-client-nav.show{display:block}.v7917-client-map{height:390px;width:100%}.v7917-nav-head{position:absolute;z-index:6;top:10px;left:10px;right:10px;padding:12px 14px;background:rgba(10,24,40,.94);color:#fff;border-radius:15px;box-shadow:0 5px 18px #0005}.v7917-nav-head strong{display:block;font-size:18px}.v7917-nav-head small{color:#d7e4f1;font-weight:800}.v7917-next-step{position:absolute;z-index:6;left:10px;right:10px;bottom:12px;padding:12px 14px;background:rgba(255,255,255,.96);color:#10243b;font-weight:950;font-size:15px;border-radius:15px;box-shadow:0 5px 18px #0004}.v7917-nav-steps{display:none!important}.v7917-hidden-address{color:#7a8796;font-style:italic}
 </style>
+
+<style id="v7929-dashboard-polish">
+.v79-driver-brand.v7929-logo-only{padding:0!important;min-width:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.v79-driver-brand.v7929-logo-only img{margin:0!important}
+.app-bottom-nav .bottom-add{position:relative;overflow:visible!important;margin-top:-24px}
+.app-bottom-nav .bottom-add span{
+  position:absolute!important;
+  width:max-content!important;height:auto!important;
+  overflow:visible!important;clip:auto!important;
+  left:50%!important;top:62px!important;transform:translateX(-50%)!important;
+  color:var(--text)!important;font-size:9px!important;font-weight:900!important;
+  line-height:1!important;white-space:nowrap!important;pointer-events:none!important
+}
+html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
+</style>
 </head>
  
 <body>
@@ -8299,7 +8314,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.28.20261010.01";
+const V79_VERSION="79.29.20261010.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
@@ -8307,7 +8322,7 @@ function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
  const home=q("dashboardHome"); if(!home||q("v79DriverHero"))return;
  const hero=document.createElement("section");hero.id="v79DriverHero";hero.setAttribute("aria-label","Disponibilité chauffeur");
- hero.innerHTML=`<div id="v79DriverMap"></div><div class="v79-driver-top"><div class="v79-driver-brand"><img src="/ouassvtc-app.png" alt=""><span>OuassVTC</span></div><button id="v79StatusPill" class="v79-switch" type="button"><span id="v79SwitchLabel">HORS LIGNE</span><span class="v79-switch-track"></span></button></div><div class="v79-driver-center"><button id="v79GoOnline" class="v79-go-online" type="button">EN LIGNE<small>Commencer</small></button></div><div class="v79-driver-bottom"><div id="v79SearchBar" class="v79-searchbar v79-hidden"><span class="v79-searchdot"></span><span id="v79SearchText">Recherche de courses en cours…</span></div></div>`;
+ hero.innerHTML=`<div id="v79DriverMap"></div><div class="v79-driver-top"><div class="v79-driver-brand v7929-logo-only"><img src="/ouassvtc-app.png" alt="OuassVTC"></div><button id="v79StatusPill" class="v79-switch" type="button"><span id="v79SwitchLabel">HORS LIGNE</span><span class="v79-switch-track"></span></button></div><div class="v79-driver-center"><button id="v79GoOnline" class="v79-go-online" type="button">EN LIGNE<small>Commencer</small></button></div><div class="v79-driver-bottom"><div id="v79SearchBar" class="v79-searchbar v79-hidden"><span class="v79-searchdot"></span><span id="v79SearchText">Recherche de courses en cours…</span></div></div>`;
  const hello=home.querySelector('.hello-row'); if(hello) hello.insertAdjacentElement('afterend',hero); else home.prepend(hero);
  q("v79GoOnline").addEventListener("click",()=>setAvailability(true,false));
  q("v79StatusPill").addEventListener("click",()=>{if(v79ForcedMission)return; const online=Boolean(v79Profile?.online||v79Profile?.availability==="online"); setAvailability(!online,false)});
