@@ -880,6 +880,10 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
     .partner-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:16px 0}.partner-card{background:var(--card,#fff);border:1px solid rgba(127,127,127,.22);border-radius:18px;padding:16px}.partner-card h3{margin:0 0 6px}.partner-card small{display:block;opacity:.72;margin:3px 0}.partner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.partner-actions button{border:0;border-radius:12px;padding:10px 12px;font-weight:700}.partner-form{display:grid;gap:12px;background:var(--card,#fff);padding:16px;border-radius:18px;border:1px solid rgba(127,127,127,.22);margin:14px 0}.partner-form label{font-size:.82rem;font-weight:800;display:block;margin-bottom:5px}.partner-form input{width:100%;box-sizing:border-box;border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:12px;background:transparent;color:inherit}.partner-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.partner-chip{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef7ef;color:#176b2c;font-size:.76rem;font-weight:800}.partner-empty{padding:18px;text-align:center;opacity:.7}.partner-admin-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.partner-admin-head button{border:0;border-radius:12px;padding:11px 14px;font-weight:800}.transfer-partner-select{width:100%;box-sizing:border-box;border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:12px;background:var(--card,#fff);color:inherit}
     .partner-detail{margin-top:16px;background:var(--card,#fff);border:1px solid rgba(127,127,127,.22);border-radius:18px;padding:16px}.partner-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.partner-revenue-nav{display:grid;gap:9px;margin-top:12px}.partner-revenue-item{width:100%;border:1px solid rgba(127,127,127,.22);background:transparent;color:inherit;border-radius:14px;padding:12px;text-align:left;display:flex;justify-content:space-between;gap:10px;align-items:center}.partner-revenue-item small{display:block;opacity:.7;margin-top:3px}.partner-revenue-item b{white-space:nowrap}.partner-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.partner-detail-grid div{padding:10px;border-radius:12px;background:rgba(127,127,127,.08)}
     @media(max-width:620px){.partner-form-row{grid-template-columns:1fr}}
+
+/* Google Places suggestions above the new-booking sheet */
+.pac-container{z-index:2147483647!important;font-family:inherit!important;border-radius:12px!important;box-shadow:0 12px 28px rgba(0,0,0,.28)!important}
+.pac-item{padding:8px 10px!important;min-height:38px!important;font-size:14px!important}
 </style>
 
 <style id="partner-auth-exclusive-v720">
@@ -1483,7 +1487,7 @@ body.partner-authenticated .action.partner-back{
         <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
         <div class="eyebrow">Préférences de l’application</div><h2 class="section-title">Réglages</h2>
         <div class="settings-card"><div><small>Alertes et réservations</small><h3>Notifications</h3><p>Recevez les nouvelles courses, les rappels et les échéances de documents, même lorsque l’application est fermée.</p></div><button class="settings-action" id="enableNotifications" type="button">Activer</button></div>
-        <div class="settings-card"><div><small>Apparence</small><h3>Mode d’affichage</h3><p>Choisissez le mode jour, nuit, ou le changement automatique selon le soleil à Perpignan.</p></div><div class="theme-choice" id="themeChoice" role="group" aria-label="Mode d’affichage"><button type="button" data-theme-choice="light">☀ Jour</button><button type="button" data-theme-choice="dark">☾ Nuit</button><button type="button" data-theme-choice="auto">◐ Auto</button></div><div class="theme-auto-note" id="themeAutoNote">Le mode automatique suit le lever et le coucher du soleil à Perpignan.</div></div>
+        <div class="settings-card"><div><small>Apparence</small><h3>Mode d’affichage</h3><p>Choisissez le mode jour, nuit, ou le changement automatique selon les réglages de votre téléphone.</p></div><div class="theme-choice" id="themeChoice" role="group" aria-label="Mode d’affichage"><button type="button" data-theme-choice="light">☀ Jour</button><button type="button" data-theme-choice="dark">☾ Nuit</button><button type="button" data-theme-choice="auto">◐ Auto</button></div><div class="theme-auto-note" id="themeAutoNote">Le mode automatique suit le mode jour/nuit de votre téléphone.</div></div>
         <div class="settings-card"><div><small>Confort de conduite</small><h3>Maintenir l’écran allumé</h3><p>Empêche la mise en veille tant que l’application reste au premier plan.</p></div><button class="settings-action wake-lock-state" id="toggleWakeLock" type="button"><span id="wakeLockState">Désactivé</span></button></div>
       </section>
 
@@ -1686,8 +1690,8 @@ body.partner-authenticated .action.partner-back{
             <div class="sim-field full"><label for="driverDestination">Adresse d’arrivée</label><input id="driverDestination" required autocomplete="off"></div>
             <div class="sim-field"><label for="driverDateTime">Date et heure</label><input id="driverDateTime" required type="datetime-local"></div><div id="v60ConflictBox" class="hidden"></div>
             <div class="sim-field"><label for="driverPassengers">Nombre de passagers</label><select id="driverPassengers"><option value="Non précisé">Non précisé</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
-            <div class="sim-field"><label for="driverSource">Origine client</label><select id="driverSource"><option value="direct">Appel direct</option><option value="website">Site web</option><option value="google_ads">Google Ads</option><option value="google_organic">Google naturel</option><option value="repeat">Ancien client</option><option value="referral">Recommandation</option><option value="other">Autre</option></select></div>
-            <div class="sim-field"><label for="driverPayment">Mode de paiement</label><select id="driverPayment"><option value="Non précisé">Non précisé</option><option value="Lien de paiement sécurisé">Lien sécurisé (CB)</option><option value="Paiement par carte bancaire à bord">Carte bancaire à bord</option><option value="Paiement en espèces à bord">Espèces à bord</option></select></div>
+            
+            <input type="hidden" id="driverPayment" value="Non précisé">
             <div class="sim-field"><label for="driverPrice">Tarif communiqué</label><input id="driverPrice" placeholder="Exemple : 35 €"></div>
             <div class="sim-field full"><label for="driverMessage">Informations complémentaires</label><textarea id="driverMessage" placeholder="Bagages, siège enfant, train, vol, code d’accès…"></textarea></div>
           </div>
@@ -1871,8 +1875,9 @@ body.partner-authenticated .action.partner-back{
 
     function applyTheme(mode = themeMode) {
       themeMode = ["light", "dark", "auto"].includes(mode) ? mode : "auto";
-      const resolved = themeMode === "auto" ? automaticTheme() : themeMode;
+      const resolved = themeMode === "auto" ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light") : themeMode;
       document.documentElement.dataset.theme = resolved;
+      window.dispatchEvent(new CustomEvent("ouassvtc-map-theme",{detail:{theme:resolved}}));
       document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#070b12" : "#07090d");
       localStorage.setItem(THEME_MODE_KEY, themeMode);
       localStorage.setItem(RESOLVED_THEME_KEY, resolved);
@@ -1880,12 +1885,13 @@ body.partner-authenticated .action.partner-back{
       if ($("themeAutoNote")) {
         const { sunrise, sunset } = sunTimesForPerpignan();
         const clock = minutes => { const rounded = Math.round(minutes); return `${String(Math.floor(rounded / 60) % 24).padStart(2, "0")}:${String(rounded % 60).padStart(2, "0")}`; };
-        $("themeAutoNote").textContent = themeMode === "auto" ? `Automatique actif · jour ${clock(sunrise)}–${clock(sunset)} à Perpignan.` : `Mode ${themeMode === "dark" ? "nuit" : "jour"} activé manuellement.`;
+        $("themeAutoNote").textContent = themeMode === "auto" ? "Automatique actif · suit le mode jour/nuit du téléphone." : `Mode ${themeMode === "dark" ? "nuit" : "jour"} activé manuellement.`;
       }
       clearInterval(themeTimer);
       if (themeMode === "auto") themeTimer = setInterval(() => applyTheme("auto"), 5 * 60 * 1000);
     }
 
+    window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if(themeMode==="auto")applyTheme("auto")});
     function notificationsOptedIn() {
       return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
     }
@@ -3238,7 +3244,7 @@ body.partner-authenticated .action.partner-back{
         const targets = [
           ["nom",0,"Quel est le nouveau nom du client ?"], ["date",1,"Quelle est la nouvelle date et la nouvelle heure ?"], ["heure",1,"Quelle est la nouvelle date et la nouvelle heure ?"],
           ["depart",2,"Quelle est la nouvelle adresse de départ ?"], ["arrivee",3,"Quelle est la nouvelle adresse d’arrivée ?"], ["telephone",4,"Quel est le nouveau numéro de téléphone ?"],
-          ["passager",5,"Quel est le nouveau nombre de passagers ?"], ["paiement",6,"Quel est le nouveau mode de paiement ?"]
+          ["passager",5,"Quel est le nouveau nombre de passagers ?"], ["paiement",7,"Dites oui pour confirmer la course."]
         ];
         const target = targets.find(([word]) => normalized.includes(word));
         if (target) { voiceFlow.step = target[1]; voiceSpeak(target[2], true); return; }
@@ -3257,12 +3263,10 @@ body.partner-authenticated .action.partner-back{
       }
       if (step === "passengers") {
         const match = normalized.match(/\d+/); const count = match ? match[0] : ({ un:"1", une:"1", deux:"2", trois:"3", quatre:"4" }[normalized] || "Non précisé");
-        $("driverPassengers").value = [...$("driverPassengers").options].some(option => option.value === count) ? count : "Non précisé"; voiceFlow.step++; voiceSpeak("Quel sera le mode de paiement : carte bancaire ou espèces ?", true); return;
+        $("driverPassengers").value = [...$("driverPassengers").options].some(option => option.value === count) ? count : "Non précisé"; voiceFlow.step=7; const date = new Date($("driverDateTime").value); voiceSpeak(`J’ai préparé la course de ${$("driverName").value}, le ${date.toLocaleDateString("fr-FR")} à ${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}, de ${$("driverPickup").value} vers ${$("driverDestination").value}. Dites oui pour confirmer, ou annuler.`, true); return;
       }
       if (step === "payment") {
-        if (normalized.includes("espece")) $("driverPayment").value = "Paiement en espèces à bord";
-        else if (normalized.includes("carte") || normalized.includes("cb")) $("driverPayment").value = "Paiement par carte bancaire à bord";
-        else { voiceSpeak("Dites simplement carte bancaire ou espèces.", true); return; }
+        $("driverPayment").value = "Non précisé";
         voiceFlow.step++; const date = new Date($("driverDateTime").value); voiceSpeak(`J’ai préparé la course de ${$("driverName").value}, le ${date.toLocaleDateString("fr-FR")} à ${date.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"})}, de ${$("driverPickup").value} vers ${$("driverDestination").value}. Dites oui pour ouvrir et vérifier le formulaire, ou annuler.`, true); return;
       }
       if (step === "confirm") {
@@ -4659,7 +4663,7 @@ body.partner-authenticated .action.partner-back{
       $("driverDestination").value = item.destination || "";
       $("driverDateTime").value = "";
       $("driverPassengers").value = [...$("driverPassengers").options].some(option => option.value === item.passengers) ? item.passengers : "Non précisé";
-      $("driverPayment").value = [...$("driverPayment").options].some(option => option.value === item.paymentMethod) ? item.paymentMethod : "Non précisé";
+      $("driverPayment").value = "Non précisé";
       $("driverMessage").value = item.customerMessage || "";
       $("driverPrice").value = "";
       $("driverCustomerMatch").textContent = `Fiche de ${item.customerName || "ce client"} reprise. Modifiez la date, l’heure ou les adresses si nécessaire.`;
@@ -6713,8 +6717,15 @@ async function handleStatusAction(id, status) {
       return autocomplete;
     }
  
-    function loadGoogleMaps() {
-      if (window.google?.maps) return Promise.resolve();
+    async function loadGoogleMaps() {
+      if (window.google?.maps?.places?.Autocomplete) return;
+      if (window.google?.maps?.importLibrary) {
+        await google.maps.importLibrary("places");
+        if (window.google?.maps?.places?.Autocomplete) return;
+      }
+      if (window.google?.maps && !window.google?.maps?.places?.Autocomplete) {
+        throw new Error("Bibliothèque Google Places non chargée. Vérifier la configuration de l’API Places.");
+      }
       return new Promise((resolve, reject) => {
         window.initOuassDriverMaps = () => {
           delete window.initOuassDriverMaps;
@@ -7096,7 +7107,7 @@ async function handleStatusAction(id, status) {
           customerMessage: params.message,
           estimatedPrice: params.prix,
           status: "new",
-          source: "website",
+          source: "driver",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
@@ -8288,7 +8299,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.26.20261009.01";
+const V79_VERSION="79.28.20261010.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
@@ -8447,7 +8458,8 @@ async function listenMissions(user){
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
 let v7917ManualMapUntil=0,v7917InternalMapMove=false;
 function v7917PauseMapFollow(){if(!v7917InternalMapMove)v7917ManualMapUntil=Date.now()+30000}
-async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]});v79Map.addListener("dragstart",v7917PauseMapFollow);v79Map.addListener("zoom_changed",v7917PauseMapFollow);renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
+async function initDriverMap(){try{await loadMaps();const el=q("v79DriverMap");if(!el||v79Map)return;v79Map=new google.maps.Map(el,{center:{lat:42.6887,lng:2.8948},zoom:11,disableDefaultUI:true,zoomControl:true,scrollwheel:true,draggable:true,keyboardShortcuts:true,gestureHandling:"greedy",styles:document.documentElement.dataset.theme==="dark"?[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]:[]});v79Map.addListener("dragstart",v7917PauseMapFollow);v79Map.addListener("zoom_changed",v7917PauseMapFollow);renderPeers()}catch(e){console.warn("Carte chauffeur V79",e)}}
+window.addEventListener("ouassvtc-map-theme",e=>{if(v79Map){const dark=e.detail.theme==="dark";v79Map.setOptions({styles:dark?[{elementType:"geometry",stylers:[{color:"#0b1b2a"}]},{elementType:"labels.text.fill",stylers:[{color:"#8fa8bd"}]},{elementType:"labels.text.stroke",stylers:[{color:"#0b1b2a"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#1b3a52"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#06111c"}]}]:[]})}});
 function carIcon(color="#111827",own=false,heading=0){
  const h=Number.isFinite(Number(heading))?Number(heading):0;
  const body=own?"#ffffff":"#d8dde3";
@@ -8596,6 +8608,7 @@ function startOwnGps(){
    {enableHighAccuracy:true,maximumAge:2500,timeout:12000}
  );
 }
+window.addEventListener("ouassvtc-map-theme",()=>{if(!map)return;renderer?.setMap(null);car?.setMap(null);map=null;renderer=null;car=null;lastRouteKey="";if(currentItem&&document.getElementById("v7917ClientMap"))setTimeout(()=>window.v7917OpenClientNavigation(currentItem),30)});
 window.v7917OpenClientNavigation=function(item){
  currentItem=item;
  const card=document.getElementById("v7917ClientNav"),el=document.getElementById("v7917ClientMap");
@@ -8606,8 +8619,9 @@ window.v7917OpenClientNavigation=function(item){
    setTimeout(()=>window.v7917OpenClientNavigation(currentItem),500);
    return;
  }
+ if(map && map.getDiv()!==el){renderer?.setMap(null);car?.setMap(null);map=null;renderer=null;car=null;lastRouteKey=""}
  if(!map){
-   map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",renderingType:google.maps.RenderingType.VECTOR,tiltInteractionEnabled:true,headingInteractionEnabled:true,tilt:67.5,heading:0});
+   map=new google.maps.Map(el,{center:lastPos||{lat:42.6887,lng:2.8948},zoom:18,disableDefaultUI:true,zoomControl:true,gestureHandling:"greedy",renderingType:google.maps.RenderingType.VECTOR,colorScheme:document.documentElement.dataset.theme==="dark"?"DARK":"LIGHT",tiltInteractionEnabled:true,headingInteractionEnabled:true,tilt:67.5,heading:0});
    google.maps.event.addListenerOnce(map,"tilesloaded",()=>{if(stage(currentItem).target){map.setTilt(67.5);map.setHeading(map.getHeading()||0)}});
    service=new google.maps.DirectionsService();
    renderer=new google.maps.DirectionsRenderer({map:map,suppressMarkers:true,preserveViewport:true,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.96,strokeWeight:7}});
