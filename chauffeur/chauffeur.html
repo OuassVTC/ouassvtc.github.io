@@ -1237,6 +1237,42 @@ body.partner-authenticated .action.partner-back{
 }
 html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
 </style>
+
+<style id="v7930-documents-light-progress">
+html[data-theme="light"] body.partner-authenticated .partner-menu-page{color:#101828!important}
+html[data-theme="light"] body.partner-authenticated .partner-menu-page h2,
+html[data-theme="light"] body.partner-authenticated .partner-menu-page h3,
+html[data-theme="light"] body.partner-authenticated .partner-menu-page b,
+html[data-theme="light"] body.partner-authenticated .partner-menu-page strong{color:#101828!important}
+html[data-theme="light"] body.partner-authenticated .partner-menu-page small,
+html[data-theme="light"] body.partner-authenticated .partner-menu-page label{color:#667085!important}
+html[data-theme="light"] body.partner-authenticated .pm-card,
+html[data-theme="light"] body.partner-authenticated .pm-list,
+html[data-theme="light"] body.partner-authenticated .pm-item,
+html[data-theme="light"] body.partner-authenticated .pm-doc-card{
+ background:#fff!important;border-color:#dfe5ec!important;color:#101828!important
+}
+html[data-theme="light"] body.partner-authenticated .pm-doc-icon{background:#eef4ff!important;color:#176ef4!important}
+html[data-theme="light"] body.partner-authenticated .pm-doc-actions a,
+html[data-theme="light"] body.partner-authenticated .pm-doc-actions label,
+html[data-theme="light"] body.partner-authenticated .pm-doc-actions button{
+ background:#f7f9fc!important;border-color:#d8e0ea!important;color:#174f9d!important
+}
+html[data-theme="light"] body.partner-authenticated .pm-doc-actions .pm-doc-add{background:#176ef4!important;border-color:#176ef4!important;color:#fff!important}
+html[data-theme="light"] body.partner-authenticated .pm-doc-actions .pm-doc-delete{background:#fff1f1!important;border-color:#f3c7c7!important;color:#b42323!important}
+html[data-theme="light"] body.partner-authenticated .pm-doc-expiry{color:#344054!important}
+html[data-theme="light"] body.partner-authenticated .pm-doc-no-expiry{background:#eaf8f0!important;color:#087442!important}
+.pm-upload-progress{grid-column:1/-1;display:grid;gap:6px;margin-top:2px}
+.pm-upload-progress.hidden{display:none!important}
+.pm-upload-track{height:9px;overflow:hidden;border-radius:999px;background:#26364b}
+html[data-theme="light"] .pm-upload-track{background:#e5eaf0}
+.pm-upload-bar{display:block;height:100%;width:0;border-radius:999px;background:#2f8cff;transition:width .18s ease}
+.pm-upload-progress small{font-weight:850!important;color:#9fb8dc!important}
+html[data-theme="light"] .pm-upload-progress small{color:#475467!important}
+.pm-upload-progress.done .pm-upload-bar{background:#16a065}
+.pm-upload-progress.done small{color:#86efac!important}
+html[data-theme="light"] .pm-upload-progress.done small{color:#087442!important}
+</style>
 </head>
  
 <body>
@@ -1679,22 +1715,6 @@ html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important
             </svg>
           </button>
         </div>
-        <h2 class="section-title">Course rapide</h2>
-        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
-          <div class="eyebrow">Enregistrement dans l’application uniquement</div>
-          <div class="simulator-grid" style="margin-top:14px">
-            <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
-            <div class="sim-field"><label for="quickBookingPrice">Tarif estimé</label><input id="quickBookingPrice" readonly aria-readonly="true" placeholder="— €"></div>
-          </div>
-          <button class="primary" id="estimateQuickBookingFare" type="button" style="margin-top:14px;background:#fff;color:#000;border:1px solid #000">Estimer le tarif</button>
-          <div class="simulator-grid" style="margin-top:14px">
-            <div class="sim-field full"><label for="quickBookingPhone">Téléphone du client</label><input id="quickBookingPhone" required type="tel" autocomplete="tel" placeholder="Exemple : 06 12 34 56 78"></div>
-            <div class="sim-field full"><label for="quickBookingComment">Commentaire</label><textarea id="quickBookingComment" required placeholder="Écrivez votre note sur la course…"></textarea></div>
-          </div>
-          <button class="primary" id="saveQuickBooking" type="submit" style="margin-top:14px">Enregistrer dans l’application</button>
-          <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
-        </form>
- 
         <h2 class="section-title">Formulaire complet</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid single-column-form">
@@ -6897,27 +6917,7 @@ async function handleStatusAction(id, status) {
     });
     $("driverName").addEventListener("input", () => delete $("driverName").dataset.customerAutofill);
     $("driverPickup").addEventListener("input", () => delete $("driverPickup").dataset.customerAutofill);
- 
-    $("quickBookingKm").addEventListener("input", () => {
-      $("quickBookingPrice").value = "";
-      delete $("quickBookingPrice").dataset.amount;
-      $("quickBookingSuccess").classList.add("hidden");
-    });
- 
-    $("estimateQuickBookingFare").addEventListener("click", () => {
-      const distance = $("quickBookingKm").valueAsNumber;
-      if (!Number.isFinite(distance) || distance < 0) {
-        alert("Indiquez le kilométrage du trajet pour estimer le tarif.");
-        return;
-      }
-      const rate = driverRate(new Date());
-      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-      const price = Math.round(rawPrice / 5) * 5;
-      $("quickBookingPrice").value = `${price} €`;
-      $("quickBookingPrice").dataset.amount = String(price);
-    });
- 
-    function calculateAutomaticFare(origin, destination, tripDate) {
+function calculateAutomaticFare(origin, destination, tripDate) {
       return new Promise((resolve, reject) => {
         if (!driverDirectionsService) {
           reject(new Error("Google Maps indisponible"));
@@ -6980,93 +6980,6 @@ async function handleStatusAction(id, status) {
     $("driverPrice").addEventListener("input", () => {
       $("driverPrice").dataset.manualPrice = "true";
     });
- 
-    $("quickBookingForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      if (!db || !auth?.currentUser) {
-        alert("Vous devez être connecté pour enregistrer une course.");
-        return;
-      }
-      const phone = $("quickBookingPhone").value.trim();
-      const priceAmount = Number($("quickBookingPrice").dataset.amount || 0);
-      const distance = $("quickBookingKm").valueAsNumber;
-      const comment = $("quickBookingComment").value.trim();
-      if (priceAmount <= 0) {
-        alert("Estimez d’abord le tarif à partir du kilométrage.");
-        return;
-      }
-      if (!phone || !comment) {
-        alert("Indiquez le numéro du client et un commentaire pour enregistrer la course.");
-        return;
-      }
-      const payment = await askPaymentMethod("Règlement de la course rapide", priceAmount);
-      if (!payment) return;
-      const button = $("saveQuickBooking");
-      button.disabled = true;
-      button.textContent = "Enregistrement en cours…";
-      let quickBooking = null;
-      try {
-        localSaveInProgress = true;
-        const missionSettings = readMissionCostSettings();
-        const safeDistance = Number.isFinite(distance) ? distance : 0;
-        const quickFuelCost = safeDistance / 100 * missionSettings.consumption * missionSettings.fuelPrice;
-        const current = new Date();
-        const currentLocal = new Date(current.getTime() - current.getTimezoneOffset() * 60000);
-        quickBooking = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
-          customerName: "Course manuelle",
-          customerPhone: phone,
-          pickup: "Ajout manuel",
-          destination: "Trajet non renseigné",
-          scheduledAtText: currentLocal.toISOString().slice(0, 16),
-          passengers: "Non précisé",
-          paymentMethod: payment.paymentMethod,
-          customerMessage: comment,
-          estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
-          status: "new",
-          source: "partner_app",
-          sourcePartnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
-          sourcePartnerName: window.currentPartnerProfile?.displayName || window.currentPartnerProfile?.companyName || auth?.currentUser?.email || "Chauffeur partenaire",
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-        await updateDoc(quickBooking, {
-          paymentCardAmount: payment.paymentCardAmount,
-          paymentCashAmount: payment.paymentCashAmount,
-          missionHomeAddress: missionSettings.homeAddress,
-          missionFuelPrice: missionSettings.fuelPrice,
-          missionConsumption: missionSettings.consumption,
-          missionClientKm: safeDistance,
-          missionTotalKm: safeDistance,
-          missionClientFuelCost: quickFuelCost,
-          missionFuelCost: quickFuelCost,
-          missionTolls: 0,
-          missionTotalCost: quickFuelCost,
-          missionMargin: priceAmount - quickFuelCost,
-          missionCostStatus: "calculated-manually",
-          missionCostUpdatedAt: serverTimestamp(),
-          status: "completed",
-          source: "driver-quick",
-          completedAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-        $("quickBookingForm").reset();
-        delete $("quickBookingPrice").dataset.amount;
-        $("quickBookingSuccess").classList.remove("hidden");
-      } catch (error) {
-        console.error(error);
-        if (quickBooking) await deleteDoc(quickBooking).catch(cleanupError => console.error("Nettoyage de la course rapide incomplète impossible", cleanupError));
-        const detail = error?.code === "permission-denied"
-          ? "Firebase a refusé l’enregistrement. Vérifiez que vous êtes connecté avec le compte chauffeur autorisé."
-          : "La course rapide n’a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
-        alert(detail);
-      } finally {
-        localSaveInProgress = false;
-        button.disabled = false;
-        button.textContent = "Enregistrer dans l’application";
-      }
-    });
- 
     $("driverBookingForm").addEventListener("submit", async event => {
       event.preventDefault();
       if (!db || !auth?.currentUser) {
@@ -7618,7 +7531,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" id="pmGames" type="button"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Accéder aux jeux de l’application</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7694,6 +7607,8 @@ function pmEnsure(){
  document.getElementById("pmLogout").onclick=()=>document.getElementById("logout")?.click();
  document.getElementById("pmNotifications").onclick=async()=>{try{await Notification.requestPermission();alert(Notification.permission==="granted"?"Notifications autorisées.":"Notifications non autorisées.")}catch(e){alert("Notifications indisponibles.")}};
  document.getElementById("pmInterpreter").onclick=()=>{const b=document.querySelector('[data-menu-tab="interpreterPanel"],#openInterpreter,[data-action="interpreter"]');if(b)b.click();else alert("Interprète disponible depuis l’application chauffeur.")};
+ const pmGames=document.getElementById("pmGames");
+ if(pmGames)pmGames.onclick=()=>{ if(typeof openPanel==="function") openPanel("gamePanel"); else document.querySelector('[data-menu-tab="gamePanel"]')?.click(); };
  document.getElementById("pmInstall").onclick=()=>{if(typeof triggerInstall==="function")triggerInstall();else document.getElementById("installApp")?.click()};
  // Initialisation différée : le module Firebase doit avoir publié son bridge global.
  const startPartnerModules=()=>{try{pmFillProfile();pmListenDocuments();}catch(error){console.error("Initialisation modules chauffeur",error)}};
@@ -7831,6 +7746,7 @@ function pmRenderDocuments(docs){
       ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
+    <div class="pm-upload-progress hidden" data-pm-upload-progress="${pme(type)}"><div class="pm-upload-track"><span class="pm-upload-bar"></span></div><small>Préparation de l’envoi…</small></div>
    </div>`;
  }).join("");
  h.querySelectorAll("[data-partner-doc-upload]").forEach(input=>input.addEventListener("change",pmUploadDocument));
@@ -7852,8 +7768,19 @@ async function pmUploadDocument(event){
  try{
    input.disabled=true;
    const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
+   const progress=input.closest(".pm-doc-card")?.querySelector(`[data-pm-upload-progress="${CSS.escape(type)}"]`);
+   const progressBar=progress?.querySelector(".pm-upload-bar"),progressText=progress?.querySelector("small");
+   progress?.classList.remove("hidden","done");
+   if(progressBar)progressBar.style.width="0%";
+   if(progressText)progressText.textContent="Envoi du document · 0 %";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
-   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
+   await new Promise((resolve,reject)=>{task.on("state_changed",snap=>{
+     const pct=snap.totalBytes?Math.round((snap.bytesTransferred/snap.totalBytes)*100):0;
+     if(progressBar)progressBar.style.width=`${pct}%`;
+     if(progressText)progressText.textContent=`Envoi du document · ${pct} %`;
+   },reject,resolve)});
+   if(progressBar)progressBar.style.width="100%";
+   if(progressText)progressText.textContent="Document envoyé · validation…";
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
    const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
@@ -7865,6 +7792,10 @@ async function pmUploadDocument(event){
      await updateDoc(existing.docs[0].ref,payload);
      if(old.storagePath&&old.storagePath!==path) deleteObject(storageRef(storage,old.storagePath)).catch(()=>{});
    }
+   if(progressBar)progressBar.style.width="100%";
+   progress?.classList.add("done");
+   if(progressText)progressText.textContent="✓ Document ajouté avec succès";
+   await new Promise(r=>setTimeout(r,900));
  }catch(e){console.error("Upload document chauffeur",e);const code=String(e?.code||"");alert(code.includes("unauthorized")?"Envoi refusé par Firebase Storage. Vérifiez que vous êtes bien connecté puis réessayez.":"Impossible d’enregistrer ce document : "+(e?.message||"erreur inconnue"))}
  finally{input.disabled=false;input.value="";const addLabel=input.closest(".pm-doc-add");if(addLabel?.childNodes?.[0])addLabel.childNodes[0].textContent=addLabel.querySelector("input")?.dataset?.existing==="1"?"Remplacer":"Ajouter"}
 }
@@ -8314,7 +8245,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.29.20261010.01";
+const V79_VERSION="79.30.20261010.01";
 const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
 const q=id=>document.getElementById(id);
