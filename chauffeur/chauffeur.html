@@ -1237,6 +1237,38 @@ body.partner-authenticated .action.partner-back{
 }
 html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
 </style>
+
+<style id="v7930-chauffeur-fixes">
+/* Libellé sous le + central */
+.partner-bottom .partner-plus{position:relative;overflow:visible!important}
+.partner-bottom .partner-plus .partner-plus-label{
+  position:absolute!important;left:50%!important;top:70px!important;transform:translateX(-50%)!important;
+  width:max-content!important;max-width:118px!important;color:#101828!important;background:transparent!important;
+  font:900 9px/1.05 system-ui!important;white-space:nowrap!important;letter-spacing:-.15px!important;pointer-events:none!important
+}
+html[data-theme="dark"] .partner-bottom .partner-plus .partner-plus-label{color:#f7f9fc!important}
+
+/* Coût kilométrique : champs parfaitement lisibles en mode jour */
+html:not([data-theme="dark"]) #partnerCostPanel input,
+html:not([data-theme="dark"]) #partnerCostPanel select,
+html[data-theme="light"] #partnerCostPanel input,
+html[data-theme="light"] #partnerCostPanel select{
+  color:#000!important;background:#fff!important;-webkit-text-fill-color:#000!important;caret-color:#000!important;
+  border-color:#b8c1cc!important
+}
+html:not([data-theme="dark"]) #partnerCostPanel input::placeholder,
+html[data-theme="light"] #partnerCostPanel input::placeholder{color:#667085!important;opacity:1!important}
+
+/* Jeux OuassVTC intégrés à l'application chauffeur */
+#gamePanel{background:#f5f7fb!important;color:#101828!important;min-height:calc(100vh - 90px)!important;padding-bottom:112px!important}
+#gamePanel .arcade-hero,#gamePanel .arcade-card,#gamePanel .mini-game-card,#gamePanel .game-shell{color:#101828}
+.v7930-game-nav{display:flex;gap:8px;justify-content:space-between;margin:4px 0 12px}
+.v7930-game-nav button{border:1px solid #d0d5dd;background:#fff;color:#101828;border-radius:13px;padding:10px 12px;font-weight:900;box-shadow:0 5px 18px rgba(0,0,0,.06)}
+html[data-theme="dark"] #gamePanel{background:#080d14!important;color:#f7f9fc!important}
+html[data-theme="dark"] #gamePanel .arcade-hero,html[data-theme="dark"] #gamePanel .arcade-card,
+html[data-theme="dark"] #gamePanel .mini-game-card,html[data-theme="dark"] #gamePanel .game-shell{color:#f7f9fc}
+html[data-theme="dark"] .v7930-game-nav button{background:#111925;color:#f7f9fc;border-color:#344155}
+</style>
 </head>
  
 <body>
@@ -1578,12 +1610,14 @@ html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important
       </section>
 
 <section class="tab-panel hidden" id="gamePanel">
-  <div class="v7930-games-top">
-    <button class="v7930-games-nav" type="button" id="v7930GamesMenu">☰ <span>Menu</span></button>
-    <strong>Jeux OuassVTC</strong>
-    <button class="v7930-games-nav" type="button" data-open-tab="dashboardHome">⌂ <span>Accueil</span></button>
+  <div class="panel-head">
+    <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
   </div>
  
+  <div class="v7930-game-nav">
+    <button type="button" id="v7930GameMenu">← Menu</button>
+    <button type="button" id="v7930GameHome">⌂ Tableau de bord</button>
+  </div>
   <div id="arcadeHome">
     <div class="arcade-hero">
       <div class="arcade-mark">OUASS<span>VTC</span></div>
@@ -1681,8 +1715,8 @@ html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important
             </svg>
           </button>
         </div>
-        <h2 class="section-title v7930-quick-hidden">Course rapide</h2>
-        <form class="simulator v7930-quick-hidden" id="quickBookingForm" style="margin-bottom:24px">
+        <h2 class="section-title">Course rapide</h2>
+        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
           <div class="eyebrow">Enregistrement dans l’application uniquement</div>
           <div class="simulator-grid" style="margin-top:14px">
             <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
@@ -7572,13 +7606,13 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 <nav class="partner-bottom" id="partnerBottomNav">
 <button type="button" data-target="dashboardHome" class="active"><span class="nav-ico">⌂</span><span>Accueil</span></button>
 <button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
-<button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
+<button type="button" class="partner-plus" id="partnerNewCourse" aria-label="Planifier une course"><span class="nav-ico">+</span><span class="partner-plus-label">Planifier une course</span></button>
 <button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
 <button type="button" data-target="partnerMenuPanel"><span class="nav-ico">☰</span><span>Menu</span></button>
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","gamePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="7d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -7620,7 +7654,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm-game="gamePanel"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Rush, 2048, logique, Memory, Snake et plus</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -7854,22 +7888,8 @@ async function pmUploadDocument(event){
  try{
    input.disabled=true;
    const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
-   let progressWrap=addLabel?.parentElement?.querySelector(".v7930-pm-progress");
-   if(!progressWrap){
-     progressWrap=document.createElement("div");
-     progressWrap.className="v7930-pm-progress";
-     progressWrap.innerHTML='<div><span></span></div><strong>Préparation de l’envoi…</strong>';
-     addLabel?.parentElement?.appendChild(progressWrap);
-   }
-   progressWrap.classList.add("show");
-   const progressBar=progressWrap.querySelector("span"),progressText=progressWrap.querySelector("strong");
-   progressBar.style.width="0%";progressText.textContent="Préparation de l’envoi…";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
-   await new Promise((resolve,reject)=>{task.on("state_changed",snap=>{
-     const pct=Math.max(0,Math.min(100,Math.round((snap.bytesTransferred/Math.max(1,snap.totalBytes))*100)));
-     progressBar.style.width=pct+"%";progressText.textContent="Envoi du document · "+pct+" %";
-   },reject,resolve)});
-   progressBar.style.width="100%";progressText.textContent="Document envoyé ✓";
+   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
    const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
@@ -8669,73 +8689,32 @@ window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true
 })();
 </script>
 
-<style id="v7930-final-polish">
-.v7930-quick-hidden{display:none!important}
-#estimatePanel>h2.section-title{margin-top:4px}
-#partnerDocumentsPanel,#partnerDocumentsPanel .pm-card,#partnerDocumentsPanel #pmDocumentsList,
-#partnerDocumentsPanel .pm-doc-item,#partnerDocumentsPanel .pm-doc-item *{color:#152033}
-#partnerDocumentsPanel .pm-card,#partnerDocumentsPanel .pm-doc-item{background:#fff}
-#partnerDocumentsPanel .pm-doc-item{border-color:#dfe5ee}
-#partnerDocumentsPanel .pm-doc-item small,#partnerDocumentsPanel .pm-doc-expiry{color:#657184!important}
-html[data-theme="dark"] #partnerDocumentsPanel,
-html[data-theme="dark"] #partnerDocumentsPanel .pm-card,
-html[data-theme="dark"] #partnerDocumentsPanel #pmDocumentsList,
-html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-item,
-html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-item *{color:#f4f7fb}
-html[data-theme="dark"] #partnerDocumentsPanel .pm-card,
-html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-item{background:#111925;border-color:#344155}
-html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-item small,
-html[data-theme="dark"] #partnerDocumentsPanel .pm-doc-expiry{color:#aeb8c8!important}
-.v7930-pm-progress{display:none;width:100%;margin-top:9px}.v7930-pm-progress.show{display:block}
-.v7930-pm-progress>div{height:9px;border-radius:999px;background:#e5eaf1;overflow:hidden}
-.v7930-pm-progress>div>span{display:block;width:0;height:100%;background:#176ef4;border-radius:999px;transition:width .18s ease}
-.v7930-pm-progress strong{display:block;margin-top:6px;font-size:11px;color:#176ef4!important}
-#gamePanel{min-height:calc(100dvh - 90px);padding-bottom:100px}
-.v7930-games-top{position:sticky;top:0;z-index:20;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;
- margin:-4px -2px 16px;padding:10px 4px 12px;background:var(--bg,#f6f8fb);border-bottom:1px solid var(--border,#e1e6ee)}
-.v7930-games-top>strong{text-align:center;font-size:15px}
-.v7930-games-nav{border:1px solid var(--border,#dfe5ee);background:var(--card,#fff);color:var(--text,#152033);border-radius:12px;
- min-height:40px;padding:0 11px;font-weight:900;display:flex;align-items:center;gap:5px}
-#gamePanel #arcadeHome{display:block}
-#gamePanel .arcade-hero{margin-top:0}
-#gamePanel .arcade-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-#gamePanel .arcade-card{display:flex;flex-direction:column;justify-content:flex-start;gap:8px;min-height:126px;color:#152033}
-#gamePanel .arcade-card b{font-size:16px;color:#111}
-#gamePanel .arcade-card span{font-size:12px;line-height:1.35;color:#687487}
-html[data-theme="dark"] #gamePanel .v7930-games-top{background:#0b111a}
-html[data-theme="dark"] #gamePanel .v7930-games-nav{background:#172130;color:#f4f7fb;border-color:#344155}
-html[data-theme="dark"] #gamePanel .arcade-card{background:#111925;border-color:#344155;color:#f4f7fb}
-html[data-theme="dark"] #gamePanel .arcade-card b{color:#fff}
-html[data-theme="dark"] #gamePanel .arcade-card span{color:#aeb8c8}
-@media(max-width:390px){.v7930-games-nav span{display:none}#gamePanel .arcade-grid{gap:9px}}
-</style>
-<script id="v7930-final-runtime">
-document.addEventListener("DOMContentLoaded",()=>{
-  const menuBtn=document.getElementById("v7930GamesMenu");
-  menuBtn?.addEventListener("click",()=>{
-    document.getElementById("sideMenu")?.classList.remove("hidden");
-    document.getElementById("menuOverlay")?.classList.remove("hidden");
-  });
-  // Each time the games page is opened, force a valid visible games home.
-  document.querySelectorAll('[data-menu-tab="gamePanel"]').forEach(btn=>btn.addEventListener("click",()=>{
+<script id="v7930-games-navigation">
+(function(){
+  function resetGamesHome(){
     const home=document.getElementById("arcadeHome");
-    document.querySelectorAll("#gamePanel .arcade-game").forEach(g=>g.classList.add("hidden"));
-    home?.classList.remove("hidden");
-    if(home) home.style.display="block";
-  },true));
-  // Safety net: a game click can never leave the page completely blank.
-  document.querySelectorAll("#gamePanel [data-arcade-open]").forEach(btn=>btn.addEventListener("click",()=>{
-    requestAnimationFrame(()=>{
-      const target=document.getElementById(btn.dataset.arcadeOpen);
-      if(target){target.classList.remove("hidden");target.style.display="block"}
-    });
-  }));
-  document.querySelectorAll("#gamePanel .arcade-back").forEach(btn=>btn.addEventListener("click",()=>{
-    const home=document.getElementById("arcadeHome");
-    if(home){home.classList.remove("hidden");home.style.display="block"}
-  }));
-});
+    if(home) home.classList.remove("hidden");
+    document.querySelectorAll("#gamePanel .arcade-game").forEach(el=>el.classList.add("hidden"));
+  }
+  document.addEventListener("click",function(e){
+    const game=e.target.closest('[data-pm-game="gamePanel"]');
+    if(game){
+      e.preventDefault();e.stopPropagation();
+      resetGamesHome();
+      if(typeof showPartnerPage==="function") showPartnerPage("gamePanel");
+      return;
+    }
+    if(e.target.closest("#v7930GameMenu")){
+      e.preventDefault();resetGamesHome();
+      if(typeof showPartnerPage==="function") showPartnerPage("partnerMenuPanel");
+      return;
+    }
+    if(e.target.closest("#v7930GameHome")){
+      e.preventDefault();resetGamesHome();
+      if(typeof showPartnerPage==="function") showPartnerPage("dashboardHome");
+    }
+  },true);
+})();
 </script>
-
 </body>
 </html>
