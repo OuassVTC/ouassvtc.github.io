@@ -1,7 +1,7 @@
 {
   "name": "OuassVTC",
   "short_name": "OuassVTC",
-  "start_url": "/chauffeur/chauffeur.html?v=790",
+  "start_url": "/chauffeur/chauffeur.html?v=7931",
   "scope": "/chauffeur/",
   "display": "standalone",
   "background_color": "#080b10",
@@ -19,3 +19,6 @@
     }
   ]
 }
+
+
+
