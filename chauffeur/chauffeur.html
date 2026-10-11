@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V79.32 — jeux visibles, planification lisible et thème automatique -->
+<!-- OuassVTC Chauffeur V79.33 — interprète vocal compatible iPhone -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -873,7 +873,7 @@ html[data-theme="dark"] .expense-breakdown-card,html[data-theme="dark"] .net-wat
 .course-extra-launchers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.course-extra-launcher{min-height:58px;padding:8px;border:1px solid #2f80ff;border-radius:15px;background:#122136;color:#fff;font-size:12px;font-weight:950}.course-extra-launcher span{display:block;margin-bottom:3px;color:#63a5ff;font-size:20px}.course-extra-launcher.active{background:#176ef4}.trip-extras-card.module-collapsed,.waiting-timer-card.module-collapsed{display:none}.waiting-free-option{margin-top:11px;padding:10px;border-radius:13px;background:#17304f}.waiting-free-toggle{display:flex;align-items:center;gap:9px;color:#fff;font-size:12px;font-weight:900}.waiting-free-toggle input{width:19px;height:19px;accent-color:#2180ff}.waiting-free-editor{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:9px}.waiting-free-editor.hidden{display:none}.waiting-free-editor input{min-width:0;min-height:40px;border:1px solid #4f7fba;border-radius:10px;background:#0d294d;color:#fff;padding:8px;text-align:center;font-weight:900}.waiting-free-editor button{min-height:40px;border:0;border-radius:10px;background:#176ef4;color:#fff;padding:0 13px;font-weight:900}.waiting-free-status{display:block;margin-top:7px;color:#9fb1c8;font-size:10px}
 
 /* V67 — transfert partenaire sécurisé + interprète vocal */
-.interpreter-overlay{position:fixed;inset:0;z-index:1400;background:#07101cf5;color:#fff;overflow:auto;padding:18px}.interpreter-card{max-width:620px;margin:0 auto;background:#101b2a;border:1px solid #2f80ff;border-radius:22px;padding:18px;box-shadow:0 20px 60px #0008}.interpreter-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.interpreter-head h2{margin:0;font-size:21px}.interpreter-close{width:42px;height:42px;border:0;border-radius:12px;background:#25344a;color:#fff;font-size:24px}.interpreter-language{width:100%;margin:16px 0;padding:13px;border:1px solid #41658f;border-radius:12px;background:#0b1522;color:#fff;font-weight:800}.interpreter-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.interpreter-talk{min-height:72px;border:0;border-radius:16px;color:#fff;font-size:16px;font-weight:950}.interpreter-talk.me{background:#176ef4}.interpreter-talk.client{background:#0b8b50}.interpreter-talk.listening{outline:4px solid #ffffff55}.interpreter-result{margin-top:14px;padding:14px;border-radius:15px;background:#0a1421}.interpreter-result small{display:block;color:#9fb1c8;margin-bottom:4px}.interpreter-result strong{display:block;white-space:pre-wrap;font-size:16px}.interpreter-result .translated{margin-top:12px;color:#7db2ff}.interpreter-replay{width:100%;margin-top:12px;min-height:46px;border:1px solid #4777ad;border-radius:12px;background:transparent;color:#fff;font-weight:900}.transfer-live{display:block;margin-top:6px;color:#61a7ff;font-size:11px;font-weight:900}
+.interpreter-overlay{position:fixed;inset:0;z-index:1400;background:#07101cf5;color:#fff;overflow:auto;padding:18px}.interpreter-card{max-width:620px;margin:0 auto;background:#101b2a;border:1px solid #2f80ff;border-radius:22px;padding:18px;box-shadow:0 20px 60px #0008}.interpreter-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.interpreter-head h2{margin:0;font-size:21px}.interpreter-close{width:42px;height:42px;border:0;border-radius:12px;background:#25344a;color:#fff;font-size:24px}.interpreter-language{width:100%;margin:16px 0;padding:13px;border:1px solid #41658f;border-radius:12px;background:#0b1522;color:#fff;font-weight:800}.interpreter-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.interpreter-talk{min-height:72px;border:0;border-radius:16px;color:#fff;font-size:16px;font-weight:950}.interpreter-talk.me{background:#176ef4}.interpreter-talk.client{background:#0b8b50}.interpreter-talk.listening{outline:4px solid #ffffff55}.interpreter-result{margin-top:14px;padding:14px;border-radius:15px;background:#0a1421}.interpreter-result small{display:block;color:#9fb1c8;margin-bottom:4px}.interpreter-result strong{display:block;white-space:pre-wrap;font-size:16px}.interpreter-result .translated{margin-top:12px;color:#7db2ff}.interpreter-replay{width:100%;margin-top:12px;min-height:46px;border:1px solid #4777ad;border-radius:12px;background:transparent;color:#fff;font-weight:900}.interpreter-help{margin:12px 2px 0;color:#b8c7da;font-size:12px;line-height:1.45}.interpreter-manual{display:none;margin-top:14px;padding:14px;border:1px solid #365274;border-radius:15px;background:#0a1421}.interpreter-manual.visible{display:block}.interpreter-manual label{display:block;margin-bottom:7px;color:#b8c7da;font-size:12px;font-weight:850}.interpreter-manual textarea{width:100%;min-height:88px;resize:vertical;border:1px solid #41658f;border-radius:12px;background:#07111d;color:#fff;padding:12px;font:inherit}.interpreter-manual-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.interpreter-manual-actions button{min-height:45px;border:0;border-radius:12px;color:#fff;font-weight:900}.interpreter-manual-actions button:first-child{background:#176ef4}.interpreter-manual-actions button:last-child{background:#0b8b50}.transfer-live{display:block;margin-top:6px;color:#61a7ff;font-size:11px;font-weight:900}
 
 
     /* V68 - Espace chauffeurs partenaires */
@@ -7410,18 +7410,21 @@ async function handleStatusAction(id, status) {
     let interpreterRecognition = null;
     let interpreterLastTranslation = "";
     let interpreterLastLang = "fr-FR";
+    let interpreterMicReady = false;
 
     function ensureInterpreterUi() {
       if ($("interpreterOverlay")) return;
       const overlay = document.createElement("section");
       overlay.id = "interpreterOverlay";
       overlay.className = "interpreter-overlay hidden";
-      overlay.innerHTML = `<div class="interpreter-card"><div class="interpreter-head"><div><small>OuassVTC</small><h2>🌐 Interprète vocal</h2></div><button class="interpreter-close" id="closeInterpreter" type="button">×</button></div><select class="interpreter-language" id="interpreterLanguage">${INTERPRETER_LANGUAGES.map(([code,name])=>`<option value="${code}">${name}</option>`).join("")}</select><div class="interpreter-actions"><button class="interpreter-talk me" id="interpreterMe" type="button">🇫🇷 Moi → Client</button><button class="interpreter-talk client" id="interpreterClient" type="button">🌍 Client → Français</button></div><div class="interpreter-result"><small>Phrase entendue</small><strong id="interpreterOriginal">Appuyez sur un bouton puis parlez.</strong><small class="translated">Traduction</small><strong id="interpreterTranslated">—</strong><button class="interpreter-replay" id="interpreterReplay" type="button">🔊 Réécouter la traduction</button></div></div>`;
+      overlay.innerHTML = `<div class="interpreter-card"><div class="interpreter-head"><div><small>OuassVTC</small><h2>🌐 Interprète vocal</h2></div><button class="interpreter-close" id="closeInterpreter" type="button">×</button></div><select class="interpreter-language" id="interpreterLanguage">${INTERPRETER_LANGUAGES.map(([code,name])=>`<option value="${code}">${name}</option>`).join("")}</select><div class="interpreter-actions"><button class="interpreter-talk me" id="interpreterMe" type="button">🇫🇷 Moi → Client</button><button class="interpreter-talk client" id="interpreterClient" type="button">🌍 Client → Français</button></div><p class="interpreter-help" id="interpreterHelp">Sur iPhone, acceptez l’accès au micro lors de la première utilisation. Siri et Dictée doivent être activés dans les réglages iOS.</p><div class="interpreter-manual" id="interpreterManual"><label for="interpreterManualText">Si le micro reste indisponible sur cet iPhone, saisissez ou dictez la phrase avec le micro du clavier.</label><textarea id="interpreterManualText" placeholder="Saisissez la phrase à traduire…"></textarea><div class="interpreter-manual-actions"><button id="interpreterManualDriver" type="button">Français → Client</button><button id="interpreterManualClient" type="button">Client → Français</button></div></div><div class="interpreter-result"><small>Phrase entendue</small><strong id="interpreterOriginal">Appuyez sur un bouton puis parlez.</strong><small class="translated">Traduction</small><strong id="interpreterTranslated">—</strong><button class="interpreter-replay" id="interpreterReplay" type="button">🔊 Réécouter la traduction</button></div></div>`;
       document.body.appendChild(overlay);
       $("closeInterpreter").addEventListener("click", closeInterpreter);
       $("interpreterMe").addEventListener("click", () => interpreterListen("driver"));
       $("interpreterClient").addEventListener("click", () => interpreterListen("client"));
       $("interpreterReplay").addEventListener("click", () => interpreterSpeak(interpreterLastTranslation, interpreterLastLang));
+      $("interpreterManualDriver").addEventListener("click", () => interpreterTranslateManual("driver"));
+      $("interpreterManualClient").addEventListener("click", () => interpreterTranslateManual("client"));
     }
 
     function openInterpreter() { ensureInterpreterUi(); if (typeof stopVoiceConversation === "function") stopVoiceConversation("Conversation du copilote arrêtée."); $("voiceAssistant")?.classList.add("hidden"); $("interpreterOverlay").classList.remove("hidden"); document.body.style.overflow="hidden"; }
@@ -7441,11 +7444,39 @@ async function handleStatusAction(id, status) {
       return { translated, lang: direction === "driver" ? targetCode : "fr-FR" };
     }
 
-    function interpreterListen(direction) {
+    async function interpreterTranslateManual(direction) {
+      const text = $("interpreterManualText")?.value.trim() || "";
+      if (!text) { $("interpreterManualText")?.focus(); return; }
+      $("interpreterOriginal").textContent = text;
+      $("interpreterTranslated").textContent = "Traduction en cours…";
+      try { const result=await interpreterTranslate(text,direction); interpreterLastTranslation=result.translated; interpreterLastLang=result.lang; $("interpreterTranslated").textContent=result.translated; interpreterSpeak(result.translated,result.lang); }
+      catch(error){ console.error(error); $("interpreterTranslated").textContent="Traduction indisponible. Vérifiez la connexion au copilote IA."; }
+    }
+
+    function interpreterShowManual(message) {
+      $("interpreterManual")?.classList.add("visible");
+      if ($("interpreterHelp") && message) $("interpreterHelp").textContent = message;
+    }
+
+    async function interpreterPrepareMicrophone() {
+      if (interpreterMicReady || !navigator.mediaDevices?.getUserMedia) return;
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      stream.getTracks().forEach(track => track.stop());
+      interpreterMicReady = true;
+    }
+
+    async function interpreterListen(direction) {
       ensureInterpreterUi();
       const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!Recognition) { alert("La reconnaissance vocale n’est pas disponible sur ce navigateur."); return; }
+      if (!Recognition) { interpreterShowManual("La reconnaissance vocale n’est pas disponible dans cette version d’iOS. Utilisez le micro du clavier dans la zone ci-dessous."); return; }
       interpreterRecognition?.abort(); window.speechSynthesis?.cancel();
+      try { await interpreterPrepareMicrophone(); }
+      catch(error) {
+        console.error("Autorisation microphone",error);
+        const denied = error?.name === "NotAllowedError" || error?.name === "SecurityError";
+        interpreterShowManual(denied ? "L’accès au micro est refusé. Sur iPhone : Réglages > Safari > Microphone, puis autorisez ce site." : "Le micro de cet iPhone est momentanément indisponible. Utilisez le micro du clavier ci-dessous.");
+        return;
+      }
       const recognition = new Recognition(); interpreterRecognition = recognition;
       const targetCode = $("interpreterLanguage").value;
       recognition.lang = direction === "driver" ? "fr-FR" : targetCode;
@@ -7453,14 +7484,20 @@ async function handleStatusAction(id, status) {
       const button = direction === "driver" ? $("interpreterMe") : $("interpreterClient");
       recognition.onstart=()=>{button.classList.add("listening");button.textContent="🎙️ Parlez maintenant…";};
       recognition.onend=()=>{button.classList.remove("listening");button.textContent=direction==="driver"?"🇫🇷 Moi → Client":"🌍 Client → Français";};
-      recognition.onerror=event=>{console.error("Interprète vocal",event.error);};
+      recognition.onerror=event=>{
+        console.error("Interprète vocal",event.error);
+        button.classList.remove("listening");
+        const permissionError=["not-allowed","service-not-allowed","audio-capture"].includes(event.error);
+        interpreterShowManual(permissionError ? "iPhone bloque la reconnaissance vocale. Vérifiez l’autorisation Microphone, activez Siri et Dictée, ou utilisez le micro du clavier ci-dessous." : "Je n’ai pas pu démarrer l’écoute. Réessayez ou utilisez la saisie avec le micro du clavier.");
+      };
       recognition.onresult=async event=>{
         const text=event.results?.[0]?.[0]?.transcript?.trim()||""; if(!text)return;
         $("interpreterOriginal").textContent=text; $("interpreterTranslated").textContent="Traduction en cours…";
         try { const result=await interpreterTranslate(text,direction); interpreterLastTranslation=result.translated; interpreterLastLang=result.lang; $("interpreterTranslated").textContent=result.translated; interpreterSpeak(result.translated,result.lang); }
         catch(error){ console.error(error); $("interpreterTranslated").textContent="Traduction indisponible. Vérifiez la connexion au copilote IA."; }
       };
-      recognition.start();
+      try { recognition.start(); }
+      catch(error) { console.error("Démarrage interprète",error); interpreterShowManual("Le micro n’a pas pu démarrer sur cet iPhone. Réessayez dans Safari ou utilisez le micro du clavier ci-dessous."); }
     }
 
     $("openInterpreter")?.addEventListener("click", openInterpreter);
