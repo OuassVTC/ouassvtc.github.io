@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V79.31 — jeux chauffeur et libellé planification -->
+<!-- OuassVTC Chauffeur V79.32 — jeux visibles, planification lisible et thème automatique -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -1882,8 +1882,14 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     const state = { bookings: [], documents:[], driverMissions:[], partnerDrivers:[], partnerDriversUnsubscribe:null, dispatchRequests:[], dispatchRequestsUnsubscribe:null, filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, driverMissionsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
     const THEME_MODE_KEY = "ouassvtcThemeMode";
     const RESOLVED_THEME_KEY = "ouassvtcResolvedTheme";
+    const THEME_AUTO_MIGRATION_KEY = "ouassvtcThemeAutoV7932";
     const NOTIFICATIONS_ENABLED_KEY = "ouassvtcNotificationsEnabled";
     let themeMode = localStorage.getItem(THEME_MODE_KEY) || "auto";
+    if (localStorage.getItem(THEME_AUTO_MIGRATION_KEY) !== "done") {
+      themeMode = "auto";
+      localStorage.setItem(THEME_MODE_KEY, "auto");
+      localStorage.setItem(THEME_AUTO_MIGRATION_KEY, "done");
+    }
     let themeTimer = null;
 
     function sunTimesForPerpignan(date = new Date()) {
@@ -1909,7 +1915,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
 
     function applyTheme(mode = themeMode) {
       themeMode = ["light", "dark", "auto"].includes(mode) ? mode : "auto";
-      const resolved = themeMode === "auto" ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light") : themeMode;
+      const resolved = themeMode === "auto" ? automaticTheme() : themeMode;
       document.documentElement.dataset.theme = resolved;
       window.dispatchEvent(new CustomEvent("ouassvtc-map-theme",{detail:{theme:resolved}}));
       document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#070b12" : "#07090d");
@@ -1919,13 +1925,13 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
       if ($("themeAutoNote")) {
         const { sunrise, sunset } = sunTimesForPerpignan();
         const clock = minutes => { const rounded = Math.round(minutes); return `${String(Math.floor(rounded / 60) % 24).padStart(2, "0")}:${String(rounded % 60).padStart(2, "0")}`; };
-        $("themeAutoNote").textContent = themeMode === "auto" ? "Automatique actif · suit le mode jour/nuit du téléphone." : `Mode ${themeMode === "dark" ? "nuit" : "jour"} activé manuellement.`;
+        $("themeAutoNote").textContent = themeMode === "auto" ? `Automatique actif · jour de ${clock(sunrise)} à ${clock(sunset)}, nuit le reste du temps.` : `Mode ${themeMode === "dark" ? "nuit" : "jour"} activé manuellement.`;
       }
       clearInterval(themeTimer);
       if (themeMode === "auto") themeTimer = setInterval(() => applyTheme("auto"), 5 * 60 * 1000);
     }
 
-    window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if(themeMode==="auto")applyTheme("auto")});
+    window.addEventListener("focus",()=>{if(themeMode==="auto")applyTheme("auto")});
     function notificationsOptedIn() {
       return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
     }
@@ -7583,19 +7589,20 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 .partner-bottom button{appearance:none;border:0;background:transparent;color:#9aa9bd;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:800 10px/1.05 system-ui}
 .partner-bottom .nav-ico{width:34px;height:30px;border-radius:11px;display:grid;place-items:center;font-size:20px;color:#c9d5e5}.partner-bottom button.active{color:#fff}.partner-bottom button.active .nav-ico{color:#fff;background:linear-gradient(145deg,#1769ff,#2d8cff);box-shadow:0 7px 18px rgba(23,105,255,.35)}
 .partner-bottom .partner-plus{width:70px;height:70px;justify-self:center;border-radius:50%;background:linear-gradient(145deg,#1769ff,#0864f7);color:#fff;border:5px solid #fff;transform:translateY(-18px);box-shadow:0 12px 28px rgba(10,96,255,.38)}.partner-bottom .partner-plus .nav-ico{font-size:35px;color:#fff;background:transparent}
+.partner-bottom .partner-plus{position:relative;overflow:visible}.partner-bottom .partner-plus-label{position:absolute;left:50%;top:70px;transform:translateX(-50%);width:max-content;color:#fff;font-size:9px;font-weight:950;line-height:1;white-space:nowrap;text-shadow:0 1px 3px #000;pointer-events:none}
 .partner-view-hidden{display:none!important}.ptr-indicator{position:fixed;z-index:10010;left:50%;top:82px;transform:translate(-50%,-70px);min-width:148px;padding:10px 15px;border-radius:999px;background:#0b1627;color:#fff;font:800 12px system-ui;box-shadow:0 8px 25px rgba(0,0,0,.2);text-align:center;transition:transform .2s;pointer-events:none}.ptr-indicator.show{transform:translate(-50%,0)}
 </style>
 <div class="ptr-indicator" id="ptrIndicator"><span id="ptrText">Actualisation…</span></div>
 <nav class="partner-bottom" id="partnerBottomNav">
 <button type="button" data-target="dashboardHome" class="active"><span class="nav-ico">⌂</span><span>Accueil</span></button>
 <button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
-<button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
+<button type="button" class="partner-plus" id="partnerNewCourse" aria-label="Planifier une course"><span class="nav-ico">+</span><span class="partner-plus-label">Planifier une course</span></button>
 <button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
 <button type="button" data-target="partnerMenuPanel"><span class="nav-ico">☰</span><span>Menu</span></button>
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","gamePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="7d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -7637,7 +7644,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="gamePanel"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Rush, 2048, logique, Memory et autres jeux</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -8689,3 +8696,5 @@ document.addEventListener("click",function(e){
 });
 </script></body>
 </html>
+
+
