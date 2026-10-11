@@ -1238,27 +1238,57 @@ body.partner-authenticated .action.partner-back{
 html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
 </style>
 
-<style id="v7930-ui-fixes">
-html:not([data-theme="dark"]) #documentsPanel,
-html:not([data-theme="dark"]) #documentsPanel .section-title,
-html:not([data-theme="dark"]) #documentsPanel h2,
-html:not([data-theme="dark"]) #documentsPanel h3,
-html:not([data-theme="dark"]) #documentsPanel strong{color:#101722!important}
-html:not([data-theme="dark"]) #documentsPanel p,
-html:not([data-theme="dark"]) #documentsPanel small,
-html:not([data-theme="dark"]) #documentsPanel .document-security-note{color:#66717f!important}
-html:not([data-theme="dark"]) #documentsPanel .document-section{background:#fff!important;border-color:#dfe4eb!important}
-html:not([data-theme="dark"]) #documentsPanel .document-card{background:#f8fafc!important;color:#101722!important;border-color:#dfe4eb!important}
-html:not([data-theme="dark"]) #documentEditorOverlay .document-editor{background:#fff!important;color:#101722!important}
-.document-upload-progress.done{background:#dcf8e9!important}
-.document-upload-progress.done span{width:100%!important;background:#b9edcf!important}
-.document-upload-progress.done strong{color:#087442!important}
-#gamePanel:not(.hidden){display:block!important;visibility:visible!important;opacity:1!important;min-height:70vh!important}
-#gamePanel:not(.hidden) #arcadeHome:not(.hidden){display:block!important;visibility:visible!important;opacity:1!important}
-#gamePanel .panel-head{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
-#gamePanel .v7930-game-nav{display:flex;gap:8px;flex-wrap:wrap}
-#gamePanel .v7930-game-nav button{min-height:42px;padding:0 12px;border:1px solid var(--border);border-radius:13px;background:var(--soft);color:var(--text);font-weight:900}
-html[data-theme="dark"] #gamePanel .v7930-game-nav button{background:#172130;color:#f4f7fb;border-color:#344155}
+<style id="v7930-final-ui">
+.v7930-quick-hidden{display:none!important}
+.app-bottom-nav .bottom-add span{font-size:8.5px!important;max-width:92px!important;text-align:center!important;white-space:nowrap!important}
+
+/* Profil et documents : lisibles en mode jour, sans casser le mode nuit */
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel{background:#f7f9fc!important;color:#101828!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel h2,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel h2,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel b,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel b,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel strong,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel strong,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel label{color:#101828!important;-webkit-text-fill-color:#101828!important;opacity:1!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel small,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel small{color:#475467!important;-webkit-text-fill-color:#475467!important;opacity:1!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel .pm-card,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel .pm-card,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel .pm-doc-card{background:#fff!important;color:#101828!important;border:1px solid #dce3ec!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel input,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel select,
+html:not([data-theme="dark"]) body.partner-authenticated #partnerProfilePanel textarea{background:#fff!important;color:#101828!important;-webkit-text-fill-color:#101828!important;border:1px solid #b8c3d1!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel .pm-doc-copy b{color:#101828!important}
+html:not([data-theme="dark"]) body.partner-authenticated #partnerDocumentsPanel .pm-doc-copy small{color:#475467!important}
+
+/* Progression réelle de l'envoi */
+.pm-upload-progress{flex:1 0 100%;display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;background:#eef4ff;border-radius:12px;padding:9px 10px;box-sizing:border-box}
+.pm-upload-progress.hidden{display:none!important}
+.pm-upload-track{height:8px;border-radius:999px;background:#cdddf7;overflow:hidden}
+.pm-upload-track span{display:block;height:100%;width:0;background:#1677ff;border-radius:999px;transition:width .18s linear}
+.pm-upload-progress small{font-size:11px!important;font-weight:900!important;color:#176ef4!important;white-space:nowrap!important}
+html[data-theme="dark"] .pm-upload-progress{background:#10233e}
+html[data-theme="dark"] .pm-upload-track{background:#263d5c}
+html[data-theme="dark"] .pm-upload-progress small{color:#8fc1ff!important}
+
+/* Jeux : page interne visible et cohérente */
+#gamePanel{min-height:calc(100vh - 145px);color:#101828}
+.v7930-games-nav{display:flex;gap:9px;justify-content:space-between;margin:4px 0 14px}
+.v7930-games-btn{border:1px solid #d8e0ea;background:#fff;color:#10233e;border-radius:14px;padding:10px 12px;font-weight:900;box-shadow:0 5px 16px rgba(16,40,75,.08)}
+#gamePanel .arcade-hero{display:block!important;visibility:visible!important;opacity:1!important}
+#gamePanel .arcade-grid{display:grid!important;visibility:visible!important;opacity:1!important}
+#gamePanel .arcade-card{color:#101828!important}
+html[data-theme="dark"] #gamePanel{color:#f4f7fb}
+html[data-theme="dark"] .v7930-games-btn{background:#172334;color:#fff;border-color:#33445b}
+
+/* Déconnexion : visible et contrastée avec sa petite flèche */
+body.partner-authenticated #logout{display:flex!important;background:#fff!important;color:#b42318!important;border:1px solid #f0b8b3!important;box-shadow:0 6px 18px rgba(180,35,24,.08)!important}
+body.partner-authenticated #logout span:first-child{font-size:20px!important;font-weight:1000!important;color:#b42318!important}
+body.partner-authenticated #logout span:last-child{font-size:14px!important;font-weight:950!important;color:#b42318!important}
+html[data-theme="dark"] body.partner-authenticated #logout{background:#2a171b!important;color:#fecaca!important;border-color:#6b3039!important}
+html[data-theme="dark"] body.partner-authenticated #logout span{color:#fecaca!important}
 </style>
 </head>
  
@@ -1601,11 +1631,9 @@ html[data-theme="dark"] #gamePanel .v7930-game-nav button{background:#172130;col
       </section>
 
 <section class="tab-panel hidden" id="gamePanel">
-  <div class="panel-head">
-    <div class="v7930-game-nav">
-      <button type="button" id="v7930BackMenu">☰ Retour au menu</button>
-      <button type="button" data-open-tab="dashboardHome">⌂ Tableau de bord</button>
-    </div>
+  <div class="v7930-games-nav">
+    <button class="v7930-games-btn" id="v7930GamesMenu" type="button">☰ <span>Menu</span></button>
+    <button class="v7930-games-btn" type="button" data-open-tab="dashboardHome">⌂ <span>Tableau de bord</span></button>
   </div>
  
   <div id="arcadeHome">
@@ -1705,8 +1733,8 @@ html[data-theme="dark"] #gamePanel .v7930-game-nav button{background:#172130;col
             </svg>
           </button>
         </div>
-        <div id="v7930QuickBookingLegacy" style="display:none!important" aria-hidden="true"><h2 class="section-title">Course rapide</h2>
-        <form class="simulator" id="quickBookingForm" style="margin-bottom:24px">
+        <h2 class="section-title v7930-quick-hidden" aria-hidden="true">Course rapide</h2>
+        <form class="simulator v7930-quick-hidden" id="quickBookingForm" style="display:none!important" aria-hidden="true">
           <div class="eyebrow">Enregistrement dans l’application uniquement</div>
           <div class="simulator-grid" style="margin-top:14px">
             <div class="sim-field"><label for="quickBookingKm">Kilométrage du trajet</label><input id="quickBookingKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Exemple : 18,5 km"></div>
@@ -1721,8 +1749,7 @@ html[data-theme="dark"] #gamePanel .v7930-game-nav button{background:#172130;col
           <div class="sim-result hidden" id="quickBookingSuccess"><strong style="font-size:21px">Course rapide enregistrée</strong><span>Elle est maintenant archivée et comptabilisée dans votre bilan.</span></div>
         </form>
  
-        </div>
-        <h2 class="section-title">Nouvelle course</h2>
+        <h2 class="section-title">Planifier une course</h2>
         <form class="simulator" id="driverBookingForm">
           <div class="simulator-grid single-column-form">
             <div class="sim-field"><label for="driverName">Nom du client</label><input id="driverName" required autocomplete="name"></div>
@@ -1754,7 +1781,7 @@ html[data-theme="dark"] #gamePanel .v7930-game-nav button{background:#172130;col
       <nav class="app-bottom-nav" id="appBottomNav" aria-label="Navigation rapide">
         <button class="active" type="button" data-open-tab="dashboardHome" data-bottom-panel="dashboardHome" aria-label="Tableau de bord"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg><span>Accueil</span></button>
         <button type="button" data-open-tab="bookingsPanel" data-bottom-panel="bookingsPanel" aria-label="Historique des courses"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path><path d="M12 7v5l3 2"></path></svg><span>Historique</span></button>
-        <button class="bottom-add" type="button" data-open-tab="estimatePanel" data-bottom-panel="estimatePanel" aria-label="Nouvelle course"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>Nouvelle course</span></button>
+        <button class="bottom-add" type="button" data-open-tab="estimatePanel" data-bottom-panel="estimatePanel" aria-label="Planifier une course"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>Planifier une course</span></button>
         <button type="button" data-open-tab="transferPanel" data-bottom-panel="transferPanel" aria-label="Transfert chauffeur"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3"></path><path d="m18 7-3 3"></path><path d="M17 17H6l3 3"></path><path d="m6 17 3-3"></path></svg><span>Transfert</span></button>
         <button type="button" id="bottomMenuButton" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Menu</span></button>
       </nav>
@@ -5583,7 +5610,7 @@ async function handleStatusAction(id, status) {
       if(input===$("documentEditorFile")&&input.files.length) $("documentCameraFile").value="";
       const file=selectedDocumentFile(); $("documentSelectedFile").textContent=file?`Fichier sélectionné : ${file.name}`:""; $("documentSelectedFile").classList.toggle("hidden",!file);
     }
-    function closeDocumentEditor() { $("documentEditorOverlay").classList.add("hidden"); document.body.style.overflow=""; $("documentEditorForm").reset(); $("documentSelectedFile").classList.add("hidden"); $("documentUploadProgress")?.classList.remove("done"); }
+    function closeDocumentEditor() { $("documentEditorOverlay").classList.add("hidden"); document.body.style.overflow=""; $("documentEditorForm").reset(); $("documentSelectedFile").classList.add("hidden"); }
 
     function updateDocumentExpiryMode() {
       const noExpiry=$("documentNoExpiry").checked;
@@ -5624,12 +5651,8 @@ async function handleStatusAction(id, status) {
         if(file){ storagePath=`driverDocuments/${auth.currentUser.uid}/${key}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`; const target=storageRef(storage,storagePath); await uploadDocumentWithProgress(target,file); downloadUrl=await getDownloadURL(target); fileName=file.name; if(existing?.storagePath&&existing.storagePath!==storagePath) deleteObject(storageRef(storage,existing.storagePath)).catch(()=>{}); }
         $("documentUploadProgressText").textContent="Finalisation sécurisée…";
         await setDoc(doc(db,"driverDocuments",`${auth.currentUser.uid}_${key}`),{ ownerUid:auth.currentUser.uid,key,label:definition.label,category:definition.category,downloadUrl,storagePath,fileName,expiryDate:expiryDate||"",updatedAt:serverTimestamp(),expiryReminderLastSent:null },{merge:true});
-        $("documentUploadProgress").classList.remove("hidden");
-        $("documentUploadProgress").classList.add("done");
-        $("documentUploadProgressBar").style.width="100%";
-        $("documentUploadProgressText").textContent="✓ Document ajouté avec succès";
-        await new Promise(resolve=>setTimeout(resolve,700));
         closeDocumentEditor();
+        alert(`${definition.label} a bien été enregistré.`);
       } catch(error){ console.error(error); const detail=error?.code==="storage/unauthorized"?"Accès Firebase refusé. Fermez puis reconnectez-vous à l’application.":error?.code==="storage/canceled"?"L’envoi a été interrompu. Vérifiez la connexion puis réessayez.":(error?.message||"Vérifiez votre connexion et réessayez."); $("documentEditorError").textContent=`Échec de l’enregistrement : ${detail}`; $("documentEditorError").classList.remove("hidden"); }
       finally{ button.disabled=false; button.textContent="Enregistrer le document"; $("documentUploadProgress").classList.add("hidden"); }
     }
@@ -6410,11 +6433,6 @@ async function handleStatusAction(id, status) {
         }, 100);
       }
       if (panelId === "mileagePanel") renderMileageReports();
-      if (panelId === "gamePanel") {
-        document.querySelectorAll("#gamePanel .arcade-game").forEach(game=>game.classList.add("hidden"));
-        document.getElementById("arcadeHome")?.classList.remove("hidden");
-        requestAnimationFrame(()=>window.scrollTo({top:0,behavior:"auto"}));
-      }
     }
 
     function clearNewBookingForms() {
@@ -6462,10 +6480,6 @@ async function handleStatusAction(id, status) {
     applyTheme(themeMode);
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
-    document.getElementById("v7930BackMenu")?.addEventListener("click",()=>{
-      document.getElementById("sideMenu")?.classList.remove("hidden");
-      document.getElementById("menuOverlay")?.classList.remove("hidden");
-    });
 
     let pullStartY = 0;
     let pullDistance = 0;
@@ -7868,6 +7882,7 @@ function pmRenderDocuments(docs){
     <div class="pm-doc-actions">
       ${ok?`<a class="pm-doc-open" href="${pme(d.downloadUrl)}" target="_blank" rel="noopener">Voir</a>`:""}
       <label class="pm-doc-add">${ok?"Remplacer":"Ajouter"}<input type="file" accept="image/*,.pdf" data-partner-doc-upload="${pme(type)}" data-existing="${ok?"1":"0"}" hidden></label>
+      <div class="pm-upload-progress hidden" data-pm-progress="${pme(type)}"><div class="pm-upload-track"><span></span></div><small>0 %</small></div>
       ${noExpiry?`<span class="pm-doc-no-expiry">Sans expiration</span>`:`<label class="pm-doc-expiry">Date de validité <input type="date" value="${pme(d?.expiryDate||"")}" data-partner-doc-date="${pme(type)}" ${ok?`data-partner-doc-expiry="${pme(d.id)}"`:""}></label>`}
       ${ok?`<button type="button" class="pm-doc-delete" data-partner-doc-delete="${pme(d.id)}" data-partner-doc-path="${pme(d.storagePath||"")}">Supprimer</button>`:""}
     </div>
@@ -7893,7 +7908,15 @@ async function pmUploadDocument(event){
    input.disabled=true;
    const addLabel=input.closest(".pm-doc-add"); const oldLabel=addLabel?.childNodes?.[0]?.textContent||"Ajouter"; if(addLabel?.childNodes?.[0]) addLabel.childNodes[0].textContent="Envoi…";
    const task=uploadBytesResumable(ref,file,{contentType:file.type||"application/octet-stream"});
-   await new Promise((resolve,reject)=>{task.on("state_changed",()=>{},reject,resolve)});
+   const progress=document.querySelector(`[data-pm-progress="${CSS.escape(type)}"]`);
+   const progressBar=progress?.querySelector(".pm-upload-track span"),progressText=progress?.querySelector("small");
+   progress?.classList.remove("hidden");
+   if(progressBar)progressBar.style.width="0%";if(progressText)progressText.textContent="0 %";
+   await new Promise((resolve,reject)=>{task.on("state_changed",snap=>{
+     const pct=Math.max(0,Math.min(100,Math.round((snap.bytesTransferred/Math.max(1,snap.totalBytes))*100)));
+     if(progressBar)progressBar.style.width=pct+"%";if(progressText)progressText.textContent=pct+" %";
+   },reject,resolve)});
+   if(progressBar)progressBar.style.width="100%";if(progressText)progressText.textContent="Document ajouté ✓";
    const downloadUrl=await getDownloadURL(ref);
    const existing=await getDocs(query(collection(db,"partnerDocuments"),where("ownerEmail","==",email),where("type","==",type),limit(1)));
    const dateInput=document.querySelector(`[data-partner-doc-date="${CSS.escape(type)}"]`);
@@ -7906,7 +7929,13 @@ async function pmUploadDocument(event){
      if(old.storagePath&&old.storagePath!==path) deleteObject(storageRef(storage,old.storagePath)).catch(()=>{});
    }
  }catch(e){console.error("Upload document chauffeur",e);const code=String(e?.code||"");alert(code.includes("unauthorized")?"Envoi refusé par Firebase Storage. Vérifiez que vous êtes bien connecté puis réessayez.":"Impossible d’enregistrer ce document : "+(e?.message||"erreur inconnue"))}
- finally{input.disabled=false;input.value="";const addLabel=input.closest(".pm-doc-add");if(addLabel?.childNodes?.[0])addLabel.childNodes[0].textContent=addLabel.querySelector("input")?.dataset?.existing==="1"?"Remplacer":"Ajouter"}
+ finally{
+   input.disabled=false;input.value="";
+   const addLabel=input.closest(".pm-doc-add");if(addLabel?.childNodes?.[0])addLabel.childNodes[0].textContent=addLabel.querySelector("input")?.dataset?.existing==="1"?"Remplacer":"Ajouter";
+   const progress=document.querySelector(`[data-pm-progress="${CSS.escape(type)}"]`);
+   if(progress&&!progress.querySelector("small")?.textContent?.includes("ajouté"))setTimeout(()=>progress.classList.add("hidden"),900);
+   else if(progress)setTimeout(()=>progress.classList.add("hidden"),2200);
+ }
 }
 async function pmDeleteDocument(event){
  const b=event.currentTarget,id=b.dataset.partnerDocDelete,path=b.dataset.partnerDocPath;
@@ -8691,6 +8720,14 @@ window.v7917UpdateClientNavPosition=function(lat,lng){
 };
 window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
 })();
+</script>
+
+<script id="v7930-final-ui-js">
+document.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("v7930GamesMenu")?.addEventListener("click",()=>{
+    document.getElementById("openMenu")?.click();
+  });
+});
 </script>
 </body>
 </html>
