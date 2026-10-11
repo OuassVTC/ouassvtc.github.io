@@ -1223,51 +1223,36 @@ body.partner-authenticated .action.partner-back{
 .v7917-client-nav.show{display:block}.v7917-client-map{height:390px;width:100%}.v7917-nav-head{position:absolute;z-index:6;top:10px;left:10px;right:10px;padding:12px 14px;background:rgba(10,24,40,.94);color:#fff;border-radius:15px;box-shadow:0 5px 18px #0005}.v7917-nav-head strong{display:block;font-size:18px}.v7917-nav-head small{color:#d7e4f1;font-weight:800}.v7917-next-step{position:absolute;z-index:6;left:10px;right:10px;bottom:12px;padding:12px 14px;background:rgba(255,255,255,.96);color:#10243b;font-weight:950;font-size:15px;border-radius:15px;box-shadow:0 5px 18px #0004}.v7917-nav-steps{display:none!important}.v7917-hidden-address{color:#7a8796;font-style:italic}
 </style>
 
-<style id="v7929-dashboard-polish">
+<style id="v7930-dashboard-polish">
 .v79-driver-brand.v7929-logo-only{padding:0!important;min-width:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
 .v79-driver-brand.v7929-logo-only img{margin:0!important}
-.app-bottom-nav .bottom-add{position:relative;overflow:visible!important;margin-top:-24px}
+.app-bottom-nav .bottom-add{
+  position:relative!important;
+  overflow:visible!important;
+  margin-top:-24px!important;
+}
 .app-bottom-nav .bottom-add span{
   position:absolute!important;
-  width:max-content!important;height:auto!important;
-  overflow:visible!important;clip:auto!important;
-  left:50%!important;top:62px!important;transform:translateX(-50%)!important;
-  color:var(--text)!important;font-size:9px!important;font-weight:900!important;
-  line-height:1!important;white-space:nowrap!important;pointer-events:none!important
+  display:block!important;
+  width:max-content!important;
+  height:auto!important;
+  overflow:visible!important;
+  clip:auto!important;
+  left:50%!important;
+  top:47px!important;
+  transform:translateX(-50%)!important;
+  padding:3px 7px!important;
+  border-radius:9px!important;
+  background:#176ef4!important;
+  color:#fff!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  z-index:5!important;
+  box-shadow:0 3px 8px rgba(23,110,244,.24)!important;
 }
-html[data-theme="dark"] .app-bottom-nav .bottom-add span{color:#dce6f4!important}
-</style>
-
-<style id="v7930-chauffeur-fixes">
-/* Libellé sous le + central */
-.partner-bottom .partner-plus{position:relative;overflow:visible!important}
-.partner-bottom .partner-plus .partner-plus-label{
-  position:absolute!important;left:50%!important;top:70px!important;transform:translateX(-50%)!important;
-  width:max-content!important;max-width:118px!important;color:#101828!important;background:transparent!important;
-  font:900 9px/1.05 system-ui!important;white-space:nowrap!important;letter-spacing:-.15px!important;pointer-events:none!important
-}
-html[data-theme="dark"] .partner-bottom .partner-plus .partner-plus-label{color:#f7f9fc!important}
-
-/* Coût kilométrique : champs parfaitement lisibles en mode jour */
-html:not([data-theme="dark"]) #partnerCostPanel input,
-html:not([data-theme="dark"]) #partnerCostPanel select,
-html[data-theme="light"] #partnerCostPanel input,
-html[data-theme="light"] #partnerCostPanel select{
-  color:#000!important;background:#fff!important;-webkit-text-fill-color:#000!important;caret-color:#000!important;
-  border-color:#b8c1cc!important
-}
-html:not([data-theme="dark"]) #partnerCostPanel input::placeholder,
-html[data-theme="light"] #partnerCostPanel input::placeholder{color:#667085!important;opacity:1!important}
-
-/* Jeux OuassVTC intégrés à l'application chauffeur */
-#gamePanel{background:#f5f7fb!important;color:#101828!important;min-height:calc(100vh - 90px)!important;padding-bottom:112px!important}
-#gamePanel .arcade-hero,#gamePanel .arcade-card,#gamePanel .mini-game-card,#gamePanel .game-shell{color:#101828}
-.v7930-game-nav{display:flex;gap:8px;justify-content:space-between;margin:4px 0 12px}
-.v7930-game-nav button{border:1px solid #d0d5dd;background:#fff;color:#101828;border-radius:13px;padding:10px 12px;font-weight:900;box-shadow:0 5px 18px rgba(0,0,0,.06)}
-html[data-theme="dark"] #gamePanel{background:#080d14!important;color:#f7f9fc!important}
-html[data-theme="dark"] #gamePanel .arcade-hero,html[data-theme="dark"] #gamePanel .arcade-card,
-html[data-theme="dark"] #gamePanel .mini-game-card,html[data-theme="dark"] #gamePanel .game-shell{color:#f7f9fc}
-html[data-theme="dark"] .v7930-game-nav button{background:#111925;color:#f7f9fc;border-color:#344155}
 </style>
 </head>
  
@@ -1614,10 +1599,6 @@ html[data-theme="dark"] .v7930-game-nav button{background:#111925;color:#f7f9fc;
     <button class="home-icon-btn" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button>
   </div>
  
-  <div class="v7930-game-nav">
-    <button type="button" id="v7930GameMenu">← Menu</button>
-    <button type="button" id="v7930GameHome">⌂ Tableau de bord</button>
-  </div>
   <div id="arcadeHome">
     <div class="arcade-hero">
       <div class="arcade-mark">OUASS<span>VTC</span></div>
@@ -1763,7 +1744,7 @@ html[data-theme="dark"] .v7930-game-nav button{background:#111925;color:#f7f9fc;
       <nav class="app-bottom-nav" id="appBottomNav" aria-label="Navigation rapide">
         <button class="active" type="button" data-open-tab="dashboardHome" data-bottom-panel="dashboardHome" aria-label="Tableau de bord"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg><span>Accueil</span></button>
         <button type="button" data-open-tab="bookingsPanel" data-bottom-panel="bookingsPanel" aria-label="Historique des courses"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path><path d="M12 7v5l3 2"></path></svg><span>Historique</span></button>
-        <button class="bottom-add" type="button" data-open-tab="estimatePanel" data-bottom-panel="estimatePanel" aria-label="Nouvelle course"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>Nouvelle course</span></button>
+        <button class="bottom-add" type="button" data-open-tab="estimatePanel" data-bottom-panel="estimatePanel" aria-label="Planifier une course"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg><span>Planifier une course</span></button>
         <button type="button" data-open-tab="transferPanel" data-bottom-panel="transferPanel" aria-label="Transfert chauffeur"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3"></path><path d="m18 7-3 3"></path><path d="M17 17H6l3 3"></path><path d="m6 17 3-3"></path></svg><span>Transfert</span></button>
         <button type="button" id="bottomMenuButton" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Menu</span></button>
       </nav>
@@ -7606,13 +7587,13 @@ body{padding-bottom:94px!important}.partner-bottom{position:fixed;z-index:10020;
 <nav class="partner-bottom" id="partnerBottomNav">
 <button type="button" data-target="dashboardHome" class="active"><span class="nav-ico">⌂</span><span>Accueil</span></button>
 <button type="button" data-target="agendaPanel"><span class="nav-ico">▣</span><span>Planning</span></button>
-<button type="button" class="partner-plus" id="partnerNewCourse" aria-label="Planifier une course"><span class="nav-ico">+</span><span class="partner-plus-label">Planifier une course</span></button>
+<button type="button" class="partner-plus" id="partnerNewCourse"><span class="nav-ico">+</span></button>
 <button type="button" data-target="reportPanel"><span class="nav-ico">€</span><span>CA</span></button>
 <button type="button" data-target="partnerMenuPanel"><span class="nav-ico">☰</span><span>Menu</span></button>
 </nav>
 <script id="ouass-partner-v711-runtime">
 window.OUASSVTC_ROLE="partner";
-function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","gamePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
+function partnerPanels(){return["dashboardHome","agendaPanel","reportPanel","settingsPanel","estimatePanel","partnerMenuPanel","partnerProfilePanel","partnerDocumentsPanel","partnerCustomersPanel","partnerHistoryPanel","partnerCostPanel","partnerSettingsPanel"].map(id=>document.getElementById(id)).filter(Boolean)}
 function showPartnerPage(id){const wanted=document.getElementById(id);if(!wanted)return false;try{document.getElementById("detailOverlay")?.classList.add("hidden");document.body.style.overflow=""}catch(_){} partnerPanels().forEach(el=>el===wanted?el.classList.remove("hidden","partner-view-hidden"):el.classList.add("partner-view-hidden"));document.querySelectorAll("#partnerBottomNav [data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));document.body.dataset.partnerPage=id==="dashboardHome"?"home":id;if(id==="reportPanel"){try{selectedRevenueChartPeriod="7d"}catch(_){} setTimeout(()=>{try{if(typeof renderReport==="function")renderReport()}catch(e){console.warn("Rafraîchissement CA",e)}try{if(typeof renderFinanceReports==="function")renderFinanceReports()}catch(_){}},0)}window.scrollTo({top:0,behavior:"smooth"});return true}
 async function refreshPartnerDashboard(){const box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");box?.classList.add("show");if(txt)txt.textContent="Actualisation…";try{if(typeof listenToBookings==="function")listenToBookings();if(typeof loadPartnerIdentityAndPresence==="function")await loadPartnerIdentityAndPresence();await new Promise(r=>setTimeout(r,600));if(txt)txt.textContent="À jour ✓"}catch(e){console.error(e);if(txt)txt.textContent="Erreur"}setTimeout(()=>box?.classList.remove("show"),650)}
 document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("#partnerBottomNav [data-target]").forEach(btn=>btn.addEventListener("click",()=>showPartnerPage(btn.dataset.target)));document.getElementById("partnerNewCourse")?.addEventListener("click",()=>showPartnerPage("estimatePanel"));let y0=null,armed=false;const home=()=>document.body.dataset.partnerPage==="home"||!document.body.dataset.partnerPage;window.addEventListener("touchstart",e=>{y0=home()&&window.scrollY<=2&&e.touches.length===1?e.touches[0].clientY:null;armed=false},{passive:true});window.addEventListener("touchmove",e=>{if(y0===null||!home())return;const d=Math.max(0,e.touches[0].clientY-y0),box=document.getElementById("ptrIndicator"),txt=document.getElementById("ptrText");if(d>18)box?.classList.add("show");armed=d>78;if(txt)txt.textContent=armed?"Relâchez pour actualiser":"Tirez pour actualiser"},{passive:true});window.addEventListener("touchend",()=>{if(y0!==null&&armed&&home())refreshPartnerDashboard();else document.getElementById("ptrIndicator")?.classList.remove("show");y0=null;armed=false},{passive:true});showPartnerPage("dashboardHome")});
@@ -7654,7 +7635,7 @@ function pmEnsure(){
  const main=document.querySelector("main")||document.body;
  if(!document.getElementById("partnerMenuPanel")){
    const s=document.createElement("section");s.id="partnerMenuPanel";s.className="partner-menu-page partner-view-hidden";
-   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm-game="gamePanel"><span class="pm-icon">🎮</span><span class="pm-grow"><b>Jeux OuassVTC</b><small>Rush, 2048, logique, Memory, Snake et plus</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
+   s.innerHTML='<div class="pm-hero"><small>ESPACE CHAUFFEUR</small><h2 id="pmName">Mon espace</h2><small id="pmPresence">Profil sécurisé OuassVTC</small></div><div class="pm-list"><button class="pm-item" data-pm="partnerProfilePanel"><span class="pm-icon">👤</span><span class="pm-grow"><b>Mon profil</b><small>Coordonnées, société et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerDocumentsPanel"><span class="pm-icon">📄</span><span class="pm-grow"><b>Mes documents</b><small>Documents chauffeur et véhicule</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCustomersPanel"><span class="pm-icon">👥</span><span class="pm-grow"><b>Fichier clients</b><small>Mes clients et leurs courses</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerHistoryPanel"><span class="pm-icon">🕘</span><span class="pm-grow"><b>Historique</b><small>Mes courses passées et effectuées</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerCostPanel"><span class="pm-icon">€</span><span class="pm-grow"><b>Coût kilométrique</b><small>Thermique / hybride et électrique</small></span><span class="pm-arrow">›</span></button><button class="pm-item" data-pm="partnerSettingsPanel"><span class="pm-icon">⚙️</span><span class="pm-grow"><b>Réglages</b><small>Application, notifications et préférences</small></span><span class="pm-arrow">›</span></button></div>';
    main.appendChild(s);
  }
  if(!document.getElementById("partnerProfilePanel")){
@@ -8686,34 +8667,6 @@ window.v7917UpdateClientNavPosition=function(lat,lng){
  const p={lat:Number(lat),lng:Number(lng)};if(!Number.isFinite(p.lat)||!Number.isFinite(p.lng))return;paintPosition(p);
 };
 window.v7917RefreshOpenClientNavigation=function(){if(currentItem)drawRoute(true)};
-})();
-</script>
-
-<script id="v7930-games-navigation">
-(function(){
-  function resetGamesHome(){
-    const home=document.getElementById("arcadeHome");
-    if(home) home.classList.remove("hidden");
-    document.querySelectorAll("#gamePanel .arcade-game").forEach(el=>el.classList.add("hidden"));
-  }
-  document.addEventListener("click",function(e){
-    const game=e.target.closest('[data-pm-game="gamePanel"]');
-    if(game){
-      e.preventDefault();e.stopPropagation();
-      resetGamesHome();
-      if(typeof showPartnerPage==="function") showPartnerPage("gamePanel");
-      return;
-    }
-    if(e.target.closest("#v7930GameMenu")){
-      e.preventDefault();resetGamesHome();
-      if(typeof showPartnerPage==="function") showPartnerPage("partnerMenuPanel");
-      return;
-    }
-    if(e.target.closest("#v7930GameHome")){
-      e.preventDefault();resetGamesHome();
-      if(typeof showPartnerPage==="function") showPartnerPage("dashboardHome");
-    }
-  },true);
 })();
 </script>
 </body>
