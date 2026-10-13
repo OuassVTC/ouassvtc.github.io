@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- OuassVTC Chauffeur V79.36 — lisibilité uniforme jour et nuit -->
+<!-- OuassVTC Chauffeur V79.37 — contraste coût kilométrique Android -->
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -8733,44 +8733,54 @@ document.addEventListener("click",function(e){
 });
 </script>
 
-<style id="v7936-theme-text-contrast">
-/* V79.36 — une seule couleur de texte par thème, avec contraste conservé sur les commandes */
-html[data-theme="light"] body,
-html[data-theme="light"] body :where(h1,h2,h3,h4,h5,h6,p,label,legend,small,strong,b,em,i,li,dt,dd,summary,output,code,time,address,blockquote,figcaption,span,div) {
+<style id="v7937-cost-contrast-fix">
+/* V79.37 — page Coût kilométrique : contraste forcé, y compris sur Android WebView */
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel input,
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel textarea,
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel select,
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel option {
+  background:#fff!important;
   color:#000!important;
-}
-html[data-theme="dark"] body,
-html[data-theme="dark"] body :where(h1,h2,h3,h4,h5,h6,p,label,legend,small,strong,b,em,i,li,dt,dd,summary,output,code,time,address,blockquote,figcaption,span,div) {
-  color:#fff!important;
-}
-
-html[data-theme="light"] body :where(input,textarea,select,option) {
-  color:#000!important;
+  -webkit-text-fill-color:#000!important;
   caret-color:#000!important;
+  opacity:1!important;
 }
-html[data-theme="dark"] body :where(input,textarea,select,option) {
-  color:#fff!important;
-  caret-color:#fff!important;
-}
-html[data-theme="light"] body :where(input,textarea)::placeholder {
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel input::placeholder,
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel textarea::placeholder {
   color:#000!important;
-  opacity:.68!important;
+  -webkit-text-fill-color:#000!important;
+  opacity:.58!important;
 }
-html[data-theme="dark"] body :where(input,textarea)::placeholder {
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel .pm-save,
+html[data-theme="light"] body.partner-authenticated #partnerCostPanel .pm-save * {
+  background:#0b1627!important;
   color:#fff!important;
-  opacity:.72!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
 }
 
-/* Les boutons, liens, pastilles et zones volontairement colorées gardent leur contraste propre. */
-html[data-theme] body :where(button,a,[role="button"],.status,.price-chip,.partner-chip,.crm-state,.transfer-driver-badge,.service-pill,.game-chip),
-html[data-theme] body :where(button,a,[role="button"],.status,.price-chip,.partner-chip,.crm-state,.transfer-driver-badge,.service-pill,.game-chip) * {
-  color:inherit!important;
-}
-
-/* Les modules toujours sombres restent lisibles dans les deux thèmes. */
-html[data-theme] body :where(.side-menu,.trip-alert-card,.dashboard-mission,.agenda-forecast,.cost-result,.waiting-timer-card,.trip-extras-card,.interpreter-overlay,.interpreter-card,.game-overlay,.arcade-hero,.v7917-client-nav,.partner-bottom),
-html[data-theme] body :where(.side-menu,.trip-alert-card,.dashboard-mission,.agenda-forecast,.cost-result,.waiting-timer-card,.trip-extras-card,.interpreter-overlay,.interpreter-card,.game-overlay,.arcade-hero,.v7917-client-nav,.partner-bottom) :where(h1,h2,h3,h4,h5,h6,p,label,legend,small,strong,b,em,i,li,dt,dd,summary,output,code,time,address,blockquote,figcaption,span,div) {
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel input,
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel textarea,
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel select,
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel option {
+  background:#0d1520!important;
   color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  caret-color:#fff!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel input::placeholder,
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel textarea::placeholder {
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:.65!important;
+}
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel .pm-save,
+html[data-theme="dark"] body.partner-authenticated #partnerCostPanel .pm-save * {
+  background:#176ef4!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
 }
 </style>
 </body>
