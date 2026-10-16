@@ -1966,6 +1966,10 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
+    const ADMIN_EMAIL = "ouassini.bouab@gmail.com";
+    const requestedAdminDriver = String(new URLSearchParams(location.search).get("adminDriver") || "").trim().toLowerCase();
+    const isAdminAssistance = () => String(auth?.currentUser?.email || "").trim().toLowerCase() === ADMIN_EMAIL && Boolean(requestedAdminDriver);
+    const effectiveDriverEmail = () => isAdminAssistance() ? requestedAdminDriver : String(window.currentPartnerProfile?.email || auth?.currentUser?.email || "").trim().toLowerCase();
     let storage = null;
     let firstBookingsSnapshot = true;
     const knownNewBookingIds = new Set();
@@ -4795,7 +4799,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
         try {
           localSaveInProgress = true;
           const createdReturn = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          partnerOwnerEmail: effectiveDriverEmail(),
             customerName: item.customerName || "Client",
             customerPhone: item.customerPhone || "",
             pickup: item.destination || "",
@@ -5958,7 +5962,8 @@ async function handleStatusAction(id, status) {
         const user = auth.currentUser;
         if (!user?.email) return false;
 
-        const rawEmail = String(user.email).trim();
+        const signedInEmail = String(user.email).trim().toLowerCase();
+        const rawEmail = signedInEmail === ADMIN_EMAIL && requestedAdminDriver ? requestedAdminDriver : String(user.email).trim();
         const email = rawEmail.toLowerCase();
 
         try {
@@ -5988,7 +5993,7 @@ async function handleStatusAction(id, status) {
           }
 
           const profile = { id: profileDoc.id, ...profileDoc.data() };
-          if (profile.active === false) {
+          if (profile.active === false && !isAdminAssistance()) {
             await signOut(auth);
             showLoginError("Ce compte chauffeur est désactivé.");
             return false;
@@ -6002,6 +6007,7 @@ async function handleStatusAction(id, status) {
           // La présence est indépendante du chargement du profil :
           // un refus d'écriture ne doit jamais faire disparaître le prénom.
           try {
+            if (isAdminAssistance()) throw new Error("ADMIN_ASSISTANCE_NO_PRESENCE");
             await updateDoc(profileDoc.ref, {
               online: true,
               lastLoginAt: serverTimestamp(),
@@ -6009,6 +6015,7 @@ async function handleStatusAction(id, status) {
               updatedAt: serverTimestamp()
             });
           } catch (presenceError) {
+            if (presenceError?.message === "ADMIN_ASSISTANCE_NO_PRESENCE") return true;
             console.warn("Présence initiale chauffeur", presenceError);
           }
 
@@ -6262,6 +6269,10 @@ async function handleStatusAction(id, status) {
         document.body.classList.remove("partner-signed-out"); document.body.classList.add("partner-authenticated");
         document.getElementById("partnerBottomNav")?.classList.remove("auth-hidden");
         document.getElementById("appBottomNav")?.classList.remove("auth-hidden");
+        if (isAdminAssistance()) {
+          document.body.classList.add("admin-assistance-mode");
+          const banner=document.createElement("div");banner.id="adminAssistanceBanner";banner.innerHTML=`<strong>Mode administrateur · ${window.currentPartnerProfile?.displayName||requestedAdminDriver}</strong><button type="button">Retour administration</button>`;banner.querySelector("button").onclick=()=>location.href="/chauffeur/";document.body.prepend(banner);
+        }
         if (typeof pmFillProfile === "function") pmFillProfile();
         if (typeof pmListenDocuments === "function") pmListenDocuments();
         if (new URLSearchParams(window.location.search).has("documents")) { if (typeof showPartnerPage === "function") showPartnerPage("partnerDocumentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
@@ -7050,7 +7061,7 @@ async function handleStatusAction(id, status) {
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
           source: "partner_app",
-          sourcePartnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          sourcePartnerEmail: effectiveDriverEmail(),
           sourcePartnerName: window.currentPartnerProfile?.displayName || window.currentPartnerProfile?.companyName || auth?.currentUser?.email || "Chauffeur partenaire",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
@@ -7136,7 +7147,7 @@ async function handleStatusAction(id, status) {
       try {
         localSaveInProgress = true;
         const createdBooking = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
+          partnerOwnerEmail: effectiveDriverEmail(),
           customerName: params.nom,
           customerPhone: params.telephone,
           pickup: params.depart,
@@ -8732,47 +8743,9 @@ document.addEventListener("click",function(e){
  if(e.target.closest(".arcade-back")){document.querySelectorAll("#gamePanel .arcade-game").forEach(x=>x.classList.add("hidden"));document.getElementById("arcadeHome")?.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
 });
 </script>
-
-<style id="v80-global-contrast-refresh">
-html,body{overscroll-behavior-y:none!important}
-.pull-refresh,.pull-refresh-indicator,#pullRefreshIndicator,#ptrIndicator{display:none!important}
-html[data-theme="light"] body,html[data-theme="light"] main,html[data-theme="light"] .tab-panel{color:#000!important}
-html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select{color:#000!important;background:#fff!important;-webkit-text-fill-color:#000!important;caret-color:#000!important}
-html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#667085!important;opacity:1!important;-webkit-text-fill-color:#667085!important}
-html[data-theme="dark"] body,html[data-theme="dark"] main,html[data-theme="dark"] .tab-panel{color:#fff!important}
-html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select{color:#fff!important;background:#0d1520!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important}
-html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#b8c2cf!important;opacity:1!important;-webkit-text-fill-color:#b8c2cf!important}
-html[data-theme="light"] .pm-card,html[data-theme="light"] .pm-grid label,html[data-theme="light"] .cost-calculator-card,html[data-theme="light"] .cost-settings-card{color:#000!important}
-html[data-theme="dark"] .pm-card,html[data-theme="dark"] .pm-grid label,html[data-theme="dark"] .cost-calculator-card,html[data-theme="dark"] .cost-settings-card{color:#fff!important;background:#111925!important}
-.pm-save,.primary{color:#fff!important}.pm-save{background:#0b1627!important}html[data-theme="dark"] .pm-save{background:#176ef4!important}
-#v80ManualRefresh{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;padding:0 15px;border:1px solid var(--border);border-radius:14px;background:var(--soft);color:var(--text);font-weight:900;text-align:left}
-#v80ManualRefresh span:last-child{font-size:21px;color:#176ef4}.v80-audit-notice{margin:12px 0;padding:14px;border:1px solid var(--border);border-radius:15px;background:var(--soft);color:var(--text)}.v80-audit-notice strong,.v80-audit-notice small{display:block}.v80-audit-notice small{margin-top:5px;color:var(--muted);line-height:1.45}
+<style id="admin-assistance-style">
+#adminAssistanceBanner{position:sticky;top:0;z-index:5000;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:max(10px,env(safe-area-inset-top)) 14px 10px;background:#8b1e16;color:#fff;box-shadow:0 8px 24px #0004;font-size:12px}#adminAssistanceBanner strong{font-size:13px}#adminAssistanceBanner button{min-height:38px;padding:0 12px;border:1px solid #ffffff55;border-radius:11px;background:#fff;color:#8b1e16;font-weight:950}.admin-assistance-mode #logout{display:none!important}@media(max-width:440px){#adminAssistanceBanner{align-items:flex-start;flex-direction:column}#adminAssistanceBanner button{width:100%}}
 </style>
-<script id="v80-refresh-control">
-(function(){
- "use strict";
- let startY=null,blocking=false;
- function atTop(){return (window.scrollY||document.documentElement.scrollTop||0)<=1}
- function stop(e){if(!e.touches||e.touches.length!==1)return;const y=e.touches[0].clientY;if(e.type==='touchstart'){startY=y;blocking=atTop();if(blocking)e.stopImmediatePropagation();return}if(startY!==null&&blocking&&y>startY){if(e.cancelable)e.preventDefault();e.stopImmediatePropagation()}}
- window.addEventListener('touchstart',stop,{capture:true,passive:false});window.addEventListener('touchmove',stop,{capture:true,passive:false});window.addEventListener('touchend',e=>{if(blocking)e.stopImmediatePropagation();startY=null;blocking=false},{capture:true,passive:false});window.addEventListener('touchcancel',()=>{startY=null;blocking=false},{capture:true});
- document.addEventListener('DOMContentLoaded',()=>{const menu=document.querySelector('#sideMenu .menu-links')||document.getElementById('sideMenu');if(menu&&!document.getElementById('v80ManualRefresh')){const b=document.createElement('button');b.id='v80ManualRefresh';b.type='button';b.innerHTML='<span>Rafraîchir les données</span><span>↻</span>';b.onclick=()=>{b.disabled=true;b.firstElementChild.textContent='Actualisation…';window.dispatchEvent(new CustomEvent('ouassvtc-manual-refresh'));if(typeof window.refreshPartnerDashboard==='function')Promise.resolve(window.refreshPartnerDashboard()).finally(()=>setTimeout(()=>location.reload(),350));else setTimeout(()=>location.reload(),250)};const settings=menu.querySelector('[data-menu-tab="settingsPanel"]');settings?settings.insertAdjacentElement('beforebegin',b):menu.appendChild(b)}const settings=document.getElementById('settingsPanel');if(settings&&!settings.querySelector('.v80-audit-notice')){const n=document.createElement('div');n.className='v80-audit-notice';n.innerHTML='<strong>Journal professionnel actif</strong><small>Les écrans consultés et les actions de gestion sont enregistrés pour le suivi d’exploitation. Aucun texte saisi, aucune conversation et aucun contenu privé ne sont enregistrés.</small>';settings.appendChild(n)}});
-})();
-</script>
-<script type="module" id="v80-professional-activity">
-import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const VERSION='80.00.20261016.01',sessionId=(crypto.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`),screenNames={dashboardHome:'Tableau de bord',agendaPanel:'Planning',reportPanel:'Chiffre d’affaires',costPanel:'Coût de mission',mileagePanel:'Kilométrage',customersPanel:'Fiches clients',maintenancePanel:'Entretien véhicule',documentsPanel:'Documents chauffeur',gamePanel:'Jeux',settingsPanel:'Réglages',estimatePanel:'Planifier une course'};let db=null,user=null,lastKey='',lastAt=0;
-function profile(){return window.currentPartnerProfile||{}}
-function safeText(v,max=100){return String(v||'').trim().slice(0,max)}
-async function log(eventType,eventLabel,details={}){if(!db||!user)return;const key=`${eventType}|${details.screen||''}|${details.bookingId||''}`,now=Date.now();if(key===lastKey&&now-lastAt<8000)return;lastKey=key;lastAt=now;const p=profile();try{await addDoc(collection(db,'driverActivity'),{eventType:safeText(eventType,50),eventLabel:safeText(eventLabel,100),screen:safeText(details.screen,80),bookingId:safeText(details.bookingId,100),targetStatus:safeText(details.targetStatus,40),driverUid:user.uid,driverEmail:safeText(user.email,160).toLowerCase(),driverName:safeText(p.displayName||p.companyName||user.email,160),sessionId,appVersion:VERSION,device:/Mobi|Android/i.test(navigator.userAgent)?'mobile':'desktop',createdAt:serverTimestamp()})}catch(e){console.warn('Journal professionnel',e?.code||e)}}
-function screenFromButton(b){const id=b?.dataset?.menuTab||b?.dataset?.target||b?.dataset?.openTab||b?.dataset?.bottomPanel||'';return screenNames[id]||safeText(b?.textContent,60)||id}
-document.addEventListener('click',e=>{const menu=e.target.closest('[data-menu-tab],[data-target],[data-open-tab],[data-bottom-panel]');if(menu)log('screen_view','Écran consulté',{screen:screenFromButton(menu)});const po=e.target.closest('[data-purchase-order]');if(po)log('purchase_order_export','Bon de commande exporté',{screen:'Course',bookingId:po.dataset.purchaseOrder});const annual=e.target.closest('#exportNetPdf');if(annual)log('annual_report_export','Rapport annuel exporté',{screen:'Chiffre d’affaires'});const status=e.target.closest('[data-status]');if(status)log('status_change','Statut de course modifié',{screen:'Course',bookingId:status.dataset.id||status.dataset.bookingId,targetStatus:status.dataset.status});const booking=e.target.closest('[data-booking-id],[data-open-booking]');if(booking)log('booking_opened','Fiche course consultée',{screen:'Course',bookingId:booking.dataset.bookingId||booking.dataset.openBooking})},true);
-document.getElementById('quickBookingForm')?.addEventListener('submit',()=>setTimeout(()=>{if(!document.getElementById('quickBookingSuccess')?.classList.contains('hidden'))log('manual_course_submitted','Course manuelle enregistrée',{screen:'Planifier une course'})},1200));
-window.addEventListener('ouassvtc-manual-refresh',()=>log('manual_refresh','Actualisation manuelle',{screen:'Menu'}));
-if(firebaseReady){const app=getApps().length?getApp():initializeApp(firebaseConfig);db=getFirestore(app);onAuthStateChanged(getAuth(app),u=>{user=u;if(u)log('session_start','Connexion à l’application',{screen:'Application chauffeur'})})}
-</script>
 </body>
 </html>
 
