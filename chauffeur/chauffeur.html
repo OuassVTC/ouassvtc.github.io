@@ -733,7 +733,8 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
     .voice-mini-actions{display:flex;gap:6px}.voice-mini-actions button{width:39px;height:39px;border:1px solid #344054;border-radius:12px;background:#151c27;color:#fff;font-size:17px}
     .voice-ai-badge{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 10px;border:1px solid #2b3950;border-radius:999px;color:#b7cdf4;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
     .voice-ai-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 5px #3b82f622}
-    .payment-choice.mixed{grid-column:1/-1;min-height:70px;background:#101722;color:#fff;border-color:#101722}.payment-choice.mixed span{display:inline;margin:0 8px 0 0}.mixed-payment-form{margin-top:12px;padding:16px;border-radius:18px;background:#f4f7fb}.mixed-payment-form.hidden{display:none}.mixed-payment-total{display:flex;justify-content:space-between;gap:12px;margin-bottom:13px;font-weight:850}.mixed-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mixed-payment-grid label{display:block;margin-bottom:6px;color:#616b79;font-size:12px;font-weight:850}.mixed-payment-grid input{width:100%;min-height:50px;border:1px solid #d6dce5;border-radius:13px;background:#fff;padding:10px;font-size:17px}.mixed-payment-error{margin:10px 0;color:#c43131;font-size:12px;font-weight:800}.mixed-payment-error.hidden{display:none}.mixed-payment-form .primary{margin-top:12px}
+    .payment-choice.mixed{grid-column:1/-1;min-height:70px;background:#101722;color:#fff;border-color:#101722}.payment-choice.mixed span{display:inline;margin:0 8px 0 0}.payment-choice.pending{background:#fff4d6;color:#7a4d00;border-color:#f0cb73}.mixed-payment-form{margin-top:12px;padding:16px;border-radius:18px;background:#f4f7fb}.mixed-payment-form.hidden{display:none}.mixed-payment-total{display:flex;justify-content:space-between;gap:12px;margin-bottom:13px;font-weight:850}.mixed-payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mixed-payment-grid label{display:block;margin-bottom:6px;color:#616b79;font-size:12px;font-weight:850}.mixed-payment-grid input{width:100%;min-height:50px;border:1px solid #d6dce5;border-radius:13px;background:#fff;padding:10px;font-size:17px}.mixed-payment-error{margin:10px 0;color:#c43131;font-size:12px;font-weight:800}.mixed-payment-error.hidden{display:none}.mixed-payment-form .primary{margin-top:12px}
+    .unpaid-intro{margin:0 0 16px;color:var(--muted);line-height:1.5}.unpaid-list{display:grid;gap:11px}.unpaid-card{padding:16px;border:1px solid var(--border);border-radius:19px;background:#fff}.unpaid-card-head{display:flex;justify-content:space-between;gap:12px}.unpaid-card strong,.unpaid-card small{display:block}.unpaid-card small{margin-top:4px;color:var(--muted);line-height:1.4}.unpaid-amount{color:#b36a00;font-size:20px;white-space:nowrap}.unpaid-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.unpaid-actions button,.unpaid-actions a{min-height:44px;border:0;border-radius:12px;background:#edf4ff;color:#145fc3;display:grid;place-items:center;text-decoration:none;font-weight:900}.unpaid-actions a{background:#176ef4;color:#fff}.history-status{display:inline-flex;margin-top:5px;padding:4px 8px;border-radius:99px;background:#e8eef7;color:#40516a;font-size:10px;font-weight:950}.history-status.cancelled{background:#ffe3e3;color:#ae2424}.history-status.pending{background:#fff0c7;color:#8a5900}html[data-theme="dark"] .unpaid-card{background:#111925;color:#f4f7fb;border-color:#2f3c50}
     .transfer-driver-months,.transfer-driver-weeks{display:grid;gap:8px;margin-top:8px}.transfer-level-button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #e0e5ec;border-radius:15px;background:#f8fafc;color:#111;text-align:left;font-weight:850}.transfer-level-button small{display:block;margin-top:3px;color:#737d8a;font-weight:700}.transfer-driver-weeks{padding-left:9px;border-left:2px solid #dce7f8}.transfer-driver-courses{display:grid;gap:7px;padding:3px 0 3px 9px}
     .expense-month-groups{display:grid;gap:10px}.expense-month-group{overflow:hidden;border:1px solid #dfe4eb;border-radius:18px;background:#fff}.expense-month-button{width:100%;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:0;background:#fff;color:#111;text-align:left}.expense-month-button span,.expense-month-button strong{display:block}.expense-month-button>span>strong{font-size:16px}.expense-month-button small{display:block;margin-top:3px;color:#737d89;font-size:12px}.expense-month-total{text-align:right;color:#176ef4;font-size:17px}.expense-month-courses{border-top:1px solid #e6eaf0;background:#f8fafc}.expense-month-courses.hidden{display:none}.expense-month-courses .expense-row{margin:0;border:0;border-bottom:1px solid #e6eaf0;border-radius:0;background:transparent}.expense-month-courses .expense-row:last-child{border-bottom:0}
 /* ===== V46 — CORRECTIONS FINANCIÈRES ET HISTORIQUE NET ===== */
@@ -1278,6 +1279,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     <div class="menu-head"><strong>Menu</strong><button class="menu-close" id="closeMenu" type="button" aria-label="Fermer">×</button></div>
     <nav class="menu-nav">
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
+      <button class="menu-link document-menu-link" type="button" data-menu-tab="unpaidPanel"><span>Courses non payées</span><span class="menu-alert-badge hidden" id="unpaidMenuBadge">0</span></button>
       <button class="menu-link" type="button" data-menu-tab="partnersPanel">Chauffeurs partenaires</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
@@ -1407,6 +1409,15 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
           <div id="archiveSearchSection"><div id="archiveSearchList"></div></div>
           <div id="searchNoResults"></div>
         </div>
+      </section>
+
+      <section class="tab-panel hidden" id="unpaidPanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord" title="Tableau de bord"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M9 21v-7h6v7"></path></svg></button></div>
+        <div class="eyebrow">Suivi des encaissements</div>
+        <h2 class="section-title">Courses non payées</h2>
+        <p class="unpaid-intro">Retrouvez les règlements en attente, ouvrez la course ou relancez directement le client par SMS.</p>
+        <div class="unpaid-list" id="unpaidCourseList"></div>
+        <div class="empty hidden" id="unpaidCourseEmpty">Aucune course en attente de règlement.</div>
       </section>
  
       <section class="tab-panel hidden" id="transferPanel">
@@ -1775,7 +1786,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     <div class="payment-sheet">
       <div class="payment-sheet-head"><div><small>Encaissement</small><h2 id="paymentTitle">Mode de règlement</h2></div><button class="payment-close" id="closePaymentChoice" type="button" aria-label="Fermer">×</button></div>
       <p class="payment-copy">Sélectionnez le règlement reçu pour comptabiliser correctement cette course.</p>
-      <div class="payment-choices"><button class="payment-choice card" type="button" data-payment-choice="Paiement par carte bancaire à bord"><span>💳</span>Carte bancaire</button><button class="payment-choice" type="button" data-payment-choice="Paiement en espèces à bord"><span>€</span>Espèces</button><button class="payment-choice mixed" type="button" id="openMixedPayment"><span>↔</span>Paiement mixte</button></div>
+      <div class="payment-choices"><button class="payment-choice card" type="button" data-payment-choice="Paiement par carte bancaire à bord"><span>💳</span>Carte bancaire</button><button class="payment-choice" type="button" data-payment-choice="Paiement en espèces à bord"><span>€</span>Espèces</button><button class="payment-choice pending" type="button" data-payment-choice="En attente de règlement"><span>◷</span>En attente de règlement</button><button class="payment-choice mixed" type="button" id="openMixedPayment"><span>↔</span>Paiement mixte</button></div>
       <form class="mixed-payment-form hidden" id="mixedPaymentForm"><div class="mixed-payment-total">Total de la course <strong id="mixedPaymentTotal">0 €</strong></div><div class="mixed-payment-grid"><div><label for="mixedCardAmount">Montant en carte</label><input id="mixedCardAmount" type="number" min="0" step="0.01" inputmode="decimal"></div><div><label for="mixedCashAmount">Montant en espèces</label><input id="mixedCashAmount" type="number" min="0" step="0.01" inputmode="decimal"></div></div><div class="mixed-payment-error hidden" id="mixedPaymentError"></div><button class="primary" type="submit">Enregistrer la répartition</button></form>
       <button class="payment-cancel" id="cancelPaymentChoice" type="button">Revenir à la course</button>
     </div>
@@ -1966,10 +1977,6 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     let deferredInstallPrompt = null;
     let auth = null;
     let db = null;
-    const ADMIN_EMAIL = "ouassini.bouab@gmail.com";
-    const requestedAdminDriver = String(new URLSearchParams(location.search).get("adminDriver") || "").trim().toLowerCase();
-    const isAdminAssistance = () => String(auth?.currentUser?.email || "").trim().toLowerCase() === ADMIN_EMAIL && Boolean(requestedAdminDriver);
-    const effectiveDriverEmail = () => isAdminAssistance() ? requestedAdminDriver : String(window.currentPartnerProfile?.email || auth?.currentUser?.email || "").trim().toLowerCase();
     let storage = null;
     let firstBookingsSnapshot = true;
     const knownNewBookingIds = new Set();
@@ -2566,9 +2573,31 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
       const term = normalizeSearch(rawTerm);
       if (!term) return true;
       const haystack = normalizeSearch([item.customerName, item.customerPhone, item.pickup, item.destination, item.customerMessage].join(" "));
-      const searchedDigits = term.replace(/\D/g, "");
-      const phoneDigits = String(item.customerPhone || "").replace(/\D/g, "");
+      const canonicalPhone = value => {
+        let digits = String(value || "").replace(/\D/g, "");
+        if (digits.startsWith("0033")) digits = digits.slice(4);
+        else if (digits.startsWith("33") && digits.length >= 11) digits = digits.slice(2);
+        if (digits.startsWith("0")) digits = digits.slice(1);
+        return digits;
+      };
+      const searchedDigits = canonicalPhone(rawTerm);
+      const phoneDigits = canonicalPhone(item.customerPhone);
       return haystack.includes(term) || (searchedDigits.length >= 3 && phoneDigits.includes(searchedDigits));
+    }
+
+    function isPaymentPending(item) {
+      const value = normalizeSearch(`${item?.paymentStatus || ""} ${item?.paymentMethod || ""}`);
+      return item?.paymentStatus === "pending" || value.includes("attente de reglement") || value.includes("non paye") || value.includes("impaye");
+    }
+
+    function operationalDate(item) {
+      return completedDate(item) || bookingDate(item) || createdDate(item) || null;
+    }
+
+    function operationalStatus(item) {
+      if (isPaymentPending(item)) return { label:"En attente de règlement", css:"pending" };
+      if (["cancelled","rejected"].includes(item?.status)) return { label:"Annulée", css:"cancelled" };
+      return { label:"Réalisée", css:"completed" };
     }
  
     function customerPhoneKey(value) {
@@ -2600,9 +2629,13 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
     }
  
     function renderMonthHistory(allCompleted, total) {
+      allCompleted = state.bookings
+        .filter(item => ["completed", "cancelled", "rejected"].includes(item.status) && operationalDate(item))
+        .sort((a, b) => operationalDate(b) - operationalDate(a));
+      total = items => items.reduce((sum, item) => sum + (item.status === "completed" && !isPaymentPending(item) ? moneyValue(item.estimatedPrice) : 0), 0);
       const months = new Map();
       allCompleted.forEach(item => {
-        const date = completedDate(item);
+        const date = operationalDate(item);
         const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
         if (!months.has(key)) months.set(key, { date: new Date(date.getFullYear(), date.getMonth(), 1), items: [] });
         months.get(key).items.push(item);
@@ -2611,7 +2644,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
       $("monthHistoryList").innerHTML = [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([key, month]) => {
         const weeks = new Map();
         month.items.forEach(item => {
-          const start = mondayOf(completedDate(item));
+          const start = mondayOf(operationalDate(item));
           const weekKey = start.toISOString().slice(0, 10);
           if (!weeks.has(weekKey)) weeks.set(weekKey, { start, items: [] });
           weeks.get(weekKey).items.push(item);
@@ -2621,11 +2654,12 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
           const end = new Date(week.start);
           end.setDate(end.getDate() + 6);
           const period = `Du ${week.start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} au ${end.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })}`;
-          const courses = [...week.items].sort((a, b) => completedDate(b) - completedDate(a)).map(item => {
-            const date = completedDate(item);
+          const courses = [...week.items].sort((a, b) => operationalDate(b) - operationalDate(a)).map(item => {
+            const date = operationalDate(item);
+            const stateInfo = operationalStatus(item);
             const dateText = date.toLocaleDateString("fr-FR", { weekday:"short", day:"2-digit", month:"2-digit" });
             const timeText = date.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
-            return `<button class="history-week-course" type="button" data-open-history-booking="${item.id}"><span><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${escapeHtml(dateText)} à ${escapeHtml(timeText)}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
+            return `<button class="history-week-course" type="button" data-open-history-booking="${item.id}"><span><strong>${escapeHtml(item.customerName || "Course")}</strong><small>${escapeHtml(dateText)} à ${escapeHtml(timeText)}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small><span class="history-status ${stateInfo.css}">${escapeHtml(stateInfo.label)}</span></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`;
           }).join("");
  
           return `<section class="history-week"><button class="history-week-button" type="button" data-history-week="${weekKey}"><span><strong>${escapeHtml(period)}</strong><br>${week.items.length} course${week.items.length > 1 ? "s" : ""}</span><strong>${total(week.items).toFixed(0)} € ›</strong></button><div class="history-week-courses hidden" id="history-week-${weekKey}">${courses}</div></section>`;
@@ -2656,11 +2690,11 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
  
     function financeCompletedItems() {
       const rows = new Map();
-      (state.bookings || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
+      (state.bookings || []).filter(item => item.status === "completed" && !isPaymentPending(item) && completedDate(item)).forEach(item => {
         const key = item.isPartnerMission && item.missionId ? `mission:${item.missionId}` : `booking:${item.id}`;
         rows.set(key, item);
       });
-      (state.driverMissions || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
+      (state.driverMissions || []).filter(item => item.status === "completed" && !isPaymentPending(item) && completedDate(item)).forEach(item => {
         const missionId = item.missionId || item.token || item.id || item.bookingId;
         const bookingId = item.bookingId || item.id;
         if (bookingId) rows.delete(`booking:${bookingId}`);
@@ -4049,21 +4083,37 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
         return;
       }
       const items = state.bookings
-        .filter(item => item.status === "completed" && matchesSearch(item))
-        .sort((a, b) => completedDate(b) - completedDate(a));
+        .filter(item => ["completed", "cancelled", "rejected"].includes(item.status) && matchesSearch(item))
+        .sort((a, b) => operationalDate(b) - operationalDate(a));
  
       $("historyCourseEmpty").classList.toggle("hidden", items.length !== 0);
       $("historyCourseEmpty").textContent = "Aucune course archivée trouvée avec cette recherche.";
  
       $("historyCourseList").innerHTML = items.map(item => {
-        const date = completedDate(item);
+        const date = operationalDate(item);
+        const stateInfo = operationalStatus(item);
         const dateText = date ? date.toLocaleDateString("fr-FR", { day:"2-digit", month:"short", year:"numeric" }) : "—";
-        return `<button class="accepted-row" type="button" data-open-history-course="${item.id}"><span class="accepted-row-time">✓</span><span><strong>${escapeHtml(item.customerName || "Client")} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(dateText)} · ${escapeHtml(item.customerPhone || "Téléphone non renseigné")}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}<br>${escapeHtml(loyaltyLabel(item))}</small></span><span class="accepted-row-arrow">›</span></button>`;
+        return `<button class="accepted-row" type="button" data-open-history-course="${item.id}"><span class="accepted-row-time">${stateInfo.css === "cancelled" ? "×" : stateInfo.css === "pending" ? "◷" : "✓"}</span><span><strong>${escapeHtml(item.customerName || "Client")} · ${escapeHtml(item.estimatedPrice || "—")}</strong><small>${escapeHtml(dateText)} · ${escapeHtml(item.customerPhone || "Téléphone non renseigné")}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small><span class="history-status ${stateInfo.css}">${escapeHtml(stateInfo.label)}</span></span><span class="accepted-row-arrow">›</span></button>`;
       }).join("");
  
       $("historyCourseList").querySelectorAll("[data-open-history-course]").forEach(button => {
         button.addEventListener("click", () => openBooking(button.dataset.openHistoryCourse));
       });
+    }
+
+    function renderUnpaidCourses() {
+      const items = state.bookings.filter(item => item.status === "completed" && isPaymentPending(item)).sort((a,b) => operationalDate(b) - operationalDate(a));
+      $("unpaidCourseEmpty").classList.toggle("hidden", items.length !== 0);
+      $("unpaidMenuBadge").textContent = String(items.length);
+      $("unpaidMenuBadge").classList.toggle("hidden", items.length === 0);
+      $("unpaidCourseList").innerHTML = items.map(item => {
+        const date = operationalDate(item);
+        const when = date ? date.toLocaleDateString("fr-FR", {day:"2-digit", month:"long", year:"numeric"}) : "Date non renseignée";
+        const phone = phoneHref(item.customerPhone);
+        const message = encodeURIComponent(`Bonjour ${item.customerName || ""}, sauf erreur de notre part, le règlement de votre course OuassVTC du ${when} est toujours en attente. Merci de nous contacter afin de le régulariser.`);
+        return `<article class="unpaid-card"><div class="unpaid-card-head"><span><strong>${escapeHtml(item.customerName || "Client")}</strong><small>${escapeHtml(when)} · ${escapeHtml(item.customerPhone || "Téléphone non renseigné")}<br>${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small></span><strong class="unpaid-amount">${escapeHtml(item.estimatedPrice || "—")}</strong></div><div class="unpaid-actions"><button type="button" data-open-unpaid-course="${escapeHtml(item.id)}">Ouvrir la course</button>${phone ? `<a href="sms:${escapeHtml(phone)}?body=${message}">Relancer par SMS</a>` : `<button type="button" disabled>Téléphone absent</button>`}</div></article>`;
+      }).join("");
+      $("unpaidCourseList").querySelectorAll("[data-open-unpaid-course]").forEach(button => button.addEventListener("click", () => openBooking(button.dataset.openUnpaidCourse)));
     }
  
     function crmPhone(value) {
@@ -4349,6 +4399,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
       renderReport();
       renderTransfers();
       renderCourseHistory();
+      renderUnpaidCourses();
     }
  
     function tripOriginalFare(item) {
@@ -4799,7 +4850,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
         try {
           localSaveInProgress = true;
           const createdReturn = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: effectiveDriverEmail(),
+          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
             customerName: item.customerName || "Client",
             customerPhone: item.customerPhone || "",
             pickup: item.destination || "",
@@ -4885,6 +4936,7 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
             scheduledAtText: $("editDateTime").value,
             passengers: $("editPassengers").value.trim() || "Non précisé",
             paymentMethod: $("editPayment").value.trim() || "Non précisé",
+            paymentStatus: normalizeSearch($("editPayment").value).includes("attente") ? "pending" : "paid",
             estimatedPrice: $("editPrice").value.trim() || "Estimation non renseignée",
             customerMessage: $("editMessage").value.trim(),
             missionApproachKm: 0,
@@ -5248,9 +5300,10 @@ html[data-theme="dark"] .v7930-games-nav button{background:#172334;color:#fff;bo
   document.getElementById("v755PayCancel").onclick=()=>done(null);
   document.getElementById("v755PayConfirm").onclick=()=>{
    if(!method)return alert("Choisissez le mode de règlement.");
+   if(method==="pending")return done({paymentMethod:"En attente de règlement",paymentStatus:"pending",paymentCardAmount:0,paymentCashAmount:0,paidAmount:0});
    let card=method==="card"?total:0,cash=method==="cash"?total:0;
    if(method==="mixed"){card=Number(document.getElementById("v755CardAmount").value||0);cash=Number(document.getElementById("v755CashAmount").value||0);if(card<=0||cash<=0)return alert("Renseignez les deux montants.");if(total>0&&Math.abs(card+cash-total)>0.02)return alert(`Le total CB + espèces doit être égal à ${total.toFixed(2)} €.`)}
-   done({paymentMethod:method==="card"?"Carte bancaire":method==="cash"?"Espèces":"Mixte",paymentCardAmount:Math.round(card*100)/100,paymentCashAmount:Math.round(cash*100)/100,paidAmount:Math.round((card+cash)*100)/100});
+   done({paymentMethod:method==="card"?"Carte bancaire":method==="cash"?"Espèces":"Mixte",paymentStatus:"paid",paymentCardAmount:Math.round(card*100)/100,paymentCashAmount:Math.round(cash*100)/100,paidAmount:Math.round((card+cash)*100)/100});
   };
   modal.classList.remove("hidden");
  });
@@ -5962,8 +6015,7 @@ async function handleStatusAction(id, status) {
         const user = auth.currentUser;
         if (!user?.email) return false;
 
-        const signedInEmail = String(user.email).trim().toLowerCase();
-        const rawEmail = signedInEmail === ADMIN_EMAIL && requestedAdminDriver ? requestedAdminDriver : String(user.email).trim();
+        const rawEmail = String(user.email).trim();
         const email = rawEmail.toLowerCase();
 
         try {
@@ -5993,7 +6045,7 @@ async function handleStatusAction(id, status) {
           }
 
           const profile = { id: profileDoc.id, ...profileDoc.data() };
-          if (profile.active === false && !isAdminAssistance()) {
+          if (profile.active === false) {
             await signOut(auth);
             showLoginError("Ce compte chauffeur est désactivé.");
             return false;
@@ -6007,7 +6059,6 @@ async function handleStatusAction(id, status) {
           // La présence est indépendante du chargement du profil :
           // un refus d'écriture ne doit jamais faire disparaître le prénom.
           try {
-            if (isAdminAssistance()) throw new Error("ADMIN_ASSISTANCE_NO_PRESENCE");
             await updateDoc(profileDoc.ref, {
               online: true,
               lastLoginAt: serverTimestamp(),
@@ -6015,7 +6066,6 @@ async function handleStatusAction(id, status) {
               updatedAt: serverTimestamp()
             });
           } catch (presenceError) {
-            if (presenceError?.message === "ADMIN_ASSISTANCE_NO_PRESENCE") return true;
             console.warn("Présence initiale chauffeur", presenceError);
           }
 
@@ -6269,10 +6319,6 @@ async function handleStatusAction(id, status) {
         document.body.classList.remove("partner-signed-out"); document.body.classList.add("partner-authenticated");
         document.getElementById("partnerBottomNav")?.classList.remove("auth-hidden");
         document.getElementById("appBottomNav")?.classList.remove("auth-hidden");
-        if (isAdminAssistance()) {
-          document.body.classList.add("admin-assistance-mode");
-          const banner=document.createElement("div");banner.id="adminAssistanceBanner";banner.innerHTML=`<strong>Mode administrateur · ${window.currentPartnerProfile?.displayName||requestedAdminDriver}</strong><button type="button">Retour administration</button>`;banner.querySelector("button").onclick=()=>location.href="/chauffeur/";document.body.prepend(banner);
-        }
         if (typeof pmFillProfile === "function") pmFillProfile();
         if (typeof pmListenDocuments === "function") pmListenDocuments();
         if (new URLSearchParams(window.location.search).has("documents")) { if (typeof showPartnerPage === "function") showPartnerPage("partnerDocumentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
@@ -6561,6 +6607,7 @@ async function handleStatusAction(id, status) {
       const method = button.dataset.paymentChoice;
       resolvePaymentChoice({
         paymentMethod:method,
+        paymentStatus:method === "En attente de règlement" ? "pending" : "paid",
         paymentCardAmount:method.includes("carte") ? currentPaymentTotal : 0,
         paymentCashAmount:method.includes("espèces") ? currentPaymentTotal : 0
       });
@@ -6580,7 +6627,7 @@ async function handleStatusAction(id, status) {
         $("mixedPaymentError").classList.remove("hidden");
         return;
       }
-      resolvePaymentChoice({ paymentMethod:"Paiement mixte CB + espèces", paymentCardAmount:card, paymentCashAmount:cash });
+      resolvePaymentChoice({ paymentMethod:"Paiement mixte CB + espèces", paymentStatus:"paid", paymentCardAmount:card, paymentCashAmount:cash });
     });
     $("closePaymentChoice").addEventListener("click", () => resolvePaymentChoice(null));
     $("cancelPaymentChoice").addEventListener("click", () => resolvePaymentChoice(null));
@@ -7061,7 +7108,7 @@ async function handleStatusAction(id, status) {
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
           source: "partner_app",
-          sourcePartnerEmail: effectiveDriverEmail(),
+          sourcePartnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
           sourcePartnerName: window.currentPartnerProfile?.displayName || window.currentPartnerProfile?.companyName || auth?.currentUser?.email || "Chauffeur partenaire",
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
@@ -7147,7 +7194,7 @@ async function handleStatusAction(id, status) {
       try {
         localSaveInProgress = true;
         const createdBooking = await addDoc(collection(db, "bookings"), {
-          partnerOwnerEmail: effectiveDriverEmail(),
+          partnerOwnerEmail: auth?.currentUser?.email?.toLowerCase() || "",
           customerName: params.nom,
           customerPhone: params.telephone,
           pickup: params.depart,
@@ -8033,7 +8080,7 @@ document.addEventListener("click", event => {
 </style>
 <div id="partnerPaymentModal" class="hidden" aria-modal="true" role="dialog">
  <div class="v755-pay-card"><h3>Règlement de la course</h3><p id="v755PayTotal">Choisissez comment le client a réglé.</p>
- <div class="v755-pay-choices"><button type="button" class="v755-pay-choice" data-v755-pay="card">💳 Carte bancaire</button><button type="button" class="v755-pay-choice" data-v755-pay="cash">💶 Espèces</button><button type="button" class="v755-pay-choice" data-v755-pay="mixed">💳 + 💶 Mixte</button></div>
+ <div class="v755-pay-choices"><button type="button" class="v755-pay-choice" data-v755-pay="card">💳 Carte bancaire</button><button type="button" class="v755-pay-choice" data-v755-pay="cash">💶 Espèces</button><button type="button" class="v755-pay-choice" data-v755-pay="pending">◷ En attente</button><button type="button" class="v755-pay-choice" data-v755-pay="mixed">💳 + 💶 Mixte</button></div>
  <div id="v755MixedFields" class="hidden"><label>Montant CB (€)<input id="v755CardAmount" type="number" min="0" step="0.01"></label><label>Montant espèces (€)<input id="v755CashAmount" type="number" min="0" step="0.01"></label></div>
  <div class="v755-pay-actions"><button type="button" class="v755-pay-cancel" id="v755PayCancel">Annuler</button><button type="button" class="v755-pay-confirm" id="v755PayConfirm">Valider et terminer</button></div></div>
 </div>
@@ -8742,11 +8789,6 @@ document.addEventListener("click",function(e){
  if(e.target.closest("#v7930GamesMenu")){document.getElementById("sideMenu")?.classList.remove("hidden");document.getElementById("menuOverlay")?.classList.remove("hidden")}
  if(e.target.closest(".arcade-back")){document.querySelectorAll("#gamePanel .arcade-game").forEach(x=>x.classList.add("hidden"));document.getElementById("arcadeHome")?.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
 });
-</script>
-<style id="admin-assistance-style">
-#adminAssistanceBanner{position:sticky;top:0;z-index:5000;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:max(10px,env(safe-area-inset-top)) 14px 10px;background:#8b1e16;color:#fff;box-shadow:0 8px 24px #0004;font-size:12px}#adminAssistanceBanner strong{font-size:13px}#adminAssistanceBanner button{min-height:38px;padding:0 12px;border:1px solid #ffffff55;border-radius:11px;background:#fff;color:#8b1e16;font-weight:950}.admin-assistance-mode #logout{display:none!important}@media(max-width:440px){#adminAssistanceBanner{align-items:flex-start;flex-direction:column}#adminAssistanceBanner button{width:100%}}
-</style>
-</body>
+</script></body>
 </html>
-
 
