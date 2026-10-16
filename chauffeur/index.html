@@ -6612,64 +6612,51 @@ document.documentElement.dataset.adminPilotVersion=V79;window.addEventListener('
 @media(max-width:700px){#v79ViewLive #v79AdminMap{height:72vh!important;min-height:480px!important;border-radius:18px!important}}
 </style>
 
-<style id="v7932-theme-and-refresh-fix">
-html,body{overscroll-behavior-y:none!important}
-html.v7932-refresh-locked,html.v7932-refresh-locked body{overscroll-behavior:none!important}
+<style id="v7933-theme-refresh-lock">
+html{height:100%;overflow:hidden!important;overscroll-behavior:none!important}
+body{height:100%;overflow:hidden!important;overscroll-behavior:none!important;display:flex;flex-direction:column}
+.topbar{flex:0 0 auto}
+main.container{flex:1 1 auto;min-height:0;width:100%;overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:none!important;-webkit-overflow-scrolling:touch}
+.side-menu{overflow-y:auto!important;overscroll-behavior:none!important}
 .manual-refresh-link{margin-top:8px;border-color:#b9d1f5!important;background:#edf5ff!important;color:#0b5fc7!important}
-.manual-refresh-link span:last-child{font-size:22px;font-weight:900}
-.manual-refresh-link.is-refreshing{pointer-events:none;opacity:.72}
+.manual-refresh-link span:last-child{font-size:22px;font-weight:900}.manual-refresh-link.is-refreshing{pointer-events:none;opacity:.72}
 html[data-theme="light"]{color-scheme:light;--text:#111;--muted:#686868;--soft:#f3f3f3;--border:#dedede}
 html[data-theme="light"] body,html[data-theme="light"] .container,html[data-theme="light"] .tab-panel{color:#111!important}
-html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select{
-  color:#111!important;-webkit-text-fill-color:#111!important;caret-color:#111!important
-}
+html[data-theme="light"] input,html[data-theme="light"] textarea,html[data-theme="light"] select{color:#111!important;-webkit-text-fill-color:#111!important;caret-color:#111!important}
 html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;opacity:1!important}
 html[data-theme="dark"] body,html[data-theme="dark"] .container,html[data-theme="dark"] .tab-panel{color:#f4f7fb!important}
-html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select{
-  color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important
-}
+html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select{color:#fff!important;-webkit-text-fill-color:#fff!important;caret-color:#fff!important}
 html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#aeb8c8!important;-webkit-text-fill-color:#aeb8c8!important;opacity:1!important}
 html[data-theme="dark"] .manual-refresh-link{background:#172130!important;color:#fff!important;border-color:#344155!important}
 </style>
 
-<script id="v7932-refresh-lock-script">
+<script id="v7933-refresh-lock-script">
 (function(){
  "use strict";
- document.documentElement.classList.add("v7932-refresh-locked");
- let touchStartY=0;
- let touchStartX=0;
+ let touchStartY=0,touchStartX=0;
  function canScrollUp(target){
    for(let el=target instanceof Element?target:null;el&&el!==document.body;el=el.parentElement){
      const style=getComputedStyle(el);
      if(/auto|scroll/.test(style.overflowY)&&el.scrollTop>0)return true;
    }
-   return (document.scrollingElement?.scrollTop||0)>0;
+   return false;
  }
  document.addEventListener("touchstart",event=>{
-   const touch=event.touches[0];
-   if(!touch)return;
-   touchStartY=touch.clientY;
-   touchStartX=touch.clientX;
- },{passive:true});
+   const touch=event.touches[0];if(!touch)return;
+   touchStartY=touch.clientY;touchStartX=touch.clientX;
+ },{passive:true,capture:true});
  document.addEventListener("touchmove",event=>{
    if(event.touches.length!==1)return;
-   const touch=event.touches[0];
-   const deltaY=touch.clientY-touchStartY;
-   const deltaX=Math.abs(touch.clientX-touchStartX);
-   if(deltaY>8&&deltaY>deltaX&&!canScrollUp(event.target))event.preventDefault();
- },{passive:false});
+   const touch=event.touches[0],deltaY=touch.clientY-touchStartY,deltaX=Math.abs(touch.clientX-touchStartX);
+   if(deltaY>6&&deltaY>deltaX&&!canScrollUp(event.target))event.preventDefault();
+ },{passive:false,capture:true});
  async function manualRefresh(){
    const button=document.getElementById("manualRefreshButton");
    if(button){button.classList.add("is-refreshing");button.firstElementChild.textContent="Actualisation…"}
    try{
-     if("serviceWorker" in navigator){
-       const registration=await navigator.serviceWorker.getRegistration("/chauffeur/");
-       await registration?.update();
-     }
+     if("serviceWorker" in navigator){const registration=await navigator.serviceWorker.getRegistration("/chauffeur/");await registration?.update()}
    }catch(error){console.warn("Mise à jour de l’application",error)}
-   const url=new URL(location.href);
-   url.searchParams.set("refresh",Date.now().toString());
-   location.replace(url.toString());
+   const url=new URL(location.href);url.searchParams.set("refresh",Date.now().toString());location.replace(url.toString());
  }
  document.addEventListener("DOMContentLoaded",()=>{
    document.getElementById("manualRefreshButton")?.addEventListener("click",manualRefresh);
