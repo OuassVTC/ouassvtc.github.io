@@ -2030,6 +2030,26 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       return item?.paymentStatus === "pending" || value.includes("attente de reglement") || value.includes("non paye") || value.includes("impaye");
     }
 
+    const pendingDebtAlertTimes = new Map();
+    function pendingPaymentsForPhone(phone) {
+      const key = customerPhoneKey(phone);
+      if (!key) return [];
+      return state.bookings.filter(item => item.status === "completed" && isPaymentPending(item) && customerPhoneKey(item.customerPhone) === key);
+    }
+
+    function warnPendingPaymentForPhone(phone, customerName = "") {
+      const key = customerPhoneKey(phone);
+      const debts = pendingPaymentsForPhone(phone);
+      if (!key || !debts.length) return debts;
+      const previous = pendingDebtAlertTimes.get(key) || 0;
+      if (Date.now() - previous > 600000) {
+        pendingDebtAlertTimes.set(key, Date.now());
+        const amount = debts.reduce((sum,item) => sum + moneyValue(item.estimatedPrice), 0);
+        alert(`⚠ RÈGLEMENT EN ATTENTE\n\n${customerName || debts[0]?.customerName || "Ce client"} possède ${debts.length} course${debts.length > 1 ? "s" : ""} non payée${debts.length > 1 ? "s" : ""}, pour un total de ${euroAmount(amount)}.\n\nConsultez « Courses non payées » avant de confirmer la nouvelle réservation.`);
+      }
+      return debts;
+    }
+
     function operationalDate(item) {
       return completedDate(item) || bookingDate(item) || createdDate(item) || null;
     }
@@ -2146,6 +2166,11 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         const date = completedDate(item);
         return date >= weekStart && date < nextWeekStart;
       });
+      const operationalWeekItems = state.bookings.filter(item => {
+        if (!["completed", "cancelled", "rejected"].includes(item.status)) return false;
+        const date = operationalDate(item);
+        return date && date >= weekStart && date < nextWeekStart;
+      }).sort((a,b) => operationalDate(a) - operationalDate(b));
       const monthItems = allCompleted.filter(item => completedDate(item) >= monthStart);
       const yearItems = allCompleted.filter(item => {
         const date = completedDate(item);
@@ -2155,7 +2180,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       const tripLabel = items => items.length === 1 ? "1 course terminée" : `${items.length} courses terminées`;
       $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
       const weekIsOpen = $("toggleWeekBreakdown").getAttribute("aria-expanded") === "true";
-      $("weekTrips").textContent = `${tripLabel(weekItems)} · ${weekIsOpen ? "Masquer le détail" : "Voir le détail"}`;
+      $("weekTrips").textContent = `${operationalWeekItems.length} course${operationalWeekItems.length > 1 ? "s" : ""} · ${weekIsOpen ? "Masquer le détail" : "Voir le détail"}`;
       $("monthRevenue").textContent = `${total(monthItems).toFixed(0)} €`;
       $("monthTrips").textContent = tripLabel(monthItems);
       $("yearRevenue").textContent = `${total(yearItems).toFixed(0)} €`;
@@ -2167,15 +2192,18 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         start.setDate(start.getDate() + index);
         const end = new Date(start);
         end.setDate(end.getDate() + 1);
-        const items = weekItems.filter(item => {
-          const date = completedDate(item);
+        const items = operationalWeekItems.filter(item => {
+          const date = operationalDate(item);
           return date >= start && date < end;
         });
         const isToday = start.toDateString() === today.toDateString();
         const count = items.length;
-        return `<div class="week-day-row${isToday ? " is-today" : ""}"><div><strong>${name}${isToday ? " · Aujourd’hui" : ""}</strong><small>${start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} · ${count} course${count > 1 ? "s" : ""}</small></div><span class="week-day-amount">${total(items).toFixed(0)} €</span></div>`;
+        const paidTotal = items.reduce((sum,item) => sum + (item.status === "completed" && !isPaymentPending(item) ? moneyValue(item.estimatedPrice) : 0), 0);
+        const courses = items.map(item => { const info=operationalStatus(item),date=operationalDate(item); return `<button class="history-week-course" type="button" data-open-current-week-course="${escapeHtml(item.id)}"><span><strong>${escapeHtml(item.customerName || "Client")}</strong><small>${date.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})} · ${escapeHtml(item.pickup || "Départ non renseigné")} → ${escapeHtml(item.destination || "Arrivée non renseignée")}</small><span class="history-status ${info.css}">${escapeHtml(info.label)}</span></span><span class="archive-price">${escapeHtml(item.estimatedPrice || "—")} ›</span></button>`; }).join("");
+        return `<section class="history-week"><div class="week-day-row${isToday ? " is-today" : ""}"><div><strong>${name}${isToday ? " · Aujourd’hui" : ""}</strong><small>${start.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" })} · ${count} course${count > 1 ? "s" : ""}</small></div><span class="week-day-amount">${paidTotal.toFixed(0)} € encaissés</span></div>${courses ? `<div class="history-week-courses">${courses}</div>` : ""}</section>`;
       }).join("");
-      $("weekBreakdown").innerHTML = `<div class="week-breakdown-head"><span>Détail de la semaine</span><span>Chiffre d’affaires</span></div>${dayRows}`;
+      $("weekBreakdown").innerHTML = `<div class="week-breakdown-head"><span>Détail de la semaine</span><span>Chiffre d’affaires encaissé</span></div>${dayRows}`;
+      $("weekBreakdown").querySelectorAll("[data-open-current-week-course]").forEach(button => button.addEventListener("click", () => openBooking(button.dataset.openCurrentWeekCourse)));
       renderMonthHistory(allCompleted, total);
       renderFinanceReports();
     }
@@ -5105,7 +5133,13 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           openBooking(requestedBookingId);
           window.history.replaceState({}, document.title, "/chauffeur/");
         }
-        if (incoming.length) showTripAlert(incoming.map(change => change.doc.id));
+        if (incoming.length) {
+          showTripAlert(incoming.map(change => change.doc.id));
+          incoming.forEach(change => {
+            const booking = change.doc.data();
+            warnPendingPaymentForPhone(booking.customerPhone, booking.customerName);
+          });
+        }
       }, error => {
         console.error(error);
         $("manualSync").classList.remove("syncing");
@@ -5836,6 +5870,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         message.textContent = customer.pickup
           ? `Client reconnu : ${customer.name || "nom à compléter"}. Son adresse de départ habituelle a été ajoutée.`
           : `Client reconnu : ${customer.name || "nom à compléter"}.`;
+        const debts = warnPendingPaymentForPhone($("driverPhone").value, customer.name);
+        if (debts.length) message.textContent = `⚠ ${debts.length} course${debts.length > 1 ? "s" : ""} en attente de règlement pour ce client. Vérifiez « Courses non payées ».`;
         message.classList.remove("hidden");
       }, 250);
     });
