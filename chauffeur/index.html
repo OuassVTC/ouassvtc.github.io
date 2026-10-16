@@ -5029,11 +5029,11 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           const silentSource = ["partner_dispatch","admin_manual","driver-quick"].includes(String(item.source||""));
           return change.type === "added" && !isPartnerOwned && !silentSource && item.status === "new" && !knownNewBookingIds.has(change.doc.id) && !localSaveInProgress;
         });
-        // Les courses créées par un chauffeur restent visibles dans son profil,
-        // mais n'entrent pas dans le planning / les nouvelles courses Admin.
+        // Toutes les courses doivent rester visibles dans l'administration.
+        // partnerOwnerEmail identifie le chauffeur qui a créé la course et ne doit
+        // jamais servir à exclure la réservation du planning central.
         state.bookings = snapshot.docs
-          .map(result => ({ id: result.id, ...result.data() }))
-          .filter(item => !item.partnerOwnerEmail);
+          .map(result => ({ id: result.id, ...result.data() }));
         mergePendingDispatchIntoAdminBookings();
         state.bookings.filter(item => ["new", "accepted"].includes(item.status) && !Number(item.missionTotalKm) && !automaticCostAttemptIds.has(item.id)).forEach(item => {
           automaticCostAttemptIds.add(item.id);
