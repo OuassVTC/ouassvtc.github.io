@@ -27,7 +27,8 @@
     }
  
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{overscroll-behavior-y:none;touch-action:pan-x pan-y}
+    html,body{overscroll-behavior:none!important;touch-action:pan-x pan-y}
+    body,.tab-panel,.side-menu,.detail-body,#v79AdminCockpit{overscroll-behavior-y:none!important}
  
     body{
       min-height:100vh;
@@ -932,6 +933,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       <button class="menu-link active" type="button" data-menu-tab="dashboardHome">Tableau de bord</button>
       <button class="menu-link" type="button" data-menu-tab="partnersPanel">Chauffeurs partenaires</button>
       <button class="menu-link" type="button" data-menu-tab="reportPanel">Chiffre d’affaires</button>
+      <button class="menu-link" type="button" data-menu-tab="unpaidPanel">Courses non payées</button>
       <button class="menu-link" type="button" data-menu-tab="costPanel">Coût de mission</button>
       <button class="menu-link" type="button" data-menu-tab="mileagePanel">Kilométrage parcouru</button>
       <button class="menu-link" type="button" data-menu-tab="customersPanel">Fiches clients</button>
@@ -939,6 +941,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       <button class="menu-link document-menu-link" type="button" data-menu-tab="documentsPanel"><span>Documents chauffeur</span><span class="menu-alert-badge hidden" id="documentMenuBadge">0</span></button>
       <button class="menu-link" type="button" data-menu-tab="gamePanel">Jeux OuassVTC</button>
       <button class="menu-link settings-menu-link" type="button" data-menu-tab="settingsPanel"><span>Réglages</span><span>›</span></button>
+      <button class="menu-link" id="manualRefreshButton" type="button">↻ Rafraîchir l’application</button>
     </nav>
     <button class="menu-logout hidden" id="logout" type="button"><span>↪</span><span>Déconnexion</span></button>
   </aside>
@@ -1002,6 +1005,19 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           <div class="dashboard-following-list" id="dashboardFollowingList"></div>
           <div class="dashboard-following-empty" id="dashboardFollowingEmpty">Aucune autre course prévue aujourd’hui.</div>
         </section>
+      </section>
+
+      <section class="tab-panel hidden" id="unpaidPanel">
+        <div class="panel-home-row"><button class="panel-home-button" type="button" data-open-tab="dashboardHome" aria-label="Retour au tableau de bord">⌂</button></div>
+        <div class="eyebrow">Suivi des encaissements</div>
+        <h2 class="section-title">Courses non payées</h2>
+        <div class="stats"><article class="stat"><strong id="unpaidCount">0</strong><span>En attente</span></article><article class="stat"><strong id="unpaidTotal">0 €</strong><span>À encaisser</span></article></div>
+        <div class="booking-list" id="unpaidCourseList"></div>
+        <div class="empty hidden" id="unpaidCourseEmpty">Aucune course en attente de règlement.</div>
+        <div class="eyebrow" style="margin-top:28px">Historique comptable</div>
+        <h2 class="section-title">Courses passées en perte</h2>
+        <div class="booking-list" id="lostCourseList"></div>
+        <div class="empty hidden" id="lostCourseEmpty">Aucune course classée en perte.</div>
       </section>
  
       <section class="tab-panel hidden" id="bookingsPanel">
@@ -1401,7 +1417,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     <div class="payment-sheet">
       <div class="payment-sheet-head"><div><small>Encaissement</small><h2 id="paymentTitle">Mode de règlement</h2></div><button class="payment-close" id="closePaymentChoice" type="button" aria-label="Fermer">×</button></div>
       <p class="payment-copy">Sélectionnez le règlement reçu pour comptabiliser correctement cette course.</p>
-      <div class="payment-choices"><button class="payment-choice card" type="button" data-payment-choice="Paiement par carte bancaire à bord"><span>💳</span>Carte bancaire</button><button class="payment-choice" type="button" data-payment-choice="Paiement en espèces à bord"><span>€</span>Espèces</button><button class="payment-choice mixed" type="button" id="openMixedPayment"><span>↔</span>Paiement mixte</button></div>
+      <div class="payment-choices"><button class="payment-choice card" type="button" data-payment-choice="Paiement par carte bancaire à bord"><span>💳</span>Carte bancaire</button><button class="payment-choice" type="button" data-payment-choice="Paiement en espèces à bord"><span>€</span>Espèces</button><button class="payment-choice mixed" type="button" id="openMixedPayment"><span>↔</span>Paiement mixte</button><button class="payment-choice" type="button" id="pendingPaymentChoice"><span>⏳</span>En attente de règlement</button><button class="payment-choice" type="button" id="lostPaymentChoice"><span>⊘</span>Classer en perte</button></div>
       <form class="mixed-payment-form hidden" id="mixedPaymentForm"><div class="mixed-payment-total">Total de la course <strong id="mixedPaymentTotal">0 €</strong></div><div class="mixed-payment-grid"><div><label for="mixedCardAmount">Montant en carte</label><input id="mixedCardAmount" type="number" min="0" step="0.01" inputmode="decimal"></div><div><label for="mixedCashAmount">Montant en espèces</label><input id="mixedCashAmount" type="number" min="0" step="0.01" inputmode="decimal"></div></div><div class="mixed-payment-error hidden" id="mixedPaymentError"></div><button class="primary" type="submit">Enregistrer la répartition</button></form>
       <button class="payment-cancel" id="cancelPaymentChoice" type="button">Revenir à la course</button>
     </div>
@@ -2180,7 +2196,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
 
     function financePeriodItems(start, end) {
-      return state.bookings.filter(item => item.status === "completed" && completedDate(item) >= start && completedDate(item) < end);
+      return state.bookings.filter(item => item.status === "completed" && !isPaymentPendingItem(item) && !isPaymentLostItem(item) && completedDate(item) >= start && completedDate(item) < end);
     }
 
     function adExpensesInPeriod(start, end) {
@@ -3726,6 +3742,54 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       listBox.querySelectorAll("[data-crm-customer]").forEach(button => button.addEventListener("click", () => openCustomerRecord(button.dataset.crmCustomer)));
     }
 
+    function isPaymentPendingItem(item) {
+      const value=String(item?.paymentStatus||item?.paymentMethod||"").toLowerCase();
+      return item?.isPaymentPending===true||value.includes("attente")||value.includes("impay")||value.includes("non pay");
+    }
+
+    function isPaymentLostItem(item) {
+      const value=String(item?.paymentStatus||item?.paymentMethod||"").toLowerCase();
+      return item?.paymentLost===true||value==="lost"||value.includes("perte");
+    }
+
+    function clientPendingPayments(phone) {
+      const key=normalizedCustomerPhone(phone);
+      if(key.length<9)return[];
+      return state.bookings.filter(item=>normalizedCustomerPhone(item.customerPhone)===key&&isPaymentPendingItem(item));
+    }
+
+    function warnIfClientHasPendingPayment(phone) {
+      const pending=clientPendingPayments(phone);
+      if(!pending.length)return;
+      const total=pending.reduce((sum,item)=>sum+moneyValue(item.estimatedPrice),0);
+      alert(`⚠️ Attention : ce client a ${pending.length} course${pending.length>1?"s":""} en attente de règlement pour ${euroAmount(total)}.`);
+    }
+
+    function unpaidCourseMarkup(item, lost=false) {
+      const date=completedDate(item)||bookingDate(item)||createdDate(item)||new Date();
+      return `<article class="booking"><div class="booking-main"><div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName||"Client")}</div><span class="booking-date">${escapeHtml(date.toLocaleDateString("fr-FR"))}</span></div><span class="status">${lost?"Perte":"À encaisser"}</span></div><div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup||"Départ")}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination||"Destination")}</strong></div></div><div class="booking-meta"><span>☎ ${escapeHtml(item.customerPhone||"Non renseigné")}</span><span>💶 ${escapeHtml(item.estimatedPrice||"0 €")}</span></div></div><div class="quick-actions"><button type="button" data-unpaid-open="${escapeHtml(item.id)}">Voir la course</button>${lost?"":`<button type="button" data-unpaid-settle="${escapeHtml(item.id)}">Régulariser</button>`}</div></article>`;
+    }
+
+    function renderUnpaidCourses() {
+      const pending=state.bookings.filter(isPaymentPendingItem).sort((a,b)=>(completedDate(b)||bookingDate(b)||createdDate(b)||0)-(completedDate(a)||bookingDate(a)||createdDate(a)||0));
+      const lost=state.bookings.filter(isPaymentLostItem).sort((a,b)=>(completedDate(b)||bookingDate(b)||createdDate(b)||0)-(completedDate(a)||bookingDate(a)||createdDate(a)||0));
+      $("unpaidCount").textContent=String(pending.length);
+      $("unpaidTotal").textContent=euroAmount(pending.reduce((sum,item)=>sum+moneyValue(item.estimatedPrice),0));
+      $("unpaidCourseEmpty").classList.toggle("hidden",pending.length>0);
+      $("lostCourseEmpty").classList.toggle("hidden",lost.length>0);
+      $("unpaidCourseList").innerHTML=pending.map(item=>unpaidCourseMarkup(item,false)).join("");
+      $("lostCourseList").innerHTML=lost.map(item=>unpaidCourseMarkup(item,true)).join("");
+      document.querySelectorAll("[data-unpaid-open]").forEach(button=>button.onclick=()=>openBooking(button.dataset.unpaidOpen));
+      document.querySelectorAll("[data-unpaid-settle]").forEach(button=>button.onclick=async()=>{
+        const item=state.bookings.find(value=>value.id===button.dataset.unpaidSettle);if(!item)return;
+        const payment=await askPaymentMethod(`Régulariser · ${item.customerName||"Course"}`,moneyValue(item.estimatedPrice));if(!payment)return;
+        if(payment.paymentStatus==="pending")return;
+        if(payment.paymentStatus==="lost"&&!confirm("Confirmer le classement définitif de cette course en perte ?"))return;
+        button.disabled=true;
+        await updateDoc(doc(db,"bookings",item.id),{...payment,paymentResolvedAt:serverTimestamp(),updatedAt:serverTimestamp()});
+      });
+    }
+
     function render() {
       updateDashboardIdentity();
       const term = state.search.trim();
@@ -3741,8 +3805,10 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("newCount").textContent = newTodayCount;
       $("newRequestStat").classList.toggle("request-alert", newTodayCount > 0);
       const todayCompleted = dailyItemsForStatus("completed");
+      const todayPaid = todayCompleted.filter(item=>!isPaymentPendingItem(item)&&!isPaymentLostItem(item));
       $("completedCount").textContent = todayCompleted.length;
-      $("dailyRevenue").textContent = `${todayCompleted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
+      $("dailyRevenue").textContent = `${todayPaid.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
+      renderUnpaidCourses();
       renderCustomerCRM();
       $("forecastRevenue").textContent = `${accepted.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0).toFixed(0)} €`;
       $("newRequestEmpty").classList.toggle("hidden", requests.length !== 0);
@@ -5007,7 +5073,11 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       const count = Math.max(1, ids.length);
       latestIncomingBookingId = ids[0] || null;
       closeTripAlert();
-      $("tripAlertText").textContent = count > 1
+      const incomingItems=ids.map(id=>state.bookings.find(item=>item.id===id)).filter(Boolean);
+      const debtor=incomingItems.find(item=>clientPendingPayments(item.customerPhone).some(old=>old.id!==item.id));
+      $("tripAlertText").textContent = debtor
+        ? `⚠️ ${debtor.customerName||"Ce client"} possède déjà une course en attente de règlement.`
+        : count > 1
         ? `${count} nouvelles demandes de trajet viennent d’arriver.`
         : "Une nouvelle demande de trajet vient d’arriver.";
       $("tripAlert").classList.remove("hidden");
@@ -5128,6 +5198,10 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           listenDispatchRequests();
           if("Notification" in window&&Notification.permission==="granted") keepNotificationsRegistered().catch(error=>console.error("Renouvellement silencieux des notifications impossible",error));
           if (new URLSearchParams(window.location.search).has("documents")) { openPanel("documentsPanel"); window.history.replaceState({},document.title,"/chauffeur/"); }
+          else {
+            const savedPanel=sessionStorage.getItem("ouassvtcActivePanel");
+            if(savedPanel&&document.getElementById(savedPanel)?.classList.contains("tab-panel"))openPanel(savedPanel);
+          }
         } else {
           if (state.unsubscribe) state.unsubscribe();
           if (state.financeUnsubscribe) state.financeUnsubscribe();
@@ -5250,6 +5324,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
  
     function openPanel(panelId) {
+      sessionStorage.setItem("ouassvtcActivePanel", panelId);
       const previousPanel = document.querySelector(".tab-panel:not(.hidden)");
       if (panelId === "dashboardHome" && previousPanel?.id === "estimatePanel") clearNewBookingForms();
       if (panelId !== "gamePanel" && rush.running && !rush.paused) rushPauseGame(false);
@@ -5320,6 +5395,11 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     applyTheme(themeMode);
     document.querySelectorAll("[data-menu-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.menuTab)));
     document.querySelectorAll("[data-open-tab]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openTab)));
+    $("manualRefreshButton")?.addEventListener("click",()=>{
+      closeMenu();
+      sessionStorage.setItem("ouassvtcManualRefresh","1");
+      window.location.reload();
+    });
 
     // Aucun rafraîchissement par glissement : seul le bouton du menu peut
     // déclencher volontairement une actualisation.
@@ -5383,9 +5463,16 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       resolvePaymentChoice({
         paymentMethod:method,
         paymentCardAmount:method.includes("carte") ? currentPaymentTotal : 0,
-        paymentCashAmount:method.includes("espèces") ? currentPaymentTotal : 0
+        paymentCashAmount:method.includes("espèces") ? currentPaymentTotal : 0,
+        paymentStatus:"paid",
+        isPaymentPending:false,
+        paymentLost:false
       });
     }));
+    $("pendingPaymentChoice").addEventListener("click",()=>resolvePaymentChoice({paymentMethod:"En attente de règlement",paymentStatus:"pending",isPaymentPending:true,paymentLost:false,paymentCardAmount:0,paymentCashAmount:0}));
+    $("lostPaymentChoice").addEventListener("click",()=>{
+      if(confirm("Classer cette course en perte ? Elle restera dans l’historique mais ne sera pas comptée dans le chiffre d’affaires encaissé."))resolvePaymentChoice({paymentMethod:"Perte",paymentStatus:"lost",isPaymentPending:false,paymentLost:true,paymentCardAmount:0,paymentCashAmount:0});
+    });
     $("openMixedPayment").addEventListener("click", () => {
       $("mixedPaymentForm").classList.remove("hidden");
       $("mixedPaymentError").classList.add("hidden");
@@ -5401,7 +5488,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         $("mixedPaymentError").classList.remove("hidden");
         return;
       }
-      resolvePaymentChoice({ paymentMethod:"Paiement mixte CB + espèces", paymentCardAmount:card, paymentCashAmount:cash });
+      resolvePaymentChoice({ paymentMethod:"Paiement mixte CB + espèces", paymentStatus:"paid", isPaymentPending:false, paymentLost:false, paymentCardAmount:card, paymentCashAmount:cash });
     });
     $("closePaymentChoice").addEventListener("click", () => resolvePaymentChoice(null));
     $("cancelPaymentChoice").addEventListener("click", () => resolvePaymentChoice(null));
@@ -5849,6 +5936,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         alert("Indiquez le numéro du client et un commentaire pour enregistrer la course.");
         return;
       }
+      warnIfClientHasPendingPayment(phone);
       const payment = await askPaymentMethod("Règlement de la course rapide", priceAmount);
       if (!payment) return;
       const button = $("saveQuickBooking");
@@ -5870,6 +5958,9 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           scheduledAtText: currentLocal.toISOString().slice(0, 16),
           passengers: "Non précisé",
           paymentMethod: payment.paymentMethod,
+          paymentStatus: payment.paymentStatus,
+          isPaymentPending: payment.isPaymentPending,
+          paymentLost: payment.paymentLost,
           customerMessage: comment,
           estimatedPrice: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`,
           status: "new",
@@ -5880,6 +5971,9 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         await updateDoc(quickBooking, {
           paymentCardAmount: payment.paymentCardAmount,
           paymentCashAmount: payment.paymentCashAmount,
+          paymentStatus: payment.paymentStatus,
+          isPaymentPending: payment.isPaymentPending,
+          paymentLost: payment.paymentLost,
           missionHomeAddress: missionSettings.homeAddress,
           missionFuelPrice: missionSettings.fuelPrice,
           missionConsumption: missionSettings.consumption,
@@ -5951,6 +6045,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         message: $("driverMessage").value.trim(),
         prix: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
       };
+      warnIfClientHasPendingPayment(params.telephone);
       lastDriverConfirmation = { ...params };
       localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
       button.textContent = "Enregistrement en cours…";
@@ -6481,6 +6576,7 @@ function showTab(name){sessionStorage.setItem("ouassvtcAdminTab",name);document.
 function statusOf(d){const age=Date.now()-toMs(d.locationUpdatedAt||d.lastSeenAt);const online=(d.online||d.availability==='online')&&age<180000;const m=missions.find(x=>norm(x.driverEmail)===norm(d.email)&&x.active!==false&&['accepted','en_route','arrived','passenger_onboard'].includes(String(x.status||'')));if(m){if(['accepted','en_route','arrived'].includes(m.status))return{key:'approach',label:'En approche',mission:m};return{key:'mission',label:'En course',mission:m}}return online?{key:'online',label:'En ligne'}:{key:'offline',label:'Hors ligne'}}
 function toMs(v){if(!v)return 0;if(v.toDate)return v.toDate().getTime();if(v.seconds)return v.seconds*1000;const d=new Date(v);return isNaN(d)?0:d.getTime()}
 function paymentPending(x){const p=norm(x.paymentStatus||x.paymentMethod);return x.isPaymentPending===true||p.includes('attente')||p.includes('impay')||p.includes('non pay')}
+function paymentLost(x){const p=norm(x.paymentStatus||x.paymentMethod);return x.paymentLost===true||p==='lost'||p.includes('perte')}
 function renderLive(){updateMarkers();v7912RenderActiveDrivers();const today=new Date();today.setHours(0,0,0,0);const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);const todayItems=courseRecords().filter(x=>{const d=dateOf(x);return d&&d>=today&&d<tomorrow}),todayRevenue=todayItems.filter(x=>['completed','transfer_performed','transfer_closed'].includes(String(x.status||''))&&!paymentPending(x)).reduce((s,x)=>s+priceOf(x),0),active=drivers.filter(d=>['online','mission','approach'].includes(statusOf(d).key)).length,pending=[...bookings,...missions].filter(paymentPending);const pendingTotal=pending.reduce((s,x)=>s+priceOf(x),0);const host=q('v79LiveKpis');if(host)host.innerHTML=`<article class="v79-kpi"><small>Courses aujourd’hui</small><strong>${todayItems.length}</strong></article><article class="v79-kpi"><small>CA encaissé aujourd’hui</small><strong>${money(todayRevenue)}</strong></article><article class="v79-kpi"><small>Chauffeurs actifs</small><strong>${active} / ${drivers.length}</strong></article><article class="v79-kpi ${pending.length?'warn':''}"><small>Règlements en attente</small><strong>${pending.length} · ${money(pendingTotal)}</strong></article>`}
 function clearAdminRoute(){if(adminRouteRenderer){adminRouteRenderer.setMap(null);adminRouteRenderer=null}}
 function drawAdminRoute(d,m){clearAdminRoute();if(!map||!m)return;const s=String(m.status||""),target=["en_route","arrived"].includes(s)?String(m.pickup||"").trim():["passenger_onboard","on_board"].includes(s)?String(m.destination||"").trim():"";const pr=presence.find(x=>x.id===d.authUid),lat=Number(pr?.lat??d.locationLat),lng=Number(pr?.lng??d.locationLng);if(!target||!Number.isFinite(lat)||!Number.isFinite(lng))return;if(!adminRouteService)adminRouteService=new google.maps.DirectionsService();adminRouteRenderer=new google.maps.DirectionsRenderer({map,suppressMarkers:true,preserveViewport:false,polylineOptions:{strokeColor:"#1478ff",strokeOpacity:.95,strokeWeight:6}});adminRouteService.route({origin:{lat,lng},destination:target,travelMode:google.maps.TravelMode.DRIVING},(r,st)=>{if(st==="OK")adminRouteRenderer.setDirections(r);else clearAdminRoute()})}
@@ -6554,13 +6650,13 @@ function updateMarkers(){if(!map||!window.google?.maps)return;const alive=new Se
 function dateOf(x){for(const v of [x.completedAt,x.statusUpdatedAt,x.scheduledAt,x.createdAt,x.updatedAt]){const ms=toMs(v);if(ms)return new Date(ms)}const t=String(x.scheduledAtText||'');const d=new Date(t);return isNaN(d)?null:d}
 function priceOf(x){const v=x.estimatedPrice??x.price??x.paidAmount??0;const n=parseFloat(String(v).replace(',','.').replace(/[^0-9.-]/g,''));if(!Number.isFinite(n))return 0;return n>=10000&&Number.isInteger(n)&&n%100===0?n/100:n}
 function paymentOf(x){const p=norm(x.paymentMethod),cash=Number(x.paymentCashAmount)>0,card=Number(x.paymentCardAmount)>0;if(p.includes('mix')||(cash&&card))return 'mixed';if(p.includes('esp')||cash)return 'cash';if(p.includes('carte')||p.includes('cb')||card)return 'card';return 'other'}
-function records(){const missionBookingIds=new Set(missions.filter(m=>m.status==='completed').map(m=>m.bookingId).filter(Boolean));const out=[];bookings.filter(b=>b.status==='completed'&&!missionBookingIds.has(b.id)).forEach(b=>out.push({...b,_type:'booking',_driver:b.partnerOwnerEmail||'Ouassini',_driverName:b.partnerOwnerEmail?driverName(b.partnerOwnerEmail):'Ouassini'}));missions.filter(m=>m.status==='completed').forEach(m=>out.push({...m,_type:'mission',_driver:m.driverEmail||'',_driverName:m.missionExecutorName||driverName(m.driverEmail)||'Chauffeur'}));return out.filter(x=>dateOf(x)).sort((a,b)=>dateOf(b)-dateOf(a))}
+function records(){const missionBookingIds=new Set(missions.filter(m=>m.status==='completed').map(m=>m.bookingId).filter(Boolean));const out=[];bookings.filter(b=>b.status==='completed'&&!paymentPending(b)&&!paymentLost(b)&&!missionBookingIds.has(b.id)).forEach(b=>out.push({...b,_type:'booking',_driver:b.partnerOwnerEmail||'Ouassini',_driverName:b.partnerOwnerEmail?driverName(b.partnerOwnerEmail):'Ouassini'}));missions.filter(m=>m.status==='completed'&&!paymentPending(m)&&!paymentLost(m)).forEach(m=>out.push({...m,_type:'mission',_driver:m.driverEmail||'',_driverName:m.missionExecutorName||driverName(m.driverEmail)||'Chauffeur'}));return out.filter(x=>dateOf(x)).sort((a,b)=>dateOf(b)-dateOf(a))}
 function driverName(email){const d=drivers.find(x=>norm(x.email)===norm(email));return d?.displayName||d?.companyName||email||'Chauffeur'}
 function weekRange(){const now=new Date();const day=(now.getDay()+6)%7;const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-day+weekOffset*7);start.setHours(0,0,0,0);const end=new Date(start);end.setDate(end.getDate()+7);return{start,end}}
 function filteredWeek(){const {start,end}=weekRange();return records().filter(x=>{const d=dateOf(x);const ok=d>=start&&d<end;if(!ok)return false;if(driverFilter==='all')return true;if(driverFilter==='admin')return norm(x._driverName)==='ouassini'||!x._driver;return norm(x._driver)===norm(driverFilter)})}
 function renderFilters(){const opts=[['all','Tous'],['admin','Ouassini'],...drivers.map(d=>[d.email,d.displayName||d.companyName||d.email])];for(const id of ['v79DriverFilter','v79FinanceFilter']){const el=q(id);el.innerHTML=opts.map(([v,l])=>`<button class="${norm(driverFilter)===norm(v)?'active':''}" data-v79filter="${esc(v)}">${esc(l)}</button>`).join('');el.querySelectorAll('[data-v79filter]').forEach(b=>b.onclick=()=>{driverFilter=b.dataset.v79filter;sessionStorage.setItem("ouassvtcAdminDriverFilter",driverFilter);renderWeekly()})}}
 function courseRecords(){const missionIds=new Set(missions.map(m=>m.bookingId).filter(Boolean)),out=[];bookings.filter(b=>!missionIds.has(b.id)).forEach(b=>out.push({...b,_type:'booking',_driver:b.partnerOwnerEmail||'',_driverName:b.partnerOwnerEmail?driverName(b.partnerOwnerEmail):'Ouassini'}));missions.forEach(m=>out.push({...m,_type:'mission',_driver:m.driverEmail||'',_driverName:m.missionExecutorName||driverName(m.driverEmail)||'Chauffeur'}));return out.filter(x=>dateOf(x)).sort((a,b)=>dateOf(b)-dateOf(a))}
-function courseStatus(x){if(paymentPending(x))return{label:'En attente de règlement',color:'#a15c00'};const s=String(x.status||'');if(['cancelled','rejected','refused','no_show'].includes(s))return{label:'Annulée',color:'#b42318'};if(['completed','transfer_performed','transfer_closed'].includes(s))return{label:'Terminée',color:'#067647'};if(['en_route','arrived','on_board','passenger_onboard'].includes(s))return{label:'En cours',color:'#175cd3'};if(['accepted','transferred','proposed'].includes(s))return{label:'Planifiée',color:'#6941c6'};return{label:'Nouvelle',color:'#175cd3'}}
+function courseStatus(x){if(paymentLost(x))return{label:'Perte',color:'#b42318'};if(paymentPending(x))return{label:'En attente de règlement',color:'#a15c00'};const s=String(x.status||'');if(['cancelled','rejected','refused','no_show'].includes(s))return{label:'Annulée',color:'#b42318'};if(['completed','transfer_performed','transfer_closed'].includes(s))return{label:'Terminée',color:'#067647'};if(['en_route','arrived','on_board','passenger_onboard'].includes(s))return{label:'En cours',color:'#175cd3'};if(['accepted','transferred','proposed'].includes(s))return{label:'Planifiée',color:'#6941c6'};return{label:'Nouvelle',color:'#175cd3'}}
 function renderWeekly(){renderFilters();const {start,end}=weekRange(),items=filteredWeek(),all=courseRecords().filter(x=>{const d=dateOf(x);if(!(d>=start&&d<end))return false;if(driverFilter==='all')return true;if(driverFilter==='admin')return norm(x._driverName)==='ouassini'||!x._driver;return norm(x._driver)===norm(driverFilter)});const total=items.reduce((s,x)=>s+priceOf(x),0),cost=items.reduce((s,x)=>s+Number(x.missionTotalCost||x.totalCost||0),0),margin=total-cost;const label=`${start.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} – ${new Date(end-1).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}`;q('v79WeekLabel').textContent=q('v79WeekLabel2').textContent=label;const waiting=all.filter(paymentPending).length,cancelled=all.filter(x=>['cancelled','rejected','refused','no_show'].includes(String(x.status||''))).length;q('v79WeekKpis').innerHTML=[['Toutes les courses',all.length,''],['Terminées',items.length,''],['À encaisser',waiting,'warn'],['Annulées',cancelled,'danger']].map(([l,v,c])=>`<article class="v79-kpi ${c}"><small>${l}</small><strong>${v}</strong></article>`).join('');q('v79FinanceKpis').innerHTML=[['CA encaissé',money(total)],['Courses terminées',items.length],['Coût estimé',money(cost)],['Marge',money(margin)]].map(([l,v])=>`<article class="v79-kpi"><small>${l}</small><strong>${v}</strong></article>`).join('');const vals=Array(7).fill(0);items.forEach(x=>{const d=dateOf(x);vals[(d.getDay()+6)%7]+=priceOf(x)});const max=Math.max(1,...vals),days=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];q('v79WeekChart').innerHTML=vals.map((v,i)=>`<div class="v79-bar-wrap"><div class="v79-bar" style="height:${Math.max(4,v/max*135)}px" title="${money(v)}"></div><b>${days[i]}</b><br>${v?money(v):'—'}</div>`).join('');const activityHtml=all.map((x,i)=>{const d=dateOf(x),st=courseStatus(x);return `<button type="button" class="v79-trip" data-v79-course="${i}" style="width:100%;color:inherit;text-align:left"><strong>${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</strong><span><strong>${esc(x.customerName||'Client')} · ${esc(x.pickup||'Départ')} → ${esc(x.destination||'Destination')}</strong><small>${esc(x._driverName)} · <b style="color:${st.color}">${st.label}</b></small></span><span class="v79-money">${money(priceOf(x))} ›</span></button>`}).join('')||'<div class="v79-empty">Aucune course sur cette semaine.</div>';q('v79TripList').innerHTML=activityHtml;q('v79TripList').querySelectorAll('[data-v79-course]').forEach(b=>b.onclick=()=>openAdminCourse(all[Number(b.dataset.v79Course)]));const financeHtml=items.map(x=>{const d=dateOf(x);return `<article class="v79-trip"><strong>${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</strong><span><strong>${esc(x.pickup||'Départ')} → ${esc(x.destination||'Destination')}</strong><small>${esc(x._driverName)} · ${esc(x.customerName||'Client')} · ${paymentOf(x)==='cash'?'Espèces':paymentOf(x)==='card'?'CB':paymentOf(x)==='mixed'?'Mixte':'Paiement non renseigné'}</small></span><span class="v79-money">${money(priceOf(x))}</span></article>`}).join('')||'<div class="v79-empty">Aucune course terminée sur cette semaine.</div>';q('v79FinanceTrips').innerHTML=financeHtml;const pay={card:0,cash:0,mixed:0,other:0};items.forEach(x=>pay[paymentOf(x)]+=priceOf(x));q('v79PaymentBreakdown').innerHTML=`<div><small>CB</small><strong>${money(pay.card)}</strong></div><div><small>Espèces</small><strong>${money(pay.cash)}</strong></div><div><small>Mixte / autre</small><strong>${money(pay.mixed+pay.other)}</strong></div>`}
 function openDriverApplication(id){const d=drivers.find(x=>x.id===id);if(!d)return;sessionStorage.setItem('ouassvtcAdminDriverId',d.id);sessionStorage.setItem('ouassvtcAdminDriverName',d.displayName||d.companyName||'Chauffeur');window.location.href=`/chauffeur/chauffeur.html?adminDriver=${encodeURIComponent(d.id)}`}
 function renderDrivers(){const host=q('v79DriversList');host.innerHTML=drivers.map(d=>{const s=statusOf(d);const own=records().filter(x=>norm(x._driver)===norm(d.email));const {start,end}=weekRange();const week=own.filter(x=>dateOf(x)>=start&&dateOf(x)<end);return `<button type="button" class="v79-trip" data-v79-open-driver="${esc(d.id)}" style="width:100%;color:inherit;text-align:left"><span><i class="v79-dot ${s.key}"></i></span><span><strong>${esc(d.displayName||d.companyName||'Chauffeur')}</strong><small>${s.label} · ${esc(d.vehicle||'Véhicule')} ${d.registration?'· '+esc(d.registration):''}<br>${week.length} courses cette semaine · Ouvrir son application</small></span><span class="v79-money">${money(week.reduce((a,x)=>a+priceOf(x),0))} ›</span></button>`}).join('')||'<div class="v79-empty">Aucun chauffeur enregistré.</div>';host.querySelectorAll('[data-v79-open-driver]').forEach(b=>b.onclick=()=>openDriverApplication(b.dataset.v79OpenDriver))}
@@ -6599,6 +6695,33 @@ document.documentElement.dataset.adminPilotVersion=V79;window.addEventListener('
    document.addEventListener("click",()=>setTimeout(syncRefreshLock,0),true);
  });
  window.addEventListener("pageshow",syncRefreshLock);
+})();
+</script>
+
+<script id="v7929-global-refresh-guard">
+(function(){
+  "use strict";
+  let startY=null;
+  function canScrollUpFrom(node){
+    let el=node instanceof Element?node:null;
+    while(el&&el!==document.documentElement){
+      const style=getComputedStyle(el);
+      if(/auto|scroll/.test(style.overflowY)&&el.scrollHeight>el.clientHeight+1&&el.scrollTop>0)return true;
+      el=el.parentElement;
+    }
+    return (document.scrollingElement?.scrollTop||window.scrollY||0)>0;
+  }
+  document.addEventListener("touchstart",event=>{
+    startY=event.touches.length===1?event.touches[0].clientY:null;
+  },{passive:true,capture:true});
+  document.addEventListener("touchmove",event=>{
+    if(startY===null||event.touches.length!==1)return;
+    if(event.target.closest?.("#v79AdminMap,.gm-style,[data-allow-touch-drag]"))return;
+    const pullingDown=event.touches[0].clientY-startY>2;
+    if(pullingDown&&!canScrollUpFrom(event.target))event.preventDefault();
+  },{passive:false,capture:true});
+  document.addEventListener("touchend",()=>{startY=null},{passive:true,capture:true});
+  document.addEventListener("touchcancel",()=>{startY=null},{passive:true,capture:true});
 })();
 </script>
 
