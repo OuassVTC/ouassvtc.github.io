@@ -1730,7 +1730,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         reminder:`Bonjour ${name},\n\n🚘 Petit rappel concernant votre trajet OuassVTC.\n\n📅 Date :\n${dateText}\n\n🕒 Heure :\n${timeText}\n\n📍 Adresse de départ :\n${item.pickup || "Non renseignée"}\n\n🏁 Adresse d’arrivée :\n${item.destination || "Non renseignée"}\n\nVotre trajet est bien confirmé. Je reste disponible si vous souhaitez apporter une modification.\n\nMerci pour votre confiance.\n\nOuassini – OuassVTC`,
         arrived:`Bonjour ${name},\n\nJe vous informe que je suis arrivé à l’adresse de prise en charge. Je vous attends à bord de mon véhicule.\n\nÀ tout de suite.\n\nOuassini – OuassVTC`,
         security:`Bonjour ${name},\n\nJe suis Ouassini, votre chauffeur VTC. Mon véhicule est une Toyota Auris break immatriculée GB-580-NS. Je serai en charge de vous transporter pour votre trajet.\n\nCordialement,\nOuassini – OuassVTC`,
-        review:`Bonjour ${name},\n\nMerci d’avoir fait confiance à OuassVTC pour votre trajet. Si vous avez été satisfait de mon service, vous pouvez partager votre expérience en laissant un avis Google grâce au lien ci-dessous :\n\nhttps://g.page/r/CR7Mtdp00GhhEBM/review\n\nVotre avis est précieux et m’aide à faire connaître mon activité.\n\nMerci encore et à bientôt.\n\nOuassini – OuassVTC`
+        review:`Bonjour ${name},\n\nMerci d’avoir fait confiance à OuassVTC pour votre trajet. Si vous avez été satisfait de mon service, vous pouvez partager votre expérience en laissant un avis Google grâce au lien ci-dessous :\n\nhttps://g.page/r/CR7Mtdp00GhhEBM/review\n\nVotre avis est précieux et m’aide à faire connaître mon activité.\n\nMerci encore et à bientôt.\n\nOuassini – OuassVTC`,
+        payment:`Bonjour ${name},\n\nSauf erreur de notre part, le règlement de votre course OuassVTC du ${dateText}${priceAmount > 0 ? `, d’un montant de ${priceText}` : ""}, est toujours en attente.\n\nMerci de bien vouloir procéder au règlement ou de me contacter afin de régulariser la situation.\n\nSi le paiement a déjà été effectué, merci de ne pas tenir compte de ce message.\n\nCordialement,\nOuassini – OuassVTC`
       };
       const message = messages[type] || messages.confirmation;
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
@@ -3752,22 +3753,29 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       return item?.paymentLost===true||value==="lost"||value.includes("perte");
     }
 
-    function clientPendingPayments(phone) {
+    function clientPendingPayments(phone, name="") {
       const key=normalizedCustomerPhone(phone);
-      if(key.length<9)return[];
-      return state.bookings.filter(item=>normalizedCustomerPhone(item.customerPhone)===key&&isPaymentPendingItem(item));
+      const nameKey=normalizeSearch(name).trim();
+      if(key.length<9&&nameKey.length<3)return[];
+      return state.bookings.filter(item=>{
+        if(!isPaymentPendingItem(item))return false;
+        const samePhone=key.length>=9&&normalizedCustomerPhone(item.customerPhone)===key;
+        const sameName=nameKey.length>=3&&normalizeSearch(item.customerName).trim()===nameKey;
+        return samePhone||sameName;
+      });
     }
 
-    function warnIfClientHasPendingPayment(phone) {
-      const pending=clientPendingPayments(phone);
-      if(!pending.length)return;
+    function warnIfClientHasPendingPayment(phone, name="") {
+      const pending=clientPendingPayments(phone,name);
+      if(!pending.length)return false;
       const total=pending.reduce((sum,item)=>sum+moneyValue(item.estimatedPrice),0);
       alert(`⚠️ Attention : ce client a ${pending.length} course${pending.length>1?"s":""} en attente de règlement pour ${euroAmount(total)}.`);
+      return true;
     }
 
     function unpaidCourseMarkup(item, lost=false) {
       const date=completedDate(item)||bookingDate(item)||createdDate(item)||new Date();
-      return `<article class="booking"><div class="booking-main"><div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName||"Client")}</div><span class="booking-date">${escapeHtml(date.toLocaleDateString("fr-FR"))}</span></div><span class="status">${lost?"Perte":"À encaisser"}</span></div><div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup||"Départ")}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination||"Destination")}</strong></div></div><div class="booking-meta"><span>☎ ${escapeHtml(item.customerPhone||"Non renseigné")}</span><span>💶 ${escapeHtml(item.estimatedPrice||"0 €")}</span></div></div><div class="quick-actions"><button type="button" data-unpaid-open="${escapeHtml(item.id)}">Voir la course</button>${lost?"":`<button type="button" data-unpaid-settle="${escapeHtml(item.id)}">Régulariser</button>`}</div></article>`;
+      return `<article class="booking"><div class="booking-main"><div class="booking-top"><div><div class="booking-name">${escapeHtml(item.customerName||"Client")}</div><span class="booking-date">${escapeHtml(date.toLocaleDateString("fr-FR"))}</span></div><span class="status">${lost?"Perte":"À encaisser"}</span></div><div class="route"><div class="route-line"><span>●</span><strong>${escapeHtml(item.pickup||"Départ")}</strong></div><div class="route-line"><span>↓</span><strong>${escapeHtml(item.destination||"Destination")}</strong></div></div><div class="booking-meta"><span>☎ ${escapeHtml(item.customerPhone||"Non renseigné")}</span><span>💶 ${escapeHtml(item.estimatedPrice||"0 €")}</span></div></div><div class="quick-actions"><button type="button" data-unpaid-open="${escapeHtml(item.id)}">Voir la course</button>${lost?"":`<button type="button" data-unpaid-sms="${escapeHtml(item.id)}">SMS de rappel</button><button type="button" data-unpaid-settle="${escapeHtml(item.id)}">Régulariser</button>`}</div></article>`;
     }
 
     function renderUnpaidCourses() {
@@ -3780,6 +3788,9 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("unpaidCourseList").innerHTML=pending.map(item=>unpaidCourseMarkup(item,false)).join("");
       $("lostCourseList").innerHTML=lost.map(item=>unpaidCourseMarkup(item,true)).join("");
       document.querySelectorAll("[data-unpaid-open]").forEach(button=>button.onclick=()=>openBooking(button.dataset.unpaidOpen));
+      document.querySelectorAll("[data-unpaid-sms]").forEach(button=>button.onclick=()=>{
+        const item=state.bookings.find(value=>value.id===button.dataset.unpaidSms);if(item)sendPlannedTripSms(item,"payment");
+      });
       document.querySelectorAll("[data-unpaid-settle]").forEach(button=>button.onclick=async()=>{
         const item=state.bookings.find(value=>value.id===button.dataset.unpaidSettle);if(!item)return;
         const payment=await askPaymentMethod(`Régulariser · ${item.customerName||"Course"}`,moneyValue(item.estimatedPrice));if(!payment)return;
@@ -4208,7 +4219,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           ${waitingTimerMarkup(item)}
         </div>
         <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
-        <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid"><button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
+        <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid">${isPaymentPendingItem(item)?`<button type="button" data-trip-sms="payment">💶 Rappel de règlement</button>`:""}<button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
         ${stagedWazeActions(item)}
         <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
@@ -5043,10 +5054,12 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       const ids = Array.isArray(bookingIds) ? bookingIds.filter(Boolean) : [];
       const count = Math.max(1, ids.length);
       const bookingId = ids[0] || "";
+      const incomingItems=ids.map(id=>state.bookings.find(item=>item.id===id)).filter(Boolean);
+      const debtor=incomingItems.find(item=>clientPendingPayments(item.customerPhone,item.customerName).some(old=>old.id!==item.id));
       try {
         const registration = await navigator.serviceWorker.ready;
-        await registration.showNotification("Nouvelle réservation OuassVTC", {
-          body: count > 1 ? `${count} nouvelles demandes de trajet viennent d’arriver.` : "Une nouvelle demande de trajet vient d’arriver.",
+        await registration.showNotification(debtor?"⚠️ Client avec règlement en attente":"Nouvelle réservation OuassVTC", {
+          body: debtor?`${debtor.customerName||"Ce client"} possède déjà une course non payée.`:count > 1 ? `${count} nouvelles demandes de trajet viennent d’arriver.` : "Une nouvelle demande de trajet vient d’arriver.",
           icon: "/ouassvtc-app.png",
           badge: "/ouassvtc-app.png",
           tag: "ouassvtc-new-booking",
@@ -5074,7 +5087,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       latestIncomingBookingId = ids[0] || null;
       closeTripAlert();
       const incomingItems=ids.map(id=>state.bookings.find(item=>item.id===id)).filter(Boolean);
-      const debtor=incomingItems.find(item=>clientPendingPayments(item.customerPhone).some(old=>old.id!==item.id));
+      const debtor=incomingItems.find(item=>clientPendingPayments(item.customerPhone,item.customerName).some(old=>old.id!==item.id));
       $("tripAlertText").textContent = debtor
         ? `⚠️ ${debtor.customerName||"Ce client"} possède déjà une course en attente de règlement.`
         : count > 1
@@ -5805,6 +5818,21 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
  
     let customerLookupTimer = null;
+    let pendingCustomerAlertKey = "";
+    function showPendingCustomerAlertInForm() {
+      const pending=clientPendingPayments($("driverPhone").value,$("driverName").value);
+      if(!pending.length){pendingCustomerAlertKey="";return false;}
+      const total=pending.reduce((sum,item)=>sum+moneyValue(item.estimatedPrice),0);
+      const signature=pending.map(item=>item.id).sort().join("|");
+      const message=$("driverCustomerMatch");
+      message.textContent=`⚠️ ALERTE IMPAYÉ : ${pending.length} course${pending.length>1?"s":""} en attente de règlement · ${euroAmount(total)} à encaisser.`;
+      message.classList.remove("hidden");
+      if(signature!==pendingCustomerAlertKey){
+        pendingCustomerAlertKey=signature;
+        alert(`⚠️ CLIENT AVEC IMPAYÉ\n\n${pending.length} course${pending.length>1?"s":""} en attente de règlement pour ${euroAmount(total)}.`);
+      }
+      return true;
+    }
     $("driverPhone").addEventListener("input", () => {
       clearTimeout(customerLookupTimer);
       customerLookupTimer = setTimeout(() => {
@@ -5816,6 +5844,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           if ($("driverPickup").dataset.customerAutofill === "true") $("driverPickup").value = "";
           delete $("driverName").dataset.customerAutofill;
           delete $("driverPickup").dataset.customerAutofill;
+          showPendingCustomerAlertInForm();
           return;
         }
         if (!$("driverName").value.trim() || $("driverName").dataset.customerAutofill === "true") {
@@ -5826,13 +5855,15 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           $("driverPickup").value = customer.pickup;
           $("driverPickup").dataset.customerAutofill = "true";
         }
-        message.textContent = customer.pickup
-          ? `Client reconnu : ${customer.name || "nom à compléter"}. Son adresse de départ habituelle a été ajoutée.`
-          : `Client reconnu : ${customer.name || "nom à compléter"}.`;
-        message.classList.remove("hidden");
+        if(!showPendingCustomerAlertInForm()){
+          message.textContent = customer.pickup
+            ? `Client reconnu : ${customer.name || "nom à compléter"}. Son adresse de départ habituelle a été ajoutée.`
+            : `Client reconnu : ${customer.name || "nom à compléter"}.`;
+          message.classList.remove("hidden");
+        }
       }, 250);
     });
-    $("driverName").addEventListener("input", () => delete $("driverName").dataset.customerAutofill);
+    $("driverName").addEventListener("input", () => { delete $("driverName").dataset.customerAutofill; clearTimeout(customerLookupTimer); customerLookupTimer=setTimeout(showPendingCustomerAlertInForm,250); });
     $("driverPickup").addEventListener("input", () => delete $("driverPickup").dataset.customerAutofill);
  
     $("quickBookingKm").addEventListener("input", () => {
@@ -5936,7 +5967,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         alert("Indiquez le numéro du client et un commentaire pour enregistrer la course.");
         return;
       }
-      warnIfClientHasPendingPayment(phone);
+      warnIfClientHasPendingPayment(phone,"Course manuelle");
       const payment = await askPaymentMethod("Règlement de la course rapide", priceAmount);
       if (!payment) return;
       const button = $("saveQuickBooking");
@@ -6045,7 +6076,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         message: $("driverMessage").value.trim(),
         prix: `${priceAmount.toLocaleString("fr-FR", { maximumFractionDigits:2 })} €`
       };
-      warnIfClientHasPendingPayment(params.telephone);
+      warnIfClientHasPendingPayment(params.telephone,params.nom);
       lastDriverConfirmation = { ...params };
       localStorage.setItem("ouassvtcLastDriverConfirmation", JSON.stringify(lastDriverConfirmation));
       button.textContent = "Enregistrement en cours…";
