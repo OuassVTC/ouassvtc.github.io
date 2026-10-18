@@ -8433,9 +8433,9 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 
-const V79_VERSION="79.30.20261011.01";
-const activeStatuses=new Set(["accepted","en_route","arrived","passenger_onboard"]);
-let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null;
+const V79_VERSION="79.40.20261018.01";
+const activeStatuses=new Set(["en_route","arrived","passenger_onboard","on_board"]);
+let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null,v79MissionWatchdog=null,v79WakeLock=null,v79WasOnlineBeforeMission=false,v79ForcedOnlineByMission=false;
 const q=id=>document.getElementById(id);
 function normalize(v){return String(v||"").trim().toLowerCase()}
 function ensureHero(){
@@ -8504,6 +8504,34 @@ async function setAvailability(online,forced){
  }
 }
 function stopTracking(){if(v79GeoWatch!==null&&navigator.geolocation){navigator.geolocation.clearWatch(v79GeoWatch);v79GeoWatch=null}}
+async function v79AcquireWakeLock(){
+ if(!v79ForcedMission||document.visibilityState!=="visible"||!("wakeLock" in navigator))return;
+ try{if(!v79WakeLock){v79WakeLock=await navigator.wakeLock.request("screen");v79WakeLock.addEventListener("release",()=>{v79WakeLock=null},{once:true})}}catch(e){console.warn("Écran actif mission",e?.name||e)}
+}
+async function v79ReleaseWakeLock(){
+ const lock=v79WakeLock;v79WakeLock=null;
+ try{if(lock&&!lock.released)await lock.release()}catch(_){ }
+}
+function v79StartMissionGuard(){
+ v79AcquireWakeLock();startTracking(true);
+ if(v79MissionWatchdog)return;
+ v79MissionWatchdog=setInterval(async()=>{
+   if(!v79ForcedMission||!v79Db||!v79Auth?.currentUser)return;
+   if(v79GeoWatch===null&&document.visibilityState==="visible")startTracking(false);
+   try{
+     const profile=await ensureV79Profile();
+     await Promise.all([
+       updateDoc(doc(v79Db,"partnerDrivers",profile.id),{authUid:v79Auth.currentUser.uid,online:true,availability:"online",locationSharing:true,lastSeenAt:serverTimestamp(),updatedAt:serverTimestamp()}),
+       setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:true,status:"mission",updatedAt:serverTimestamp()},{merge:true})
+     ]);
+     profile.online=true;profile.availability="online";profile.locationSharing=true;paint();
+   }catch(e){console.warn("Maintien mission en ligne",e?.code||e)}
+ },20000);
+}
+function v79StopMissionGuard(){
+ if(v79MissionWatchdog){clearInterval(v79MissionWatchdog);v79MissionWatchdog=null}
+ v79ReleaseWakeLock();
+}
 function startTracking(showError=false){
  if(!navigator.geolocation){if(showError)alert("Vous êtes en ligne, mais la géolocalisation n’est pas disponible sur ce téléphone.");return}
  if(v79GeoWatch!==null||!v79Profile?.id)return;
@@ -8514,6 +8542,13 @@ function startTracking(showError=false){
    try{await updateDoc(doc(v79Db,"partnerDrivers",v79Profile.id),{authUid:v79Auth.currentUser.uid,locationLat:c.latitude,locationLng:c.longitude,locationAccuracy:Number(c.accuracy||0),locationUpdatedAt:serverTimestamp(),locationSharing:true,lastSeenAt:serverTimestamp(),online:true,availability:"online",updatedAt:serverTimestamp()});await setDoc(doc(v79Db,"driverPresence",v79Auth.currentUser.uid),{online:true,status:v79ForcedMission?"mission":"online",lat:c.latitude,lng:c.longitude,accuracy:Number(c.accuracy||0),heading:Number.isFinite(Number(c.heading))?Number(c.heading):0,updatedAt:serverTimestamp()},{merge:true})}catch(e){console.warn("Position V79.3",e?.code||e)}
  },err=>{console.warn("Géolocalisation V79.1",err?.code||err);if(showError&&!geoErrorShown){geoErrorShown=true;alert("Vous êtes bien en ligne, mais la position GPS n’est pas partagée. Autorisez la localisation pour apparaître sur la carte Admin.")}}, {enableHighAccuracy:true,maximumAge:8000,timeout:15000});
 }
+document.addEventListener("visibilitychange",()=>{
+ if(!v79ForcedMission)return;
+ if(document.visibilityState==="visible"){
+   v79AcquireWakeLock();
+   if(v79GeoWatch===null)startTracking(false);
+ }
+});
 
 function v79TaskStage(task){
  const s=String(task?.status||"");
@@ -8579,8 +8614,20 @@ async function listenMissions(user){
  v79MissionUnsub=onSnapshot(mq,s=>{
    window.__v79Missions=s.docs.map(d=>({id:d.id,missionId:d.id,...d.data()}));
    const forced=window.__v79Missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));
-   const was=v79ForcedMission;v79ForcedMission=forced;
-   if(forced){if(!was||!v79Profile?.online)setAvailability(true,true);else startTracking()}
+   const was=v79ForcedMission;
+   if(forced&&!was){
+     v79WasOnlineBeforeMission=Boolean(v79Profile?.online||v79Profile?.availability==="online");
+     v79ForcedOnlineByMission=!v79WasOnlineBeforeMission;
+   }
+   v79ForcedMission=forced;
+   if(forced){
+     if(!was||!v79Profile?.online)setAvailability(true,true);
+     v79StartMissionGuard();
+   }else if(was){
+     v79StopMissionGuard();
+     if(v79ForcedOnlineByMission)setAvailability(false,true);else paint();
+     v79ForcedOnlineByMission=false;v79WasOnlineBeforeMission=false;
+   }
    paint();v79ChooseActiveTask();
  },e=>console.warn("Missions trajet",e?.code||e));
  const bq=query(collection(v79Db,"bookings"),where("partnerOwnerEmail","==",email.toLowerCase()),limit(100));
@@ -8649,7 +8696,7 @@ async function boot(){
  v79Auth=window.auth;
  v79Db=window.db;
  onAuthStateChanged(v79Auth,async user=>{
-   stopTracking();v79Profile=null;v79ForcedMission=false;v79ActiveTask=null;window.__v79Missions=[];window.__v79Bookings=[];v79ClearRoute();
+   v79StopMissionGuard();stopTracking();v79Profile=null;v79ForcedMission=false;v79ForcedOnlineByMission=false;v79WasOnlineBeforeMission=false;v79ActiveTask=null;window.__v79Missions=[];window.__v79Bookings=[];v79ClearRoute();
    if(!user){paint();return}
    try{
      v79Profile=await resolveProfile(user);
@@ -8778,5 +8825,3 @@ document.addEventListener("click",function(e){
 });
 </script></body>
 </html>
-
-
