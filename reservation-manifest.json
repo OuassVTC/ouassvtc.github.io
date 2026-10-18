@@ -1,0 +1,28 @@
+{
+  "id": "/chauffeur/reservation-client.html",
+  "name": "OUASS VTC",
+  "short_name": "OUASS VTC",
+  "description": "Réservez votre trajet simplement avec OUASS VTC.",
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "start_url": "/chauffeur/reservation-client.html",
+  "scope": "/chauffeur/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#071426",
+  "theme_color": "#071426",
+  "icons": [
+    {
+      "src": "/ouassvtc-app.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/ouassvtc-app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
