@@ -1,11 +1,13 @@
 {
-  "name": "OuassVTC",
-  "short_name": "OuassVTC",
-  "start_url": "/chauffeur/chauffeur.html?v=7931",
+  "name": "OUASS VTC",
+  "short_name": "OUASS VTC",
+  "description": "Réservez simplement votre chauffeur privé OuassVTC à Perpignan.",
+  "start_url": "/chauffeur/reservation-client.html?v=client3",
   "scope": "/chauffeur/",
   "display": "standalone",
-  "background_color": "#080b10",
-  "theme_color": "#080b10",
+  "orientation": "portrait",
+  "background_color": "#071321",
+  "theme_color": "#071321",
   "icons": [
     {
       "src": "/ouassvtc-app.png",
@@ -19,6 +21,5 @@
     }
   ]
 }
-
 
 
