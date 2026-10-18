@@ -2,7 +2,7 @@
   "name": "OUASS VTC Chauffeur",
   "short_name": "OUASS Chauffeur",
   "description": "Application professionnelle des chauffeurs partenaires OuassVTC.",
-  "start_url": "/chauffeur/index.html",
+  "start_url": "/chauffeur/chauffeur.html",
   "scope": "/chauffeur/",
   "display": "standalone",
   "orientation": "portrait",
