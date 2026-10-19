@@ -159,6 +159,7 @@
     import { firebaseConfig, firebaseReady } from "/firebase-config.js";
     const $=id=>document.getElementById(id), form=$("bookingForm"), estimateBox=$("estimateBox"), statusBox=$("statusBox"), successPanel=$("successPanel");
     let routeData=null,db=null,startedAt=Date.now();
+    new MutationObserver(()=>{const transmission=$("receipt")?.querySelector(".receipt-row:last-child strong");if(transmission)transmission.textContent="OuassVTC"}).observe($("receipt"),{childList:true});
     window.emailjs?.init("U08QGWWRUenJDOllc");
     const esc=value=>String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
     const compact=value=>String(value||"").trim().replace(/\s+/g," ");
