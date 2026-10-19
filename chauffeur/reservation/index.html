@@ -58,6 +58,7 @@
     .field input,.field select{min-height:54px;border:1px solid var(--border);border-radius:10px;background:#fff;padding:0 14px;color:var(--text);font-size:14px;font-weight:500;box-shadow:0 1px 2px rgba(16,24,40,.03)}
     .field input:hover,.field select:hover{border-color:#c6ced8}
     .field input:focus,.field select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(23,105,224,.12)}
+    .date-time-control{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,.9fr);gap:10px}
     .route{padding:17px;border-color:var(--border);border-radius:13px;background:#f8fafc}
     .route .field input{background:#fff}
     .route-line:before{background:#cbd5e1}
@@ -113,9 +114,9 @@
       <div class="trustbar"><span>Prix annoncé</span><span>Paiement à bord</span><span>Service 7j/7</span></div>
     </header>
     <section class="content">
-      <div class="form-intro"><strong>Réserver un trajet</strong><small>Renseignez votre trajet pour obtenir une estimation immédiate. Aucun compte nécessaire.</small></div>
       <div class="client-tools"><button class="client-tool primary" id="installApp" type="button">Installer l’application</button><button class="client-tool share" id="shareApp" type="button">Partager à un proche</button></div>
       <p class="install-help" id="installHelp"></p><p class="share-status" id="shareStatus"></p>
+      <div class="form-intro"><strong>Réserver un trajet</strong><small>Renseignez votre trajet pour obtenir une estimation immédiate. Aucun compte nécessaire.</small></div>
       <div class="progress" aria-hidden="true"><i class="active"></i><i id="step2"></i><i id="step3"></i></div>
       <form id="bookingForm" novalidate autocomplete="off">
         <div class="section-title">Vos coordonnées</div>
@@ -128,8 +129,7 @@
         </div>
         <div class="section-title">Date et règlement</div>
         <div class="grid">
-          <div class="field"><label for="date">Date</label><input id="date" name="date" type="date" required></div>
-          <div class="field"><label for="time">Heure</label><input id="time" name="time" type="text" inputmode="numeric" autocomplete="off" placeholder="Exemple : 14:30" maxlength="5" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" required></div>
+          <div class="field full"><label for="date">Date et heure</label><div class="date-time-control"><input id="date" name="date" type="date" aria-label="Date" required><input id="time" name="time" type="text" inputmode="numeric" autocomplete="off" aria-label="Heure" placeholder="Heure 14:30" maxlength="5" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" required></div></div>
           <div class="field"><label for="passengers">Passagers</label><select id="passengers" name="passengers" required><option value="">Choisir</option><option value="1">1 passager</option><option value="2">2 passagers</option><option value="3">3 passagers</option><option value="4">4 passagers</option></select></div>
           <div class="field"><label for="payment">Règlement</label><select id="payment" name="payment" required><option value="">Choisir</option><option value="Carte bancaire">Carte bancaire</option><option value="Espèces">Espèces</option></select></div>
         </div>
