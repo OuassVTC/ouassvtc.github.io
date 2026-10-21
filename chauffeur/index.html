@@ -423,6 +423,14 @@
     .sms-choice-panel strong{display:block;margin-bottom:10px;font-size:14px}
     .sms-choice-grid{display:grid;gap:8px}
     .sms-choice-grid button{min-height:48px;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;text-align:left;font-weight:850;cursor:pointer}
+    .contact-choice-panel{margin:0 20px 14px;padding:14px;border:1px solid var(--border);border-radius:14px;background:#f7f7f7}
+    .contact-choice-panel>strong{display:block;margin-bottom:10px;font-size:14px}
+    .contact-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .contact-choice-grid a,.contact-choice-grid button{min-height:50px;display:flex;align-items:center;justify-content:center;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;color:#111;text-decoration:none;text-align:center;font-weight:900;cursor:pointer}
+    .contact-choice-grid .whatsapp-choice{background:#168b48;color:#fff;border-color:#168b48}
+    .contact-choice-grid button.active{background:#176ef4;color:#fff;border-color:#176ef4}
+    .message-theme-wrap{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+    .message-theme-wrap>strong{display:block;margin-bottom:9px;font-size:13px}
     .more-actions-panel{margin:12px 0 0;padding:12px;border:1px solid var(--border);border-radius:14px;background:#f7f7f7;display:grid;gap:8px}
     .more-actions-panel button{min-height:48px;padding:10px 12px;border:1px solid #d8d8d8;border-radius:11px;background:#fff;text-align:left;font-weight:850;cursor:pointer}
     .customer-match{grid-column:1/-1;padding:11px 13px;border-radius:12px;background:#edf8f0;color:#0d6b31;font-size:13px;font-weight:850;line-height:1.4}
@@ -576,7 +584,7 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .booking-main,.booking-card,.accepted-row,.agenda-day,.history-month,.history-week{border-color:var(--border)!important;box-shadow:0 8px 25px #101b300b}
 .price-chip,.status{background:var(--blue-soft)!important;color:var(--blue)!important}
 .quick-actions a,.quick-actions button,.waze-actions a{border-color:#dfe5ef!important;background:#fff!important;color:var(--text)!important}
-.quick-actions button[data-toggle-sms-menu],.waze-actions a:first-child{background:var(--blue)!important;color:#fff!important;border-color:var(--blue)!important}
+.quick-actions button[data-toggle-message-menu],.waze-actions a:first-child{background:var(--blue)!important;color:#fff!important;border-color:var(--blue)!important}
 .detail-head{background:var(--black);border-bottom:1px solid #ffffff15}
 .detail-card{border-radius:28px}
 .detail-body .booking-main{border-radius:22px}
@@ -769,7 +777,7 @@ html[data-theme="dark"]{color-scheme:dark;--text:#f4f7fb;--muted:#aeb8c8;--soft:
 /* Contrastes renforcés pour tous les écrans secondaires en mode nuit */
 html[data-theme="dark"] .detail-body .actions-screen,html[data-theme="dark"] .detail-body .mission-screen,html[data-theme="dark"] .payment-report,html[data-theme="dark"] .finance-correction,html[data-theme="dark"] .health-screen{background:#080d14!important;color:#f4f7fb!important}
 html[data-theme="dark"] .detail-body .actions-screen-grid>.actions-command,html[data-theme="dark"] .detail-body .actions-screen>.actions-command,html[data-theme="dark"] .detail-body .status-actions .action:not(.accept):not(.finish),html[data-theme="dark"] .sms-choice-grid button,html[data-theme="dark"] .more-actions-panel button,html[data-theme="dark"] .transfer-course-card,html[data-theme="dark"] .finance-summary-card:not(.dark),html[data-theme="dark"] .expense-row,html[data-theme="dark"] .payment-breakdown-card,html[data-theme="dark"] .payment-sheet,html[data-theme="dark"] .document-editor,html[data-theme="dark"] .health-summary,html[data-theme="dark"] .health-check,html[data-theme="dark"] .health-event,html[data-theme="dark"] .health-progress-card,html[data-theme="dark"] .health-confirm-card{background:#111925!important;color:#f4f7fb!important;border-color:#2f3c50!important}
-html[data-theme="dark"] .detail-body .more-actions-panel,html[data-theme="dark"] .sms-choice-panel{background:#0d1623!important;border-color:#2f3c50!important}
+html[data-theme="dark"] .detail-body .more-actions-panel,html[data-theme="dark"] .sms-choice-panel,html[data-theme="dark"] .contact-choice-panel{background:#0d1623!important;border-color:#2f3c50!important}
 html[data-theme="dark"] .booking-date,html[data-theme="dark"] .detail-body small,html[data-theme="dark"] .transfer-course-card small,html[data-theme="dark"] .expense-row small,html[data-theme="dark"] .payment-breakdown-card small,html[data-theme="dark"] .health-summary small,html[data-theme="dark"] .health-check small,html[data-theme="dark"] .health-event small,html[data-theme="dark"] .health-event p{color:#aeb8c8!important}
 html[data-theme="dark"] .detail-body .action.accept{background:#176ef4!important;color:#fff!important;border-color:#176ef4!important}html[data-theme="dark"] .detail-body .action.finish{background:#14833b!important;color:#fff!important;border-color:#14833b!important}html[data-theme="dark"] .detail-body .action.reject{color:#ff8588!important}html[data-theme="dark"] .action-symbol{background:#1a2b44!important;color:#67a9ff!important}
 /* V65.8 — contraste intégral du tableau de bord et des commandes GPS en mode nuit */
@@ -1707,7 +1715,14 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       return `https://www.waze.com/ul?q=${encodeURIComponent(address || "")}&navigate=yes`;
     }
  
-    function sendPlannedTripSms(item, type) {
+    function whatsappPhone(value) {
+      let digits = String(value || "").replace(/\D/g, "");
+      if (digits.startsWith("00")) digits = digits.slice(2);
+      if (digits.startsWith("0")) digits = `33${digits.slice(1)}`;
+      return digits;
+    }
+ 
+    function sendPlannedTripSms(item, type, channel = "sms") {
       const phone = phoneHref(item.customerPhone);
       const scheduledDate = bookingDate(item);
       if (!phone) {
@@ -1731,9 +1746,16 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         arrived:`Bonjour ${name},\n\nJe vous informe que je suis arrivé à l’adresse de prise en charge. Je vous attends à bord de mon véhicule.\n\nÀ tout de suite.\n\nOuassini – OuassVTC`,
         security:`Bonjour ${name},\n\nJe suis Ouassini, votre chauffeur VTC. Mon véhicule est une Toyota Auris break immatriculée GB-580-NS. Je serai en charge de vous transporter pour votre trajet.\n\nCordialement,\nOuassini – OuassVTC`,
         review:`Bonjour ${name},\n\nMerci d’avoir fait confiance à OuassVTC pour votre trajet. Si vous avez été satisfait de mon service, vous pouvez partager votre expérience en laissant un avis Google grâce au lien ci-dessous :\n\nhttps://g.page/r/CR7Mtdp00GhhEBM/review\n\nVotre avis est précieux et m’aide à faire connaître mon activité.\n\nMerci encore et à bientôt.\n\nOuassini – OuassVTC`,
+        installation:`Bonjour ${name},\n\nPour vos prochaines réservations, vous pouvez installer l’application OuassVTC grâce au lien ci-dessous :\n\nhttps://www.ouassvtc.fr/chauffeur/reservation/\n\nL’application est 100 % sécurisée : aucun compte à créer et aucun identifiant à renseigner. Votre réservation se fait en quelques clics et votre demande est envoyée directement à OuassVTC.\n\nEn tant que client régulier, vous bénéficiez de tarifs privilégiés, calculés automatiquement et annoncés à l’avance.\n\nÀ bientôt,\nOuassini – OuassVTC`,
         payment:`Bonjour ${name},\n\nSauf erreur de notre part, le règlement de votre course OuassVTC du ${dateText}${priceAmount > 0 ? `, d’un montant de ${priceText}` : ""}, est toujours en attente.\n\nMerci de bien vouloir procéder au règlement ou de me contacter afin de régulariser la situation.\n\nSi le paiement a déjà été effectué, merci de ne pas tenir compte de ce message.\n\nCordialement,\nOuassini – OuassVTC`
       };
       const message = messages[type] || messages.confirmation;
+      if (channel === "whatsapp") {
+        const whatsapp = whatsappPhone(item.customerPhone);
+        if (!whatsapp) return alert("Ce numéro ne peut pas être ouvert dans WhatsApp.");
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+        return;
+      }
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     }
  
@@ -4219,8 +4241,9 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           ${tripExtrasMarkup(item)}
           ${waitingTimerMarkup(item)}
         </div>
-        <div class="quick-actions"><a href="tel:${phone}">☎ Appeler</a><button type="button" data-toggle-sms-menu>💬 SMS</button></div>
-        <div class="sms-choice-panel hidden" data-sms-menu><strong>Choisissez le SMS à envoyer</strong><div class="sms-choice-grid">${isPaymentPendingItem(item)?`<button type="button" data-trip-sms="payment">💶 Rappel de règlement</button>`:""}<button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div>
+        <div class="quick-actions"><button type="button" data-toggle-call-menu>☎ Appeler</button><button type="button" data-toggle-message-menu>💬 SMS / WhatsApp</button></div>
+        <div class="contact-choice-panel hidden" data-call-menu><strong>Comment souhaitez-vous contacter le client ?</strong><div class="contact-choice-grid"><a href="tel:${phone}">☎ Appel téléphonique</a><a class="whatsapp-choice" href="https://wa.me/${whatsappPhone(item.customerPhone)}" target="_blank" rel="noopener">WhatsApp</a></div></div>
+        <div class="contact-choice-panel hidden" data-message-menu><strong>Comment souhaitez-vous envoyer le message ?</strong><div class="contact-choice-grid"><button type="button" data-message-channel="sms">💬 SMS classique</button><button class="whatsapp-choice" type="button" data-message-channel="whatsapp">WhatsApp</button></div><div class="message-theme-wrap hidden" data-message-themes><strong>Choisissez le thème du message</strong><div class="sms-choice-grid">${isPaymentPendingItem(item)?`<button type="button" data-trip-sms="payment">💶 Rappel de règlement</button>`:""}<button type="button" data-trip-sms="confirmation">Confirmation du trajet</button><button type="button" data-trip-sms="reminder">Rappel du trajet</button><button type="button" data-trip-sms="arrived">Je suis arrivé sur place</button><button type="button" data-trip-sms="security">Présentation et sécurité</button><button type="button" data-trip-sms="installation">📲 Installation de l’application</button><button type="button" data-trip-sms="review">⭐ Demander un avis Google</button></div></div></div>
         ${stagedWazeActions(item)}
         <div class="status-actions">${actionButtons(item)}<button class="action" type="button" data-toggle-more-actions>⋯ Autres actions</button></div>
         <div class="more-actions-panel hidden actions-screen" data-more-actions>
@@ -4264,9 +4287,20 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
       $("detailBody").querySelector("[data-transfer-booking]")?.addEventListener("click", () => openTransferBooking(item.id));
-      $("detailBody").querySelector("[data-toggle-sms-menu]")?.addEventListener("click", () => {
-        $("detailBody").querySelector("[data-sms-menu]")?.classList.toggle("hidden");
+      $("detailBody").querySelector("[data-toggle-call-menu]")?.addEventListener("click", () => {
+        $("detailBody").querySelector("[data-call-menu]")?.classList.toggle("hidden");
+        $("detailBody").querySelector("[data-message-menu]")?.classList.add("hidden");
       });
+      $("detailBody").querySelector("[data-toggle-message-menu]")?.addEventListener("click", () => {
+        $("detailBody").querySelector("[data-message-menu]")?.classList.toggle("hidden");
+        $("detailBody").querySelector("[data-call-menu]")?.classList.add("hidden");
+      });
+      let selectedMessageChannel = "sms";
+      $("detailBody").querySelectorAll("[data-message-channel]").forEach(button => button.addEventListener("click", () => {
+        selectedMessageChannel = button.dataset.messageChannel;
+        $("detailBody").querySelectorAll("[data-message-channel]").forEach(choice => choice.classList.toggle("active", choice === button));
+        $("detailBody").querySelector("[data-message-themes]")?.classList.remove("hidden");
+      }));
       $("detailBody").querySelector("[data-toggle-more-actions]")?.addEventListener("click", () => {
         const screen = $("detailBody").querySelector("[data-more-actions]");
         screen?.classList.remove("hidden");
@@ -4284,7 +4318,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("detailBody").querySelector("[data-duplicate-booking]")?.addEventListener("click", () => duplicateBooking(item.id));
       $("detailBody").querySelector("[data-return-booking]")?.addEventListener("click", () => openReturnBooking(item.id));
       $("detailBody").querySelectorAll("[data-trip-sms]").forEach(button => {
-        button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms));
+        button.addEventListener("click", () => sendPlannedTripSms(item, button.dataset.tripSms, selectedMessageChannel));
       });
       $("detailBody").querySelectorAll("[data-status]").forEach(button => button.addEventListener("click", async () => {
         await handleStatusAction(button.dataset.id, button.dataset.status);
