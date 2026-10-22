@@ -2374,10 +2374,12 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         try{const logo=await loadPdfImage("/ouassvtc-app.png"),canvas=document.createElement("canvas");canvas.width=logo.naturalWidth;canvas.height=logo.naturalHeight;canvas.getContext("2d").drawImage(logo,0,0);logoData=canvas.toDataURL("image/png");}catch(error){console.warn("Logo PDF indisponible",error);}
         const money=value=>pdfMoney(value).replace(" EUR"," €");
         const header=(title,subtitle)=>{doc.setFillColor(6,10,15);doc.rect(0,0,width,38,"F");if(logoData)doc.addImage(logoData,"PNG",14,8,22,22,undefined,"FAST");else{doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(12);doc.text("OUASSVTC",14,21);}doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text(title,43,17);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(169,181,198);doc.text(subtitle,43,25);doc.text(`Edite le ${now.toLocaleDateString("fr-FR")}`,196,22,{align:"right"});};
-        const footer=page=>{doc.setDrawColor(225,229,235);doc.line(margin,286,width-margin,286);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(122,132,146);doc.text("Document de pilotage OuassVTC",margin,291);doc.text(`Page ${page} sur 2`,width-margin,291,{align:"right"});};
+        const footer=page=>{doc.setDrawColor(225,229,235);doc.line(margin,286,width-margin,286);doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(122,132,146);doc.text("Document de pilotage OuassVTC",margin,291);doc.text(`Page ${page} sur 3`,width-margin,291,{align:"right"});};
         const sectionTitle=(title,y)=>{doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(17,31,51);doc.text(title,margin,y);doc.setDrawColor(226,231,238);doc.line(margin,y+3,width-margin,y+3);};
         const kpi=(x,y,w,label,value,accent=false)=>{doc.setFillColor(accent?20:247,accent?91:249,accent?211:252);doc.roundedRect(x,y,w,25,3,3,"F");doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(accent?220:103,accent?234:113,accent?255:127);doc.text(label,x+5,y+8);doc.setFont("helvetica","bold");doc.setFontSize(13);doc.setTextColor(accent?255:17,accent?255:49,accent?255:85);doc.text(String(value),x+5,y+19);};
         const bar=(x,y,w,label,value,max,color=[23,110,244],displayValue=null)=>{doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(69,79,93);doc.text(label,x,y);doc.setFont("helvetica","bold");doc.setTextColor(24,45,75);doc.text(displayValue??String(value),x+w,y,{align:"right"});doc.setFillColor(234,238,244);doc.roundedRect(x,y+3,w,4,2,2,"F");doc.setFillColor(...color);doc.roundedRect(x,y+3,Math.max(2,w*(max?value/max:0)),4,2,2,"F");};
+        const paragraph=(text,x,y,w,size=9,color=[55,65,81])=>{doc.setFont("helvetica","normal");doc.setFontSize(size);doc.setTextColor(...color);const lines=doc.splitTextToSize(text,w);doc.text(lines,x,y,{lineHeightFactor:1.45});return y+lines.length*size*0.48;};
+        const actionLine=(number,title,text,y)=>{doc.setFillColor(23,110,244);doc.circle(19,y-1.5,4,"F");doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text(String(number),19,y+0.8,{align:"center"});doc.setFont("helvetica","bold");doc.setFontSize(9.5);doc.setTextColor(17,31,51);doc.text(title,27,y);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(75,85,99);const lines=doc.splitTextToSize(text,169);doc.text(lines,27,y+4.5,{lineHeightFactor:1.25});return y+8+lines.length*3.6;};
  
         header(`Bilan annuel OuassVTC ${year}`,"Synthese financiere et resultat de l'activite");
         sectionTitle("Vue d'ensemble",49);
@@ -2409,11 +2411,50 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         if(reasons.length){const maxReason=Math.max(...reasons.map(item=>item[1]),1);reasons.slice(0,5).forEach(([label,count],index)=>bar(14,175+index*11,182,label,count,maxReason,[197,55,55]));}
         else{doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(104,114,128);doc.text("Aucun motif d'annulation enregistre sur cette periode.",14,178);}
  
-        sectionTitle("Repartition des depenses",230);
-        const expenseLines=[["Carburant",annual.fuel],["Peages",annual.tolls],["Publicite",annual.ads],["Usure vehicule",annual.wear],["Assurance vehicule",annual.insurance]];
-        const expenseTop=239,maxExpense=Math.max(...expenseLines.map(item=>item[1]),1);
-        expenseLines.forEach(([label,value],index)=>bar(14,expenseTop+index*9,182,label,value,maxExpense,[23,110,244],money(value)));
         footer(2);
+ 
+        doc.addPage("a4","portrait");header("Analyse et plan d'action","Conclusion du bilan et priorites du mois a venir");
+        const expenseLines=[["Carburant",annual.fuel],["Peages",annual.tolls],["Publicite",annual.ads],["Usure vehicule",annual.wear],["Assurance vehicule",annual.insurance]];
+        const expenseTotal=expenseLines.reduce((sum,item)=>sum+item[1],0);
+        const expenseTopLine=[...expenseLines].sort((a,b)=>b[1]-a[1])[0]||["Aucune depense",0];
+        const expenseRatio=annual.revenue?Math.round(expenseTotal/annual.revenue*100):0;
+        const netMargin=annual.revenue?Math.round(annual.net/annual.revenue*100):0;
+        const averageCourse=annual.courses.length?annual.revenue/annual.courses.length:0;
+        const bestMonth=[...rows].sort((a,b)=>b.current.revenue-a.current.revenue)[0]||null;
+        const topReason=reasons[0]||null;
+        const monthlyTarget=rows.length?Math.round(rows.reduce((sum,row)=>sum+row.current.revenue,0)/rows.length*1.1/5)*5:0;
+ 
+        sectionTitle("Repartition des depenses",49);
+        const expenseTop=59,maxExpense=Math.max(...expenseLines.map(item=>item[1]),1);
+        expenseLines.forEach(([label,value],index)=>bar(14,expenseTop+index*12,182,label,value,maxExpense,[23,110,244],money(value)));
+ 
+        sectionTitle("Indicateurs de rentabilite",128);
+        kpi(14,136,57,"Poids des frais",`${expenseRatio} %`);
+        kpi(76.5,136,57,"Marge nette estimee",`${netMargin} %`,true);
+        kpi(139,136,57,"Panier moyen",money(averageCourse));
+ 
+        sectionTitle("Conclusion de l'analyse",174);
+        const conclusionParts=[];
+        conclusionParts.push(`L'activite enregistre ${annual.courses.length} courses realisees pour ${money(annual.revenue)} de chiffre d'affaires et un revenu net estime a ${money(annual.net)}.`);
+        if(bestMonth) conclusionParts.push(`${bestMonth.name.charAt(0).toUpperCase()+bestMonth.name.slice(1)} est le mois le plus performant avec ${money(bestMonth.current.revenue)} de chiffre d'affaires.`);
+        conclusionParts.push(`La conversion reelle atteint ${conversionRate} %, tandis que ${notRealized} demandes n'ont pas abouti. Le premier poste de depense est ${expenseTopLine[0].toLowerCase()} avec ${money(expenseTopLine[1])}.`);
+        paragraph(conclusionParts.join(" "),14,184,182,9);
+ 
+        sectionTitle("Actions prioritaires pour le mois a venir",214);
+        const conversionAction=conversionRate<80
+          ? "Rappeler rapidement chaque nouvelle demande, relancer les dossiers sans reponse et confirmer les courses la veille afin d'augmenter le taux de transformation."
+          : "Maintenir la rapidite de reponse et la confirmation la veille, puis proposer l'application aux clients satisfaits pour favoriser les reservations recurrentes.";
+        const cancellationAction=topReason
+          ? `Traiter en priorite le motif « ${topReason[0]} » (${topReason[1]} cas) et renseigner systematiquement la cause exacte de chaque course non realisee.`
+          : "Continuer a renseigner chaque motif de non-realisation afin d'identifier rapidement les causes de perte de chiffre d'affaires.";
+        const growthAction=monthlyTarget
+          ? `Viser au moins ${money(monthlyTarget)} de chiffre d'affaires sur le prochain mois, tout en surveillant ${expenseTopLine[0].toLowerCase()} et le retour des campagnes publicitaires.`
+          : `Developper les demandes recurrentes et suivre chaque semaine le chiffre d'affaires, la conversion et le poste ${expenseTopLine[0].toLowerCase()}.`;
+        let actionY=224;
+        actionY=actionLine(1,"Convertir davantage",conversionAction,actionY);
+        actionY=actionLine(2,"Reduire les pertes",cancellationAction,actionY);
+        actionLine(3,"Developper le chiffre d'affaires",growthAction,actionY);
+        footer(3);
         const exportStamp=new Date();
         const stamp=`${exportStamp.getFullYear()}${String(exportStamp.getMonth()+1).padStart(2,"0")}${String(exportStamp.getDate()).padStart(2,"0")}-${String(exportStamp.getHours()).padStart(2,"0")}${String(exportStamp.getMinutes()).padStart(2,"0")}${String(exportStamp.getSeconds()).padStart(2,"0")}`;
         const fileName=`OuassVTC-bilan-annuel-${year}-${stamp}.pdf`;
@@ -6719,7 +6760,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.42.20261022.01",REPORTING_START_MS=Date.parse("2026-10-21T20:31:00Z"),q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],clientInstallations=[],clientEstimates=[],clientVisits=[],unsubs=[],map=null,markers=new Map(),weekOffset=Number(sessionStorage.getItem("ouassvtcAdminWeekOffset")||0),driverFilter=sessionStorage.getItem("ouassvtcAdminDriverFilter")||"all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.43.20261022.01",REPORTING_START_MS=Date.parse("2026-10-21T20:31:00Z"),q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],clientInstallations=[],clientEstimates=[],clientVisits=[],unsubs=[],map=null,markers=new Map(),weekOffset=Number(sessionStorage.getItem("ouassvtcAdminWeekOffset")||0),driverFilter=sessionStorage.getItem("ouassvtcAdminDriverFilter")||"all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Bonjour Ouassini</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button" aria-label="Fermer">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Pilotage</button><button data-v79tab="activity">Courses</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button><button data-v79tab="alerts">Alertes</button><button data-v79tab="applications">Applications</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-live-kpis" id="v79LiveKpis"></div><div class="v79-section-title">Carte en direct</div><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div><div id="v79DriverDetail" class="v79-driver-detail v79-hidden"></div></div><div id="v79ViewActivity" class="v79-admin-view"><div class="v79-filter" id="v79DriverFilter"></div><div class="v79-week-head"><button id="v79PrevWeek">←</button><strong id="v79WeekLabel"></strong><button id="v79NextWeek">→</button></div><div class="v79-week-kpis" id="v79WeekKpis"></div><div class="v79-chart" id="v79WeekChart"></div><div class="v79-section-title">Détail des courses</div><div class="v79-trip-list" id="v79TripList"></div></div><div id="v79ViewDrivers" class="v79-admin-view"><div class="v79-section-title">Équipe et accès administrateur</div><div class="v79-trip-list" id="v79DriversList"></div></div><div id="v79ViewFinance" class="v79-admin-view"><div class="v79-filter" id="v79FinanceFilter"></div><div class="v79-week-head"><button id="v79PrevWeek2">←</button><strong id="v79WeekLabel2"></strong><button id="v79NextWeek2">→</button></div><div class="v79-week-kpis" id="v79FinanceKpis"></div><div class="v79-pay" id="v79PaymentBreakdown"></div><div class="v79-section-title">Encaissements</div><div class="v79-trip-list" id="v79FinanceTrips"></div></div><div id="v79ViewAlerts" class="v79-admin-view"><div class="v79-section-title">Actions prioritaires</div><div class="v79-trip-list" id="v79AlertsList"></div></div><div id="v79ViewApplications" class="v79-admin-view"><div class="v79-section-title">Installations anonymes de l’application client</div><div class="v79-week-kpis" id="v79InstallKpis"></div><div class="v79-driver-detail"><h3>Comptage respectueux de la vie privée</h3><p style="margin:7px 0 0;color:#65758a">Aucun compte client, nom, téléphone, adresse, course ou adresse IP n’est enregistré. Chaque installation possède uniquement un identifiant technique unique permettant d’éviter les doubles comptages.</p><p style="margin:7px 0 0;color:#65758a"><strong>Android :</strong> installations confirmées ou détectées à l’ouverture. <strong>iPhone/iPad :</strong> estimation basée sur la première ouverture depuis l’icône installée.</p></div><div class="v79-section-title">Dernières installations détectées</div><div class="v79-trip-list" id="v79InstallList"></div><div id="v79InstallDetail" class="v79-driver-detail v79-hidden"></div><div class="v79-section-title">Parcours de réservation</div><div class="v79-week-kpis" id="v79EstimateKpis"></div><div class="v79-section-title">Estimations de tarif réalisées</div><div class="v79-trip-list" id="v79EstimateList"></div><div id="v79EstimateDetail" class="v79-driver-detail v79-hidden"></div></div></div>`;document.body.appendChild(root);
@@ -6964,3 +7005,4 @@ document.documentElement.dataset.adminPilotVersion=V79;window.addEventListener('
  
 </body>
 </html>
+ 
