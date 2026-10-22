@@ -4791,13 +4791,18 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
  
     async function refuseAndDelete(id) {
-      if (!confirm("Refuser et supprimer définitivement cette demande ?")) return false;
+      if (!confirm("Refuser cette demande ? Elle sera conservée dans l’historique pour calculer le taux de non-réalisation.")) return false;
       try {
-        await deleteDoc(doc(db, "bookings", id));
+        await updateDoc(doc(db, "bookings", id), {
+          status: "rejected",
+          rejectedAt: serverTimestamp(),
+          statusUpdatedAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
         return true;
       } catch (error) {
         console.error(error);
-        alert("La demande n’a pas pu être supprimée.");
+        alert("La demande n’a pas pu être refusée.");
         return false;
       }
     }
@@ -6782,7 +6787,10 @@ function renderInstallations(){
 function openEstimateRecord(id){
  const item=clientEstimates.find(x=>x.id===id),box=q('v79EstimateDetail');if(!item||!box)return;
  const created=toMs(item.createdAt)?new Date(toMs(item.createdAt)):null;
- box.classList.remove('v79-hidden');box.innerHTML=`<h3>Fiche d’estimation · ${money(item.estimatedPrice)}</h3><p><strong>Départ</strong><br>${esc(item.pickup||'Non renseigné')}</p><p><strong>Arrivée</strong><br>${esc(item.destination||'Non renseignée')}</p><p><strong>Distance</strong><br>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km</p><p><strong>Date souhaitée</strong><br>${esc(String(item.scheduledAtText||'Non renseignée').replace('T',' '))}</p><p><strong>Estimation réalisée</strong><br>${created?created.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'Date en attente'}</p><p><strong>Résultat</strong><br>${item.converted?'Réservation envoyée':'Estimation sans réservation'}</p>`;
+ const booking=item.bookingId?bookings.find(x=>x.id===item.bookingId):null;
+ const doneStatuses=['completed','transfer_performed','transfer_closed'],missedStatuses=['cancelled','rejected','refused','no_show'];
+ const finalResult=!item.converted?'Estimation sans réservation':!booking?'Réservation envoyée':doneStatuses.includes(String(booking.status||''))?'Course réalisée':missedStatuses.includes(String(booking.status||''))?'Course non réalisée':'Réservation en attente';
+ box.classList.remove('v79-hidden');box.innerHTML=`<h3>Fiche d’estimation · ${money(item.estimatedPrice)}</h3><p><strong>Départ</strong><br>${esc(item.pickup||'Non renseigné')}</p><p><strong>Arrivée</strong><br>${esc(item.destination||'Non renseignée')}</p><p><strong>Distance</strong><br>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km</p><p><strong>Date souhaitée</strong><br>${esc(String(item.scheduledAtText||'Non renseignée').replace('T',' '))}</p><p><strong>Estimation réalisée</strong><br>${created?created.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'Date en attente'}</p><p><strong>Résultat</strong><br>${finalResult}</p>`;
  box.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function renderEstimates(){
@@ -6791,12 +6799,23 @@ function renderEstimates(){
  const trackedBookings=bookings.filter(x=>x.reportingExcluded!==true&&['website','client','app-client'].includes(String(x.source||'').toLowerCase())&&toMs(x.createdAt)>=REPORTING_START_MS);
  const total=trackedEstimates.length,converted=trackedEstimates.filter(x=>x.converted===true).length,abandoned=total-converted;
  const sent=trackedBookings.length;
- const rate=total?Math.round(converted/total*100):0;
+ const completedStatuses=['completed','transfer_performed','transfer_closed'],missedStatuses=['cancelled','rejected','refused','no_show'];
+ const realized=trackedBookings.filter(x=>completedStatuses.includes(String(x.status||''))).length;
+ const notRealized=trackedBookings.filter(x=>missedStatuses.includes(String(x.status||''))).length;
+ const pending=Math.max(0,sent-realized-notRealized);
+ const formRate=total?Math.round(converted/total*100):0;
+ const realConversionRate=sent?Math.round(realized/sent*100):0;
+ const notRealizedRate=sent?Math.round(notRealized/sent*100):0;
  kpis.innerHTML=`
   <article class="v79-kpi" data-estimate-kpi="0"><div class="v79-metric-label">Estimations</div><div class="v79-metric-value">${String(total)}</div></article>
   <article class="v79-kpi" data-estimate-kpi="1"><div class="v79-metric-label">Formulaires envoyés</div><div class="v79-metric-value">${String(sent)}</div></article>
   <article class="v79-kpi" data-estimate-kpi="2"><div class="v79-metric-label">Sans réservation</div><div class="v79-metric-value">${String(abandoned)}</div></article>
-  <article class="v79-kpi" data-estimate-kpi="3"><div class="v79-metric-label">Transformation</div><div class="v79-metric-value">${String(rate)} %</div></article>`;
+  <article class="v79-kpi" data-estimate-kpi="3"><div class="v79-metric-label">Transformation formulaire</div><div class="v79-metric-value">${String(formRate)} %</div></article>
+  <article class="v79-kpi" data-estimate-kpi="4"><div class="v79-metric-label">Courses réalisées</div><div class="v79-metric-value">${String(realized)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="5"><div class="v79-metric-label">Conversion réelle</div><div class="v79-metric-value">${String(realConversionRate)} %</div></article>
+  <article class="v79-kpi" data-estimate-kpi="6"><div class="v79-metric-label">Non réalisées</div><div class="v79-metric-value">${String(notRealized)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="7"><div class="v79-metric-label">Taux non-réalisation</div><div class="v79-metric-value">${String(notRealizedRate)} %</div></article>
+  <article class="v79-kpi" data-estimate-kpi="8"><div class="v79-metric-label">Encore en attente</div><div class="v79-metric-value">${String(pending)}</div></article>`;
  const rows=[...trackedEstimates].sort((a,b)=>toMs(b.createdAt)-toMs(a.createdAt));
  list.innerHTML=rows.length?rows.map(item=>{const d=toMs(item.createdAt)?new Date(toMs(item.createdAt)):null;return `<button type="button" class="v79-trip" data-estimate-id="${esc(item.id)}" style="width:100%;color:inherit;text-align:left"><strong>${money(item.estimatedPrice)}</strong><span><strong>${esc(item.pickup||'Départ')} → ${esc(item.destination||'Arrivée')}</strong><small>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km · ${d?d.toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'}):'Date en attente'} · ${item.converted?'Réservation envoyée':'Sans réservation'}</small></span><span class="v79-money">›</span></button>`}).join(''):'<div class="v79-empty">Aucune estimation enregistrée pour le moment.</div>';
  kpis.querySelectorAll('[data-estimate-kpi]').forEach(button=>button.onclick=()=>list.scrollIntoView({behavior:'smooth',block:'start'}));
