@@ -2281,7 +2281,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
  
     function pdfMoney(value) {
-      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 })} EUR`;
+      const amount = Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:2, maximumFractionDigits:2 }).replace(/[\u00A0\u202F]/g, " ");
+      return `${amount} EUR`;
     }
  
     function mileageValue(item) {
@@ -2299,7 +2300,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     }
  
     function formatKm(value) {
-      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:1, maximumFractionDigits:1 })} km`;
+      const distance = Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits:1, maximumFractionDigits:1 }).replace(/[\u00A0\u202F]/g, " ");
+      return `${distance} km`;
     }
  
     function renderMileageReports() {
@@ -6717,7 +6719,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79="79.41.20261022.01",REPORTING_START_MS=Date.parse("2026-10-21T20:31:00Z"),q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],clientInstallations=[],clientEstimates=[],clientVisits=[],unsubs=[],map=null,markers=new Map(),weekOffset=Number(sessionStorage.getItem("ouassvtcAdminWeekOffset")||0),driverFilter=sessionStorage.getItem("ouassvtcAdminDriverFilter")||"all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
+const V79="79.42.20261022.01",REPORTING_START_MS=Date.parse("2026-10-21T20:31:00Z"),q=id=>document.getElementById(id);let db=null,drivers=[],bookings=[],missions=[],presence=[],clientInstallations=[],clientEstimates=[],clientVisits=[],unsubs=[],map=null,markers=new Map(),weekOffset=Number(sessionStorage.getItem("ouassvtcAdminWeekOffset")||0),driverFilter=sessionStorage.getItem("ouassvtcAdminDriverFilter")||"all",selectedDriverId="",adminRouteService=null,adminRouteRenderer=null;
 const money=n=>`${Number(n||0).toLocaleString("fr-FR",{maximumFractionDigits:2})} €`;const norm=v=>String(v||"").trim().toLowerCase();
 function mount(){if(q("v79AdminCockpit"))return;const home=q("dashboardHome");if(home){const b=document.createElement("button");b.id="v79AdminLaunch";b.type="button";b.innerHTML='<span><strong>Admin · Pilotage</strong><small>Carte en direct · activité · chauffeurs · finances</small></span>';const hello=home.querySelector('.hello-row');hello?hello.insertAdjacentElement('afterend',b):home.prepend(b);b.onclick=openCockpit}
  const root=document.createElement("section");root.id="v79AdminCockpit";root.className="v79-hidden";root.innerHTML=`<div class="v79-admin-shell"><header class="v79-admin-head"><div><small>OUASSVTC · CENTRE DE PILOTAGE</small><h1>Bonjour Ouassini</h1></div><button class="v79-admin-close" id="v79AdminClose" type="button" aria-label="Fermer">×</button></header><nav class="v79-tabs"><button class="active" data-v79tab="live">Pilotage</button><button data-v79tab="activity">Courses</button><button data-v79tab="drivers">Chauffeurs</button><button data-v79tab="finance">Finances</button><button data-v79tab="alerts">Alertes</button><button data-v79tab="applications">Applications</button></nav><div id="v79ViewLive" class="v79-admin-view active"><div class="v79-live-kpis" id="v79LiveKpis"></div><div class="v79-section-title">Carte en direct</div><div class="v79-map-wrap v798-map-only"><div id="v79AdminMap" class="v79-admin-map"></div></div><div id="v79ActiveDrivers" style="display:grid;gap:9px;margin-top:12px"></div><div id="v79DriverDetail" class="v79-driver-detail v79-hidden"></div></div><div id="v79ViewActivity" class="v79-admin-view"><div class="v79-filter" id="v79DriverFilter"></div><div class="v79-week-head"><button id="v79PrevWeek">←</button><strong id="v79WeekLabel"></strong><button id="v79NextWeek">→</button></div><div class="v79-week-kpis" id="v79WeekKpis"></div><div class="v79-chart" id="v79WeekChart"></div><div class="v79-section-title">Détail des courses</div><div class="v79-trip-list" id="v79TripList"></div></div><div id="v79ViewDrivers" class="v79-admin-view"><div class="v79-section-title">Équipe et accès administrateur</div><div class="v79-trip-list" id="v79DriversList"></div></div><div id="v79ViewFinance" class="v79-admin-view"><div class="v79-filter" id="v79FinanceFilter"></div><div class="v79-week-head"><button id="v79PrevWeek2">←</button><strong id="v79WeekLabel2"></strong><button id="v79NextWeek2">→</button></div><div class="v79-week-kpis" id="v79FinanceKpis"></div><div class="v79-pay" id="v79PaymentBreakdown"></div><div class="v79-section-title">Encaissements</div><div class="v79-trip-list" id="v79FinanceTrips"></div></div><div id="v79ViewAlerts" class="v79-admin-view"><div class="v79-section-title">Actions prioritaires</div><div class="v79-trip-list" id="v79AlertsList"></div></div><div id="v79ViewApplications" class="v79-admin-view"><div class="v79-section-title">Installations anonymes de l’application client</div><div class="v79-week-kpis" id="v79InstallKpis"></div><div class="v79-driver-detail"><h3>Comptage respectueux de la vie privée</h3><p style="margin:7px 0 0;color:#65758a">Aucun compte client, nom, téléphone, adresse, course ou adresse IP n’est enregistré. Chaque installation possède uniquement un identifiant technique unique permettant d’éviter les doubles comptages.</p><p style="margin:7px 0 0;color:#65758a"><strong>Android :</strong> installations confirmées ou détectées à l’ouverture. <strong>iPhone/iPad :</strong> estimation basée sur la première ouverture depuis l’icône installée.</p></div><div class="v79-section-title">Dernières installations détectées</div><div class="v79-trip-list" id="v79InstallList"></div><div id="v79InstallDetail" class="v79-driver-detail v79-hidden"></div><div class="v79-section-title">Parcours de réservation</div><div class="v79-week-kpis" id="v79EstimateKpis"></div><div class="v79-section-title">Estimations de tarif réalisées</div><div class="v79-trip-list" id="v79EstimateList"></div><div id="v79EstimateDetail" class="v79-driver-detail v79-hidden"></div></div></div>`;document.body.appendChild(root);
@@ -6962,6 +6964,3 @@ document.documentElement.dataset.adminPilotVersion=V79;window.addEventListener('
  
 </body>
 </html>
- 
- 
- 
