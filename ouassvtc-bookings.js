@@ -35,6 +35,7 @@ window.saveBookingToDriverApp = async function saveBookingToDriverApp(data) {
     estimatedPrice: clean(data.prix),
     status: "new",
     source: "website",
+    reportingExcluded: clean(data.nom).toLowerCase() === "test",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
   };
@@ -42,3 +43,6 @@ window.saveBookingToDriverApp = async function saveBookingToDriverApp(data) {
   const reference = await addDoc(collection(db, "bookings"), booking);
   return { saved: true, id: reference.id };
 };
+
+
+
