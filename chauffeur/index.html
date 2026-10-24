@@ -2241,13 +2241,13 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         return date < end && new Date(date.getFullYear(),date.getMonth()+1,1) > start;
       });
     }
- 
+
     function insuranceRuleForMonth(monthKey) {
       return [...(state.financeSettings.insuranceRules || [])]
         .filter(rule => /^\d{4}-\d{2}$/.test(String(rule.effectiveMonth || "")) && rule.effectiveMonth <= monthKey)
         .sort((a,b) => String(b.effectiveMonth).localeCompare(String(a.effectiveMonth)))[0] || null;
     }
- 
+
     function insuranceInPeriod(start, end) {
       let total = 0;
       const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -2356,7 +2356,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         }).filter(row=>row.current.courses.length||row.current.ads||row.current.tolls||row.current.wear||row.current.insurance||row.previous.courses.length);
         const annual=financeTotals(new Date(year,0,1),new Date(year+1,0,1));
         if(!rows.length){alert("Aucune donnée financière n’est disponible pour créer le rapport.");return;}
- 
+
         const conversionSources=["website","client","app-client"],doneStatuses=["completed","transfer_performed","transfer_closed"],missedStatuses=["cancelled","rejected","refused","no_show"];
         const requests=state.bookings.filter(item=>{const d=createdDate(item),source=String(item.source||"").toLowerCase();return conversionSources.includes(source)&&d>=new Date(year,0,1)&&d<new Date(year+1,0,1);});
         const realized=requests.filter(item=>doneStatuses.includes(String(item.status||""))).length;
@@ -2367,7 +2367,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         const reasonCounts=new Map();
         requests.filter(item=>missedStatuses.includes(String(item.status||""))).forEach(item=>{const reason=String(item.cancellationReasonText||item.cancellationReasonLabel||"Motif non renseigné");reasonCounts.set(reason,(reasonCounts.get(reason)||0)+1);});
         const reasons=[...reasonCounts.entries()].sort((a,b)=>b[1]-a[1]);
- 
+
         const doc=new JsPdf({orientation:"portrait",unit:"mm",format:"a4"});
         const width=210,height=297,margin=14,contentWidth=182;
         let logoData=null;
@@ -2380,7 +2380,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         const bar=(x,y,w,label,value,max,color=[23,110,244],displayValue=null)=>{doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(69,79,93);doc.text(label,x,y);doc.setFont("helvetica","bold");doc.setTextColor(24,45,75);doc.text(displayValue??String(value),x+w,y,{align:"right"});doc.setFillColor(234,238,244);doc.roundedRect(x,y+3,w,4,2,2,"F");doc.setFillColor(...color);doc.roundedRect(x,y+3,Math.max(2,w*(max?value/max:0)),4,2,2,"F");};
         const paragraph=(text,x,y,w,size=9,color=[55,65,81])=>{doc.setFont("helvetica","normal");doc.setFontSize(size);doc.setTextColor(...color);const lines=doc.splitTextToSize(text,w);doc.text(lines,x,y,{lineHeightFactor:1.45});return y+lines.length*size*0.48;};
         const actionLine=(number,title,text,y)=>{doc.setFillColor(23,110,244);doc.circle(19,y-1.5,4,"F");doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text(String(number),19,y+0.8,{align:"center"});doc.setFont("helvetica","bold");doc.setFontSize(9.5);doc.setTextColor(17,31,51);doc.text(title,27,y);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(75,85,99);const lines=doc.splitTextToSize(text,169);doc.text(lines,27,y+4.5,{lineHeightFactor:1.25});return y+8+lines.length*3.6;};
- 
+
         header(`Bilan annuel OuassVTC ${year}`,"Synthese financiere et resultat de l'activite");
         sectionTitle("Vue d'ensemble",49);
         kpi(14,56,57,"Chiffre d'affaires",money(annual.revenue),true);
@@ -2389,7 +2389,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         kpi(14,86,57,"Kilometres parcourus",formatKm(annual.kilometers));
         kpi(76.5,86,57,"Total des frais",money(annual.fuel+annual.tolls+annual.ads+annual.wear+annual.insurance));
         kpi(139,86,57,"Conversion reelle",`${conversionRate} %`);
- 
+
         sectionTitle("Resultats mensuels",125);
         const cols=[14,50,81,112,143,174],headers=["Mois","CA","Frais","Net","Net N-1","Ecart"];
         doc.setFillColor(23,110,244);doc.roundedRect(14,131,182,10,2,2,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(7.5);headers.forEach((h,i)=>doc.text(h,cols[i]+2,137.5));
@@ -2397,7 +2397,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         rows.forEach((row,index)=>{const expenses=row.current.fuel+row.current.tolls+row.current.ads+row.current.wear+row.current.insurance,rowHeight=9;if(index%2===0){doc.setFillColor(247,249,252);doc.rect(14,y-5.5,182,rowHeight,"F");}const diff=row.current.net-row.previous.net,values=[row.name.charAt(0).toUpperCase()+row.name.slice(1),money(row.current.revenue),money(expenses),money(row.current.net),money(row.previous.net),`${diff>=0?"+":""}${money(diff)}`];doc.setFont("helvetica","normal");doc.setFontSize(7);doc.setTextColor(39,48,60);values.forEach((value,i)=>doc.text(String(value),cols[i]+1,y));y+=rowHeight;});
         const totalsY=Math.min(264,y+6);doc.setFillColor(9,18,31);doc.roundedRect(14,totalsY,182,15,3,3,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(8.5);doc.text("TOTAL ANNUEL",20,totalsY+9.5);doc.text(money(annual.revenue),85,totalsY+9.5,{align:"right"});doc.text("NET",116,totalsY+9.5);doc.text(money(annual.net),190,totalsY+9.5,{align:"right"});
         footer(1);
- 
+
         doc.addPage("a4","portrait");header("Conversion et depenses","Lecture commerciale des demandes et des annulations");
         sectionTitle("Performance commerciale",49);
         kpi(14,56,86,"Demandes recues",requests.length,true);
@@ -2406,13 +2406,13 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         kpi(110,86,86,"Encore en attente",pending);
         bar(14,123,182,"Taux de conversion reelle",conversionRate,100,[17,146,82]);
         bar(14,139,182,"Taux de non-realisation",nonRealizationRate,100,[197,55,55]);
- 
+
         sectionTitle("Motifs de non-realisation",165);
         if(reasons.length){const maxReason=Math.max(...reasons.map(item=>item[1]),1);reasons.slice(0,5).forEach(([label,count],index)=>bar(14,175+index*11,182,label,count,maxReason,[197,55,55]));}
         else{doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(104,114,128);doc.text("Aucun motif d'annulation enregistre sur cette periode.",14,178);}
- 
+
         footer(2);
- 
+
         doc.addPage("a4","portrait");header("Analyse et plan d'action","Conclusion du bilan et priorites du mois a venir");
         const expenseLines=[["Carburant",annual.fuel],["Peages",annual.tolls],["Publicite",annual.ads],["Usure vehicule",annual.wear],["Assurance vehicule",annual.insurance]];
         const expenseTotal=expenseLines.reduce((sum,item)=>sum+item[1],0);
@@ -2423,23 +2423,23 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         const bestMonth=[...rows].sort((a,b)=>b.current.revenue-a.current.revenue)[0]||null;
         const topReason=reasons[0]||null;
         const monthlyTarget=rows.length?Math.round(rows.reduce((sum,row)=>sum+row.current.revenue,0)/rows.length*1.1/5)*5:0;
- 
+
         sectionTitle("Repartition des depenses",49);
         const expenseTop=59,maxExpense=Math.max(...expenseLines.map(item=>item[1]),1);
         expenseLines.forEach(([label,value],index)=>bar(14,expenseTop+index*12,182,label,value,maxExpense,[23,110,244],money(value)));
- 
+
         sectionTitle("Indicateurs de rentabilite",128);
         kpi(14,136,57,"Poids des frais",`${expenseRatio} %`);
         kpi(76.5,136,57,"Marge nette estimee",`${netMargin} %`,true);
         kpi(139,136,57,"Panier moyen",money(averageCourse));
- 
+
         sectionTitle("Conclusion de l'analyse",174);
         const conclusionParts=[];
         conclusionParts.push(`L'activite enregistre ${annual.courses.length} courses realisees pour ${money(annual.revenue)} de chiffre d'affaires et un revenu net estime a ${money(annual.net)}.`);
         if(bestMonth) conclusionParts.push(`${bestMonth.name.charAt(0).toUpperCase()+bestMonth.name.slice(1)} est le mois le plus performant avec ${money(bestMonth.current.revenue)} de chiffre d'affaires.`);
         conclusionParts.push(`La conversion reelle atteint ${conversionRate} %, tandis que ${notRealized} demandes n'ont pas abouti. Le premier poste de depense est ${expenseTopLine[0].toLowerCase()} avec ${money(expenseTopLine[1])}.`);
         paragraph(conclusionParts.join(" "),14,184,182,9);
- 
+
         sectionTitle("Actions prioritaires pour le mois a venir",214);
         const conversionAction=conversionRate<80
           ? "Rappeler rapidement chaque nouvelle demande, relancer les dossiers sans reponse et confirmer les courses la veille afin d'augmenter le taux de transformation."
@@ -2487,7 +2487,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       } catch(error){console.error(error);if(previewWindow&&!previewWindow.closed)previewWindow.close();alert("Le rapport PDF n’a pas pu être généré. Réessayez dans quelques instants.");}
       finally{button.disabled=false;}
     }
- 
+
     function paymentPeriodDates(period = selectedPaymentPeriod) {
       const now = new Date();
       if (period === "month") return { start:new Date(now.getFullYear(), now.getMonth(), 1), end:new Date(now.getFullYear(), now.getMonth() + 1, 1), label:"Ce mois-ci" };
@@ -4874,7 +4874,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       ["schedule","Changement de programme"],["competitor","Course réservée ailleurs"],["duplicate","Demande en double"],
       ["driver","Indisponibilité du chauffeur"],["vehicle","Problème de véhicule"],["booking_error","Erreur de réservation"],["other","Autre motif"]
     ];
- 
+
     function askCancellationReason(title="Annuler la course") {
       return new Promise(resolve => {
         const overlay=document.createElement("div"); overlay.className="cancellation-reason-overlay";
@@ -4888,7 +4888,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         overlay.querySelector("form").addEventListener("submit",event=>{event.preventDefault();const code=select.value;if(!code){alert("Choisissez un motif d’annulation.");return;}const detail=details.value.trim();if(code==="other"&&!detail){alert("Précisez le motif de l’annulation.");details.focus();return;}const label=cancellationReasonOptions.find(item=>item[0]===code)?.[1]||"Autre motif";close({cancellationReasonCode:code,cancellationReasonLabel:label,cancellationReasonDetails:detail,cancellationReasonText:detail?`${label} — ${detail}`:label});});
       });
     }
- 
+
     async function refuseAndDelete(id) {
       const reason=await askCancellationReason("Refuser la demande"); if(!reason)return false;
       try {
@@ -5715,7 +5715,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("insuranceActive").value=rule.active===false?"false":"true";
       $("insuranceExpenseForm").scrollIntoView({behavior:"smooth",block:"center"});
     }
- 
+
     $("insuranceExpenseForm").addEventListener("submit", async event => {
       event.preventDefault();
       const effectiveMonth=$("insuranceEffectiveMonth").value,amount=$("insuranceMonthlyAmount").valueAsNumber,active=$("insuranceActive").value==="true";
@@ -5727,7 +5727,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       await saveFinanceSettings({insuranceRules});
       alert(active?`L’assurance de ${euroAmount(amount)} sera comptée chaque mois à partir de ${effectiveMonth}.`:`L’assurance sera suspendue à partir de ${effectiveMonth}.`);
     });
- 
+
     function loadMonthlyEntry(month) {
       const entry=monthlyEntryForKey(month); if(!entry)return;
       $("monthlyExpenseMonth").value=entry.month;
@@ -6918,20 +6918,21 @@ function renderInstallations(){
  list.innerHTML=recent.length?recent.map(item=>{const d=toMs(item.detectedAt)?new Date(toMs(item.detectedAt)):null,label=item.platform==='android'?'Android · confirmée':item.platform==='ios'?'iPhone / iPad · estimée':'Autre appareil',uniqueId=String(item.installationId||item.installId||item.deviceInstallId||item.id||'');return `<button type="button" class="v79-trip" data-installation-id="${esc(item.id)}" style="width:100%;color:inherit;text-align:left"><strong>${d?d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'}):'—'}</strong><span><strong>${label}</strong><small>${d?d.toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'}):'Date en attente'} · ID ${esc(uniqueId.slice(-8)||'—')}</small></span><span class="v79-money">Voir ›</span></button>`}).join(''):'<div class="v79-empty">Aucune installation détectée pour le moment.</div>';
  list.querySelectorAll('[data-installation-id]').forEach(button=>button.onclick=()=>openInstallationRecord(button.dataset.installationId));
 }
- 
+
 function openEstimateRecord(id){
  const item=clientEstimates.find(x=>x.id===id),box=q('v79EstimateDetail');if(!item||!box)return;
  const created=toMs(item.createdAt)?new Date(toMs(item.createdAt)):null;
  const booking=item.bookingId?bookings.find(x=>x.id===item.bookingId):null;
  const doneStatuses=['completed','transfer_performed','transfer_closed'],missedStatuses=['cancelled','rejected','refused','no_show'];
  const finalResult=!item.converted?'Estimation sans réservation':!booking?'Réservation envoyée':doneStatuses.includes(String(booking.status||''))?'Course réalisée':missedStatuses.includes(String(booking.status||''))?'Course non réalisée':'Réservation en attente';
- box.classList.remove('v79-hidden');box.innerHTML=`<h3>Fiche d’estimation · ${money(item.estimatedPrice)}</h3><p><strong>Départ</strong><br>${esc(item.pickup||'Non renseigné')}</p><p><strong>Arrivée</strong><br>${esc(item.destination||'Non renseignée')}</p><p><strong>Distance</strong><br>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km</p><p><strong>Date souhaitée</strong><br>${esc(String(item.scheduledAtText||'Non renseignée').replace('T',' '))}</p><p><strong>Estimation réalisée</strong><br>${created?created.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'Date en attente'}</p><p><strong>Résultat</strong><br>${finalResult}</p>${booking?.cancellationReasonText?`<p><strong>Motif de non-réalisation</strong><br>${esc(booking.cancellationReasonText)}</p>`:""}`;
+ const estimateChannel=String(item.channel||item.app||'').toLowerCase()==='website'?'Site internet':'Application client';
+ box.classList.remove('v79-hidden');box.innerHTML=`<h3>Fiche d’estimation · ${money(item.estimatedPrice)}</h3><p><strong>Canal</strong><br>${estimateChannel}</p><p><strong>Départ</strong><br>${esc(item.pickup||'Non renseigné')}</p><p><strong>Arrivée</strong><br>${esc(item.destination||'Non renseignée')}</p><p><strong>Distance</strong><br>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km</p><p><strong>Date souhaitée</strong><br>${esc(String(item.scheduledAtText||'Non renseignée').replace('T',' '))}</p><p><strong>Estimation réalisée</strong><br>${created?created.toLocaleString('fr-FR',{dateStyle:'long',timeStyle:'short'}):'Date en attente'}</p><p><strong>Résultat</strong><br>${finalResult}</p>${booking?.cancellationReasonText?`<p><strong>Motif de non-réalisation</strong><br>${esc(booking.cancellationReasonText)}</p>`:""}`;
  box.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function renderEstimates(){
  const kpis=q('v79EstimateKpis'),list=q('v79EstimateList');if(!kpis||!list)return;
- const trackedEstimates=clientEstimates.filter(x=>toMs(x.createdAt)>=REPORTING_START_MS);
- const trackedBookings=bookings.filter(x=>x.reportingExcluded!==true&&['website','client','app-client'].includes(String(x.source||'').toLowerCase())&&toMs(x.createdAt)>=REPORTING_START_MS);
+ const trackedEstimates=clientEstimates.filter(x=>x.reportingExcluded!==true&&toMs(x.createdAt)>=REPORTING_START_MS);
+ const trackedBookings=bookings.filter(x=>x.reportingExcluded!==true&&['website','website-contact','client','app-client'].includes(String(x.source||'').toLowerCase())&&toMs(x.createdAt)>=REPORTING_START_MS);
  const total=trackedEstimates.length,converted=trackedEstimates.filter(x=>x.converted===true).length,abandoned=total-converted;
  const sent=trackedBookings.length;
  const completedStatuses=['completed','transfer_performed','transfer_closed'],missedStatuses=['cancelled','rejected','refused','no_show'];
@@ -6941,6 +6942,10 @@ function renderEstimates(){
  const formRate=total?Math.round(converted/total*100):0;
  const realConversionRate=sent?Math.round(realized/sent*100):0;
  const notRealizedRate=sent?Math.round(notRealized/sent*100):0;
+ const websiteEstimates=trackedEstimates.filter(x=>String(x.channel||x.app||'').toLowerCase()==='website').length;
+ const appEstimates=trackedEstimates.filter(x=>String(x.channel||x.app||'').toLowerCase()!=='website').length;
+ const websiteForms=trackedBookings.filter(x=>['website','website-contact'].includes(String(x.source||'').toLowerCase())).length;
+ const appForms=trackedBookings.filter(x=>['client','app-client'].includes(String(x.source||'').toLowerCase())).length;
  kpis.innerHTML=`
   <article class="v79-kpi" data-estimate-kpi="0"><div class="v79-metric-label">Estimations</div><div class="v79-metric-value">${String(total)}</div></article>
   <article class="v79-kpi" data-estimate-kpi="1"><div class="v79-metric-label">Formulaires envoyés</div><div class="v79-metric-value">${String(sent)}</div></article>
@@ -6950,7 +6955,11 @@ function renderEstimates(){
   <article class="v79-kpi" data-estimate-kpi="5"><div class="v79-metric-label">Conversion réelle</div><div class="v79-metric-value">${String(realConversionRate)} %</div></article>
   <article class="v79-kpi" data-estimate-kpi="6"><div class="v79-metric-label">Non réalisées</div><div class="v79-metric-value">${String(notRealized)}</div></article>
   <article class="v79-kpi" data-estimate-kpi="7"><div class="v79-metric-label">Taux non-réalisation</div><div class="v79-metric-value">${String(notRealizedRate)} %</div></article>
-  <article class="v79-kpi" data-estimate-kpi="8"><div class="v79-metric-label">Encore en attente</div><div class="v79-metric-value">${String(pending)}</div></article>`;
+  <article class="v79-kpi" data-estimate-kpi="8"><div class="v79-metric-label">Encore en attente</div><div class="v79-metric-value">${String(pending)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="9"><div class="v79-metric-label">Estimations site</div><div class="v79-metric-value">${String(websiteEstimates)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="10"><div class="v79-metric-label">Estimations application</div><div class="v79-metric-value">${String(appEstimates)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="11"><div class="v79-metric-label">Formulaires site</div><div class="v79-metric-value">${String(websiteForms)}</div></article>
+  <article class="v79-kpi" data-estimate-kpi="12"><div class="v79-metric-label">Formulaires application</div><div class="v79-metric-value">${String(appForms)}</div></article>`;
  const rows=[...trackedEstimates].sort((a,b)=>toMs(b.createdAt)-toMs(a.createdAt));
  list.innerHTML=rows.length?rows.map(item=>{const d=toMs(item.createdAt)?new Date(toMs(item.createdAt)):null;return `<button type="button" class="v79-trip" data-estimate-id="${esc(item.id)}" style="width:100%;color:inherit;text-align:left"><strong>${money(item.estimatedPrice)}</strong><span><strong>${esc(item.pickup||'Départ')} → ${esc(item.destination||'Arrivée')}</strong><small>${Number(item.distanceKm||0).toLocaleString('fr-FR',{maximumFractionDigits:1})} km · ${d?d.toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'}):'Date en attente'} · ${item.converted?'Réservation envoyée':'Sans réservation'}</small></span><span class="v79-money">›</span></button>`}).join(''):'<div class="v79-empty">Aucune estimation enregistrée pour le moment.</div>';
  kpis.querySelectorAll('[data-estimate-kpi]').forEach(button=>button.onclick=()=>list.scrollIntoView({behavior:'smooth',block:'start'}));
