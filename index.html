@@ -2900,6 +2900,9 @@ let calendarCurrentYear;
 let selectedCalendarDate =
   null;
 
+let currentWebsiteEstimateId =
+  null;
+
 
 /* =========================
    NAVIGATION
@@ -4006,7 +4009,9 @@ async function validerCalendrierEtEstimer(){
    CALCUL DU TARIF
 ========================= */
 
-function calculerEstimation(){
+function calculerEstimation(
+  enregistrerConsultation = true
+){
 
   return new Promise(
     resolve => {
@@ -4225,7 +4230,7 @@ function calculerEstimation(){
             openFareBar();
 
 
-            resolve({
+            const estimationCalculee = {
 
               prix:prix,
 
@@ -4237,7 +4242,82 @@ function calculerEstimation(){
 
               tarif:tarif.nom
 
-            });
+            };
+
+
+            if(
+              enregistrerConsultation
+              &&
+              typeof window.saveWebsiteEstimate
+              ===
+              "function"
+            ){
+
+              const nomClient =
+                document
+                  .getElementById(
+                    "nom"
+                  )
+                  .value
+                  .trim();
+
+
+              window
+                .saveWebsiteEstimate({
+
+                  customerName:
+                    nomClient,
+
+                  pickup:
+                    leg.start_address
+                    ||
+                    depart,
+
+                  destination:
+                    leg.end_address
+                    ||
+                    arrivee,
+
+                  distanceKm:
+                    distKm,
+
+                  estimatedPrice:
+                    prix,
+
+                  scheduledAtText:
+                    dateHeure
+
+                })
+                .then(result => {
+
+                  currentWebsiteEstimateId =
+                    result
+                    &&
+                    result.saved
+                      ?
+                      result.id
+                      :
+                      null;
+
+                })
+                .catch(error => {
+
+                  currentWebsiteEstimateId =
+                    null;
+
+                  console.warn(
+                    "Suivi estimation site indisponible :",
+                    error
+                  );
+
+                });
+
+            }
+
+
+            resolve(
+              estimationCalculee
+            );
 
           }
 
@@ -4379,7 +4459,9 @@ async function sendEmail(
   try{
 
     calc =
-      await calculerEstimation();
+      await calculerEstimation(
+        false
+      );
 
   }
 
@@ -4520,7 +4602,15 @@ async function envoyerFormulaire(
         .value,
 
     prix:
-      prixStr
+      prixStr,
+
+    sourceChannel:
+      "website",
+
+    estimateId:
+      currentWebsiteEstimateId
+      ||
+      ""
 
   };
 
