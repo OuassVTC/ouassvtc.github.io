@@ -1,4 +1,4 @@
-const CACHE_NAME = "ouassvtc-reservation-v2";
+const CACHE_NAME = "ouassvtc-reservation-v3";
 const APP_SHELL = [
   "/chauffeur/reservation/",
   "/chauffeur/reservation/index.html",
