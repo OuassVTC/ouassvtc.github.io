@@ -7156,11 +7156,11 @@ if (firebaseReady) {
 .ouass-price-card{margin-bottom:14px;padding:18px;border:1px solid #dfe6ef;border-radius:22px;background:#fff;box-shadow:0 9px 26px #10243d0d}
 .ouass-price-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.ouass-price-head h3{margin:0;color:#0b1628;font-size:20px}.ouass-price-head small{display:block;margin-top:3px;color:#65758a}
 .ouass-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ouass-price-field label{display:block;margin-bottom:6px;color:#344054;font-size:12px;font-weight:850}.ouass-price-input{position:relative}.ouass-price-field input,.ouass-price-field select{width:100%;min-height:49px;padding:12px;border:1px solid #cfd8e5;border-radius:13px;background:#fff;color:#071321;font-size:17px;font-weight:900}.ouass-price-field input.ouass-has-unit{padding-right:72px}.ouass-price-unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#65758a;font-size:14px;font-weight:900;pointer-events:none}.ouass-price-field select{appearance:auto}
-.ouass-price-switch{display:flex;align-items:center;gap:8px;color:#1478ff;font-weight:900}.ouass-price-switch input{width:21px;height:21px;accent-color:#1478ff}
+.ouass-price-switch{display:flex;align-items:center;gap:9px;color:#65758a;font-weight:950;cursor:pointer}.ouass-price-switch input{position:absolute;opacity:0;pointer-events:none}.ouass-price-toggle{position:relative;width:52px;height:30px;border-radius:999px;background:#cbd5e1;box-shadow:inset 0 0 0 1px #b8c3d1;transition:.2s}.ouass-price-toggle::after{content:"";position:absolute;left:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 7px #0b162830;transition:.2s}.ouass-price-switch input:checked+.ouass-price-toggle{background:#18a66f;box-shadow:inset 0 0 0 1px #12865b}.ouass-price-switch input:checked+.ouass-price-toggle::after{transform:translateX(22px)}.ouass-price-switch strong{min-width:34px;color:#7b8798;font-size:14px}.ouass-price-switch input:checked~strong{color:#087a53}
 .ouass-price-note{margin:4px 0 14px;padding:12px 14px;border-radius:14px;background:#edf5ff;color:#365574;font-size:12px;line-height:1.45}
 .ouass-price-sync{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:12px 0;padding:12px;border-radius:15px;background:#ecfbf5;color:#087a53;font-size:12px;font-weight:900}.ouass-price-sync span{padding:5px 8px;border-radius:999px;background:#d7f6e9}
 .ouass-price-save{width:100%;min-height:56px;border:0;border-radius:15px;background:#1478ff;color:#fff;font-size:16px;font-weight:950;box-shadow:0 10px 22px #1478ff30}.ouass-price-save:disabled{opacity:.55}
-.ouass-price-status{min-height:20px;margin-top:10px;text-align:center;color:#087a53;font-size:12px;font-weight:850}.ouass-price-preview{display:grid;gap:8px}.ouass-price-example{display:flex;justify-content:space-between;gap:12px;padding:12px;border-radius:13px;background:#f4f7fb;color:#0b1628}.ouass-price-example strong{color:#1478ff;white-space:nowrap}
+.ouass-price-status{min-height:20px;margin-top:10px;text-align:center;color:#087a53;font-size:12px;font-weight:850}.ouass-price-preview{display:grid;gap:8px}.ouass-price-example{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:12px;border-radius:13px;background:#f4f7fb;color:#0b1628}.ouass-price-example>strong{color:#1478ff;white-space:nowrap}.ouass-price-state{min-width:42px;padding:5px 8px;border-radius:999px;text-align:center;font-size:11px;font-weight:950}.ouass-price-state.on{background:#d7f6e9;color:#087a53}.ouass-price-state.off{background:#e7ebf0;color:#667085}
 @media(max-width:700px){.ouass-price-grid{grid-template-columns:1fr}.ouass-price-title h2{font-size:25px}}
 </style>
 <script type="module" id="ouass-pricing-admin">
@@ -7191,13 +7191,13 @@ function pricingMarkup(){
     <div class="ouass-price-field"><label>Au-delà de 7 km</label>${priceInput("standardExtraKm","€/km")}</div>
     <div class="ouass-price-field"><label>Arrondi du tarif final</label>${priceInput("rounding")}</div>
   </div></section>
-  <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif de nuit</h3><small>De 21 h à 6 h</small></div><label class="ouass-price-switch"><input id="nightEnabled" type="checkbox">Activé</label></div><div class="ouass-price-grid">
+  <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif de nuit</h3><small>De 21 h à 6 h</small></div><label class="ouass-price-switch"><input id="nightEnabled" type="checkbox"><span class="ouass-price-toggle" aria-hidden="true"></span><strong id="nightEnabledText">OFF</strong></label></div><div class="ouass-price-grid">
     <div class="ouass-price-field"><label>Début du tarif de nuit</label><select id="nightStartHour">${hourOptions()}</select></div>
     <div class="ouass-price-field"><label>Fin du tarif de nuit</label><select id="nightEndHour">${hourOptions()}</select></div>
     <div class="ouass-price-field"><label>Prix de nuit jusqu’à 7 km</label>${priceInput("nightUpTo7")}</div>
     <div class="ouass-price-field"><label>Au-delà de 7 km la nuit</label>${priceInput("nightExtraKm","€/km")}</div>
   </div></section>
-  <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif du dimanche</h3><small>Prioritaire sur le tarif de nuit</small></div><label class="ouass-price-switch"><input id="sundayEnabled" type="checkbox">Activé</label></div><div class="ouass-price-grid">
+  <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif du dimanche</h3><small>Prioritaire sur le tarif de nuit</small></div><label class="ouass-price-switch"><input id="sundayEnabled" type="checkbox"><span class="ouass-price-toggle" aria-hidden="true"></span><strong id="sundayEnabledText">OFF</strong></label></div><div class="ouass-price-grid">
     <div class="ouass-price-field"><label>Prix du dimanche jusqu’à 7 km</label>${priceInput("sundayUpTo7")}</div>
     <div class="ouass-price-field"><label>Au-delà de 7 km le dimanche</label>${priceInput("sundayExtraKm","€/km")}</div>
   </div></section>
@@ -7238,18 +7238,25 @@ function fillPricing(value){
   byId("sundayEnabled").checked=data.sundayEnabled!==false;
   window.applyOuassPricing(data);previewPricing();
 }
+function updatePricingToggleLabels(){
+  const nightOn=Boolean(byId("nightEnabled")?.checked),sundayOn=Boolean(byId("sundayEnabled")?.checked);
+  if(byId("nightEnabledText"))byId("nightEnabledText").textContent=nightOn?"ON":"OFF";
+  if(byId("sundayEnabledText"))byId("sundayEnabledText").textContent=sundayOn?"ON":"OFF";
+  return {nightOn,sundayOn};
+}
 function previewPricing(){
   try{
     const draft=formPricing();
+    const {nightOn,sundayOn}=updatePricingToggleLabels();
     const sunday=new Date(2026,9,25,14,0),night=new Date(2026,9,26,23,0),day=new Date(2026,9,26,14,0);
     const rows=[
-      ["3,2 km · Perpignan → Perpignan",window.calculateOuassPrice({distance:3.2,origin:"Perpignan",destination:"Perpignan",date:day,pricing:draft}).price],
-      ["6,5 km · Perpignan → Perpignan",window.calculateOuassPrice({distance:6.5,origin:"Perpignan",destination:"Perpignan",date:day,pricing:draft}).price],
-      ["14,3 km · Canet → Perpignan",window.calculateOuassPrice({distance:14.3,origin:"Canet-en-Roussillon",destination:"Perpignan",date:day,pricing:draft}).price],
-      ["6 km · Nuit",window.calculateOuassPrice({distance:6,origin:"Perpignan",destination:"Canet-en-Roussillon",date:night,pricing:draft}).price],
-      ["6 km · Dimanche",window.calculateOuassPrice({distance:6,origin:"Perpignan",destination:"Canet-en-Roussillon",date:sunday,pricing:draft}).price]
+      ["3,2 km · Perpignan → Perpignan",window.calculateOuassPrice({distance:3.2,origin:"Perpignan",destination:"Perpignan",date:day,pricing:draft}).price,""],
+      ["6,5 km · Perpignan → Perpignan",window.calculateOuassPrice({distance:6.5,origin:"Perpignan",destination:"Perpignan",date:day,pricing:draft}).price,""],
+      ["14,3 km · Canet → Perpignan",window.calculateOuassPrice({distance:14.3,origin:"Canet-en-Roussillon",destination:"Perpignan",date:day,pricing:draft}).price,""],
+      ["6 km · Nuit",window.calculateOuassPrice({distance:6,origin:"Perpignan",destination:"Canet-en-Roussillon",date:night,pricing:draft}).price,nightOn?"ON":"OFF"],
+      ["6 km · Dimanche",window.calculateOuassPrice({distance:6,origin:"Perpignan",destination:"Canet-en-Roussillon",date:sunday,pricing:draft}).price,sundayOn?"ON":"OFF"]
     ];
-    byId("ouassPricingPreview").innerHTML=rows.map(([label,price])=>`<div class="ouass-price-example"><span>${label}</span><strong>${Number(price).toLocaleString("fr-FR",{maximumFractionDigits:2})} €</strong></div>`).join("");
+    byId("ouassPricingPreview").innerHTML=rows.map(([label,price,state])=>`<div class="ouass-price-example"><span>${label}</span>${state?`<span class="ouass-price-state ${state.toLowerCase()}">${state}</span>`:"<span></span>"}<strong>${Number(price).toLocaleString("fr-FR",{maximumFractionDigits:2})} €</strong></div>`).join("");
   }catch(_){}
 }
 async function savePricing(){
