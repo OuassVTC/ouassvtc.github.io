@@ -5968,12 +5968,47 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
     });
  
-    function driverRate(date) {
-      const sunday = date.getDay() === 0;
-      const night = date.getHours() >= 20 || date.getHours() < 6;
-      return (sunday || night)
-        ? { base: 25, extraKm: 2.20, label: sunday ? "Tarif du dimanche" : "Tarif de soirée / nuit" }
-        : { base: 20, extraKm: 1.80, label: "Tarif de jour" };
+    function driverRate() {
+      return { base: 20, extraKm: 1.80, label: "Tarif standard OuassVTC" };
+    }
+
+    function isPerpignanAddress(address) {
+      return String(address || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .includes("perpignan");
+    }
+
+    function roundFareToFive(value) {
+      return Math.round((Number(value) || 0) / 5) * 5;
+    }
+
+    function calculateOuassFare(distance, origin = "", destination = "") {
+      const km = Math.max(0, Number(distance) || 0);
+      const perpignanTrip =
+        isPerpignanAddress(origin)
+        &&
+        isPerpignanAddress(destination);
+
+      let rawPrice;
+
+      if (perpignanTrip && km <= 4) {
+        rawPrice = 15;
+      } else if (km <= 7) {
+        rawPrice = 20;
+      } else {
+        rawPrice = 20 + (km - 7) * 1.80;
+      }
+
+      return {
+        price: roundFareToFive(rawPrice),
+        rawPrice,
+        label: perpignanTrip
+          ? "Tarif Perpignan"
+          : "Tarif standard OuassVTC",
+        perpignanTrip
+      };
     }
  
     let customerLookupTimer = null;
@@ -6037,9 +6072,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         alert("Indiquez le kilométrage du trajet pour estimer le tarif.");
         return;
       }
-      const rate = driverRate(new Date());
-      const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-      const price = Math.round(rawPrice / 5) * 5;
+      const fare = calculateOuassFare(distance);
+      const price = fare.price;
       $("quickBookingPrice").value = `${price} €`;
       $("quickBookingPrice").dataset.amount = String(price);
     });
@@ -6057,10 +6091,19 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           }
           const leg = result.routes[0].legs[0];
           const distance = leg.distance.value / 1000;
-          const rate = driverRate(tripDate);
-          const rawPrice = rate.base + Math.max(0, distance - 7) * rate.extraKm;
-          const price = Math.round(rawPrice / 5) * 5;
-          resolve({ price, distance, duration: leg.duration.text, rate });
+          const fare = calculateOuassFare(
+            distance,
+            leg.start_address || origin,
+            leg.end_address || destination
+          );
+          const rate = driverRate();
+          rate.label = fare.label;
+          resolve({
+            price: fare.price,
+            distance,
+            duration: leg.duration.text,
+            rate
+          });
         });
       });
     }
