@@ -1714,7 +1714,7 @@ Firebase n’est pas encore configuré. L’application est prête, mais elle re
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script>
-window.OUASSVTC_BUILD = "79.2.20261008.01";
+window.OUASSVTC_BUILD = "79.41.20261025.01";
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -1735,6 +1735,7 @@ addDoc,
 collection,
 deleteDoc,
 doc,
+getDoc,
 getDocs,
 getFirestore,
 limit,
@@ -2055,6 +2056,17 @@ const route = `${course.pickup || "Départ non renseigné"} → ${course.destina
 return `<button class="dashboard-following-card" type="button" data-open-booking="${escapeHtml(course.id)}"><span class="dashboard-following-time">${escapeHtml(time)}</span><span class="dashboard-following-main"><strong>${escapeHtml(course.customerName || "Client")}</strong><small>${escapeHtml(route)}</small></span><span class="dashboard-following-price">${escapeHtml(course.estimatedPrice || "—")}</span></button>`;
 }).join("");
 $("dashboardFollowingList").querySelectorAll("[data-open-booking]").forEach(button => button.addEventListener("click", event => openBooking(event.currentTarget.dataset.openBooking)));
+}
+function bindPartnerDashboardAgendaArrow() {
+const button = $("partnerNextTripAgenda");
+if (!button || button.dataset.agendaBound === "1") return;
+button.dataset.agendaBound = "1";
+button.addEventListener("click", event => {
+event.preventDefault();
+event.stopPropagation();
+if (typeof showPartnerPage === "function") showPartnerPage("agendaPanel");
+else openPanel("agendaPanel");
+});
 }
 function updateDashboardIdentity() {
 const now = new Date();
@@ -2468,16 +2480,24 @@ button.addEventListener("click", () => openBooking(button.dataset.openHistoryBoo
 function financeCompletedItems() {
 const rows = new Map();
 (state.bookings || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
-const key = item.isPartnerMission && item.missionId ? `mission:${item.missionId}` : `booking:${item.id}`;
-rows.set(key, item);
+const key = String(item.bookingId || item.originalBookingId || item.id || item.missionId || item.token || "");
+if (key) rows.set(`course:${key}`, item);
 });
 (state.driverMissions || []).filter(item => item.status === "completed" && completedDate(item)).forEach(item => {
 const missionId = item.missionId || item.token || item.id || item.bookingId;
 const bookingId = item.bookingId || item.id;
-if (bookingId) rows.delete(`booking:${bookingId}`);
-rows.set(`mission:${missionId}`, {...item, id:bookingId || missionId, missionId, isPartnerMission:true});
+const key = String(bookingId || missionId || "");
+if (key) rows.set(`course:${key}`, {...item, id:bookingId || missionId, missionId, isPartnerMission:true});
 });
 return Array.from(rows.values()).filter(item => completedDate(item)).sort((a,b)=>completedDate(b)-completedDate(a));
+}
+function financeCourseAmount(item) {
+const amount = moneyValue(item?.driverPrice ?? item?.estimatedPrice);
+if (!Number.isFinite(amount) || amount < 0 || amount > 5000) {
+console.warn("Montant de course ignoré dans le chiffre d’affaires", { id:item?.id || item?.missionId || "", amount });
+return 0;
+}
+return amount;
 }
 function renderReport() {
 const allCompleted = financeCompletedItems();
@@ -2500,7 +2520,7 @@ const yearItems = allCompleted.filter(item => {
 const date = completedDate(item);
 return date >= yearStart && date < nextYearStart;
 });
-const total = items => items.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
+const total = items => items.reduce((sum, item) => sum + financeCourseAmount(item), 0);
 const tripLabel = items => items.length === 1 ? "1 course terminée" : `${items.length} courses terminées`;
 $("weekRevenue").textContent = `${total(weekItems).toFixed(0)} €`;
 const weekIsOpen = $("toggleWeekBreakdown").getAttribute("aria-expanded") === "true";
@@ -2554,7 +2574,7 @@ const area=`${line} L${coords.at(-1).x.toFixed(1)},${height-padBottom} L${coords
 const labelIndexes=[0,Math.floor((points.length-1)/2),points.length-1].filter((value,index,array)=>array.indexOf(value)===index);
 $("financeRevenueChart").innerHTML=points.some(Boolean)?`<svg class="finance-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Évolution du chiffre d’affaires"><defs><linearGradient id="financeAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2380ff" stop-opacity=".48"/><stop offset="1" stop-color="#2380ff" stop-opacity=".03"/></linearGradient></defs><line class="finance-chart-grid" x1="${padX}" y1="${padTop}" x2="${padX}" y2="${height-padBottom}"/><line class="finance-chart-grid" x1="${padX}" y1="${height-padBottom}" x2="${width-padX}" y2="${height-padBottom}"/><path class="finance-chart-area" d="${area}"/><path class="finance-chart-line" d="${line}"/>${coords.filter((_,i)=>labelIndexes.includes(i)).map(point=>`<circle class="finance-chart-dot" cx="${point.x}" cy="${point.y}" r="5"/>`).join("")}${labelIndexes.map(index=>`<text class="finance-chart-label" x="${coords[index].x}" y="${height-7}" text-anchor="${index===0?"start":index===points.length-1?"end":"middle"}">${escapeHtml(labels[index])}</text>`).join("")}</svg>`:`<div class="finance-chart-empty">Aucun chiffre d’affaires sur cette période.</div>`;
 document.querySelectorAll("[data-revenue-chart]").forEach(button=>button.classList.toggle("active",button.dataset.revenueChart===selectedRevenueChartPeriod));
-const amount=category=>monthItems.reduce((sum,item)=>{const kind=paymentCategory(item);if(kind==="mixed")return sum+moneyValue(category==="card"?item.paymentCardAmount:category==="cash"?item.paymentCashAmount:0);return sum+(kind===category?moneyValue(item.estimatedPrice):0);},0);
+const amount=category=>monthItems.reduce((sum,item)=>{const kind=paymentCategory(item);if(kind==="mixed")return sum+moneyValue(category==="card"?item.paymentCardAmount:category==="cash"?item.paymentCashAmount:0);return sum+(kind===category?financeCourseAmount(item):0);},0);
 const card=amount("card"),cash=amount("cash"),cardShare=monthRevenue>0?Math.round(card/monthRevenue*100):0,cashShare=monthRevenue>0?Math.round(cash/monthRevenue*100):0,otherShare=Math.max(0,100-cardShare-cashShare);
 $("financePaymentDonut").style.setProperty("--card-share",`${cardShare}%`);$("financePaymentDonut").style.setProperty("--cash-share",`${cashShare}%`);
 $("financePaymentSummary").textContent=`Cartes ${cardShare} % · Espèces ${cashShare} % · Autres ${otherShare} %`;
@@ -2583,7 +2603,7 @@ return date < end && new Date(date.getFullYear(),date.getMonth()+1,1) > start;
 }
 function financeTotals(start, end) {
 const courses = financePeriodItems(start, end);
-const revenue = courses.reduce((sum, item) => sum + moneyValue(item.estimatedPrice), 0);
+const revenue = courses.reduce((sum, item) => sum + financeCourseAmount(item), 0);
 const fuel = courses.reduce((sum,item)=>sum+moneyValue(item.missionFuelCost),0);
 const entryMonths=new Set(monthlyEntriesInPeriod(start,end).map(entry=>entry.month));
 const courseTolls=courses.reduce((sum,item)=>{const date=completedDate(item),key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;return sum+(entryMonths.has(key)?0:moneyValue(item.missionTolls));},0);
@@ -5017,13 +5037,22 @@ updatedAt:serverTimestamp()
 }).catch(error => console.warn("Miroir Admin de fin de mission différé", error?.code || error));
 }
 } catch (error) {
-// Uniquement une vraie erreur Firebase fait revenir à l'étape précédente.
+// En cas de coupure juste après l'écriture, Firestore peut avoir validé la mission
+// malgré l'erreur reçue par le téléphone. On relit avant d'annoncer un échec.
+let confirmed=false;
+try{
+const check=await getDoc(missionRef);
+confirmed=check.exists()&&String(check.data()?.status||"")===String(status);
+}catch(_){ }
+if(!confirmed){
 currentMissionItem.partnerMissionStatus=previousMissionStatus;
 currentMissionItem.status=previousUiStatus;
 try{openBooking(id)}catch(_){}
 console.error("Écriture statut mission partenaire", {code:error?.code||"",message:error?.message||String(error),missionId:currentMissionItem.missionId,status});
-alert(error?.code === "permission-denied" ? "Action refusée par Firebase pour cette mission." : "La mission n’a pas pu être mise à jour.");
+alert(error?.code === "permission-denied" ? "Action refusée par Firebase pour cette mission." : "La mission n’a pas pu être mise à jour. Vérifiez la connexion puis réessayez.");
 return false;
+}
+console.warn("Mission confirmée après réponse réseau incertaine",currentMissionItem.missionId,status);
 }
 // Une mission transférée acceptée est recalculée avec LE profil du chauffeur
 // qui l'exécute : adresse d'approche + motorisation + prix/consommation personnels.
@@ -5113,6 +5142,12 @@ updatedAt:serverTimestamp()
 console.warn("Détails de règlement différés, course terminée synchronisée", fullWriteError?.code || fullWriteError);
 }
 } catch (error) {
+let confirmed=false;
+try{
+const check=await getDoc(doc(db,"bookings",id));
+confirmed=check.exists()&&String(check.data()?.status||"")===String(status);
+}catch(_){ }
+if(!confirmed){
 Object.keys(current).forEach(k => { if (!(k in previous)) delete current[k]; });
 Object.assign(current, previous);
 try { openBooking(id); } catch (_) {}
@@ -5128,8 +5163,10 @@ transferredDriverEmail: previous.transferredDriverEmail || ""
 if (button) button.disabled = false;
 alert(error?.code === "permission-denied"
 ? "Action refusée par Firebase pour cette course."
-: "La course n’a pas pu être mise à jour.");
+: "La course n’a pas pu être mise à jour. Vérifiez la connexion puis réessayez.");
 return false;
+}
+console.warn("Course confirmée après réponse réseau incertaine",id,status);
 }
 // Après succès serveur, une erreur d'affichage ne doit JAMAIS devenir une fausse erreur d'enregistrement.
 try {
@@ -7290,20 +7327,21 @@ async function pmRenderCustomers(){
 const box=document.getElementById("pmCustomersList");if(!box)return;
 box.innerHTML='<div class="pm-loading-card"><b>Chargement du fichier clients…</b><small>Synchronisation avec votre profil chauffeur.</small></div>';
 const owned=await pmLoadOwnedBookings();
+const completedOwned=owned.filter(item=>item.status==="completed"&&completedDate(item));
 const q=normalizeSearch(document.getElementById("pmCustomerSearch")?.value||"");
 const regularOnly=!!document.getElementById("pmCustomerRegularOnly")?.checked;
 const map=new Map();
-owned.forEach(item=>{
+completedOwned.forEach(item=>{
 const key=pmCustomerKey(item);if(!key)return;
 const d=bookingDate(item),current=map.get(key)||{name:item.customerName||"Client",phone:item.customerPhone||"",courses:[],addresses:new Set(),last:null,ca:0};
 current.courses.push(item);if(item.pickup)current.addresses.add(item.pickup);if(item.destination)current.addresses.add(item.destination);
 if(!current.last||d>current.last)current.last=d;
-current.ca+=moneyValue(item.estimatedPrice);map.set(key,current);
+current.ca+=financeCourseAmount(item);map.set(key,current);
 });
 const all=Array.from(map.values());
 document.getElementById("pmCustomerCount").textContent=String(all.length);
-document.getElementById("pmCustomerRideCount").textContent=String(owned.length);
-document.getElementById("pmCustomerRevenue").textContent=`${owned.reduce((sum,x)=>sum+moneyValue(x.estimatedPrice),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
+document.getElementById("pmCustomerRideCount").textContent=String(completedOwned.length);
+document.getElementById("pmCustomerRevenue").textContent=`${completedOwned.reduce((sum,x)=>sum+financeCourseAmount(x),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
 const rows=all.sort((a,b)=>(b.last?.getTime?.()||0)-(a.last?.getTime?.()||0)).filter(x=>(!regularOnly||x.courses.length>=2)&&(!q||normalizeSearch([x.name,x.phone,...x.addresses].join(" ")).includes(q)));
 box.innerHTML=rows.length?rows.map(x=>{
 const last=x.last?.toLocaleDateString?.("fr-FR")||"—";
@@ -7322,7 +7360,7 @@ const [ownRows,missionSnaps]=await Promise.all([
 pmLoadOwnedBookings(),
 Promise.all(missionEmails.map(value=>getDocs(query(collection(db,"driverMissions"),where("driverEmail","==",value),limit(1000))).catch(()=>null)))
 ]);
-owned=ownRows.map(x=>({...x,historyOrigin:"owned"}));
+owned=ownRows.filter(x=>x.status==="completed"&&completedDate(x)).map(x=>({...x,historyOrigin:"owned"}));
 const missionMap=new Map();
 missionSnaps.filter(Boolean).forEach(snap=>snap.docs.forEach(d=>missionMap.set(d.id,{id:d.data().bookingId||d.id,missionId:d.id,...d.data(),historyOrigin:"mission"})));
 missions=Array.from(missionMap.values()).filter(x=>x.status==="completed");
@@ -7334,13 +7372,14 @@ if(document.getElementById("pmHistCash")?.checked!==false)payAllowed.add("cash")
 if(document.getElementById("pmHistMixed")?.checked!==false)payAllowed.add("mixed");
 if(document.getElementById("pmHistUnknown")?.checked!==false)payAllowed.add("unknown");
 const keyPay=x=>{const p=normalizeSearch(x.paymentMethod||"");if(p.includes("mix"))return"mixed";if(p.includes("carte")||p==="cb")return"card";if(p.includes("espece"))return"cash";return"unknown"};
+const courseKey=x=>String(x.bookingId||x.originalBookingId||x.id||x.missionId||x.token||"");
 const merged=new Map();
-if(ownOn)owned.forEach(x=>merged.set(`owned:${x.id}`,x));
-if(missionOn)missions.forEach(x=>merged.set(`mission:${x.missionId}`,x));
+if(ownOn)owned.forEach(x=>{const key=courseKey(x);if(key)merged.set(`course:${key}`,x)});
+if(missionOn)missions.forEach(x=>{const key=courseKey(x);if(key)merged.set(`course:${key}`,x)});
 const all=Array.from(merged.values()).sort((a,b)=>(bookingDate(b)?.getTime?.()||b.statusUpdatedAt?.toMillis?.()||0)-(bookingDate(a)?.getTime?.()||a.statusUpdatedAt?.toMillis?.()||0));
 const rows=all.filter(x=>payAllowed.has(keyPay(x)));
 document.getElementById("pmHistoryCount").textContent=String(rows.length);
-document.getElementById("pmHistoryRevenue").textContent=`${rows.reduce((sum,x)=>sum+moneyValue(x.estimatedPrice),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
+document.getElementById("pmHistoryRevenue").textContent=`${rows.reduce((sum,x)=>sum+financeCourseAmount(x),0).toLocaleString("fr-FR",{maximumFractionDigits:0})} €`;
 document.getElementById("pmHistoryPaid").textContent=String(rows.filter(x=>keyPay(x)!=="unknown").length);
 box.innerHTML=rows.length?rows.map(i=>`<article class="pm-history-card"><div class="pm-history-date"><b>${pme(bookingDate(i)?.toLocaleDateString("fr-FR")||"—")}</b><small>${pme(bookingDate(i)?.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})||"")}</small></div><div class="pm-history-main"><div><b>${pme(i.customerName||"Client")}</b><span class="pm-origin">${i.historyOrigin==="mission"?"Mission effectuée":"Ma course"}</span></div><small>${pme(i.pickup||"Départ")} → ${pme(i.destination||"Destination")}</small><div class="pm-history-pay"><span>${pme(i.paymentMethod||"Règlement non renseigné")}</span><strong>${pme(i.estimatedPrice||"—")}</strong></div></div></article>`).join(""):'<div class="pm-empty-state"><div>🕘</div><b>Aucune course avec ces filtres.</b><p>Cochez les catégories que vous souhaitez afficher. Les courses terminées apparaissent automatiquement ici.</p></div>';
 }
@@ -7871,7 +7910,7 @@ import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebase
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, doc, getDocs, limit, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
-const V79_VERSION="79.40.20261018.01";
+const V79_VERSION="79.41.20261025.01";
 const activeStatuses=new Set(["en_route","arrived","passenger_onboard","on_board"]);
 let v79App=null,v79Auth=null,v79Db=null,v79Profile=null,v79MissionUnsub=null,v79BookingUnsub=null,v79PresenceUnsub=null,v79GeoWatch=null,v79LastWrite=0,v79Map=null,v79Marker=null,v79ForcedMission=false,v79Peers=new Map(),v79MapFocused=false,v79AvailabilityBusy=false,v79RouteRenderer=null,v79RouteService=null,v79ActiveTask=null,v79LastRouteKey="",v7917TargetMarker=null,v79MissionWatchdog=null,v79WakeLock=null,v79WasOnlineBeforeMission=false,v79ForcedOnlineByMission=false;
 const q=id=>document.getElementById(id);
@@ -7895,7 +7934,10 @@ go.classList.toggle("v79-hidden",online); bar.classList.toggle("v79-hidden",!onl
 q("v79SearchText").textContent=v79ForcedMission?"Mission en cours · suivi actif":"Recherche de courses en cours…";
 }
 async function resolveProfile(user){
-if(!user||!v79Db)return null; const email=String(user.email||"").trim(); if(!email)return null;
+if(!user||!v79Db)return null;
+const selected=window.currentPartnerProfile;
+if(selected?.id&&selected?.email)return{id:selected.id,...selected};
+const email=String(user.email||"").trim(); if(!email)return null;
 const snap=await getDocs(query(collection(v79Db,"partnerDrivers"),where("email","==",email),limit(5)));
 let hit=snap.docs[0];
 if(!hit){const all=await getDocs(query(collection(v79Db,"partnerDrivers"),limit(100)));hit=all.docs.find(d=>normalize(d.data().email)===normalize(email))}
@@ -8041,15 +8083,9 @@ v79ActiveTask=active;
 const newKey=active?[active.id||active.missionId,active.status].join("|"):"";
 if(oldKey!==newKey)v79RefreshRoute(true); else v79RefreshRoute(false);
 }
-async function listenMissions(user){
-if(v79MissionUnsub){v79MissionUnsub();v79MissionUnsub=null}
-if(v79BookingUnsub){v79BookingUnsub();v79BookingUnsub=null}
-if(!user||!v79Db)return;
-const email=String(v79Profile?.email||user.email||"").trim(); if(!email)return;
-const mq=query(collection(v79Db,"driverMissions"),where("driverEmail","==",email),limit(100));
-v79MissionUnsub=onSnapshot(mq,s=>{
-window.__v79Missions=s.docs.map(d=>({id:d.id,missionId:d.id,...d.data()}));
-const forced=window.__v79Missions.some(m=>m.active!==false&&activeStatuses.has(String(m.status||"")));
+function v79RefreshForcedMission(){
+const candidates=[...(window.__v79Missions||[]),...(window.__v79Bookings||[])];
+const forced=candidates.some(item=>item.active!==false&&activeStatuses.has(String(item.status||"")));
 const was=v79ForcedMission;
 if(forced&&!was){
 v79WasOnlineBeforeMission=Boolean(v79Profile?.online||v79Profile?.availability==="online");
@@ -8064,12 +8100,23 @@ v79StopMissionGuard();
 if(v79ForcedOnlineByMission)setAvailability(false,true);else paint();
 v79ForcedOnlineByMission=false;v79WasOnlineBeforeMission=false;
 }
-paint();v79ChooseActiveTask();
+paint();
+v79ChooseActiveTask();
+}
+async function listenMissions(user){
+if(v79MissionUnsub){v79MissionUnsub();v79MissionUnsub=null}
+if(v79BookingUnsub){v79BookingUnsub();v79BookingUnsub=null}
+if(!user||!v79Db)return;
+const email=String(v79Profile?.email||user.email||"").trim(); if(!email)return;
+const mq=query(collection(v79Db,"driverMissions"),where("driverEmail","==",email),limit(100));
+v79MissionUnsub=onSnapshot(mq,s=>{
+window.__v79Missions=s.docs.map(d=>({id:d.id,missionId:d.id,...d.data()}));
+v79RefreshForcedMission();
 },e=>console.warn("Missions trajet",e?.code||e));
 const bq=query(collection(v79Db,"bookings"),where("partnerOwnerEmail","==",email.toLowerCase()),limit(100));
 v79BookingUnsub=onSnapshot(bq,s=>{
 window.__v79Bookings=s.docs.map(d=>({id:d.id,...d.data()}));
-v79ChooseActiveTask();
+v79RefreshForcedMission();
 },e=>console.warn("Courses trajet",e?.code||e));
 }
 function loadMaps(){return new Promise(resolve=>{if(window.google?.maps)return resolve(true);let s=document.querySelector('script[data-v79-maps]');if(s){s.addEventListener('load',()=>resolve(true),{once:true});return}window.v79MapsReady=()=>resolve(true);s=document.createElement('script');s.dataset.v79Maps='1';s.async=true;s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxEs2za_iEs5okAbU3H9fvJm0sRm0oG-A&loading=async&callback=v79MapsReady';document.head.appendChild(s)})}
