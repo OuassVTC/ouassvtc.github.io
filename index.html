@@ -2986,52 +2986,28 @@ function openFareBar(){
    TARIFICATION
 ========================= */
 
-function obtenirTarif(
-  dateTrajet
-){
-
-  const jour =
-    dateTrajet.getDay();
-
-  const heure =
-    dateTrajet.getHours();
-
-  const estDimanche =
-    jour === 0;
-
-  const estNuit =
-    heure >= 20
-    ||
-    heure < 6;
-
-
-  if(estDimanche){
-
-    return {
-      base:25,
-      kmSupplementaire:2.20,
-      nom:"Tarif dimanche"
-    };
-
-  }
-
-
-  if(estNuit){
-
-    return {
-      base:25,
-      kmSupplementaire:2.20,
-      nom:"Tarif soir / nuit"
-    };
-
-  }
-
+function obtenirTarif(){
 
   return {
     base:20,
     kmSupplementaire:1.80,
-    nom:"Tarif jour"
+    nom:"Tarif standard OuassVTC"
   };
+
+}
+
+
+function estAdressePerpignan(
+  adresse
+){
+
+  return String(
+    adresse || ""
+  )
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .includes("perpignan");
 
 }
 
@@ -4184,21 +4160,68 @@ function calculerEstimation(
               leg.duration.text;
 
 
-            const kmSupplementaires =
-              Math.max(
-                0,
-                distKm - 7
+            const adresseDepart =
+              leg.start_address
+              ||
+              depart;
+
+
+            const adresseArrivee =
+              leg.end_address
+              ||
+              arrivee;
+
+
+            const trajetPerpignan =
+              estAdressePerpignan(
+                adresseDepart
+              )
+              &&
+              estAdressePerpignan(
+                adresseArrivee
               );
 
 
-            const prixBrut =
-              tarif.base
-              +
-              (
-                kmSupplementaires
-                *
-                tarif.kmSupplementaire
-              );
+            let prixBrut;
+
+
+            if(
+              trajetPerpignan
+              &&
+              distKm <= 4
+            ){
+
+              prixBrut = 15;
+              tarif.nom =
+                "Tarif Perpignan";
+
+            }else if(
+              distKm <= 7
+            ){
+
+              prixBrut = 20;
+              tarif.nom =
+                trajetPerpignan
+                ? "Tarif Perpignan"
+                : "Tarif standard OuassVTC";
+
+            }else{
+
+              prixBrut =
+                20
+                +
+                (
+                  (distKm - 7)
+                  *
+                  1.80
+                );
+
+              tarif.nom =
+                trajetPerpignan
+                ? "Tarif Perpignan"
+                : "Tarif standard OuassVTC";
+
+            }
 
 
             const prix =
