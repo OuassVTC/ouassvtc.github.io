@@ -6554,19 +6554,13 @@ return String(address || "")
 function roundFareToFive(value) {
 return Math.round((Number(value) || 0) / 5) * 5;
 }
-function calculateOuassFare(distance, origin = "", destination = "") {
-const km = Math.max(0, Number(distance) || 0);
-const perpignanTrip = isPerpignanAddress(origin) && isPerpignanAddress(destination);
-let rawPrice;
-if (perpignanTrip && km <= 4) rawPrice = 15;
-else if (km <= 7) rawPrice = 20;
-else rawPrice = 20 + (km - 7) * 1.80;
-return {
-price: roundFareToFive(rawPrice),
-rawPrice,
-label: perpignanTrip ? "Tarif Perpignan" : "Tarif standard OuassVTC",
-perpignanTrip
-};
+function calculateOuassFare(distance, origin = "", destination = "", tripDate = new Date()) {
+return window.calculateOuassPrice({
+distance,
+origin,
+destination,
+date:tripDate
+});
 }
 let customerLookupTimer = null;
 $("driverPhone").addEventListener("input", () => {
@@ -6609,7 +6603,7 @@ if (!Number.isFinite(distance) || distance < 0) {
 alert("Indiquez le kilométrage du trajet pour estimer le tarif.");
 return;
 }
-const fare = calculateOuassFare(distance);
+const fare = calculateOuassFare(distance, "", "", new Date());
 const price = fare.price;
 $("quickBookingPrice").value = `${price} €`;
 $("quickBookingPrice").dataset.amount = String(price);
@@ -6630,7 +6624,8 @@ const distance = leg.distance.value / 1000;
 const fare = calculateOuassFare(
 distance,
 leg.start_address || origin,
-leg.end_address || destination
+leg.end_address || destination,
+tripDate
 );
 const rate = driverRate();
 rate.label = fare.label;
@@ -8378,5 +8373,99 @@ document.addEventListener("click",function(e){
 if(e.target.closest("#v7930GamesMenu")){document.getElementById("sideMenu")?.classList.remove("hidden");document.getElementById("menuOverlay")?.classList.remove("hidden")}
 if(e.target.closest(".arcade-back")){document.querySelectorAll("#gamePanel .arcade-game").forEach(x=>x.classList.add("hidden"));document.getElementById("arcadeHome")?.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
 });
-</script></body>
+</script>
+<script id="ouass-pricing-core">
+(() => {
+  const defaults = {
+    standardPerpignan4: 15,
+    standardUpTo7: 20,
+    standardExtraKm: 1.80,
+    rounding: 5,
+    nightEnabled: true,
+    nightStartHour: 21,
+    nightEndHour: 6,
+    nightUpTo7: 25,
+    nightExtraKm: 2.20,
+    sundayEnabled: true,
+    sundayUpTo7: 25,
+    sundayExtraKm: 2.20,
+    version: 1
+  };
+  const number = (value, fallback, min = 0, max = 10000) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) && parsed >= min && parsed <= max ? parsed : fallback;
+  };
+  const normalize = value => ({
+    standardPerpignan4: number(value?.standardPerpignan4, defaults.standardPerpignan4),
+    standardUpTo7: number(value?.standardUpTo7, defaults.standardUpTo7),
+    standardExtraKm: number(value?.standardExtraKm, defaults.standardExtraKm),
+    rounding: number(value?.rounding, defaults.rounding, 0.01, 100),
+    nightEnabled: value?.nightEnabled !== false,
+    nightStartHour: number(value?.nightStartHour, defaults.nightStartHour, 0, 23),
+    nightEndHour: number(value?.nightEndHour, defaults.nightEndHour, 0, 23),
+    nightUpTo7: number(value?.nightUpTo7, defaults.nightUpTo7),
+    nightExtraKm: number(value?.nightExtraKm, defaults.nightExtraKm),
+    sundayEnabled: value?.sundayEnabled !== false,
+    sundayUpTo7: number(value?.sundayUpTo7, defaults.sundayUpTo7),
+    sundayExtraKm: number(value?.sundayExtraKm, defaults.sundayExtraKm),
+    version: number(value?.version, defaults.version, 1, 999999)
+  });
+  let cached = {};
+  try { cached = JSON.parse(localStorage.getItem("ouassvtcPricing") || "{}"); } catch (_) {}
+  window.OUASS_PRICING_DEFAULTS = defaults;
+  window.OUASS_PRICING = normalize({ ...defaults, ...cached });
+  window.applyOuassPricing = value => {
+    window.OUASS_PRICING = normalize({ ...defaults, ...(value || {}) });
+    try { localStorage.setItem("ouassvtcPricing", JSON.stringify(window.OUASS_PRICING)); } catch (_) {}
+    window.dispatchEvent(new CustomEvent("ouassvtc:pricing-updated", { detail: window.OUASS_PRICING }));
+    return window.OUASS_PRICING;
+  };
+  const isPerpignan = address => String(address || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("perpignan");
+  const isNight = (date, start, end) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return false;
+    const hour = date.getHours();
+    return start === end ? true : start > end ? hour >= start || hour < end : hour >= start && hour < end;
+  };
+  window.calculateOuassPrice = ({ distance, origin = "", destination = "", date = null, pricing: pricingOverride = null }) => {
+    const pricing = normalize(pricingOverride || window.OUASS_PRICING || defaults);
+    const km = Math.max(0, Number(distance) || 0);
+    const tripDate = date instanceof Date && !Number.isNaN(date.getTime()) ? date : null;
+    const sunday = Boolean(tripDate && tripDate.getDay() === 0 && pricing.sundayEnabled);
+    const night = Boolean(!sunday && pricing.nightEnabled && isNight(tripDate, pricing.nightStartHour, pricing.nightEndHour));
+    const perpignanTrip = isPerpignan(origin) && isPerpignan(destination);
+    let rawPrice;
+    let label;
+    if (sunday) {
+      rawPrice = km <= 7 ? pricing.sundayUpTo7 : pricing.sundayUpTo7 + (km - 7) * pricing.sundayExtraKm;
+      label = "Tarif du dimanche";
+    } else if (night) {
+      rawPrice = km <= 7 ? pricing.nightUpTo7 : pricing.nightUpTo7 + (km - 7) * pricing.nightExtraKm;
+      label = "Tarif de nuit";
+    } else if (perpignanTrip && km <= 4) {
+      rawPrice = pricing.standardPerpignan4;
+      label = "Tarif Perpignan";
+    } else {
+      rawPrice = km <= 7 ? pricing.standardUpTo7 : pricing.standardUpTo7 + (km - 7) * pricing.standardExtraKm;
+      label = perpignanTrip ? "Tarif Perpignan" : "Tarif standard OuassVTC";
+    }
+    const price = Math.round(rawPrice / pricing.rounding) * pricing.rounding;
+    return { price, rawPrice, label, sunday, night, perpignanTrip, pricing };
+  };
+})();
+</script>
+<script type="module" id="ouass-pricing-sync">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { firebaseConfig, firebaseReady } from "/firebase-config.js";
+if (firebaseReady) {
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const pricingDb = getFirestore(app);
+  onSnapshot(doc(pricingDb, "publicSettings", "pricing"), snapshot => {
+    if (snapshot.exists()) window.applyOuassPricing(snapshot.data());
+  }, error => console.warn("Tarifs dynamiques indisponibles, tarifs enregistrés conservés.", error?.code || error));
+}
+</script>
+ 
+</body>
 </html>
+ 
