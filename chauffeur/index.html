@@ -7149,9 +7149,22 @@ if (firebaseReady) {
  
  
 <style id="ouass-pricing-admin-style">
-#v79AdminCockpit .v79-tabs.ouass-pricing-tabs{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;scrollbar-width:none}
-#v79AdminCockpit .v79-tabs.ouass-pricing-tabs::-webkit-scrollbar{display:none}
-#v79AdminCockpit .v79-tabs.ouass-pricing-tabs button{flex:0 0 auto;min-width:82px!important;padding:12px 10px!important}
+#v79AdminCockpit .v79-admin-head{padding-left:0;padding-right:0}
+.ouass-admin-head-actions{display:flex;align-items:center;gap:9px}
+.ouass-menu-trigger{min-height:44px;padding:0 15px;border:1px solid #bfd6f6;border-radius:14px;background:#fff;color:#116fe5;font-size:14px;font-weight:950;box-shadow:0 5px 18px #10243d12;display:flex;align-items:center;gap:9px}
+.ouass-menu-trigger svg{width:20px;height:20px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.ouass-current-section{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:999px;background:#e8f2ff;color:#116fe5;font-size:12px;font-weight:950}
+#v79AdminCockpit .v79-tabs.ouass-pricing-tabs{position:fixed!important;z-index:3002!important;inset:0 auto 0 0!important;width:min(320px,86vw)!important;margin:0!important;padding:max(26px,env(safe-area-inset-top)) 16px max(22px,env(safe-area-inset-bottom))!important;border:0!important;border-radius:0 24px 24px 0!important;background:#fff!important;box-shadow:24px 0 70px #07132135!important;display:flex!important;flex-direction:column!important;gap:6px!important;overflow-y:auto!important;transform:translateX(-105%)!important;transition:transform .26s cubic-bezier(.22,.8,.22,1)!important}
+#v79AdminCockpit .v79-tabs.ouass-pricing-tabs.ouass-drawer-open{transform:translateX(0)!important}
+#v79AdminCockpit .v79-tabs.ouass-pricing-tabs button{display:flex!important;align-items:center!important;gap:13px!important;flex:0 0 auto!important;width:100%!important;min-height:52px!important;padding:11px 14px!important;border-radius:14px!important;color:#344054!important;font-size:15px!important;text-align:left!important;transition:.18s!important}
+#v79AdminCockpit .v79-tabs.ouass-pricing-tabs button:hover{background:#f4f7fb!important}
+#v79AdminCockpit .v79-tabs.ouass-pricing-tabs button.active{background:#e8f2ff!important;color:#116fe5!important;box-shadow:none!important}
+.ouass-nav-icon{width:24px;height:24px;display:grid;place-items:center;flex:0 0 24px}.ouass-nav-icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ouass-drawer-brand{margin:2px 4px 18px;padding:4px 8px 18px;border-bottom:1px solid #e5eaf1}.ouass-drawer-brand strong{display:block;color:#0b1628;font-size:23px;letter-spacing:-.03em}.ouass-drawer-brand strong span{color:#1478ff}.ouass-drawer-brand small{display:block;margin-top:4px;color:#718096;font-size:10px;font-weight:900;letter-spacing:.16em}
+.ouass-drawer-close{position:absolute;right:14px;top:max(18px,env(safe-area-inset-top));width:38px;height:38px;border:0;border-radius:12px;background:#f2f5f9;color:#0b1628;font-size:22px;font-weight:700}
+.ouass-drawer-overlay{position:fixed;z-index:3001;inset:0;background:#0713218c;backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.24s}
+.ouass-drawer-overlay.open{opacity:1;visibility:visible}
+@media(min-width:1000px){#v79AdminCockpit .v79-tabs.ouass-pricing-tabs{width:300px!important}.ouass-menu-trigger{padding:0 17px}}
 .ouass-price-title{margin:4px 2px 18px}.ouass-price-title h2{margin:0;color:#0b1628;font-size:28px}.ouass-price-title p{margin:6px 0 0;color:#65758a}
 .ouass-price-card{margin-bottom:14px;padding:18px;border:1px solid #dfe6ef;border-radius:22px;background:#fff;box-shadow:0 9px 26px #10243d0d}
 .ouass-price-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.ouass-price-head h3{margin:0;color:#0b1628;font-size:20px}.ouass-price-head small{display:block;margin-top:3px;color:#65758a}
@@ -7177,6 +7190,45 @@ const fields = [
   "nightStartHour", "nightEndHour", "nightUpTo7", "nightExtraKm",
   "sundayUpTo7", "sundayExtraKm"
 ];
+const adminSectionLabels={live:"Pilotage",activity:"Courses",drivers:"Chauffeurs",finance:"Finances",alerts:"Alertes",applications:"Applications",pricing:"Tarifs"};
+const adminSectionIcons={
+  live:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5V3M9.8 13.2 5 18M14.2 13.2 19 18"/></svg>',
+  activity:'<svg viewBox="0 0 24 24"><path d="M5 17h14l-1-7H6l-1 7Z"/><path d="M7 10l2-4h6l2 4M7 17v2M17 17v2"/><circle cx="8" cy="14" r="1"/><circle cx="16" cy="14" r="1"/></svg>',
+  drivers:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 19v-2.2A4.8 4.8 0 0 1 8.3 12h1.4a4.8 4.8 0 0 1 4.8 4.8V19M15 13.5h1.8a3.7 3.7 0 0 1 3.7 3.7V19"/></svg>',
+  finance:'<svg viewBox="0 0 24 24"><path d="M4 20V11h4v9M10 20V4h4v16M16 20V8h4v12"/></svg>',
+  alerts:'<svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 7 3 7 3 7H3s3 0 3-7Z"/><path d="M10 20h4"/></svg>',
+  applications:'<svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 5h4M11 18.5h2"/></svg>',
+  pricing:'<svg viewBox="0 0 24 24"><path d="m3 12 9-9h7l2 2v7l-9 9-9-9Z"/><circle cx="16.5" cy="7.5" r="1.2"/></svg>'
+};
+function setAdminSectionLabel(name){const label=byId("ouassCurrentSection");if(label)label.textContent=adminSectionLabels[name]||"Menu"}
+function closeAdminDrawer(){
+  document.querySelector("#v79AdminCockpit .v79-tabs")?.classList.remove("ouass-drawer-open");
+  byId("ouassDrawerOverlay")?.classList.remove("open");
+  byId("ouassMenuTrigger")?.setAttribute("aria-expanded","false");
+}
+function openAdminDrawer(){
+  document.querySelector("#v79AdminCockpit .v79-tabs")?.classList.add("ouass-drawer-open");
+  byId("ouassDrawerOverlay")?.classList.add("open");
+  byId("ouassMenuTrigger")?.setAttribute("aria-expanded","true");
+}
+function enhanceAdminNavigation(cockpit,nav){
+  if(byId("ouassMenuTrigger"))return;
+  const header=cockpit.querySelector(".v79-admin-head"),close=byId("v79AdminClose");if(!header||!close)return;
+  const actions=document.createElement("div");actions.className="ouass-admin-head-actions";
+  const trigger=document.createElement("button");trigger.id="ouassMenuTrigger";trigger.className="ouass-menu-trigger";trigger.type="button";trigger.setAttribute("aria-expanded","false");trigger.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span>';
+  const current=document.createElement("span");current.id="ouassCurrentSection";current.className="ouass-current-section";current.textContent="Pilotage";
+  close.replaceWith(actions);actions.append(trigger,current,close);
+  const brand=document.createElement("div");brand.className="ouass-drawer-brand";brand.innerHTML='<strong>OUASS<span>VTC</span></strong><small>CENTRE DE PILOTAGE</small>';
+  const drawerClose=document.createElement("button");drawerClose.type="button";drawerClose.className="ouass-drawer-close";drawerClose.setAttribute("aria-label","Fermer le menu");drawerClose.textContent="×";
+  nav.prepend(brand);nav.appendChild(drawerClose);
+  const overlay=document.createElement("div");overlay.id="ouassDrawerOverlay";overlay.className="ouass-drawer-overlay";cockpit.appendChild(overlay);
+  const decorate=button=>{const name=button.dataset.v79tab,label=adminSectionLabels[name]||button.textContent.trim();button.innerHTML=`<span class="ouass-nav-icon">${adminSectionIcons[name]||""}</span><span>${label}</span>`;button.addEventListener("click",()=>{setAdminSectionLabel(name);closeAdminDrawer()})};
+  nav.querySelectorAll("[data-v79tab]").forEach(decorate);
+  trigger.onclick=()=>nav.classList.contains("ouass-drawer-open")?closeAdminDrawer():openAdminDrawer();
+  drawerClose.onclick=overlay.onclick=closeAdminDrawer;
+  document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAdminDrawer()});
+  const active=sessionStorage.getItem("ouassvtcAdminTab")||"live";setAdminSectionLabel(active);
+}
 function hourOptions(){
   return Array.from({length:24},(_,hour)=>`<option value="${hour}">${String(hour).padStart(2,"0")} h 00</option>`).join("");
 }
@@ -7213,7 +7265,8 @@ function mountPricing(){
   nav.classList.add("ouass-pricing-tabs");
   const button=document.createElement("button");button.type="button";button.dataset.v79tab="pricing";button.textContent="Tarifs";nav.appendChild(button);
   const view=document.createElement("div");view.id="v79ViewPricing";view.className="v79-admin-view";view.innerHTML=pricingMarkup();shell.appendChild(view);
-  button.onclick=()=>{cockpit.querySelectorAll("[data-v79tab]").forEach(item=>item.classList.toggle("active",item===button));cockpit.querySelectorAll(".v79-admin-view").forEach(item=>item.classList.remove("active"));view.classList.add("active");};
+  button.onclick=()=>{cockpit.querySelectorAll("[data-v79tab]").forEach(item=>item.classList.toggle("active",item===button));cockpit.querySelectorAll(".v79-admin-view").forEach(item=>item.classList.remove("active"));view.classList.add("active");sessionStorage.setItem("ouassvtcAdminTab","pricing");setAdminSectionLabel("pricing");closeAdminDrawer();};
+  enhanceAdminNavigation(cockpit,nav);
   byId("ouassPricingSave").onclick=savePricing;
   [...fields,"nightEnabled","sundayEnabled"].forEach(id=>byId(id)?.addEventListener("input",previewPricing));
   fillPricing(window.OUASS_PRICING);
