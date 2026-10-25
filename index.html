@@ -3039,7 +3039,7 @@ function arrondirTarif(
    ESTIMATION
 ========================= */
 
-function demanderEstimation(){
+async function demanderEstimation(){
 
   const depart =
     document
@@ -3095,9 +3095,7 @@ function demanderEstimation(){
   }
 
 
-  synchroniserCalendrierDepuisFormulaire();
-
-  ouvrirCalendrier();
+  await calculerEstimation();
 
 }
 
@@ -3975,9 +3973,6 @@ async function validerCalendrierEtEstimer(){
   fermerCalendrier();
 
 
-  await calculerEstimation();
-
-
 }
 
 
@@ -4041,27 +4036,6 @@ function calculerEstimation(
         !depart
         ||
         !arrivee
-        ||
-        !dateHeure
-      ){
-
-        resolve(null);
-
-        return;
-
-      }
-
-
-      const dateTrajet =
-        new Date(
-          dateHeure
-        );
-
-
-      if(
-        isNaN(
-          dateTrajet.getTime()
-        )
       ){
 
         resolve(null);
@@ -4072,9 +4046,7 @@ function calculerEstimation(
 
 
       const tarif =
-        obtenirTarif(
-          dateTrajet
-        );
+        obtenirTarif();
 
 
       priceEl.textContent =
