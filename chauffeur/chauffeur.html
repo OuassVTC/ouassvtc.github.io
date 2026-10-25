@@ -1714,7 +1714,7 @@ Firebase n’est pas encore configuré. L’application est prête, mais elle re
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script>
-window.OUASSVTC_BUILD = "79.41.20261025.01";
+window.OUASSVTC_BUILD = "79.42.20261025.01";
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -1806,7 +1806,13 @@ function notificationsOptedIn() {
 return localStorage.getItem(NOTIFICATIONS_ENABLED_KEY) !== "false";
 }
 const MISSION_COST_SETTINGS_KEY = "ouassvtcMissionCostSettingsV2";
-const DEFAULT_MISSION_COST_SETTINGS = { homeAddress: "", vehicleType:"thermal", fuelPrice: 1.8, consumption: 6, evConsumption:18, kwhPrice:0.25 };
+const DEFAULT_MISSION_COST_SETTINGS = { homeAddress: "", vehicleType:"thermal", fuelPrice: 1.8, consumption: 6, evConsumption:16, kwhPrice:0.25 };
+const MAX_REASONABLE_EV_CONSUMPTION = 80;
+const CORRECTED_EV_CONSUMPTION = 16;
+function safeEvConsumption(value) {
+const amount = Number(value);
+return amount > 0 && amount <= MAX_REASONABLE_EV_CONSUMPTION ? amount : CORRECTED_EV_CONSUMPTION;
+}
 function missionCostStorageKey() {
 const owner = String(auth?.currentUser?.email || auth?.currentUser?.uid || "guest").trim().toLowerCase();
 return `${MISSION_COST_SETTINGS_KEY}:${owner}`;
@@ -2141,10 +2147,10 @@ homeAddress: String(stored?.homeAddress || driver.homeAddress || DEFAULT_MISSION
 vehicleType: String(stored?.vehicleType || driver.vehicleType || (driver.evConsumption>0 && !(driver.consumption>0) ? "electric" : "thermal")),
 fuelPrice: Number(stored?.fuelPrice) > 0 ? Number(stored.fuelPrice) : (driver.fuelPrice > 0 ? driver.fuelPrice : DEFAULT_MISSION_COST_SETTINGS.fuelPrice),
 consumption: Number(stored?.consumption) > 0 ? Number(stored.consumption) : (driver.consumption > 0 ? driver.consumption : DEFAULT_MISSION_COST_SETTINGS.consumption),
-evConsumption: Number(stored?.evConsumption) > 0 ? Number(stored.evConsumption) : (driver.evConsumption > 0 ? driver.evConsumption : DEFAULT_MISSION_COST_SETTINGS.evConsumption),
+evConsumption: safeEvConsumption(Number(stored?.evConsumption) > 0 ? stored.evConsumption : driver.evConsumption),
 kwhPrice: Number(stored?.kwhPrice) > 0 ? Number(stored.kwhPrice) : (driver.kwhPrice > 0 ? driver.kwhPrice : DEFAULT_MISSION_COST_SETTINGS.kwhPrice)
 };
-} catch (error) { return { ...DEFAULT_MISSION_COST_SETTINGS, homeAddress:driver.homeAddress, vehicleType:driver.vehicleType || "thermal", evConsumption:driver.evConsumption || DEFAULT_MISSION_COST_SETTINGS.evConsumption, kwhPrice:driver.kwhPrice || DEFAULT_MISSION_COST_SETTINGS.kwhPrice }; }
+} catch (error) { return { ...DEFAULT_MISSION_COST_SETTINGS, homeAddress:driver.homeAddress, vehicleType:driver.vehicleType || "thermal", evConsumption:safeEvConsumption(driver.evConsumption), kwhPrice:driver.kwhPrice || DEFAULT_MISSION_COST_SETTINGS.kwhPrice }; }
 }
 async function saveMissionCostSettings(settings) {
 localStorage.setItem(missionCostStorageKey(), JSON.stringify(settings));
@@ -2210,7 +2216,7 @@ homeAddress: String(p.homeAddress || p.address || "").trim(),
 vehicleType,
 fuelPrice: Number(p.fuelPrice || 0),
 consumption: Number(p.consumption || p.fuelConsumption || 0),
-evConsumption: Number(p.evConsumption || 0),
+evConsumption: safeEvConsumption(p.evConsumption),
 kwhPrice: Number(p.kwhPrice || 0)
 };
 }
@@ -3477,7 +3483,7 @@ if (saved) state.financeSettings = { ...state.financeSettings, ...saved, adExpen
 renderFinanceReports();
 }
 async function completeHistoricCosts() {
-const candidates = state.bookings.filter(item => item.status === "completed" && !Number(item.missionTotalKm) && item.pickup && item.destination && item.pickup !== "Ajout manuel" && item.destination !== "Trajet non renseigné");
+const candidates = state.bookings.filter(item => item.status === "completed" && item.pickup && item.destination && item.pickup !== "Ajout manuel" && item.destination !== "Trajet non renseigné");
 const button = $("estimateHistoricCosts"), progress = $("historicCostsProgress");
 progress.classList.remove("hidden");
 if (!candidates.length) { progress.textContent = "Toutes les courses exploitables sont déjà calculées."; return; }
@@ -3489,14 +3495,51 @@ progress.textContent = `Calcul de l’historique : ${completed + skipped + 1}/${
 try {
 const route = await calculateMissionRoute(settings.homeAddress, item.pickup, item.destination);
 const totalKm = route.approachKm + route.clientKm + route.returnKm;
-const fuelCost = totalKm / 100 * settings.consumption * settings.fuelPrice;
+const isElectric = settings.vehicleType === "electric";
+const unitConsumption = isElectric ? safeEvConsumption(settings.evConsumption) : settings.consumption;
+const unitPrice = isElectric ? settings.kwhPrice : settings.fuelPrice;
+const fuelCost = totalKm / 100 * unitConsumption * unitPrice;
 const tolls = Math.max(0, moneyValue(item.missionTolls));
-await updateDoc(doc(db, "bookings", item.id), { missionHomeAddress:settings.homeAddress, missionFuelPrice:settings.fuelPrice, missionConsumption:settings.consumption, missionApproachKm:route.approachKm, missionClientKm:route.clientKm, missionReturnKm:route.returnKm, missionTotalKm:totalKm, missionClientFuelCost:route.clientKm / 100 * settings.consumption * settings.fuelPrice, missionFuelCost:fuelCost, missionTolls:tolls, missionTotalCost:fuelCost + tolls, missionMargin:moneyValue(item.estimatedPrice) - fuelCost - tolls, missionCostUpdatedAt:serverTimestamp() });
+await updateDoc(doc(db, "bookings", item.id), { missionHomeAddress:settings.homeAddress, missionEnergyType:settings.vehicleType, missionFuelPrice:isElectric?null:settings.fuelPrice, missionConsumption:isElectric?null:settings.consumption, missionEvConsumption:isElectric?unitConsumption:null, missionKwhPrice:isElectric?unitPrice:null, missionApproachKm:route.approachKm, missionClientKm:route.clientKm, missionReturnKm:route.returnKm, missionTotalKm:totalKm, missionClientFuelCost:route.clientKm / 100 * unitConsumption * unitPrice, missionFuelCost:fuelCost, missionTolls:tolls, missionTotalCost:fuelCost + tolls, missionMargin:moneyValue(item.estimatedPrice) - fuelCost - tolls, missionCostStatus:"calculated", missionCostUpdatedAt:serverTimestamp(), updatedAt:serverTimestamp() });
 completed++;
 } catch (error) { console.error(error); skipped++; }
 }
 progress.textContent = `${completed} ancienne${completed > 1 ? "s" : ""} course${completed > 1 ? "s" : ""} calculée${completed > 1 ? "s" : ""}${skipped ? ` · ${skipped} non calculée${skipped > 1 ? "s" : ""}` : ""}. Les péages restent à 0 s’ils n’étaient pas renseignés.`;
 button.disabled = false;
+}
+const repairedElectricCostIds = new Set();
+async function repairInvalidElectricCosts(items, collectionName) {
+if (!db || !window.currentPartnerProfile?.id || !Array.isArray(items)) return;
+const profile = window.currentPartnerProfile;
+const profileConsumption = Number(profile.evConsumption);
+if (profileConsumption > MAX_REASONABLE_EV_CONSUMPTION) {
+profile.evConsumption = CORRECTED_EV_CONSUMPTION;
+try {
+await updateDoc(doc(db,"partnerDrivers",profile.id), { evConsumption:CORRECTED_EV_CONSUMPTION, updatedAt:serverTimestamp() });
+const cached = readMissionCostSettings();
+localStorage.setItem(missionCostStorageKey(),JSON.stringify({...cached,vehicleType:"electric",evConsumption:CORRECTED_EV_CONSUMPTION}));
+} catch (error) { console.warn("Correction consommation électrique du profil",error?.code||error); }
+}
+const priceFallback = Number(profile.kwhPrice) > 0 ? Number(profile.kwhPrice) : DEFAULT_MISSION_COST_SETTINGS.kwhPrice;
+for (const item of items) {
+const itemId = String(collectionName === "driverMissions" ? (item.missionId || item.id) : item.id || "");
+const repairKey = `${collectionName}:${itemId}`;
+if (!itemId || repairedElectricCostIds.has(repairKey) || item.status !== "completed") continue;
+const storedConsumption = Number(item.missionEvConsumption || 0);
+const storedCost = moneyValue(item.missionFuelCost);
+if (!(storedConsumption > MAX_REASONABLE_EV_CONSUMPTION || storedCost > 1000)) continue;
+const totalKm = Number(item.missionTotalKm || 0);
+if (!(totalKm > 0)) continue;
+repairedElectricCostIds.add(repairKey);
+const clientKm = Math.max(0,Number(item.missionClientKm || 0));
+const kwhPrice = Number(item.missionKwhPrice) > 0 && Number(item.missionKwhPrice) < 5 ? Number(item.missionKwhPrice) : priceFallback;
+const tolls = Math.max(0,moneyValue(item.missionTolls));
+const energyCost = totalKm / 100 * CORRECTED_EV_CONSUMPTION * kwhPrice;
+const clientEnergyCost = clientKm / 100 * CORRECTED_EV_CONSUMPTION * kwhPrice;
+const values = { missionEnergyType:"electric", missionFuelPrice:null, missionConsumption:null, missionEvConsumption:CORRECTED_EV_CONSUMPTION, missionKwhPrice:kwhPrice, missionClientFuelCost:clientEnergyCost, missionFuelCost:energyCost, missionTotalCost:energyCost+tolls, missionMargin:moneyValue(item.estimatedPrice)-energyCost-tolls, missionCostStatus:"calculated", missionCostUpdatedAt:serverTimestamp(), updatedAt:serverTimestamp() };
+try { await updateDoc(doc(db,collectionName,itemId),values); Object.assign(item,values); }
+catch (error) { repairedElectricCostIds.delete(repairKey); console.warn("Correction ancien coût électrique",collectionName,itemId,error?.code||error); }
+}
 }
 function partnerIdFromEmail(email) { return String(email || "").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || `chauffeur-${Date.now()}`; }
 let selectedPartnerDriverId = null;
@@ -3553,6 +3596,7 @@ function listenDriverMissions() {
 if (state.driverMissionsUnsubscribe) state.driverMissionsUnsubscribe();
 state.driverMissionsUnsubscribe = onSnapshot(collection(db, "driverMissions"), snapshot => {
 state.driverMissions = snapshot.docs.map(result => ({ id:result.id, ...result.data() }));
+repairInvalidElectricCosts(state.driverMissions,"driverMissions").catch(error=>console.warn("Réparation missions électriques",error));
 for (const mission of state.driverMissions) {
 const booking = state.bookings.find(item => item.id === mission.bookingId);
 if (booking) booking.partnerMissionStatus = mission.status || booking.partnerMissionStatus || "proposed";
@@ -5518,6 +5562,7 @@ const da = a.createdAt?.toMillis?.() || a.statusUpdatedAt?.toMillis?.() || Date.
 const dbv = b.createdAt?.toMillis?.() || b.statusUpdatedAt?.toMillis?.() || Date.parse(b.scheduledAtText || "") || 0;
 return dbv - da;
 });
+repairInvalidElectricCosts(state.bookings,"bookings").catch(error=>console.warn("Réparation courses électriques",error));
 render();
 state.bookings.forEach(item => scheduleExecutingDriverMissionCost(item, 250));
 $("manualSync")?.classList.remove("syncing");
@@ -5660,6 +5705,11 @@ if (profile.active === false) {
 await signOut(auth);
 showLoginError("Ce compte chauffeur est désactivé.");
 return false;
+}
+if (Number(profile.evConsumption) > MAX_REASONABLE_EV_CONSUMPTION) {
+profile.evConsumption = CORRECTED_EV_CONSUMPTION;
+try { await updateDoc(profileDoc.ref,{evConsumption:CORRECTED_EV_CONSUMPTION,updatedAt:serverTimestamp()}); }
+catch (error) { console.warn("Correction consommation électrique chauffeur",error?.code||error); }
 }
 window.currentPartnerProfile = profile;
 window.OUASSVTC_ADMIN_DRIVER_MODE = isAdminDriverAccess;
@@ -7231,7 +7281,7 @@ main.appendChild(s);
 }
 if(!document.getElementById("partnerProfilePanel")){
 const s=document.createElement("section");s.id="partnerProfilePanel";s.className="partner-menu-page partner-view-hidden";
-s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse société / personnelle<input id="pmAddress"></label><label>Adresse de référence des courses<input id="pmHomeAddress" placeholder="Départ et retour du bilan"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>Registre VTC<input id="pmVtcRegistry" placeholder="EVTC..."></label><div class="pm-energy-choice"><span class="pm-energy-title">Motorisation enregistrée</span><div class="pm-energy-options"><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeThermal" value="thermal"><span>⛽ Thermique / hybride</span></label><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeElectric" value="electric"><span>⚡ 100 % électrique</span></label></div><small>Le bilan de course utilisera uniquement la motorisation cochée et enregistrée.</small></div><label data-pm-energy="thermal">Prix carburant €/L<input id="pmFuelPrice" type="number" min="0" step="0.001"></label><label data-pm-energy="thermal">Consommation L/100 km<input id="pmConsumption" type="number" min="0" step="0.1"></label><label data-pm-energy="electric">Prix électricité €/kWh<input id="pmProfileKwhPrice" type="number" min="0" step="0.001"></label><label data-pm-energy="electric">Consommation kWh/100 km<input id="pmProfileEvConsumption" type="number" min="0" step="0.1"></label><label>Lien avis client<input id="pmReviewUrl" type="url" placeholder="https://..."></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
+s.innerHTML='<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>Mon profil</h2><div class="pm-card"><form id="pmProfileForm" class="pm-grid"><label>Nom / prénom<input id="pmDisplayName"></label><label>Société<input id="pmCompany"></label><label>SIRET<input id="pmSiret"></label><label>Téléphone<input id="pmPhone" type="tel"></label><label>Adresse société / personnelle<input id="pmAddress"></label><label>Adresse de référence des courses<input id="pmHomeAddress" placeholder="Départ et retour du bilan"></label><label>Véhicule<input id="pmVehicle"></label><label>Immatriculation<input id="pmRegistration"></label><label>Registre VTC<input id="pmVtcRegistry" placeholder="EVTC..."></label><div class="pm-energy-choice"><span class="pm-energy-title">Motorisation enregistrée</span><div class="pm-energy-options"><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeThermal" value="thermal"><span>⛽ Thermique / hybride</span></label><label><input type="radio" name="pmVehicleType" id="pmVehicleTypeElectric" value="electric"><span>⚡ 100 % électrique</span></label></div><small>Le bilan de course utilisera uniquement la motorisation cochée et enregistrée.</small></div><label data-pm-energy="thermal">Prix carburant €/L<input id="pmFuelPrice" type="number" min="0" max="30" step="0.001"></label><label data-pm-energy="thermal">Consommation L/100 km<input id="pmConsumption" type="number" min="0" max="50" step="0.1"></label><label data-pm-energy="electric">Prix électricité €/kWh<input id="pmProfileKwhPrice" type="number" min="0" max="5" step="0.001"></label><label data-pm-energy="electric">Consommation kWh/100 km<input id="pmProfileEvConsumption" type="number" min="1" max="80" step="0.1"></label><label>Lien avis client<input id="pmReviewUrl" type="url" placeholder="https://..."></label><label>E-mail de connexion<input id="pmEmail" disabled></label><button class="pm-save" type="submit">Enregistrer mes modifications</button></form></div>';
 main.appendChild(s);
 }
 if(!document.getElementById("partnerDocumentsPanel")){
@@ -7260,7 +7310,7 @@ s.innerHTML=`<button class="pm-back" data-pm="partnerMenuPanel">‹</button><h2>
 <label>Kilomètres à calculer<input id="pmCostFuelKm" type="number" min="0" step="1" value="100"></label>
 <div class="pm-cost-result">Coût : <strong id="pmCostFuelResult">—</strong></div>
 <div class="pm-cost-title" id="pmElectricTitle"><small>100 % ÉLECTRIQUE</small><b>Électricité</b></div>
-<label>Consommation moyenne (kWh/100 km)<input id="pmCostEvConsumption" type="number" min="0" step="0.1"></label>
+<label>Consommation moyenne (kWh/100 km)<input id="pmCostEvConsumption" type="number" min="1" max="80" step="0.1"></label>
 <label>Prix électricité (€/kWh)<input id="pmCostKwhPrice" type="number" min="0" step="0.001"></label>
 <label>Kilomètres à calculer<input id="pmCostEvKm" type="number" min="0" step="1" value="100"></label>
 <div class="pm-cost-result">Coût : <strong id="pmCostEvResult">—</strong></div>
@@ -7292,6 +7342,7 @@ document.getElementById("pmCostForm").onsubmit=async event=>{
 event.preventDefault();const p=window.currentPartnerProfile;if(!p?.id)return alert("Profil chauffeur indisponible.");
 const vehicleType=document.getElementById("pmCostVehicleType").value;
 const data={homeAddress:document.getElementById("pmCostHome").value.trim(),fuelPrice:Number(document.getElementById("pmCostFuelPrice").value)||null,consumption:Number(document.getElementById("pmCostFuelConsumption").value)||null,evConsumption:Number(document.getElementById("pmCostEvConsumption").value)||null,kwhPrice:Number(document.getElementById("pmCostKwhPrice").value)||null,updatedAt:serverTimestamp()};
+if(vehicleType==="electric"&&(!(data.evConsumption>0)||data.evConsumption>MAX_REASONABLE_EV_CONSUMPTION))return alert("La consommation électrique doit être comprise entre 1 et 80 kWh/100 km.");
 try{const cached=readMissionCostSettings();localStorage.setItem(missionCostStorageKey(),JSON.stringify({...cached,...data,vehicleType}));}catch(_){}
 try{await updateDoc(doc(db,"partnerDrivers",p.id),data);Object.assign(p,data,{vehicleType});
 try{await updateDoc(doc(db,"partnerDrivers",p.id),{vehicleType,updatedAt:serverTimestamp()});}catch(typeSyncError){console.warn("Motorisation conservée localement",typeSyncError?.code||typeSyncError)}
@@ -7400,6 +7451,7 @@ async function pmSaveProfile(e){
 e.preventDefault();if(!window.currentPartnerProfile?.id)return;
 const vehicleType=document.querySelector('input[name="pmVehicleType"]:checked')?.value||"thermal";
 const data={displayName:pmDisplayName.value.trim(),companyName:pmCompany.value.trim(),siret:pmSiret.value.trim(),phone:pmPhone.value.trim(),address:pmAddress.value.trim(),homeAddress:pmHomeAddress.value.trim(),vehicle:pmVehicle.value.trim(),registration:pmRegistration.value.trim(),vtcRegistry:pmVtcRegistry.value.trim(),fuelPrice:Number(pmFuelPrice.value)||null,consumption:Number(pmConsumption.value)||null,kwhPrice:Number(document.getElementById("pmProfileKwhPrice")?.value)||null,evConsumption:Number(document.getElementById("pmProfileEvConsumption")?.value)||null,reviewUrl:pmReviewUrl.value.trim(),updatedAt:serverTimestamp()};
+if(vehicleType==="electric"&&(!(data.evConsumption>0)||data.evConsumption>MAX_REASONABLE_EV_CONSUMPTION))return alert("La consommation électrique doit être comprise entre 1 et 80 kWh/100 km.");
 try{
 await updateDoc(doc(db,"partnerDrivers",window.currentPartnerProfile.id),data);
 Object.assign(window.currentPartnerProfile,data,{vehicleType});
