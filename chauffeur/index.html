@@ -7155,7 +7155,7 @@ if (firebaseReady) {
 .ouass-price-title{margin:4px 2px 18px}.ouass-price-title h2{margin:0;color:#0b1628;font-size:28px}.ouass-price-title p{margin:6px 0 0;color:#65758a}
 .ouass-price-card{margin-bottom:14px;padding:18px;border:1px solid #dfe6ef;border-radius:22px;background:#fff;box-shadow:0 9px 26px #10243d0d}
 .ouass-price-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.ouass-price-head h3{margin:0;color:#0b1628;font-size:20px}.ouass-price-head small{display:block;margin-top:3px;color:#65758a}
-.ouass-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ouass-price-field label{display:block;margin-bottom:6px;color:#344054;font-size:12px;font-weight:850}.ouass-price-field input{width:100%;min-height:49px;padding:12px;border:1px solid #cfd8e5;border-radius:13px;background:#fff;color:#071321;font-size:17px;font-weight:900}
+.ouass-price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ouass-price-field label{display:block;margin-bottom:6px;color:#344054;font-size:12px;font-weight:850}.ouass-price-input{position:relative}.ouass-price-field input,.ouass-price-field select{width:100%;min-height:49px;padding:12px;border:1px solid #cfd8e5;border-radius:13px;background:#fff;color:#071321;font-size:17px;font-weight:900}.ouass-price-field input.ouass-has-unit{padding-right:72px}.ouass-price-unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#65758a;font-size:14px;font-weight:900;pointer-events:none}.ouass-price-field select{appearance:auto}
 .ouass-price-switch{display:flex;align-items:center;gap:8px;color:#1478ff;font-weight:900}.ouass-price-switch input{width:21px;height:21px;accent-color:#1478ff}
 .ouass-price-note{margin:4px 0 14px;padding:12px 14px;border-radius:14px;background:#edf5ff;color:#365574;font-size:12px;line-height:1.45}
 .ouass-price-sync{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:12px 0;padding:12px;border-radius:15px;background:#ecfbf5;color:#087a53;font-size:12px;font-weight:900}.ouass-price-sync span{padding:5px 8px;border-radius:999px;background:#d7f6e9}
@@ -7177,23 +7177,29 @@ const fields = [
   "nightStartHour", "nightEndHour", "nightUpTo7", "nightExtraKm",
   "sundayUpTo7", "sundayExtraKm"
 ];
+function hourOptions(){
+  return Array.from({length:24},(_,hour)=>`<option value="${hour}">${String(hour).padStart(2,"0")} h 00</option>`).join("");
+}
+function priceInput(id,unit="€"){
+  return `<div class="ouass-price-input"><input class="ouass-has-unit" id="${id}" type="number" min="0" step="0.01" inputmode="decimal"><span class="ouass-price-unit">${unit}</span></div>`;
+}
 function pricingMarkup(){
   return `<div class="ouass-price-title"><h2>Gestion des tarifs</h2><p>Une seule modification pour toutes vos applications.</p></div>
   <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarification active</h3><small>Tarif standard et trajets Perpignan</small></div></div><div class="ouass-price-grid">
-    <div class="ouass-price-field"><label>Perpignan · jusqu’à 4 km</label><input id="standardPerpignan4" type="number" min="0" step="0.01"></div>
-    <div class="ouass-price-field"><label>Jusqu’à 7 km</label><input id="standardUpTo7" type="number" min="0" step="0.01"></div>
-    <div class="ouass-price-field"><label>Kilomètre supplémentaire</label><input id="standardExtraKm" type="number" min="0" step="0.01"></div>
-    <div class="ouass-price-field"><label>Arrondi automatique</label><input id="rounding" type="number" min="0.01" step="0.01"></div>
+    <div class="ouass-price-field"><label>Prix fixe Perpignan jusqu’à 4 km</label>${priceInput("standardPerpignan4")}</div>
+    <div class="ouass-price-field"><label>Forfait standard de 4 à 7 km</label>${priceInput("standardUpTo7")}</div>
+    <div class="ouass-price-field"><label>Au-delà de 7 km</label>${priceInput("standardExtraKm","€/km")}</div>
+    <div class="ouass-price-field"><label>Arrondi du tarif final</label>${priceInput("rounding")}</div>
   </div></section>
   <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif de nuit</h3><small>De 21 h à 6 h</small></div><label class="ouass-price-switch"><input id="nightEnabled" type="checkbox">Activé</label></div><div class="ouass-price-grid">
-    <div class="ouass-price-field"><label>Début de nuit</label><input id="nightStartHour" type="number" min="0" max="23" step="1"></div>
-    <div class="ouass-price-field"><label>Fin de nuit</label><input id="nightEndHour" type="number" min="0" max="23" step="1"></div>
-    <div class="ouass-price-field"><label>Forfait jusqu’à 7 km</label><input id="nightUpTo7" type="number" min="0" step="0.01"></div>
-    <div class="ouass-price-field"><label>Kilomètre supplémentaire</label><input id="nightExtraKm" type="number" min="0" step="0.01"></div>
+    <div class="ouass-price-field"><label>Début du tarif de nuit</label><select id="nightStartHour">${hourOptions()}</select></div>
+    <div class="ouass-price-field"><label>Fin du tarif de nuit</label><select id="nightEndHour">${hourOptions()}</select></div>
+    <div class="ouass-price-field"><label>Prix de nuit jusqu’à 7 km</label>${priceInput("nightUpTo7")}</div>
+    <div class="ouass-price-field"><label>Au-delà de 7 km la nuit</label>${priceInput("nightExtraKm","€/km")}</div>
   </div></section>
   <section class="ouass-price-card"><div class="ouass-price-head"><div><h3>Tarif du dimanche</h3><small>Prioritaire sur le tarif de nuit</small></div><label class="ouass-price-switch"><input id="sundayEnabled" type="checkbox">Activé</label></div><div class="ouass-price-grid">
-    <div class="ouass-price-field"><label>Forfait jusqu’à 7 km</label><input id="sundayUpTo7" type="number" min="0" step="0.01"></div>
-    <div class="ouass-price-field"><label>Kilomètre supplémentaire</label><input id="sundayExtraKm" type="number" min="0" step="0.01"></div>
+    <div class="ouass-price-field"><label>Prix du dimanche jusqu’à 7 km</label>${priceInput("sundayUpTo7")}</div>
+    <div class="ouass-price-field"><label>Au-delà de 7 km le dimanche</label>${priceInput("sundayExtraKm","€/km")}</div>
   </div></section>
   <div class="ouass-price-note">Le tarif du dimanche est prioritaire sur le tarif de nuit. Les courses déjà créées conservent leur tarif.</div>
   <div class="ouass-price-sync">✓ Synchronisation active <span>Site</span><span>Client</span><span>Chauffeur</span><span>Administrateur</span></div>
