@@ -711,6 +711,9 @@ body{background:linear-gradient(180deg,#eef2f7 0,#f7f8fa 360px);letter-spacing:-
 .detail-body .more-actions-panel .mission-profit-toggle span:last-child{display:none}
 .detail-body .more-actions-panel .mission-profit-panel{grid-column:1/-1;margin:0;background:#fff}
 .detail-body .more-actions-panel [data-purchase-order]{font-weight:900}
+.detail-body .more-actions-panel [data-invoice]{font-weight:900}
+.invoice-overlay{position:fixed;inset:0;z-index:1800;display:grid;place-items:end center;padding:18px;background:#07101fcc;backdrop-filter:blur(8px)}.invoice-sheet{width:min(100%,560px);max-height:92vh;overflow:auto;padding:22px;border-radius:26px;background:#fff;color:#111827;box-shadow:0 28px 80px #0007}.invoice-sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.invoice-sheet-head small{display:block;color:#64748b;font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.invoice-sheet-head h2{margin:5px 0 0;font-size:27px}.invoice-sheet-close{width:45px;height:45px;border:0;border-radius:14px;background:#eef2f7;color:#111827;font-size:25px}.invoice-summary{display:grid;gap:8px;margin:18px 0;padding:15px;border-radius:17px;background:#f4f7fb}.invoice-summary div{display:flex;justify-content:space-between;gap:18px}.invoice-summary span{color:#64748b}.invoice-summary strong{text-align:right}.invoice-status-label{display:block;margin:16px 0 8px;font-weight:900}.invoice-status-choice{display:grid;grid-template-columns:1fr 1fr;gap:9px}.invoice-status-choice button{min-height:58px;border:2px solid #dce3ec;border-radius:16px;background:#fff;color:#334155;font-weight:900}.invoice-status-choice button.active{border-color:#1677f2;background:#eaf3ff;color:#075fce}.invoice-status-choice button.paid.active{border-color:#17a668;background:#e8f9f0;color:#087747}.invoice-auto-note{margin:11px 0 0;color:#64748b;font-size:13px;line-height:1.45}.invoice-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:19px}.invoice-actions button{min-height:56px;border:0;border-radius:16px;font-weight:900}.invoice-actions .invoice-create{background:#111827;color:#fff}.invoice-actions .invoice-share{background:#1677f2;color:#fff}@media(max-width:420px){.invoice-actions{grid-template-columns:1fr}.invoice-sheet{padding:19px}}
+html[data-theme="dark"] .invoice-sheet{background:#111925;color:#f4f7fb}html[data-theme="dark"] .invoice-summary{background:#0b111b}html[data-theme="dark"] .invoice-status-choice button{background:#182231;color:#e7edf7;border-color:#344155}
 @media(max-width:390px){.detail-body .more-actions-panel{grid-template-columns:1fr}}
  
 /* ===== V31 — PILOTAGE FINANCIER ===== */
@@ -4332,6 +4335,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           <button class="actions-command" type="button" data-edit-booking="${item.id}"><span class="action-symbol">✎</span>Modifier la course</button>
           <button class="actions-command" type="button" data-transfer-booking="${item.id}"><span class="action-symbol">⇄</span>Transfert chauffeur</button>
           <button class="actions-command" type="button" data-purchase-order="${item.id}"><span class="action-symbol">PDF</span>Bon de commande</button>
+          <button class="actions-command" type="button" data-invoice="${item.id}"><span class="action-symbol">€</span>Facture client</button>
           <button class="mission-profit-toggle actions-command" type="button" data-toggle-mission-profit><span class="action-symbol">€</span><span>Bilan de course</span><span>＋</span></button>
           <button class="actions-command" type="button" data-duplicate-booking="${item.id}"><span class="action-symbol">＋</span>Dupliquer</button>
           <button class="actions-command" type="button" data-return-booking="${item.id}"><span class="action-symbol">↩</span>Programmer le retour</button>
@@ -4366,6 +4370,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       $("detailBody").querySelectorAll("[data-trip-stop]").forEach(input => { if (window.google?.maps?.places) createAddressAutocomplete(input); });
       $("detailBody").querySelector("[data-edit-booking]")?.addEventListener("click", () => openEditBooking(item.id));
       $("detailBody").querySelector("[data-purchase-order]")?.addEventListener("click", event => generatePurchaseOrder(item.id, event.currentTarget));
+      $("detailBody").querySelector("[data-invoice]")?.addEventListener("click", () => openInvoiceEditor(item.id));
       $("detailBody").querySelector("[data-transfer-booking]")?.addEventListener("click", () => openTransferBooking(item.id));
       $("detailBody").querySelector("[data-toggle-call-menu]")?.addEventListener("click", () => {
         $("detailBody").querySelector("[data-call-menu]")?.classList.toggle("hidden");
@@ -4755,6 +4760,75 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       for (let number = 1; number <= 5; number += 1) pushText(`${String(offsets[number]).padStart(10, "0")} 00000 n \n`);
       pushText(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
       return new Blob(chunks, { type:"application/pdf" });
+    }
+ 
+    function invoiceIsAutomaticallyPaid(item) {
+      if (!item || isPaymentPendingItem(item) || item.paymentLost === true) return false;
+      const payment = String(item.paymentStatus || item.paymentMethod || "").toLowerCase();
+      if (payment === "paid" || payment.includes("payé") || payment.includes("paye") || payment.includes("carte") || payment.includes("espèces") || payment.includes("especes") || payment.includes("mixte")) return true;
+      return ["completed", "transfer_closed"].includes(String(item.status || ""));
+    }
+ 
+    async function getInvoiceNumber(bookingId) {
+      const item = state.bookings.find(booking => booking.id === bookingId);
+      if (!item) throw new Error("Course introuvable");
+      if (item.invoiceNumber) return String(item.invoiceNumber);
+      const year = new Date().getFullYear();
+      const counterRef = doc(db, "counters", `invoices-${year}`), bookingRef = doc(db, "bookings", bookingId);
+      const invoiceNumber = await runTransaction(db, async transaction => {
+        const freshBooking = await transaction.get(bookingRef), existing = freshBooking.data()?.invoiceNumber;
+        if (existing) return String(existing);
+        const counter = await transaction.get(counterRef), next = Math.max(0, Number(counter.data()?.lastNumber) || 0) + 1;
+        const number = `FAC-${year}-${String(next).padStart(4, "0")}`;
+        transaction.set(counterRef, { lastNumber:next, updatedAt:serverTimestamp() }, { merge:true });
+        transaction.update(bookingRef, { invoiceNumber:number, invoiceCreatedAt:serverTimestamp(), updatedAt:serverTimestamp() });
+        return number;
+      });
+      item.invoiceNumber = invoiceNumber;
+      return invoiceNumber;
+    }
+ 
+    function openInvoiceEditor(bookingId) {
+      const item = state.bookings.find(booking => booking.id === bookingId);
+      if (!item) { alert("Cette course est introuvable."); return; }
+      const automaticPaid = invoiceIsAutomaticallyPaid(item), overlay = document.createElement("div");
+      overlay.className = "invoice-overlay";
+      overlay.innerHTML = `<section class="invoice-sheet" role="dialog" aria-modal="true" aria-labelledby="invoiceSheetTitle"><div class="invoice-sheet-head"><div><small>Document client</small><h2 id="invoiceSheetTitle">Créer la facture</h2></div><button class="invoice-sheet-close" type="button" aria-label="Fermer">×</button></div><div class="invoice-summary"><div><span>Client</span><strong>${escapeHtml(item.customerName || "Client")}</strong></div><div><span>Trajet</span><strong>${escapeHtml(item.pickup || "Départ")} → ${escapeHtml(item.destination || "Destination")}</strong></div><div><span>Total</span><strong>${escapeHtml(euroAmount(moneyValue(item.estimatedPrice)))}</strong></div><div><span>Règlement enregistré</span><strong>${escapeHtml(item.paymentMethod || "Non renseigné")}</strong></div></div><label class="invoice-status-label">État de la facture</label><div class="invoice-status-choice"><button class="paid ${automaticPaid ? "active" : ""}" type="button" data-invoice-status="paid">✓ Payée · acquittée</button><button class="${automaticPaid ? "" : "active"}" type="button" data-invoice-status="unpaid">À régler</button></div><p class="invoice-auto-note">Le statut est présélectionné automatiquement d’après le règlement de la course. Vous pouvez le corriger avant de créer le document.</p><div class="invoice-actions"><button class="invoice-create" type="button" data-invoice-create>Ouvrir le PDF</button><button class="invoice-share" type="button" data-invoice-share>Partager la facture</button></div></section>`;
+      document.body.appendChild(overlay); document.body.style.overflow = "hidden";
+      let paid = automaticPaid;
+      const close = () => { overlay.remove(); document.body.style.overflow = ""; };
+      overlay.querySelector(".invoice-sheet-close").addEventListener("click", close);
+      overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+      overlay.querySelectorAll("[data-invoice-status]").forEach(button => button.addEventListener("click", () => { paid = button.dataset.invoiceStatus === "paid"; overlay.querySelectorAll("[data-invoice-status]").forEach(choice => choice.classList.toggle("active", choice === button)); }));
+      overlay.querySelector("[data-invoice-create]").addEventListener("click", event => generateInvoice(bookingId, paid, event.currentTarget, false));
+      overlay.querySelector("[data-invoice-share]").addEventListener("click", event => generateInvoice(bookingId, paid, event.currentTarget, true));
+    }
+ 
+    async function generateInvoice(bookingId, paid, button, sharePdf = false) {
+      if (!db || !auth?.currentUser) { alert("Vous devez être connecté pour créer la facture."); return; }
+      const item = state.bookings.find(booking => booking.id === bookingId);
+      if (!item) { alert("Cette course est introuvable."); return; }
+      const pdfWindow = sharePdf ? null : window.open("", "_blank"), oldText = button.textContent;
+      button.disabled = true; button.textContent = "Création en cours…";
+      try {
+        const invoiceNumber = await getInvoiceNumber(bookingId), issueDate = new Date(), serviceDate = bookingDate(item), total = moneyValue(item.estimatedPrice);
+        const canvas = document.createElement("canvas"); canvas.width = 1240; canvas.height = 1754;
+        const context = canvas.getContext("2d"); context.fillStyle = "#ffffff"; context.fillRect(0, 0, 1240, 1754); context.fillStyle = "#0b1423"; context.fillRect(0, 0, 1240, 245);
+        try { const logo = await loadPdfImage("/ouassvtc-app.png"), ratio = Math.min(190 / logo.naturalWidth, 125 / logo.naturalHeight); context.drawImage(logo, 90, 55, logo.naturalWidth * ratio, logo.naturalHeight * ratio); } catch (error) { console.warn("Logo indisponible", error); }
+        context.fillStyle = "#fff"; context.textAlign = "right"; context.font = "700 48px Arial"; context.fillText(paid ? "FACTURE ACQUITTÉE" : "FACTURE", 1140, 108); context.font = "400 24px Arial"; context.fillText(`N° ${invoiceNumber}`, 1140, 153); context.fillText(`Émise le ${issueDate.toLocaleDateString("fr-FR")}`, 1140, 193);
+        context.fillStyle = "#111827"; context.textAlign = "left"; context.font = "700 28px Arial"; context.fillText("OUASSVTC", 90, 315); context.font = "400 22px Arial"; ["BOUAB Ouassini", "10 rue Claude Monet · 66000 Perpignan", "Téléphone : 06 44 12 07 84", "SIRET : 818 284 788 00012", "Registre des VTC : EVTC095161898"].forEach((line, index) => context.fillText(line, 90, 355 + index * 31));
+        context.font = "700 25px Arial"; context.fillText("FACTURÉ À", 760, 315); context.font = "400 23px Arial"; context.fillText(item.customerName || "Client", 760, 360); context.fillText(item.customerPhone || "Téléphone non renseigné", 760, 396);
+        context.strokeStyle = "#d9e0e9"; context.lineWidth = 2; context.beginPath(); context.moveTo(90, 535); context.lineTo(1150, 535); context.stroke(); context.font = "700 25px Arial"; context.fillText("PRESTATION", 90, 585); context.fillText("DATE", 820, 585); context.textAlign = "right"; context.fillText("MONTANT", 1150, 585); context.textAlign = "left";
+        context.fillStyle = "#f4f7fb"; context.fillRect(80, 615, 1080, 285); context.fillStyle = "#111827"; context.font = "700 27px Arial"; context.fillText("Transport de personnes avec chauffeur VTC", 105, 665); context.font = "400 23px Arial"; const routeY = drawWrappedText(context, `${item.pickup || "Départ non renseigné"} → ${item.destination || "Destination non renseignée"}`, 105, 710, 650, 34); if (moneyValue(item.waitingFee) > 0) drawWrappedText(context, `Dont attente : ${euroAmount(item.waitingFee)}`, 105, routeY + 8, 650, 32);
+        context.font = "400 23px Arial"; context.fillText(serviceDate ? serviceDate.toLocaleDateString("fr-FR") : "Non renseignée", 820, 665); context.textAlign = "right"; context.font = "700 28px Arial"; context.fillText(euroAmount(total), 1135, 665); context.textAlign = "left";
+        context.font = "400 23px Arial"; context.fillText("Sous-total", 760, 980); context.textAlign = "right"; context.fillText(euroAmount(total), 1135, 980); context.textAlign = "left"; context.fillText("TVA", 760, 1030); context.textAlign = "right"; context.fillText("0,00 €", 1135, 1030); context.fillStyle = "#0b1423"; context.fillRect(735, 1065, 415, 88); context.fillStyle = "#fff"; context.textAlign = "left"; context.font = "700 28px Arial"; context.fillText("TOTAL", 765, 1120); context.textAlign = "right"; context.fillText(euroAmount(total), 1120, 1120);
+        context.textAlign = "left"; context.fillStyle = paid ? "#087747" : "#9a5b00"; context.font = "700 31px Arial"; context.fillText(paid ? "✓ PAYÉE · ACQUITTÉE" : "À RÉGLER", 90, 1000); context.fillStyle = "#111827"; context.font = "400 22px Arial"; context.fillText(`Mode de règlement : ${item.paymentMethod || "Non renseigné"}`, 90, 1042); if (paid) context.fillText(`Date d’acquittement : ${issueDate.toLocaleDateString("fr-FR")}`, 90, 1080);
+        context.font = "400 20px Arial"; drawWrappedText(context, "TVA non applicable, article 293 B du Code général des impôts.", 90, 1290, 1060, 30); drawWrappedText(context, paid ? "Facture acquittée : le règlement correspondant à cette prestation a été enregistré." : "Facture payable à réception. Merci d’indiquer le numéro de facture lors du règlement.", 90, 1340, 1060, 30); context.strokeStyle = "#d9e0e9"; context.beginPath(); context.moveTo(90, 1605); context.lineTo(1150, 1605); context.stroke(); context.fillStyle = "#64748b"; context.textAlign = "center"; context.font = "400 18px Arial"; context.fillText(`OuassVTC · ${invoiceNumber} · Document généré depuis le centre de pilotage`, 620, 1655);
+        const pdfBlob = canvasAsPdfBlob(canvas), pdfFile = new File([pdfBlob], `facture-${invoiceNumber}.pdf`, { type:"application/pdf" });
+        await updateDoc(doc(db, "bookings", bookingId), { invoiceNumber, invoiceStatus:paid ? "paid" : "unpaid", invoicePaid:paid, invoiceIssuedAt:serverTimestamp(), updatedAt:serverTimestamp() }); Object.assign(item, { invoiceNumber, invoiceStatus:paid ? "paid" : "unpaid", invoicePaid:paid });
+        if (sharePdf && navigator.share && (!navigator.canShare || navigator.canShare({ files:[pdfFile] }))) { await navigator.share({ title:`Facture OuassVTC ${invoiceNumber}`, text:`Votre facture OuassVTC ${invoiceNumber}`, files:[pdfFile] }); return; }
+        const pdfUrl = URL.createObjectURL(pdfBlob); if (pdfWindow) pdfWindow.location.href = pdfUrl; else { const download = document.createElement("a"); download.href = pdfUrl; download.download = `facture-${invoiceNumber}.pdf`; document.body.appendChild(download); download.click(); download.remove(); } setTimeout(() => URL.revokeObjectURL(pdfUrl), 120000);
+      } catch (error) { console.error(error); if (pdfWindow) pdfWindow.close(); if (error?.name === "AbortError") return; alert("La facture n’a pas pu être créée. Vérifiez votre connexion et réessayez."); } finally { button.disabled = false; button.textContent = oldText; }
     }
  
     async function generatePurchaseOrder(bookingId, button, sharePdf = false) {
@@ -7355,4 +7429,6 @@ window.addEventListener("DOMContentLoaded",bootPricingAdmin,{once:true});
  
 </body>
 </html>
+ 
+ 
  
