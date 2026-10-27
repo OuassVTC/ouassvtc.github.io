@@ -4787,6 +4787,24 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       return `BC-${referenceDate.getFullYear()}-${String(orderNumber).padStart(4, "0")}`;
     }
  
+    function invoiceCustomerName(item) {
+      return String(item?.customerName || item?.clientName || item?.name || "Client").trim();
+    }
+ 
+    function invoiceCustomerPhone(item) {
+      return String(item?.customerPhone || item?.clientPhone || item?.phone || item?.telephone || "").trim();
+    }
+ 
+    function uploadInvoicePdf(bookingId, invoiceNumber, pdfBlob) {
+      if (!storage) return Promise.reject(new Error("Stockage Firebase indisponible"));
+      const target = storageRef(storage, `invoices/${bookingId}/${invoiceNumber}.pdf`);
+      const task = uploadBytesResumable(target, pdfBlob, { contentType:"application/pdf", customMetadata:{ bookingId, invoiceNumber } });
+      return new Promise((resolve, reject) => task.on("state_changed", null, reject, async () => {
+        try { resolve(await getDownloadURL(task.snapshot.ref)); }
+        catch (error) { reject(error); }
+      }));
+    }
+ 
     function openInvoiceEditor(bookingId) {
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item) { alert("Cette course est introuvable."); return; }
@@ -4808,6 +4826,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       if (!db || !auth?.currentUser) { alert("Vous devez être connecté pour créer la facture."); return; }
       const item = state.bookings.find(booking => booking.id === bookingId);
       if (!item) { alert("Cette course est introuvable."); return; }
+      const clientPhone = invoiceCustomerPhone(item);
+      if (shareChannel && !clientPhone) { alert("Le numéro de téléphone du client n’est pas renseigné dans cette fiche. Ajoutez-le avant d’envoyer la facture."); return; }
       const sharePdf = Boolean(shareChannel), pdfWindow = sharePdf ? null : window.open("", "_blank"), oldText = button.textContent;
       button.disabled = true; button.textContent = "Création en cours…";
       try {
@@ -4817,7 +4837,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         try { const logo = await loadPdfImage("/ouassvtc-app.png"), ratio = Math.min(190 / logo.naturalWidth, 125 / logo.naturalHeight); context.drawImage(logo, 90, 55, logo.naturalWidth * ratio, logo.naturalHeight * ratio); } catch (error) { console.warn("Logo indisponible", error); }
         context.fillStyle = "#fff"; context.textAlign = "right"; context.font = "700 48px Arial"; context.fillText(paid ? "FACTURE ACQUITTÉE" : "FACTURE", 1140, 108); context.font = "400 24px Arial"; context.fillText(`N° ${invoiceNumber}`, 1140, 153); context.fillText(`Émise le ${issueDate.toLocaleDateString("fr-FR")}`, 1140, 193);
         context.fillStyle = "#111827"; context.textAlign = "left"; context.font = "700 28px Arial"; context.fillText("OUASSVTC", 90, 315); context.font = "400 22px Arial"; ["BOUAB Ouassini", "10 rue Claude Monet · 66000 Perpignan", "Téléphone : 06 44 12 07 84", "SIRET : 818 284 788 00012", "Registre des VTC : EVTC095161898"].forEach((line, index) => context.fillText(line, 90, 355 + index * 31));
-        context.font = "700 25px Arial"; context.fillText("FACTURÉ À", 760, 315); context.font = "400 23px Arial"; context.fillText(item.customerName || "Client", 760, 360); context.fillText(item.customerPhone || "Téléphone non renseigné", 760, 396);
+        context.font = "700 25px Arial"; context.fillText("FACTURÉ À", 760, 315); context.font = "400 23px Arial"; context.fillText(invoiceCustomerName(item), 760, 360); context.fillText(clientPhone || "Téléphone non renseigné", 760, 396);
         context.strokeStyle = "#d9e0e9"; context.lineWidth = 2; context.beginPath(); context.moveTo(90, 535); context.lineTo(1150, 535); context.stroke(); context.font = "700 25px Arial"; context.fillText("PRESTATION", 90, 585); context.fillText("DATE", 820, 585); context.textAlign = "right"; context.fillText("MONTANT", 1150, 585); context.textAlign = "left";
         context.fillStyle = "#f4f7fb"; context.fillRect(80, 615, 1080, 285); context.fillStyle = "#111827"; context.font = "700 27px Arial"; context.fillText("Transport de personnes avec chauffeur VTC", 105, 665); context.font = "400 23px Arial"; const routeY = drawWrappedText(context, `${item.pickup || "Départ non renseigné"} → ${item.destination || "Destination non renseignée"}`, 105, 710, 650, 34); if (moneyValue(item.waitingFee) > 0) drawWrappedText(context, `Dont attente : ${euroAmount(item.waitingFee)}`, 105, routeY + 8, 650, 32);
         context.font = "400 23px Arial"; context.fillText(serviceDate ? serviceDate.toLocaleDateString("fr-FR") : "Non renseignée", 820, 665); context.textAlign = "right"; context.font = "700 28px Arial"; context.fillText(euroAmount(total), 1135, 665); context.textAlign = "left";
@@ -4826,10 +4846,19 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
         context.font = "400 20px Arial"; drawWrappedText(context, "TVA non applicable, article 293 B du Code général des impôts.", 90, 1290, 1060, 30); drawWrappedText(context, paid ? "Facture acquittée : le règlement correspondant à cette prestation a été enregistré." : "Facture payable à réception. Merci d’indiquer le numéro de facture lors du règlement.", 90, 1340, 1060, 30); context.strokeStyle = "#d9e0e9"; context.beginPath(); context.moveTo(90, 1605); context.lineTo(1150, 1605); context.stroke(); context.fillStyle = "#64748b"; context.textAlign = "center"; context.font = "400 18px Arial"; context.fillText(`OuassVTC · ${invoiceNumber} · Document généré depuis le centre de pilotage`, 620, 1655);
         const pdfBlob = canvasAsPdfBlob(canvas), pdfFile = new File([pdfBlob], `facture-${invoiceNumber}.pdf`, { type:"application/pdf" });
         await updateDoc(doc(db, "bookings", bookingId), { invoiceNumber, invoiceStatus:paid ? "paid" : "unpaid", invoicePaid:paid, invoiceIssuedAt:serverTimestamp(), updatedAt:serverTimestamp() }); Object.assign(item, { invoiceNumber, invoiceStatus:paid ? "paid" : "unpaid", invoicePaid:paid });
-        const clientName = item.customerName || "Madame, Monsieur";
-        const shareText = paid ? `Bonjour ${clientName}, veuillez trouver ci-joint votre facture acquittée OuassVTC n° ${invoiceNumber}. Merci pour votre confiance. Ouassini - OuassVTC` : `Bonjour ${clientName}, veuillez trouver ci-joint votre facture OuassVTC n° ${invoiceNumber}, d’un montant de ${euroAmount(total)}. Ouassini - OuassVTC`;
-        if (sharePdf && navigator.share && (!navigator.canShare || navigator.canShare({ files:[pdfFile] }))) { await navigator.share({ title:`Facture OuassVTC ${invoiceNumber}`, text:shareText, files:[pdfFile] }); return; }
-        const pdfUrl = URL.createObjectURL(pdfBlob); if (pdfWindow) pdfWindow.location.href = pdfUrl; else { const download = document.createElement("a"); download.href = pdfUrl; download.download = `facture-${invoiceNumber}.pdf`; document.body.appendChild(download); download.click(); download.remove(); if (shareChannel === "whatsapp") window.location.href = `https://wa.me/${whatsappPhone(item.customerPhone)}?text=${encodeURIComponent(shareText)}`; if (shareChannel === "sms") window.location.href = `sms:${phoneHref(item.customerPhone)}?body=${encodeURIComponent(shareText)}`; alert("Le PDF a été téléchargé. Ajoutez-le à votre message comme pièce jointe."); } setTimeout(() => URL.revokeObjectURL(pdfUrl), 120000);
+        if (sharePdf) {
+          button.textContent = "Préparation du message…";
+          const invoiceUrl = await uploadInvoicePdf(bookingId, invoiceNumber, pdfBlob);
+          await updateDoc(doc(db, "bookings", bookingId), { invoiceUrl, invoiceSharedAt:serverTimestamp(), updatedAt:serverTimestamp() });
+          const clientName = invoiceCustomerName(item), firstName = clientName.split(/\s+/)[0] || "";
+          const shareText = paid
+            ? `Bonjour ${firstName},\n\nVeuillez trouver votre facture acquittée OuassVTC n° ${invoiceNumber}, d’un montant de ${euroAmount(total)}.\n\nConsulter ou télécharger la facture :\n${invoiceUrl}\n\nMerci pour votre confiance.\nOuassini - OuassVTC`
+            : `Bonjour ${firstName},\n\nVeuillez trouver votre facture OuassVTC n° ${invoiceNumber}, d’un montant de ${euroAmount(total)}.\n\nConsulter ou télécharger la facture :\n${invoiceUrl}\n\nCordialement,\nOuassini - OuassVTC`;
+          if (shareChannel === "whatsapp") window.location.href = `https://wa.me/${whatsappPhone(clientPhone)}?text=${encodeURIComponent(shareText)}`;
+          if (shareChannel === "sms") window.location.href = `sms:${phoneHref(clientPhone)}?body=${encodeURIComponent(shareText)}`;
+          return;
+        }
+        const pdfUrl = URL.createObjectURL(pdfBlob); if (pdfWindow) pdfWindow.location.href = pdfUrl; else { const download = document.createElement("a"); download.href = pdfUrl; download.download = `facture-${invoiceNumber}.pdf`; document.body.appendChild(download); download.click(); download.remove(); } setTimeout(() => URL.revokeObjectURL(pdfUrl), 120000);
       } catch (error) { console.error(error); if (pdfWindow) pdfWindow.close(); if (error?.name === "AbortError") return; alert("La facture n’a pas pu être créée. Vérifiez votre connexion et réessayez."); } finally { button.disabled = false; button.textContent = oldText; }
     }
  
@@ -7432,4 +7461,6 @@ window.addEventListener("DOMContentLoaded",bootPricingAdmin,{once:true});
  
 </body>
 </html>
+ 
+ 
  
