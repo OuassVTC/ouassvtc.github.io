@@ -4797,7 +4797,8 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
  
     function uploadInvoicePdf(bookingId, invoiceNumber, pdfBlob) {
       if (!storage) return Promise.reject(new Error("Stockage Firebase indisponible"));
-      const target = storageRef(storage, `invoices/${bookingId}/${invoiceNumber}.pdf`);
+      if (!auth?.currentUser?.uid) return Promise.reject(new Error("Session administrateur indisponible"));
+      const target = storageRef(storage, `driverDocuments/${auth.currentUser.uid}/invoices/${bookingId}/${invoiceNumber}.pdf`);
       const task = uploadBytesResumable(target, pdfBlob, { contentType:"application/pdf", customMetadata:{ bookingId, invoiceNumber } });
       return new Promise((resolve, reject) => task.on("state_changed", null, reject, async () => {
         try { resolve(await getDownloadURL(task.snapshot.ref)); }
@@ -4859,7 +4860,7 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
           return;
         }
         const pdfUrl = URL.createObjectURL(pdfBlob); if (pdfWindow) pdfWindow.location.href = pdfUrl; else { const download = document.createElement("a"); download.href = pdfUrl; download.download = `facture-${invoiceNumber}.pdf`; document.body.appendChild(download); download.click(); download.remove(); } setTimeout(() => URL.revokeObjectURL(pdfUrl), 120000);
-      } catch (error) { console.error(error); if (pdfWindow) pdfWindow.close(); if (error?.name === "AbortError") return; alert("La facture n’a pas pu être créée. Vérifiez votre connexion et réessayez."); } finally { button.disabled = false; button.textContent = oldText; }
+      } catch (error) { console.error(error); if (pdfWindow) pdfWindow.close(); if (error?.name === "AbortError") return; const message = error?.code === "storage/unauthorized" ? "Firebase refuse encore l’enregistrement de la facture. Mettez à jour les règles Firebase Storage." : error?.code === "storage/canceled" ? "La préparation de la facture a été interrompue. Réessayez." : `La facture n’a pas pu être préparée : ${error?.message || "vérifiez votre connexion"}.`; alert(message); } finally { button.disabled = false; button.textContent = oldText; }
     }
  
     async function generatePurchaseOrder(bookingId, button, sharePdf = false) {
@@ -7461,6 +7462,4 @@ window.addEventListener("DOMContentLoaded",bootPricingAdmin,{once:true});
  
 </body>
 </html>
- 
- 
  
