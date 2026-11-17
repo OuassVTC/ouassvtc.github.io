@@ -185,5 +185,3 @@ self.addEventListener("message", event => {
   };
   if (event.ports?.[0]) event.ports[0].postMessage(response);
 });
-
-
