@@ -1511,14 +1511,18 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
       deleteDoc,
       doc,
       getFirestore,
+      initializeFirestore,
       limit,
       onSnapshot,
       orderBy,
+      persistentLocalCache,
+      persistentMultipleTabManager,
       query,
       runTransaction,
       serverTimestamp,
       setDoc,
       updateDoc,
+      waitForPendingWrites,
       where
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
@@ -1533,6 +1537,42 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     const NOTIFICATIONS_ENABLED_KEY = "ouassvtcNotificationsEnabled";
     let themeMode = localStorage.getItem(THEME_MODE_KEY) || "auto";
     let themeTimer = null;
+ 
+    function ensureOfflineStatus() {
+      let box = document.getElementById("ouassvtcOfflineStatus");
+      if (box) return box;
+      box = document.createElement("div");
+      box.id = "ouassvtcOfflineStatus";
+      box.setAttribute("role", "status");
+      box.setAttribute("aria-live", "polite");
+      box.style.cssText = "position:fixed;left:12px;right:12px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:100000;display:none;padding:11px 14px;border-radius:14px;background:#101f30;color:#fff;font:800 13px/1.3 system-ui,-apple-system,sans-serif;box-shadow:0 8px 28px #0004;text-align:center";
+      document.body.appendChild(box);
+      return box;
+    }
+ 
+    function showOfflineStatus(message, kind = "offline", hideAfter = 0) {
+      const box = ensureOfflineStatus();
+      box.textContent = message;
+      box.style.display = "block";
+      box.style.background = kind === "ok" ? "#087b48" : kind === "error" ? "#b3261e" : "#101f30";
+      clearTimeout(showOfflineStatus.timer);
+      if (hideAfter) showOfflineStatus.timer = setTimeout(() => { box.style.display = "none"; }, hideAfter);
+    }
+ 
+    function refreshConnectionStatus() {
+      if (!navigator.onLine) {
+        showOfflineStatus("Hors connexion · vos données restent disponibles sur ce téléphone");
+        return;
+      }
+      if (!db) return;
+      showOfflineStatus("Connexion retrouvée · synchronisation en cours…", "offline");
+      waitForPendingWrites(db)
+        .then(() => showOfflineStatus("Tout est synchronisé", "ok", 3500))
+        .catch(() => showOfflineStatus("Synchronisation automatique dès que la connexion sera stable", "error", 5000));
+    }
+ 
+    window.addEventListener("offline", refreshConnectionStatus);
+    window.addEventListener("online", refreshConnectionStatus);
  
     function sunTimesForPerpignan(date = new Date()) {
       const latitude = 42.6887, longitude = 2.8948;
@@ -5410,8 +5450,16 @@ html[data-theme="dark"] .v7920-next{background:#172130;color:#f4f7fb}
     } else {
       const app = initializeApp(firebaseConfig);
       auth = getAuth(app);
-      db = getFirestore(app);
+      try {
+        db = initializeFirestore(app, {
+          localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+        });
+      } catch (error) {
+        db = getFirestore(app);
+        console.warn("Cache hors connexion déjà initialisé", error?.code || error);
+      }
       storage = getStorage(app);
+      refreshConnectionStatus();
       aiCopilotCallable = httpsCallable(getFunctions(app, "europe-west1"), "aiCopilot", { timeout:45000 });
       messaging = await isSupported() ? getMessaging(app) : null;
       if (messaging) {
