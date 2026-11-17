@@ -12,15 +12,24 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-const SW_VERSION = "79.31.20261011.01";
-const CACHE_NAME = "ouassvtc-chauffeur-v79.31.20261011.01";
+const SW_VERSION = "79.43.20261117.01";
+const CACHE_NAME = "ouassvtc-chauffeur-v79.43.20261117.01";
 
 const APP_SHELL = [
+  "/chauffeur/",
+  "/chauffeur/index.html",
   "/chauffeur/chauffeur.html",
+  "/chauffeur/mission.html",
   "/chauffeur/manifest.json",
   "/chauffeur/manifest-chauffeur.json",
+  "/firebase-config.js",
   "/ouassvtc-app.png"
 ];
+
+const OFFLINE_DEPENDENCY_HOSTS = new Set([
+  "www.gstatic.com",
+  "cdn.jsdelivr.net"
+]);
 
 messaging.onBackgroundMessage(payload => {
   const title = payload.data?.title || payload.notification?.title || "Nouvelle réservation OuassVTC";
@@ -43,7 +52,9 @@ messaging.onBackgroundMessage(payload => {
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
+      .then(cache => Promise.all(
+        APP_SHELL.map(url => cache.add(url).catch(() => undefined))
+      ))
       .catch(() => undefined)
   );
   self.skipWaiting();
@@ -65,7 +76,32 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
   const requestUrl = new URL(event.request.url);
-  if (requestUrl.origin !== self.location.origin) return;
+  const isLocal = requestUrl.origin === self.location.origin;
+  const isOfflineDependency =
+    OFFLINE_DEPENDENCY_HOSTS.has(requestUrl.hostname) &&
+    ["script", "style", "font"].includes(event.request.destination);
+
+  if (!isLocal && isOfflineDependency) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response && (response.ok || response.type === "opaque")) {
+            const copy = response.clone();
+            event.waitUntil(
+              caches.open(CACHE_NAME)
+                .then(cache => cache.put(event.request, copy))
+                .catch(() => {})
+            );
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+
+  if (!isLocal) return;
 
   const isFreshHtml =
     event.request.mode === "navigate" ||
@@ -149,3 +185,5 @@ self.addEventListener("message", event => {
   };
   if (event.ports?.[0]) event.ports[0].postMessage(response);
 });
+
+
