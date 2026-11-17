@@ -1714,7 +1714,7 @@ Firebase n’est pas encore configuré. L’application est prête, mais elle re
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script>
-window.OUASSVTC_BUILD = "79.42.20261025.01";
+window.OUASSVTC_BUILD = "79.43.20261117.01";
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -1731,21 +1731,24 @@ sendPasswordResetEmail,
 signOut
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import {
-addDoc,
 collection,
-deleteDoc,
+deleteDoc as firebaseDeleteDoc,
 doc,
 getDoc,
 getDocs,
 getFirestore,
+initializeFirestore,
 limit,
 onSnapshot,
 orderBy,
+persistentLocalCache,
+persistentMultipleTabManager,
 query,
 runTransaction,
 serverTimestamp,
-setDoc,
-updateDoc,
+setDoc as firebaseSetDoc,
+updateDoc as firebaseUpdateDoc,
+waitForPendingWrites,
 where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
@@ -1753,6 +1756,105 @@ import { deleteToken, getMessaging, getToken, isSupported, onMessage } from "htt
 import { deleteObject, getDownloadURL, getStorage, ref as storageRef, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-storage.js";
 import { firebaseConfig, firebaseReady } from "/firebase-config.js";
 const $ = id => document.getElementById(id);
+let offlinePendingWrites = 0;
+let offlineSyncError = "";
+let offlineStatusTimer = null;
+function ensureOfflineStatusUi() {
+  if (document.getElementById("ouassOfflineStatus")) return;
+  const style = document.createElement("style");
+  style.id = "ouassOfflineStatusStyle";
+  style.textContent = `
+    #ouassOfflineStatus{position:fixed;z-index:100000;left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:9px 14px;border:1px solid transparent;border-radius:999px;font:800 12px/1.2 Inter,system-ui,sans-serif;box-shadow:0 8px 24px #0713212b;transition:.22s;white-space:nowrap}
+    #ouassOfflineStatus[hidden]{display:none}
+    #ouassOfflineStatus .ouass-sync-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:0 0 auto}
+    #ouassOfflineStatus[data-state="offline"]{color:#7a2e0b;background:#fff4e5;border-color:#ffd9a8}
+    #ouassOfflineStatus[data-state="syncing"]{color:#0757b8;background:#eaf3ff;border-color:#b9d8ff}
+    #ouassOfflineStatus[data-state="synced"]{color:#087443;background:#e9f8f0;border-color:#bce9d0}
+    #ouassOfflineStatus[data-state="error"]{color:#b42318;background:#fff0f0;border-color:#ffc9c9}
+  `;
+  document.head.appendChild(style);
+  const banner = document.createElement("div");
+  banner.id = "ouassOfflineStatus";
+  banner.setAttribute("role","status");
+  banner.setAttribute("aria-live","polite");
+  banner.innerHTML = '<span class="ouass-sync-dot"></span><span id="ouassOfflineStatusText"></span>';
+  document.body.appendChild(banner);
+}
+function renderOfflineStatus(forceVisible = false) {
+  ensureOfflineStatusUi();
+  const banner = document.getElementById("ouassOfflineStatus");
+  const text = document.getElementById("ouassOfflineStatusText");
+  clearTimeout(offlineStatusTimer);
+  banner.hidden = false;
+  if (!navigator.onLine) {
+    banner.dataset.state = "offline";
+    text.textContent = offlinePendingWrites
+      ? `Hors connexion · ${offlinePendingWrites} modification(s) en attente`
+      : "Hors connexion · données enregistrées sur ce téléphone";
+    return;
+  }
+  if (offlineSyncError) {
+    banner.dataset.state = "error";
+    text.textContent = "Une modification n’a pas pu être synchronisée";
+    return;
+  }
+  if (offlinePendingWrites) {
+    banner.dataset.state = "syncing";
+    text.textContent = "Synchronisation en cours…";
+    return;
+  }
+  banner.dataset.state = "synced";
+  text.textContent = "Tout est synchronisé";
+  if (!forceVisible) offlineStatusTimer = setTimeout(() => { banner.hidden = true; }, 2600);
+}
+function settleFirestoreWrite(writePromise) {
+  offlinePendingWrites += 1;
+  renderOfflineStatus(true);
+  const tracked = Promise.resolve(writePromise).then(
+    value => {
+      offlinePendingWrites = Math.max(0, offlinePendingWrites - 1);
+      offlineSyncError = "";
+      renderOfflineStatus();
+      return value;
+    },
+    error => {
+      offlinePendingWrites = Math.max(0, offlinePendingWrites - 1);
+      offlineSyncError = error?.message || "Synchronisation refusée";
+      renderOfflineStatus(true);
+      throw error;
+    }
+  );
+  if (navigator.onLine) return tracked;
+  tracked.catch(error => console.error("Écriture hors connexion non synchronisée", error));
+  return Promise.race([
+    tracked,
+    new Promise(resolve => setTimeout(() => resolve({ queuedOffline:true }), 120))
+  ]);
+}
+function setDoc(...args) { return settleFirestoreWrite(firebaseSetDoc(...args)); }
+function updateDoc(...args) { return settleFirestoreWrite(firebaseUpdateDoc(...args)); }
+function deleteDoc(...args) { return settleFirestoreWrite(firebaseDeleteDoc(...args)); }
+async function addDoc(collectionReference, data) {
+  const createdReference = doc(collectionReference);
+  await settleFirestoreWrite(firebaseSetDoc(createdReference, data));
+  return createdReference;
+}
+async function flushOfflineWrites() {
+  renderOfflineStatus(true);
+  if (!db || !navigator.onLine) return;
+  try {
+    await waitForPendingWrites(db);
+    offlinePendingWrites = 0;
+    offlineSyncError = "";
+    renderOfflineStatus();
+  } catch (error) {
+    offlineSyncError = error?.message || "Synchronisation impossible";
+    renderOfflineStatus(true);
+  }
+}
+window.addEventListener("offline", () => renderOfflineStatus(true));
+window.addEventListener("online", () => flushOfflineWrites());
+document.addEventListener("DOMContentLoaded", () => renderOfflineStatus());
 const state = { bookings: [], documents:[], driverMissions:[], partnerDrivers:[], partnerDriversUnsubscribe:null, dispatchRequests:[], dispatchRequestsUnsubscribe:null, filter: "active", search: "", unsubscribe: null, financeUnsubscribe: null, documentsUnsubscribe:null, driverMissionsUnsubscribe:null, financeSettings: { urssafRate:21.2, incomeTaxRate:1.7, adExpenses:[], monthlyEntries:[] } };
 const THEME_MODE_KEY = "ouassvtcThemeMode";
 const RESOLVED_THEME_KEY = "ouassvtcResolvedTheme";
@@ -5606,8 +5708,18 @@ $("emptyState").classList.remove("hidden");
 } else {
 const app = initializeApp(firebaseConfig, "ouassvtc-partner");
 auth = getAuth(app);
-db = getFirestore(app);
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager()
+    })
+  });
+} catch (offlineCacheError) {
+  console.warn("Cache permanent indisponible, utilisation du cache standard.", offlineCacheError);
+  db = getFirestore(app);
+}
 storage = getStorage(app);
+renderOfflineStatus(true);
 aiCopilotCallable = httpsCallable(getFunctions(app, "europe-west1"), "aiCopilot", { timeout:45000 });
 messaging = await isSupported() ? getMessaging(app) : null;
 // V72.6 — compatibilité des modules historiques placés hors du <script type="module">.
@@ -6849,7 +6961,7 @@ $("installApp").classList.add("hidden");
 });
 if ("serviceWorker" in navigator) {
 window.addEventListener("load", async () => {
-const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=7934", { scope:"/chauffeur/", updateViaCache:"none" });
+const registration = await navigator.serviceWorker.register("/chauffeur/sw.js?v=7943", { scope:"/chauffeur/", updateViaCache:"none" });
 registration.update();
 });
 }
